@@ -10,9 +10,9 @@ export const InvitesModel = {
   invite_resolveParams: t.Object({ code: t.String({ maxLength: 152133 }) }),
   invite_resolveQuery: t.Object({
     with_counts: t.Optional(t.Boolean()),
-    guild_scheduled_event_id: t.Optional(SnowflakeTypeSchema),
-    target_channel_id: t.Optional(SnowflakeTypeSchema),
-    target_message_id: t.Optional(SnowflakeTypeSchema),
+    guild_scheduled_event_id: t.Optional(t.String({ pattern: '^(0|[1-9][0-9]*)$' })),
+    target_channel_id: t.Optional(t.String({ pattern: '^(0|[1-9][0-9]*)$' })),
+    target_message_id: t.Optional(t.String({ pattern: '^(0|[1-9][0-9]*)$' })),
   }),
   invite_resolveResponse200: t.Union([
     FriendInviteResponseSchema,
@@ -47,11 +47,11 @@ export const InvitesModel = {
   get_invite_target_users_job_statusParams: t.Object({ code: t.String({ maxLength: 152133 }) }),
   add_invite_target_userParams: t.Object({
     code: t.String({ maxLength: 152133 }),
-    user_id: SnowflakeTypeSchema,
+    user_id: t.String({ pattern: '^(0|[1-9][0-9]*)$' }),
   }),
   remove_invite_target_userParams: t.Object({
     code: t.String({ maxLength: 152133 }),
-    user_id: SnowflakeTypeSchema,
+    user_id: t.String({ pattern: '^(0|[1-9][0-9]*)$' }),
   }),
 } as const
 

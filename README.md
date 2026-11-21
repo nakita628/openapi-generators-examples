@@ -74,6 +74,5 @@ Problems found while generating are reported where the code lives: schema genera
 | [truth#21](https://github.com/nakita628/truth/issues/21) arktype string-DSL union of 25+ literals hits TS2589 | ArkType apps fail on discord and openai |
 | [truth#22](https://github.com/nakita628/truth/issues/22) effect recursive declaration annotated `Schema.Codec<T>` | Effect apps fail on openai |
 | [takibi-hono#73](https://github.com/nakita628/takibi-hono/issues/73) `openapi: true` + TypeBox passes a non-Standard-Schema validator to hono-openapi | `hono-openapi-typebox` fails on every spec |
-| [asphodelos#25](https://github.com/nakita628/asphodelos/issues/25) a schema named `*Response` is imported from `./responses` | `elysia-typebox` fails on discord and openai |
 
 The generators depend on `oas-truth ^0.5.1`; some failures (Valibot recursive schemas on openai) are already fixed in oas-truth 0.6.1.

@@ -1,4 +1,4 @@
-import { ErrorResponseSchema, RatelimitedResponseSchema } from './responses'
+import { ErrorResponseSchema, RatelimitedResponseSchema } from './schemas'
 
 export const ClientErrorResponseResponseSchema = ErrorResponseSchema
 

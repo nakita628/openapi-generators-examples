@@ -1,6 +1,5 @@
 import { Elysia, t } from 'elysia'
 import {
-  CreateFileRequestSchema,
   DeleteFileResponseSchema,
   ErrorSchema,
   ErrorResponseSchema,
@@ -15,7 +14,6 @@ import { FilesModel } from './model'
 
 export const files = new Elysia()
   .model({
-    CreateFileRequest: CreateFileRequestSchema,
     DeleteFileResponse: DeleteFileResponseSchema,
     Error: ErrorSchema,
     ErrorResponse: ErrorResponseSchema,
@@ -42,7 +40,7 @@ export const files = new Elysia()
     },
   })
   .post('/files', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'CreateFileRequest',
+    body: FilesModel.createFileBody,
     response: {
       200: 'OpenAIFile',
       400: 'ErrorResponse',

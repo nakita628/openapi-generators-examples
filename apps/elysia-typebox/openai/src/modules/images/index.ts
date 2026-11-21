@@ -1,7 +1,6 @@
 import { Elysia } from 'elysia'
 import {
   CreateImageRequestSchema,
-  CreateImageVariationRequestSchema,
   EditImageBodyJsonParamSchema,
   ErrorSchema,
   ErrorResponseSchema,
@@ -30,7 +29,6 @@ import { ImagesModel } from './model'
 export const images = new Elysia()
   .model({
     CreateImageRequest: CreateImageRequestSchema,
-    CreateImageVariationRequest: CreateImageVariationRequestSchema,
     EditImageBodyJsonParam: EditImageBodyJsonParamSchema,
     Error: ErrorSchema,
     ErrorResponse: ErrorResponseSchema,
@@ -93,7 +91,7 @@ export const images = new Elysia()
     },
   })
   .post('/images/variations', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'CreateImageVariationRequest',
+    body: ImagesModel.createImageVariationBody,
     response: {
       200: 'ImagesResponse',
       400: 'ErrorResponse',

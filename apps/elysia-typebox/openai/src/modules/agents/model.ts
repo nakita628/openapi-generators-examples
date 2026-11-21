@@ -2,15 +2,18 @@ import { t, type UnwrapSchema } from 'elysia'
 import {
   AutomationInvocationResourceSchema,
   AutomationResourceSchema,
-  EnvironmentTypeParamSchema,
-  ListOrderParamSchema,
   SubagentResourceSchema,
 } from '../../components/schemas'
 
 export const AgentsModel = {
   listAgentAutomationsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
     session_id: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
@@ -69,7 +72,12 @@ export const AgentsModel = {
   }),
   listAgentAutomationInvocationsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   listAgentAutomationInvocationsResponse200: t.Object(
@@ -116,12 +124,19 @@ export const AgentsModel = {
   }),
   listAgentEnvironmentsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
-    type: t.Optional(EnvironmentTypeParamSchema),
+    type: t.Optional(
+      t.Literal('openai_hosted', { description: 'The hosting type of an execution environment.' }),
+    ),
   }),
   createAgentEnvironmentHeaders: t.Object({
-    'Idempotency-Key': t.Optional(t.String({ minLength: 1, maxLength: 256 })),
+    'idempotency-key': t.Optional(t.String({ minLength: 1, maxLength: 256 })),
   }),
   retrieveAgentEnvironmentParams: t.Object({
     environment_id: t.String({ minLength: 0, maxLength: 1048576 }),
@@ -132,9 +147,22 @@ export const AgentsModel = {
   listAgentEnvironmentFilesQuery: t.Object({
     path: t.Optional(t.Union([t.String({ minLength: 0, maxLength: 1048576 }), t.Null()])),
     limit: t.Optional(
-      t.Union([t.Integer({ format: 'int64', minimum: 1, maximum: 100 }), t.Null()]),
+      t
+        .Transform(
+          t.Union([
+            t.Literal('null'),
+            t.Union([t.Integer({ format: 'int64', minimum: 1, maximum: 100 }), t.Null()]),
+          ]),
+        )
+        .Decode((v) => (v === 'null' ? null : v))
+        .Encode((v) => v),
     ),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: undefined,
+      }),
+    ),
     page: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   createAgentEnvironmentFileParams: t.Object({
@@ -145,7 +173,12 @@ export const AgentsModel = {
   }),
   listAgentSessionSubagentsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   listAgentSessionSubagentsResponse200: t.Object(
@@ -193,7 +226,12 @@ export const AgentsModel = {
   }),
   listAgentSessionSubagentItemsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   listAgentSessionSubagentTurnsParams: t.Object({
@@ -202,7 +240,12 @@ export const AgentsModel = {
   }),
   listAgentSessionSubagentTurnsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   retrieveAgentSessionSubagentTurnParams: t.Object({
@@ -217,12 +260,22 @@ export const AgentsModel = {
   }),
   listAgentSessionSubagentTurnItemsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   listAgentsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   retrieveAgentParams: t.Object({ agent_id: t.String({ minLength: 0, maxLength: 1048576 }) }),
@@ -230,7 +283,12 @@ export const AgentsModel = {
   deleteAgentParams: t.Object({ agent_id: t.String({ minLength: 0, maxLength: 1048576 }) }),
   listAgentEnvironmentTemplatesQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   retrieveAgentEnvironmentTemplateParams: t.Object({
@@ -244,7 +302,12 @@ export const AgentsModel = {
   }),
   listAgentSessionsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
     agent_id: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
     metadata: t.Optional(
@@ -268,7 +331,12 @@ export const AgentsModel = {
   }),
   listAgentSessionArtifactsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
     environment_id: t.Optional(t.Union([t.String({ minLength: 0, maxLength: 1048576 }), t.Null()])),
   }),
@@ -294,14 +362,19 @@ export const AgentsModel = {
     session_id: t.String({ minLength: 0, maxLength: 1048576 }),
   }),
   createAgentSessionEventsHeaders: t.Object({
-    'Idempotency-Key': t.Optional(t.String({ minLength: 1, maxLength: 256 })),
+    'idempotency-key': t.Optional(t.String({ minLength: 1, maxLength: 256 })),
   }),
   listAgentSessionItemsParams: t.Object({
     session_id: t.String({ minLength: 0, maxLength: 1048576 }),
   }),
   listAgentSessionItemsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   listAgentSessionTracesParams: t.Object({
@@ -309,7 +382,12 @@ export const AgentsModel = {
   }),
   listAgentSessionTracesQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   listAgentSessionTurnsParams: t.Object({
@@ -317,7 +395,12 @@ export const AgentsModel = {
   }),
   listAgentSessionTurnsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
   retrieveAgentSessionTurnParams: t.Object({
@@ -330,7 +413,12 @@ export const AgentsModel = {
   }),
   listAgentSessionTurnItemsQuery: t.Object({
     limit: t.Optional(t.Integer({ format: 'int64', minimum: 1, maximum: 100, default: 20 })),
-    order: t.Optional(ListOrderParamSchema),
+    order: t.Optional(
+      t.UnionEnum(['asc', 'desc'], {
+        description: 'The order in which paginated resources are returned.',
+        default: 'desc',
+      }),
+    ),
     after: t.Optional(t.String({ minLength: 0, maxLength: 1048576 })),
   }),
 } as const

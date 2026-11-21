@@ -17,7 +17,6 @@ import {
   PromptSchema,
   PromptCacheBreakpointConfigSchema,
   RealtimeAudioFormatsSchema,
-  RealtimeCallCreateRequestSchema,
   RealtimeCallReferRequestSchema,
   RealtimeCallRejectRequestSchema,
   RealtimeCreateClientSecretRequestSchema,
@@ -70,7 +69,6 @@ export const realtime = new Elysia()
     Prompt: PromptSchema,
     PromptCacheBreakpointConfig: PromptCacheBreakpointConfigSchema,
     RealtimeAudioFormats: RealtimeAudioFormatsSchema,
-    RealtimeCallCreateRequest: RealtimeCallCreateRequestSchema,
     RealtimeCallReferRequest: RealtimeCallReferRequestSchema,
     RealtimeCallRejectRequest: RealtimeCallRejectRequestSchema,
     RealtimeCreateClientSecretRequest: RealtimeCreateClientSecretRequestSchema,
@@ -106,7 +104,7 @@ export const realtime = new Elysia()
     MisalignmentSteer: MisalignmentSteerSchema,
   })
   .post('/realtime/calls', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'RealtimeCallCreateRequest',
+    body: RealtimeModel.createRealtimeCallBody,
     response: { 201: t.Void() },
     detail: {
       tags: ['Realtime'],

@@ -1,8 +1,7 @@
 import { t, type UnwrapSchema } from 'elysia'
-import { SnowflakeTypeSchema } from '../../components/schemas'
 
 export const StickerPacksModel = {
-  get_sticker_packParams: t.Object({ pack_id: SnowflakeTypeSchema }),
+  get_sticker_packParams: t.Object({ pack_id: t.String({ pattern: '^(0|[1-9][0-9]*)$' }) }),
 } as const
 
 export type StickerPacksModel = {

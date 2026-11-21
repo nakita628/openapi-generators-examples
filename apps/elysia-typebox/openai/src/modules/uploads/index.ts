@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia'
 import {
-  AddUploadPartRequestSchema,
   CompleteUploadRequestSchema,
   CreateUploadRequestSchema,
   ErrorSchema,
@@ -17,7 +16,6 @@ import { UploadsModel } from './model'
 
 export const uploads = new Elysia()
   .model({
-    AddUploadPartRequest: AddUploadPartRequestSchema,
     CompleteUploadRequest: CompleteUploadRequestSchema,
     CreateUploadRequest: CreateUploadRequestSchema,
     Error: ErrorSchema,
@@ -79,7 +77,7 @@ export const uploads = new Elysia()
   })
   .post('/uploads/:upload_id/parts', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: UploadsModel.addUploadPartParams,
-    body: 'AddUploadPartRequest',
+    body: UploadsModel.addUploadPartBody,
     response: {
       200: 'UploadPart',
       400: 'ErrorResponse',

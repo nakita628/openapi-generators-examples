@@ -23,8 +23,10 @@ catalog:
   zod: 4.6.7
 minimumReleaseAgeExclude:
   - effect@4.1.5
+  - asphodelos@0.3.1
 overrides:
-  # wakusei 0.0.5 pins effect 4.0.5, while @effect/platform-node 4.0.5 accepts
-  # @effect/platform-node-shared ^4.0.5 and resolves 4.1.x, which imports modules effect 4.0.5
-  # does not have (effect/dist/process/CommandLine.js).
+  # wakusei 0.0.5 pins effect 4.0.5 (asphodelos 0.3.1: 4.0.6), while @effect/platform-node 4.0.x
+  # accepts @effect/platform-node-shared ^4.0.x and here resolves 4.1.x, which imports modules
+  # effect 4.0.x does not have (effect/dist/process/CommandLine.js).
   "@effect/platform-node@4.0.5>@effect/platform-node-shared": 4.0.5
+  "@effect/platform-node@4.0.6>@effect/platform-node-shared": 4.0.6

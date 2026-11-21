@@ -2,7 +2,6 @@ import { Elysia } from 'elysia'
 import {
   C2PAProvenanceResultSchema,
   C2PAValidationStateApiSchema,
-  CreateContentProvenanceBodySchema,
   ErrorSchema,
   ErrorResponseSchema,
   MisalignmentErrorDetailsResourceSchema,
@@ -19,7 +18,6 @@ export const contentProvenanceChecks = new Elysia()
   .model({
     C2PAProvenanceResult: C2PAProvenanceResultSchema,
     C2PAValidationStateApi: C2PAValidationStateApiSchema,
-    CreateContentProvenanceBody: CreateContentProvenanceBodySchema,
     Error: ErrorSchema,
     ErrorResponse: ErrorResponseSchema,
     MisalignmentErrorDetailsResource: MisalignmentErrorDetailsResourceSchema,
@@ -31,7 +29,7 @@ export const contentProvenanceChecks = new Elysia()
     MisalignmentSteer: MisalignmentSteerSchema,
   })
   .post('/content_provenance_checks', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'CreateContentProvenanceBody',
+    body: ContentProvenanceChecksModel.CreatecontentprovenancecheckBody,
     response: {
       200: 'ProvenanceResource',
       400: 'ErrorResponse',

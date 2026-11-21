@@ -1,12 +1,8 @@
 import { t, type UnwrapSchema } from 'elysia'
-import {
-  GuildStickerResponseSchema,
-  SnowflakeTypeSchema,
-  StandardStickerResponseSchema,
-} from '../../components/schemas'
+import { GuildStickerResponseSchema, StandardStickerResponseSchema } from '../../components/schemas'
 
 export const StickersModel = {
-  get_stickerParams: t.Object({ sticker_id: SnowflakeTypeSchema }),
+  get_stickerParams: t.Object({ sticker_id: t.String({ pattern: '^(0|[1-9][0-9]*)$' }) }),
   get_stickerResponse200: t.Union([GuildStickerResponseSchema, StandardStickerResponseSchema]),
 } as const
 

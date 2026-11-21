@@ -6,9 +6,9 @@ import {
 
 export const PartnerSdkModel = {
   update_user_message_external_moderation_metadataParams: t.Object({
-    user_id_1: SnowflakeTypeSchema,
-    user_id_2: SnowflakeTypeSchema,
-    message_id: SnowflakeTypeSchema,
+    user_id_1: t.String({ pattern: '^(0|[1-9][0-9]*)$' }),
+    user_id_2: t.String({ pattern: '^(0|[1-9][0-9]*)$' }),
+    message_id: t.String({ pattern: '^(0|[1-9][0-9]*)$' }),
   }),
   update_user_message_external_moderation_metadataBody: t.Record(
     t.String(),

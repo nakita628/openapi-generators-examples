@@ -15,7 +15,6 @@ import {
   DeletedVaultResourceSchema,
   ErrorBodyResourceSchema,
   ErrorResponse2Schema,
-  ListOrderParamSchema,
   McpOauthRefreshResourceSchema,
   McpOauthTokenEndpointAuthResourceSchema,
   McpOauthTokenEndpointAuthResourceClientSecretBasicSchema,
@@ -45,8 +44,6 @@ import {
   VaultCredentialResourceSchema,
   VaultListResourceSchema,
   VaultResourceSchema,
-  VaultStatusFilterParamSchema,
-  VaultStatusParamSchema,
 } from '../../components/schemas'
 import { VaultsModel } from './model'
 
@@ -70,7 +67,6 @@ export const vaults = new Elysia()
     DeletedVaultResource: DeletedVaultResourceSchema,
     ErrorBodyResource: ErrorBodyResourceSchema,
     ErrorResponse2: ErrorResponse2Schema,
-    ListOrderParam: ListOrderParamSchema,
     McpOauthRefreshResource: McpOauthRefreshResourceSchema,
     McpOauthTokenEndpointAuthResource: McpOauthTokenEndpointAuthResourceSchema,
     McpOauthTokenEndpointAuthResourceClientSecretBasic:
@@ -107,8 +103,6 @@ export const vaults = new Elysia()
     VaultCredentialResource: VaultCredentialResourceSchema,
     VaultListResource: VaultListResourceSchema,
     VaultResource: VaultResourceSchema,
-    VaultStatusFilterParam: VaultStatusFilterParamSchema,
-    VaultStatusParam: VaultStatusParamSchema,
   })
   .get('/vaults', ({ query }) => { throw new Error('Not implemented') }, {
     query: VaultsModel.listVaultsQuery,

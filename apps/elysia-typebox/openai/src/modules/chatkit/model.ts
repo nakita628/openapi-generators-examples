@@ -1,12 +1,11 @@
 import { t, type UnwrapSchema } from 'elysia'
-import { OrderEnumSchema } from '../../components/schemas'
 
 export const ChatkitModel = {
   CancelChatSessionMethodParams: t.Object({ session_id: t.String({ example: 'cksess_123' }) }),
   ListThreadItemsMethodParams: t.Object({ thread_id: t.String({ example: 'cthr_123' }) }),
   ListThreadItemsMethodQuery: t.Object({
     limit: t.Optional(t.Integer({ minimum: 0, maximum: 100 })),
-    order: t.Optional(OrderEnumSchema),
+    order: t.Optional(t.UnionEnum(['asc', 'desc'], { default: undefined })),
     after: t.Optional(
       t.String({
         description:
@@ -24,7 +23,7 @@ export const ChatkitModel = {
   DeleteThreadMethodParams: t.Object({ thread_id: t.String({ example: 'cthr_123' }) }),
   ListThreadsMethodQuery: t.Object({
     limit: t.Optional(t.Integer({ minimum: 0, maximum: 100 })),
-    order: t.Optional(OrderEnumSchema),
+    order: t.Optional(t.UnionEnum(['asc', 'desc'], { default: undefined })),
     after: t.Optional(
       t.String({
         description:

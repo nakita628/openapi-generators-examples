@@ -1,15 +1,11 @@
 import { Elysia, t } from 'elysia'
 import {
-  AudioResponseFormatSchema,
   CreateSpeechRequestSchema,
-  CreateTranscriptionRequestSchema,
   CreateTranscriptionResponseDiarizedJsonSchema,
   CreateTranscriptionResponseJsonSchema,
   CreateTranscriptionResponseVerboseJsonSchema,
-  CreateTranslationRequestSchema,
   CreateTranslationResponseJsonSchema,
   CreateTranslationResponseVerboseJsonSchema,
-  CreateVoiceConsentRequestSchema,
   CreateVoicePromptRequestSchema,
   ErrorSchema,
   ErrorResponseSchema,
@@ -17,7 +13,6 @@ import {
   TranscriptTextUsageDurationSchema,
   TranscriptTextUsageTokensSchema,
   TranscriptionDiarizedSegmentSchema,
-  TranscriptionIncludeSchema,
   TranscriptionLanguageSchema,
   TranscriptionSegmentSchema,
   TranscriptionWordSchema,
@@ -36,16 +31,12 @@ import { AudioModel } from './model'
 
 export const audio = new Elysia()
   .model({
-    AudioResponseFormat: AudioResponseFormatSchema,
     CreateSpeechRequest: CreateSpeechRequestSchema,
-    CreateTranscriptionRequest: CreateTranscriptionRequestSchema,
     CreateTranscriptionResponseDiarizedJson: CreateTranscriptionResponseDiarizedJsonSchema,
     CreateTranscriptionResponseJson: CreateTranscriptionResponseJsonSchema,
     CreateTranscriptionResponseVerboseJson: CreateTranscriptionResponseVerboseJsonSchema,
-    CreateTranslationRequest: CreateTranslationRequestSchema,
     CreateTranslationResponseJson: CreateTranslationResponseJsonSchema,
     CreateTranslationResponseVerboseJson: CreateTranslationResponseVerboseJsonSchema,
-    CreateVoiceConsentRequest: CreateVoiceConsentRequestSchema,
     CreateVoicePromptRequest: CreateVoicePromptRequestSchema,
     Error: ErrorSchema,
     ErrorResponse: ErrorResponseSchema,
@@ -53,7 +44,6 @@ export const audio = new Elysia()
     TranscriptTextUsageDuration: TranscriptTextUsageDurationSchema,
     TranscriptTextUsageTokens: TranscriptTextUsageTokensSchema,
     TranscriptionDiarizedSegment: TranscriptionDiarizedSegmentSchema,
-    TranscriptionInclude: TranscriptionIncludeSchema,
     TranscriptionLanguage: TranscriptionLanguageSchema,
     TranscriptionSegment: TranscriptionSegmentSchema,
     TranscriptionWord: TranscriptionWordSchema,
@@ -88,7 +78,7 @@ export const audio = new Elysia()
     },
   })
   .post('/audio/transcriptions', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'CreateTranscriptionRequest',
+    body: AudioModel.createTranscriptionBody,
     response: {
       200: AudioModel.createTranscriptionResponse200,
       400: 'ErrorResponse',
@@ -109,7 +99,7 @@ export const audio = new Elysia()
     },
   })
   .post('/audio/translations', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'CreateTranslationRequest',
+    body: AudioModel.createTranslationBody,
     response: {
       200: AudioModel.createTranslationResponse200,
       400: 'ErrorResponse',
@@ -140,7 +130,7 @@ export const audio = new Elysia()
     },
   })
   .post('/audio/voice_consents', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'CreateVoiceConsentRequest',
+    body: AudioModel.createVoiceConsentBody,
     response: { 200: 'VoiceConsentResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
       tags: ['Audio'],

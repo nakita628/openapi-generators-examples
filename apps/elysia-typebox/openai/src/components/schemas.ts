@@ -22178,7 +22178,7 @@ export const RealtimeTranscriptionSessionCreateRequestSchema = t.Object(
       ),
     ),
     input_audio_noise_reduction: t.Optional(
-      t.Not(t.Array(t.Unknown()), {
+      t.Not(t.Union([t.Array(t.Unknown()), t.String(), t.Number(), t.Boolean()]), {
         description:
           'Configuration for input audio noise reduction. This can be set to `null` to turn off.\nNoise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.\nFiltering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.\n',
         default: null,
@@ -23389,7 +23389,7 @@ export const RealtimeSessionSchema = t.Object(
     input_audio_transcription: t.Optional(t.Union([AudioTranscriptionResponseSchema, t.Null()])),
     turn_detection: t.Optional(RealtimeTurnDetectionSchema),
     input_audio_noise_reduction: t.Optional(
-      t.Not(t.Array(t.Unknown()), {
+      t.Not(t.Union([t.Array(t.Unknown()), t.String(), t.Number(), t.Boolean()]), {
         description:
           'Configuration for input audio noise reduction. This can be set to `null` to turn off.\nNoise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.\nFiltering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.\n',
         default: null,
@@ -23708,7 +23708,7 @@ export const RealtimeSessionCreateRequestGASchema = t.Object(
               format: t.Optional(RealtimeAudioFormatsSchema),
               transcription: t.Optional(AudioTranscriptionSchema),
               noise_reduction: t.Optional(
-                t.Not(t.Array(t.Unknown()), {
+                t.Not(t.Union([t.Array(t.Unknown()), t.String(), t.Number(), t.Boolean()]), {
                   description:
                     'When you supply a `noise_reduction` object, you must set `type` to `near_field` or `far_field`.\nSet `noise_reduction` to `null` to turn off input audio noise reduction.\nNoise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.\nFiltering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.\n',
                   default: null,
@@ -24355,7 +24355,7 @@ export const RealtimeTranscriptionSessionCreateRequestGASchema = t.Object(
               format: t.Optional(RealtimeAudioFormatsSchema),
               transcription: t.Optional(AudioTranscriptionSchema),
               noise_reduction: t.Optional(
-                t.Not(t.Array(t.Unknown()), {
+                t.Not(t.Union([t.Array(t.Unknown()), t.String(), t.Number(), t.Boolean()]), {
                   description:
                     'Configuration for input audio noise reduction. This can be set to `null` to turn off.\nNoise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.\nFiltering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.\n',
                   default: null,
