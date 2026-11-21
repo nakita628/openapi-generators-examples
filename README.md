@@ -60,7 +60,7 @@ The type checks can also run as Bazel tests, `bun run test` (`bazel test //...`)
 
 ## Known issues
 
-Problems found while generating are reported in [nakita628/truth](https://github.com/nakita628/truth/issues).
+Problems found while generating are reported where the code lives: schema generation in [nakita628/truth](https://github.com/nakita628/truth/issues) (schema-truth / oas-truth, which wakusei, openapi-to-trpc and takibi-hono build on), everything else in the generator's own repository.
 
 | Issue | Effect here |
 | --- | --- |
@@ -72,5 +72,8 @@ Problems found while generating are reported in [nakita628/truth](https://github
 | [truth#19](https://github.com/nakita628/truth/issues/19) effect emits `Schema.isLengthBetween` (Effect 4: `isBetweenLength`) | Effect apps fail on openai |
 | [truth#20](https://github.com/nakita628/truth/issues/20) effect puts `null` into `Schema.Literals` | Effect apps fail on openai |
 | [truth#21](https://github.com/nakita628/truth/issues/21) arktype string-DSL union of 25+ literals hits TS2589 | ArkType apps fail on discord and openai |
+| [truth#22](https://github.com/nakita628/truth/issues/22) effect recursive declaration annotated `Schema.Codec<T>` | Effect apps fail on openai |
+| [takibi-hono#73](https://github.com/nakita628/takibi-hono/issues/73) `openapi: true` + TypeBox passes a non-Standard-Schema validator to hono-openapi | `hono-openapi-typebox` fails on every spec |
+| [asphodelos#25](https://github.com/nakita628/asphodelos/issues/25) a schema named `*Response` is imported from `./responses` | `elysia-typebox` fails on discord and openai |
 
 The generators depend on `oas-truth ^0.5.1`; some failures (Valibot recursive schemas on openai) are already fixed in oas-truth 0.6.1.
