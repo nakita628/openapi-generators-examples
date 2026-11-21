@@ -40,16 +40,16 @@ export const agentsHandler = new Hono()
         session_id: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/agents/automations', sValidator('json', CreateAutomationParamsSchema), (c) => {})
+  .post('/agents/automations', sValidator('json', CreateAutomationParamsSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/agents/automations/:automation_id',
     sValidator(
       'param',
       v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id',
@@ -58,7 +58,7 @@ export const agentsHandler = new Hono()
       v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
     sValidator('json', UpdateAutomationParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/automations/:automation_id',
@@ -66,7 +66,7 @@ export const agentsHandler = new Hono()
       'param',
       v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id/pause',
@@ -74,7 +74,7 @@ export const agentsHandler = new Hono()
       'param',
       v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id/resume',
@@ -82,7 +82,7 @@ export const agentsHandler = new Hono()
       'param',
       v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/automations/:automation_id/invocations',
@@ -109,7 +109,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id/invocations',
@@ -117,7 +117,7 @@ export const agentsHandler = new Hono()
       'param',
       v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/automations/:automation_id/invocations/:invocation_id',
@@ -128,7 +128,7 @@ export const agentsHandler = new Hono()
         invocation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments',
@@ -152,7 +152,7 @@ export const agentsHandler = new Hono()
         type: v.optional(EnvironmentTypeParamSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments',
@@ -165,7 +165,7 @@ export const agentsHandler = new Hono()
       ),
     ),
     sValidator('json', CreateAgentEnvironmentParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/:environment_id',
@@ -175,7 +175,7 @@ export const agentsHandler = new Hono()
         environment_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/:environment_id/files',
@@ -210,7 +210,7 @@ export const agentsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments/:environment_id/files',
@@ -221,7 +221,7 @@ export const agentsHandler = new Hono()
       }),
     ),
     sValidator('json', HostedEnvironmentFileParamSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents',
@@ -248,7 +248,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id',
@@ -259,7 +259,7 @@ export const agentsHandler = new Hono()
         subagent_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/items',
@@ -289,7 +289,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/turns',
@@ -319,7 +319,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/turns/:turn_id',
@@ -331,7 +331,7 @@ export const agentsHandler = new Hono()
         turn_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/turns/:turn_id/items',
@@ -362,7 +362,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents',
@@ -385,16 +385,16 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/agents', sValidator('json', CreateAgentParamsSchema), (c) => {})
+  .post('/agents', sValidator('json', CreateAgentParamsSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/agents/:agent_id',
     sValidator(
       'param',
       v.object({ agent_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/:agent_id',
@@ -403,7 +403,7 @@ export const agentsHandler = new Hono()
       v.object({ agent_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
     sValidator('json', UpdateAgentParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/:agent_id',
@@ -411,7 +411,7 @@ export const agentsHandler = new Hono()
       'param',
       v.object({ agent_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/templates',
@@ -434,12 +434,12 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments/templates',
     sValidator('json', CreateEnvironmentTemplateParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/templates/:environment_template_id',
@@ -449,7 +449,7 @@ export const agentsHandler = new Hono()
         environment_template_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments/templates/:environment_template_id',
@@ -460,7 +460,7 @@ export const agentsHandler = new Hono()
       }),
     ),
     sValidator('json', UpdateEnvironmentTemplateParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/environments/templates/:environment_template_id',
@@ -470,7 +470,7 @@ export const agentsHandler = new Hono()
         environment_template_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions',
@@ -497,16 +497,16 @@ export const agentsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/agents/sessions', sValidator('json', CreateAgentSessionParamsSchema), (c) => {})
+  .post('/agents/sessions', sValidator('json', CreateAgentSessionParamsSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/agents/sessions/:session_id',
     sValidator(
       'param',
       v.object({ session_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/sessions/:session_id',
@@ -515,7 +515,7 @@ export const agentsHandler = new Hono()
       v.object({ session_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
     sValidator('json', UpdateAgentSessionParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/sessions/:session_id',
@@ -523,7 +523,7 @@ export const agentsHandler = new Hono()
       'param',
       v.object({ session_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/artifacts',
@@ -553,7 +553,7 @@ export const agentsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/artifacts/:artifact_id',
@@ -564,7 +564,7 @@ export const agentsHandler = new Hono()
         artifact_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/sessions/:session_id/artifacts/:artifact_id',
@@ -575,7 +575,7 @@ export const agentsHandler = new Hono()
         artifact_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/artifacts/:artifact_id/content',
@@ -586,7 +586,7 @@ export const agentsHandler = new Hono()
         artifact_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/events',
@@ -607,7 +607,7 @@ export const agentsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/sessions/:session_id/events',
@@ -624,7 +624,7 @@ export const agentsHandler = new Hono()
       ),
     ),
     sValidator('json', CreateSessionEventsParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/items',
@@ -651,7 +651,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/traces',
@@ -678,7 +678,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/turns',
@@ -705,7 +705,7 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/turns/:turn_id',
@@ -716,7 +716,7 @@ export const agentsHandler = new Hono()
         turn_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/turns/:turn_id/items',
@@ -746,5 +746,5 @@ export const agentsHandler = new Hono()
         after: v.optional(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

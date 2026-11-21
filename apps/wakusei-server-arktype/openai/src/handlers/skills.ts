@@ -35,7 +35,7 @@ export const getSkills = os
     }),
   )
   .output(SkillListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postSkills = os
   .route({
@@ -48,7 +48,7 @@ export const postSkills = os
   })
   .input(CreateSkillBodySchema)
   .output(SkillResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSkillsSkillId = os
   .route({
@@ -61,7 +61,7 @@ export const getSkillsSkillId = os
   })
   .input(type({ skill_id: type('string') }))
   .output(SkillResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postSkillsSkillId = os
   .route({
@@ -79,7 +79,7 @@ export const postSkillsSkillId = os
     }),
   )
   .output(SkillResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteSkillsSkillId = os
   .route({
@@ -92,7 +92,7 @@ export const deleteSkillsSkillId = os
   })
   .input(type({ skill_id: type('string') }))
   .output(DeletedSkillResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSkillsSkillIdContent = os
   .route({
@@ -105,7 +105,7 @@ export const getSkillsSkillIdContent = os
   })
   .input(type({ skill_id: type('string') }))
   .output(type('string'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSkillsSkillIdVersions = os
   .route({
@@ -130,7 +130,7 @@ export const getSkillsSkillIdVersions = os
     }),
   )
   .output(SkillVersionListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postSkillsSkillIdVersions = os
   .route({
@@ -153,7 +153,7 @@ export const postSkillsSkillIdVersions = os
     }),
   )
   .output(SkillVersionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSkillsSkillIdVersionsVersion = os
   .route({
@@ -171,7 +171,7 @@ export const getSkillsSkillIdVersionsVersion = os
     }),
   )
   .output(SkillVersionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteSkillsSkillIdVersionsVersion = os
   .route({
@@ -189,7 +189,7 @@ export const deleteSkillsSkillIdVersionsVersion = os
     }),
   )
   .output(DeletedSkillVersionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSkillsSkillIdVersionsVersionContent = os
   .route({
@@ -207,4 +207,4 @@ export const getSkillsSkillIdVersionsVersionContent = os
     }),
   )
   .output(type('string'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

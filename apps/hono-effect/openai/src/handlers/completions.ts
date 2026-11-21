@@ -6,5 +6,5 @@ import { CreateCompletionRequestSchema } from '../components'
 export const completionsHandler = new Hono().post(
   '/completions',
   sValidator('json', Schema.toStandardSchemaV1(CreateCompletionRequestSchema)),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

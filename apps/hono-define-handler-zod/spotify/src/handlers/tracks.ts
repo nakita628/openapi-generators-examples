@@ -4,9 +4,9 @@ import { getTracksIdHandler, getTracksHandler } from '../routes'
 export const tracksHandler = new Hono()
   .get(
     '/tracks/:id',
-    getTracksIdHandler(async (c, { param, query }) => {}),
+    getTracksIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/tracks',
-    getTracksHandler(async (c, { query }) => {}),
+    getTracksHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )

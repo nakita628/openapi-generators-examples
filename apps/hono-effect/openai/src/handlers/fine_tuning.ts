@@ -12,12 +12,12 @@ export const fineTuningHandler = new Hono()
   .post(
     '/fine_tuning/alpha/graders/run',
     sValidator('json', Schema.toStandardSchemaV1(RunGraderRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning/alpha/graders/validate',
     sValidator('json', Schema.toStandardSchemaV1(ValidateGraderRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/fine_tuning/checkpoints/:fine_tuned_model_checkpoint/permissions',
@@ -46,7 +46,7 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning/checkpoints/:fine_tuned_model_checkpoint/permissions',
@@ -64,7 +64,7 @@ export const fineTuningHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(CreateFineTuningCheckpointPermissionRequestSchema),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/fine_tuning/checkpoints/:fine_tuned_model_checkpoint/permissions/:permission_id',
@@ -81,7 +81,7 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/fine_tuning/jobs',
@@ -108,12 +108,12 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning/jobs',
     sValidator('json', Schema.toStandardSchemaV1(CreateFineTuningJobRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/fine_tuning/jobs/:fine_tuning_job_id',
@@ -127,7 +127,7 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning/jobs/:fine_tuning_job_id/cancel',
@@ -141,7 +141,7 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/fine_tuning/jobs/:fine_tuning_job_id/checkpoints',
@@ -166,7 +166,7 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/fine_tuning/jobs/:fine_tuning_job_id/events',
@@ -191,7 +191,7 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning/jobs/:fine_tuning_job_id/pause',
@@ -205,7 +205,7 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning/jobs/:fine_tuning_job_id/resume',
@@ -219,5 +219,5 @@ export const fineTuningHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

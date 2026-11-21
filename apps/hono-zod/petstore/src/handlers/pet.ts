@@ -50,7 +50,7 @@ export const petHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet',
@@ -98,7 +98,7 @@ export const petHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByStatus',
@@ -106,7 +106,7 @@ export const petHandler = new Hono()
       'query',
       z.object({ status: z.enum(['available', 'pending', 'sold']).default('available') }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByTags',
@@ -119,12 +119,12 @@ export const petHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/:petId',
     sValidator('param', z.object({ petId: z.coerce.bigint().pipe(z.int64()) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId',
@@ -133,17 +133,17 @@ export const petHandler = new Hono()
       'query',
       z.object({ name: z.string().exactOptional(), status: z.string().exactOptional() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/pet/:petId',
     sValidator('param', z.object({ petId: z.coerce.bigint().pipe(z.int64()) })),
     sValidator('header', z.object({ api_key: z.string().exactOptional() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId/uploadImage',
     sValidator('param', z.object({ petId: z.coerce.bigint().pipe(z.int64()) })),
     sValidator('query', z.object({ additionalMetadata: z.string().exactOptional() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

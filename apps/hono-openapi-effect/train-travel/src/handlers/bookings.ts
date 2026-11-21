@@ -109,7 +109,7 @@ export const bookingsHandler = new Hono()
         '500': InternalServerErrorResponse,
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/bookings',
@@ -167,7 +167,7 @@ export const bookingsHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(BookingSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/bookings/:bookingId',
@@ -227,7 +227,7 @@ export const bookingsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ bookingId: Schema.String.check(Schema.isUUID()) })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/bookings/:bookingId',
@@ -251,7 +251,7 @@ export const bookingsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ bookingId: Schema.String.check(Schema.isUUID()) })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/bookings/:bookingId/payment',
@@ -340,5 +340,5 @@ export const bookingsHandler = new Hono()
       Schema.toStandardSchemaV1(Schema.Struct({ bookingId: Schema.String.check(Schema.isUUID()) })),
     ),
     validator('json', Schema.toStandardSchemaV1(BookingPaymentSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

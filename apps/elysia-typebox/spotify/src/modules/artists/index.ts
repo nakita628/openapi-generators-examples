@@ -38,7 +38,7 @@ export const artists = new Elysia()
     TrackObject: TrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/artists/:id', ({ params }) => {}, {
+  .get('/artists/:id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ArtistsModel.getAnArtistParams,
     response: {
       200: 'ArtistObject',
@@ -55,7 +55,7 @@ export const artists = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/artists', ({ query }) => {}, {
+  .get('/artists', ({ query }) => { throw new Error('Not implemented') }, {
     query: ArtistsModel.getMultipleArtistsQuery,
     response: {
       200: ArtistsModel.getMultipleArtistsResponse200,
@@ -72,7 +72,7 @@ export const artists = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/artists/:id/albums', ({ params, query }) => {}, {
+  .get('/artists/:id/albums', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ArtistsModel.getAnArtistsAlbumsParams,
     query: ArtistsModel.getAnArtistsAlbumsQuery,
     response: {
@@ -89,7 +89,7 @@ export const artists = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/artists/:id/top-tracks', ({ params, query }) => {}, {
+  .get('/artists/:id/top-tracks', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ArtistsModel.getAnArtistsTopTracksParams,
     query: ArtistsModel.getAnArtistsTopTracksQuery,
     response: {
@@ -106,7 +106,7 @@ export const artists = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/artists/:id/related-artists', ({ params }) => {}, {
+  .get('/artists/:id/related-artists', ({ params }) => { throw new Error('Not implemented') }, {
     params: ArtistsModel.getAnArtistsRelatedArtistsParams,
     response: {
       200: ArtistsModel.getAnArtistsRelatedArtistsResponse200,

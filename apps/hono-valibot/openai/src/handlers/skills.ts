@@ -31,7 +31,7 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills',
@@ -60,7 +60,7 @@ export const skillsHandler = new Hono()
         ),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id',
@@ -68,7 +68,7 @@ export const skillsHandler = new Hono()
       'param',
       v.object({ skill_id: v.pipe(v.string(), v.metadata({ examples: ['skill_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills/:skill_id',
@@ -77,7 +77,7 @@ export const skillsHandler = new Hono()
       v.object({ skill_id: v.pipe(v.string(), v.metadata({ examples: ['skill_123'] })) }),
     ),
     sValidator('json', SetDefaultSkillVersionBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/skills/:skill_id',
@@ -85,7 +85,7 @@ export const skillsHandler = new Hono()
       'param',
       v.object({ skill_id: v.pipe(v.string(), v.metadata({ examples: ['skill_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/content',
@@ -93,7 +93,7 @@ export const skillsHandler = new Hono()
       'param',
       v.object({ skill_id: v.pipe(v.string(), v.metadata({ examples: ['skill_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions',
@@ -118,7 +118,7 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills/:skill_id/versions',
@@ -159,7 +159,7 @@ export const skillsHandler = new Hono()
         v.description('Uploads a new immutable version of a skill.'),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions/:version',
@@ -170,7 +170,7 @@ export const skillsHandler = new Hono()
         version: v.pipe(v.string(), v.description('The version number to retrieve.')),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/skills/:skill_id/versions/:version',
@@ -181,7 +181,7 @@ export const skillsHandler = new Hono()
         version: v.pipe(v.string(), v.description('The skill version number.')),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions/:version/content',
@@ -192,5 +192,5 @@ export const skillsHandler = new Hono()
         version: v.pipe(v.string(), v.description('The skill version number.')),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

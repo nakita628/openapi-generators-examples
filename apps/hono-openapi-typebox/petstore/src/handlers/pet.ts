@@ -69,7 +69,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet',
@@ -134,7 +134,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByStatus',
@@ -168,7 +168,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByTags',
@@ -192,7 +192,7 @@ export const petHandler = new Hono()
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     }),
     validator('query', Compile(Type.Object({ tags: Type.Array(Type.String()) }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/:petId',
@@ -225,7 +225,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId',
@@ -263,7 +263,7 @@ export const petHandler = new Hono()
         Type.Object({ name: Type.Optional(Type.String()), status: Type.Optional(Type.String()) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/pet/:petId',
@@ -290,7 +290,7 @@ export const petHandler = new Hono()
       ),
     ),
     validator('header', Compile(Type.Object({ api_key: Type.Optional(Type.String()) }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId/uploadImage',
@@ -321,5 +321,5 @@ export const petHandler = new Hono()
       ),
     ),
     validator('query', Compile(Type.Object({ additionalMetadata: Type.Optional(Type.String()) }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

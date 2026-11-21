@@ -41,7 +41,7 @@ export const getWebhookEndpoints = os
     }),
   )
   .output(WebhookEndpointListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postWebhookEndpoints = os
   .route({
@@ -53,7 +53,7 @@ export const postWebhookEndpoints = os
   })
   .input(PublicCreateEndpointBodySchema)
   .output(WebhookEndpointWithSecretResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getWebhookEndpointsWebhookEndpointId = os
   .route({
@@ -65,7 +65,7 @@ export const getWebhookEndpointsWebhookEndpointId = os
   })
   .input(type({ webhook_endpoint_id: type('string') }))
   .output(WebhookEndpointBodySchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postWebhookEndpointsWebhookEndpointId = os
   .route({
@@ -92,7 +92,7 @@ export const postWebhookEndpointsWebhookEndpointId = os
     }),
   )
   .output(WebhookEndpointBodySchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteWebhookEndpointsWebhookEndpointId = os
   .route({
@@ -104,7 +104,7 @@ export const deleteWebhookEndpointsWebhookEndpointId = os
   })
   .input(type({ webhook_endpoint_id: type('string') }))
   .output(DeletedWebhookEndpointResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postWebhookEndpointsWebhookEndpointIdRotateSecret = os
   .route({
@@ -123,7 +123,7 @@ export const postWebhookEndpointsWebhookEndpointIdRotateSecret = os
     }),
   )
   .output(WebhookEndpointWithSecretResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postWebhookEndpointsWebhookEndpointIdTest = os
   .route({
@@ -135,4 +135,4 @@ export const postWebhookEndpointsWebhookEndpointIdTest = os
   })
   .input(type({ webhook_endpoint_id: type('string'), event_type: ProjectEventTypeEnumSchema }))
   .output(WebhookEndpointTestResultResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

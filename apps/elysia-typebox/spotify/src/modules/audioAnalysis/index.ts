@@ -26,7 +26,7 @@ export const audioAnalysis = new Elysia()
     TimeIntervalObject: TimeIntervalObjectSchema,
     TimeSignature: TimeSignatureSchema,
   })
-  .get('/audio-analysis/:id', ({ params }) => {}, {
+  .get('/audio-analysis/:id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AudioAnalysisModel.getAudioAnalysisParams,
     response: {
       200: 'AudioAnalysisObject',

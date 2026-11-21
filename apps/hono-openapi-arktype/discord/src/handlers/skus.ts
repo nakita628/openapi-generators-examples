@@ -88,7 +88,7 @@ export const skusHandler = new Hono()
         'user_id?': SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skus/:sku_id/subscriptions/:subscription_id',
@@ -154,5 +154,5 @@ export const skusHandler = new Hono()
     }),
     validator('param', type({ sku_id: SnowflakeTypeSchema, subscription_id: SnowflakeTypeSchema })),
     validator('query', type({ 'user_id?': SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

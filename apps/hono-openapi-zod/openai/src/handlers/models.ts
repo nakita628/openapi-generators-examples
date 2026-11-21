@@ -29,7 +29,7 @@ export const modelsHandler = new Hono()
         },
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/models/:model',
@@ -55,7 +55,7 @@ export const modelsHandler = new Hono()
       },
     }),
     validator('param', z.object({ model: z.string().meta({ examples: ['gpt-6.2-astra'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/models/:model',
@@ -88,5 +88,5 @@ export const modelsHandler = new Hono()
         model: z.string().meta({ examples: ['ft:gpt-4.1-mini-2025-04-14:acemeco:suffix:abc123'] }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

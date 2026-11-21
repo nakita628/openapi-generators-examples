@@ -39,24 +39,24 @@ export const chatHandler = new Hono()
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/chat/completions', sValidator('json', CreateChatCompletionRequestSchema), (c) => {})
+  .post('/chat/completions', sValidator('json', CreateChatCompletionRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/chat/completions/:completion_id',
     sValidator('param', v.object({ completion_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chat/completions/:completion_id',
     sValidator('param', v.object({ completion_id: v.string() })),
     sValidator('json', v.object({ metadata: MetadataSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chat/completions/:completion_id',
     sValidator('param', v.object({ completion_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chat/completions/:completion_id/messages',
@@ -72,5 +72,5 @@ export const chatHandler = new Hono()
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

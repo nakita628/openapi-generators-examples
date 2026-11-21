@@ -22,4 +22,4 @@ export const postInteractionsInteractionIdInteractionTokenCallback = os
     }),
   )
   .output(InteractionCallbackResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

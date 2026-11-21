@@ -410,7 +410,7 @@ export const interactions = new Elysia()
   })
   .post(
     '/interactions/:interaction_id/:interaction_token/callback',
-    ({ params, query, body }) => {},
+    ({ params, query, body }) => { throw new Error('Not implemented') },
     {
       params: InteractionsModel.create_interaction_responseParams,
       query: InteractionsModel.create_interaction_responseQuery,

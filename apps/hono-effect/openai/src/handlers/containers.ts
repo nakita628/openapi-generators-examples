@@ -21,22 +21,22 @@ export const containersHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/containers',
     sValidator('json', Schema.toStandardSchemaV1(CreateContainerBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ container_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ container_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files',
@@ -55,14 +55,14 @@ export const containersHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/containers/:container_id/files',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ container_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(CreateContainerFileBodySchema)),
     sValidator('form', Schema.toStandardSchemaV1(CreateContainerFileBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id',
@@ -72,7 +72,7 @@ export const containersHandler = new Hono()
         Schema.Struct({ container_id: Schema.String, file_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id/files/:file_id',
@@ -82,7 +82,7 @@ export const containersHandler = new Hono()
         Schema.Struct({ container_id: Schema.String, file_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id/content',
@@ -92,5 +92,5 @@ export const containersHandler = new Hono()
         Schema.Struct({ container_id: Schema.String, file_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

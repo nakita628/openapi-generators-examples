@@ -71,7 +71,7 @@ export const safetyHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/safety/alerts/:id',
@@ -127,5 +127,5 @@ export const safetyHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

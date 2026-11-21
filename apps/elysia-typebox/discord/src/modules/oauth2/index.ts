@@ -67,7 +67,7 @@ export const oauth2 = new Elysia()
     UserPrimaryGuildResponse: UserPrimaryGuildResponseSchema,
     UserResponse: UserResponseSchema,
   })
-  .get('/oauth2/@me', () => {}, {
+  .get('/oauth2/@me', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'OAuth2GetAuthorizationResponse',
       429: 'RatelimitedResponse',
@@ -119,7 +119,7 @@ export const oauth2 = new Elysia()
       ],
     },
   })
-  .get('/oauth2/applications/@me', () => {}, {
+  .get('/oauth2/applications/@me', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'PrivateApplicationResponse',
       429: 'RatelimitedResponse',
@@ -127,11 +127,11 @@ export const oauth2 = new Elysia()
     },
     detail: { tags: [], operationId: 'get_my_oauth2_application', security: [{ BotToken: [] }] },
   })
-  .get('/oauth2/keys', () => {}, {
+  .get('/oauth2/keys', () => { throw new Error('Not implemented') }, {
     response: { 200: 'OAuth2GetKeys', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_public_keys', security: [{}, { BotToken: [] }] },
   })
-  .get('/oauth2/userinfo', () => {}, {
+  .get('/oauth2/userinfo', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'OAuth2GetOpenIDConnectUserInfoResponse',
       429: 'RatelimitedResponse',

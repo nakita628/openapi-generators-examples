@@ -9,17 +9,17 @@ import {
 export const oauth2Handler = new Hono()
   .get(
     '/oauth2/@me',
-    getOauth2MeHandler(async (c) => {}),
+    getOauth2MeHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/oauth2/applications/@me',
-    getOauth2ApplicationsMeHandler(async (c) => {}),
+    getOauth2ApplicationsMeHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/oauth2/keys',
-    getOauth2KeysHandler(async (c) => {}),
+    getOauth2KeysHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/oauth2/userinfo',
-    getOauth2UserinfoHandler(async (c) => {}),
+    getOauth2UserinfoHandler(async (c) => { throw new Error('Not implemented') }),
   )

@@ -28,7 +28,7 @@ export const getContainers = os
     }),
   )
   .output(ContainerListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postContainers = os
   .route({
@@ -40,7 +40,7 @@ export const postContainers = os
   })
   .input(CreateContainerBodySchema)
   .output(ContainerResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getContainersContainerId = os
   .route({
@@ -52,7 +52,7 @@ export const getContainersContainerId = os
   })
   .input(type({ container_id: type('string') }))
   .output(ContainerResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteContainersContainerId = os
   .route({
@@ -63,7 +63,7 @@ export const deleteContainersContainerId = os
   })
   .input(type({ container_id: type('string') }))
   .output(type({ object: "'container.deleted'", deleted: 'boolean', id: 'string' }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getContainersContainerIdFiles = os
   .route({
@@ -85,7 +85,7 @@ export const getContainersContainerIdFiles = os
     }),
   )
   .output(ContainerFileListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postContainersContainerIdFiles = os
   .route({
@@ -104,7 +104,7 @@ export const postContainersContainerIdFiles = os
     }),
   )
   .output(ContainerFileResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getContainersContainerIdFilesFileId = os
   .route({
@@ -116,7 +116,7 @@ export const getContainersContainerIdFilesFileId = os
   })
   .input(type({ container_id: type('string'), file_id: type('string') }))
   .output(ContainerFileResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteContainersContainerIdFilesFileId = os
   .route({
@@ -127,7 +127,7 @@ export const deleteContainersContainerIdFilesFileId = os
   })
   .input(type({ container_id: type('string'), file_id: type('string') }))
   .output(type({ object: "'container.file.deleted'", deleted: 'boolean', id: 'string' }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getContainersContainerIdFilesFileIdContent = os
   .route({
@@ -138,4 +138,4 @@ export const getContainersContainerIdFilesFileIdContent = os
     successDescription: 'Success',
   })
   .input(type({ container_id: type('string'), file_id: type('string') }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

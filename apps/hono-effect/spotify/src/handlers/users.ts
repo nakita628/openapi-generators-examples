@@ -17,7 +17,7 @@ export const usersHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/:user_id/playlists',
@@ -58,7 +58,7 @@ export const usersHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/users/:user_id/playlists',
@@ -107,5 +107,5 @@ export const usersHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

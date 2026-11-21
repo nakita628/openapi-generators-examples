@@ -105,7 +105,7 @@ export const realtime = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/realtime/calls', ({ body }) => {}, {
+  .post('/realtime/calls', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'RealtimeCallCreateRequest',
     response: { 201: t.Void() },
     detail: {
@@ -116,7 +116,7 @@ export const realtime = new Elysia()
       operationId: 'create-realtime-call',
     },
   })
-  .post('/realtime/calls/:call_id/accept', ({ params, body }) => {}, {
+  .post('/realtime/calls/:call_id/accept', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: RealtimeModel.acceptRealtimeCallParams,
     body: 'RealtimeSessionCreateRequestGA',
     response: { 200: t.Void(), 404: 'ErrorResponse', 409: 'ErrorResponse', 500: t.Void() },
@@ -128,7 +128,7 @@ export const realtime = new Elysia()
       operationId: 'accept-realtime-call',
     },
   })
-  .post('/realtime/calls/:call_id/hangup', ({ params }) => {}, {
+  .post('/realtime/calls/:call_id/hangup', ({ params }) => { throw new Error('Not implemented') }, {
     params: RealtimeModel.hangupRealtimeCallParams,
     response: { 200: t.Void(), 404: 'ErrorResponse' },
     detail: {
@@ -138,7 +138,7 @@ export const realtime = new Elysia()
       operationId: 'hangup-realtime-call',
     },
   })
-  .post('/realtime/calls/:call_id/refer', ({ params, body }) => {}, {
+  .post('/realtime/calls/:call_id/refer', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: RealtimeModel.referRealtimeCallParams,
     body: 'RealtimeCallReferRequest',
     response: { 200: t.Void(), 404: 'ErrorResponse', 500: t.Void() },
@@ -149,7 +149,7 @@ export const realtime = new Elysia()
       operationId: 'refer-realtime-call',
     },
   })
-  .post('/realtime/calls/:call_id/reject', ({ params, body }) => {}, {
+  .post('/realtime/calls/:call_id/reject', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: RealtimeModel.rejectRealtimeCallParams,
     body: 'RealtimeCallRejectRequest',
     response: { 200: t.Void(), 404: 'ErrorResponse', 409: 'ErrorResponse', 500: t.Void() },
@@ -160,7 +160,7 @@ export const realtime = new Elysia()
       operationId: 'reject-realtime-call',
     },
   })
-  .post('/realtime/client_secrets', ({ body }) => {}, {
+  .post('/realtime/client_secrets', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'RealtimeCreateClientSecretRequest',
     response: {
       200: 'RealtimeCreateClientSecretResponse',
@@ -176,7 +176,7 @@ export const realtime = new Elysia()
       operationId: 'create-realtime-client-secret',
     },
   })
-  .post('/realtime/sessions', ({ body }) => {}, {
+  .post('/realtime/sessions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'RealtimeSessionCreateRequest',
     response: { 200: 'RealtimeSessionCreateResponse' },
     detail: {
@@ -187,7 +187,7 @@ export const realtime = new Elysia()
       operationId: 'create-realtime-session',
     },
   })
-  .post('/realtime/transcription_sessions', ({ body }) => {}, {
+  .post('/realtime/transcription_sessions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'RealtimeTranscriptionSessionCreateRequest',
     response: { 200: 'RealtimeTranscriptionSessionCreateResponse' },
     detail: {
@@ -198,7 +198,7 @@ export const realtime = new Elysia()
       operationId: 'create-realtime-transcription-session',
     },
   })
-  .post('/realtime/translations/client_secrets', ({ body }) => {}, {
+  .post('/realtime/translations/client_secrets', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'RealtimeTranslationClientSecretCreateRequest',
     response: {
       200: 'RealtimeTranslationClientSecretCreateResponse',

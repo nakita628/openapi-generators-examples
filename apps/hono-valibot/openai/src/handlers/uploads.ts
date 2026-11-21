@@ -8,14 +8,14 @@ import {
 } from '../components'
 
 export const uploadsHandler = new Hono()
-  .post('/uploads', sValidator('json', CreateUploadRequestSchema), (c) => {})
+  .post('/uploads', sValidator('json', CreateUploadRequestSchema), (c) => { throw new Error('Not implemented') })
   .post(
     '/uploads/:upload_id/cancel',
     sValidator(
       'param',
       v.object({ upload_id: v.pipe(v.string(), v.metadata({ examples: ['upload_abc123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/complete',
@@ -24,7 +24,7 @@ export const uploadsHandler = new Hono()
       v.object({ upload_id: v.pipe(v.string(), v.metadata({ examples: ['upload_abc123'] })) }),
     ),
     sValidator('json', CompleteUploadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/parts',
@@ -33,5 +33,5 @@ export const uploadsHandler = new Hono()
       v.object({ upload_id: v.pipe(v.string(), v.metadata({ examples: ['upload_abc123'] })) }),
     ),
     sValidator('form', AddUploadPartRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

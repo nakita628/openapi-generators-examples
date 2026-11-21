@@ -10,21 +10,21 @@ import {
 export const browseHandler = new Hono()
   .get(
     '/browse/featured-playlists',
-    getBrowseFeaturedPlaylistsHandler(async (c, { query }) => {}),
+    getBrowseFeaturedPlaylistsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/browse/categories',
-    getBrowseCategoriesHandler(async (c, { query }) => {}),
+    getBrowseCategoriesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/browse/categories/:category_id',
-    getBrowseCategoriesCategoryIdHandler(async (c, { param, query }) => {}),
+    getBrowseCategoriesCategoryIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/browse/categories/:category_id/playlists',
-    getBrowseCategoriesCategoryIdPlaylistsHandler(async (c, { param, query }) => {}),
+    getBrowseCategoriesCategoryIdPlaylistsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/browse/new-releases',
-    getBrowseNewReleasesHandler(async (c, { query }) => {}),
+    getBrowseNewReleasesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )

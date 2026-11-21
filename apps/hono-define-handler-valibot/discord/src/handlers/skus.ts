@@ -7,9 +7,9 @@ import {
 export const skusHandler = new Hono()
   .get(
     '/skus/:sku_id/subscriptions',
-    getSkusSkuIdSubscriptionsHandler(async (c, { param, query }) => {}),
+    getSkusSkuIdSubscriptionsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/skus/:sku_id/subscriptions/:subscription_id',
-    getSkusSkuIdSubscriptionsSubscriptionIdHandler(async (c, { param, query }) => {}),
+    getSkusSkuIdSubscriptionsSubscriptionIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )

@@ -25,24 +25,24 @@ export const vectorStoresHandler = new Hono()
         before: v.optional(v.string()),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/vector_stores', sValidator('json', CreateVectorStoreRequestSchema), (c) => {})
+  .post('/vector_stores', sValidator('json', CreateVectorStoreRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/vector_stores/:vector_store_id',
     sValidator('param', v.object({ vector_store_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id',
     sValidator('param', v.object({ vector_store_id: v.string() })),
     sValidator('json', UpdateVectorStoreRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vector_stores/:vector_store_id',
     sValidator('param', v.object({ vector_store_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/file_batches',
@@ -51,7 +51,7 @@ export const vectorStoresHandler = new Hono()
       v.object({ vector_store_id: v.pipe(v.string(), v.metadata({ examples: ['vs_abc123'] })) }),
     ),
     sValidator('json', CreateVectorStoreFileBatchRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/file_batches/:batch_id',
@@ -62,12 +62,12 @@ export const vectorStoresHandler = new Hono()
         batch_id: v.pipe(v.string(), v.metadata({ examples: ['vsfb_abc123'] })),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/file_batches/:batch_id/cancel',
     sValidator('param', v.object({ vector_store_id: v.string(), batch_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/file_batches/:batch_id/files',
@@ -85,7 +85,7 @@ export const vectorStoresHandler = new Hono()
         filter: v.optional(v.picklist(['in_progress', 'completed', 'failed', 'cancelled'])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/files',
@@ -103,7 +103,7 @@ export const vectorStoresHandler = new Hono()
         filter: v.optional(v.picklist(['in_progress', 'completed', 'failed', 'cancelled'])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/files',
@@ -112,7 +112,7 @@ export const vectorStoresHandler = new Hono()
       v.object({ vector_store_id: v.pipe(v.string(), v.metadata({ examples: ['vs_abc123'] })) }),
     ),
     sValidator('json', CreateVectorStoreFileRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/files/:file_id',
@@ -123,7 +123,7 @@ export const vectorStoresHandler = new Hono()
         file_id: v.pipe(v.string(), v.metadata({ examples: ['file-abc123'] })),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/files/:file_id',
@@ -135,12 +135,12 @@ export const vectorStoresHandler = new Hono()
       }),
     ),
     sValidator('json', UpdateVectorStoreFileAttributesRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vector_stores/:vector_store_id/files/:file_id',
     sValidator('param', v.object({ vector_store_id: v.string(), file_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/files/:file_id/content',
@@ -151,7 +151,7 @@ export const vectorStoresHandler = new Hono()
         file_id: v.pipe(v.string(), v.metadata({ examples: ['file-abc123'] })),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/search',
@@ -160,5 +160,5 @@ export const vectorStoresHandler = new Hono()
       v.object({ vector_store_id: v.pipe(v.string(), v.metadata({ examples: ['vs_abc123'] })) }),
     ),
     sValidator('json', VectorStoreSearchRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

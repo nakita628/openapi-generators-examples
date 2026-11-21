@@ -18,53 +18,53 @@ import {
 export const projectsHandler = new Hono()
   .get(
     '/projects/:project_id/groups/:group_id/roles',
-    getProjectsProjectIdGroupsGroupIdRolesHandler(async (c, { param, query }) => {}),
+    getProjectsProjectIdGroupsGroupIdRolesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/projects/:project_id/groups/:group_id/roles',
-    postProjectsProjectIdGroupsGroupIdRolesHandler(async (c, { param, json }) => {}),
+    postProjectsProjectIdGroupsGroupIdRolesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
-    getProjectsProjectIdGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => {}),
+    getProjectsProjectIdGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
-    deleteProjectsProjectIdGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteProjectsProjectIdGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/projects/:project_id/roles',
-    getProjectsProjectIdRolesHandler(async (c, { param, query }) => {}),
+    getProjectsProjectIdRolesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/projects/:project_id/roles',
-    postProjectsProjectIdRolesHandler(async (c, { param, json }) => {}),
+    postProjectsProjectIdRolesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/projects/:project_id/roles/:role_id',
-    getProjectsProjectIdRolesRoleIdHandler(async (c, { param }) => {}),
+    getProjectsProjectIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/projects/:project_id/roles/:role_id',
-    postProjectsProjectIdRolesRoleIdHandler(async (c, { param, json }) => {}),
+    postProjectsProjectIdRolesRoleIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/projects/:project_id/roles/:role_id',
-    deleteProjectsProjectIdRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteProjectsProjectIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/projects/:project_id/users/:user_id/roles',
-    getProjectsProjectIdUsersUserIdRolesHandler(async (c, { param, query }) => {}),
+    getProjectsProjectIdUsersUserIdRolesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/projects/:project_id/users/:user_id/roles',
-    postProjectsProjectIdUsersUserIdRolesHandler(async (c, { param, json }) => {}),
+    postProjectsProjectIdUsersUserIdRolesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/projects/:project_id/users/:user_id/roles/:role_id',
-    getProjectsProjectIdUsersUserIdRolesRoleIdHandler(async (c, { param }) => {}),
+    getProjectsProjectIdUsersUserIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/projects/:project_id/users/:user_id/roles/:role_id',
-    deleteProjectsProjectIdUsersUserIdRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteProjectsProjectIdUsersUserIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )

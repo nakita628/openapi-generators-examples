@@ -37,24 +37,24 @@ export const chatHandler = new Hono()
         'order?': "'asc' | 'desc'",
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/chat/completions', sValidator('json', CreateChatCompletionRequestSchema), (c) => {})
+  .post('/chat/completions', sValidator('json', CreateChatCompletionRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/chat/completions/:completion_id',
     sValidator('param', type({ completion_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chat/completions/:completion_id',
     sValidator('param', type({ completion_id: 'string' })),
     sValidator('json', type({ metadata: MetadataSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chat/completions/:completion_id',
     sValidator('param', type({ completion_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chat/completions/:completion_id/messages',
@@ -70,5 +70,5 @@ export const chatHandler = new Hono()
         'order?': "'asc' | 'desc'",
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

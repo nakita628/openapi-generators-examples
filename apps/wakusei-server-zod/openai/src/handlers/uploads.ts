@@ -13,7 +13,7 @@ export const postUploads = os
   })
   .input(CreateUploadRequestSchema)
   .output(UploadSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postUploadsUploadIdCancel = os
   .route({
@@ -26,7 +26,7 @@ export const postUploadsUploadIdCancel = os
   })
   .input(z.object({ upload_id: z.string().meta({ examples: ['upload_abc123'] }) }))
   .output(UploadSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postUploadsUploadIdComplete = os
   .route({
@@ -51,7 +51,7 @@ export const postUploadsUploadIdComplete = os
     }),
   )
   .output(UploadSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postUploadsUploadIdParts = os
   .route({
@@ -64,4 +64,4 @@ export const postUploadsUploadIdParts = os
   })
   .input(z.object({ upload_id: z.string().meta({ examples: ['upload_abc123'] }) }))
   .output(UploadPartSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

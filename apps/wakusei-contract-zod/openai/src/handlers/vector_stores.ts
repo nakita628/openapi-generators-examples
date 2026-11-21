@@ -3,39 +3,39 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getVectorStores = os.getVectorStores.handler(async ({ input }) => {})
-export const postVectorStores = os.postVectorStores.handler(async ({ input }) => {})
+export const getVectorStores = os.getVectorStores.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const postVectorStores = os.postVectorStores.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getVectorStoresVectorStoreId = os.getVectorStoresVectorStoreId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postVectorStoresVectorStoreId = os.postVectorStoresVectorStoreId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const deleteVectorStoresVectorStoreId = os.deleteVectorStoresVectorStoreId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postVectorStoresVectorStoreIdFileBatches =
-  os.postVectorStoresVectorStoreIdFileBatches.handler(async ({ input }) => {})
+  os.postVectorStoresVectorStoreIdFileBatches.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getVectorStoresVectorStoreIdFileBatchesBatchId =
-  os.getVectorStoresVectorStoreIdFileBatchesBatchId.handler(async ({ input }) => {})
+  os.getVectorStoresVectorStoreIdFileBatchesBatchId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postVectorStoresVectorStoreIdFileBatchesBatchIdCancel =
-  os.postVectorStoresVectorStoreIdFileBatchesBatchIdCancel.handler(async ({ input }) => {})
+  os.postVectorStoresVectorStoreIdFileBatchesBatchIdCancel.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getVectorStoresVectorStoreIdFileBatchesBatchIdFiles =
-  os.getVectorStoresVectorStoreIdFileBatchesBatchIdFiles.handler(async ({ input }) => {})
+  os.getVectorStoresVectorStoreIdFileBatchesBatchIdFiles.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getVectorStoresVectorStoreIdFiles = os.getVectorStoresVectorStoreIdFiles.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postVectorStoresVectorStoreIdFiles = os.postVectorStoresVectorStoreIdFiles.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getVectorStoresVectorStoreIdFilesFileId =
-  os.getVectorStoresVectorStoreIdFilesFileId.handler(async ({ input }) => {})
+  os.getVectorStoresVectorStoreIdFilesFileId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postVectorStoresVectorStoreIdFilesFileId =
-  os.postVectorStoresVectorStoreIdFilesFileId.handler(async ({ input }) => {})
+  os.postVectorStoresVectorStoreIdFilesFileId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const deleteVectorStoresVectorStoreIdFilesFileId =
-  os.deleteVectorStoresVectorStoreIdFilesFileId.handler(async ({ input }) => {})
+  os.deleteVectorStoresVectorStoreIdFilesFileId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getVectorStoresVectorStoreIdFilesFileIdContent =
-  os.getVectorStoresVectorStoreIdFilesFileIdContent.handler(async ({ input }) => {})
+  os.getVectorStoresVectorStoreIdFilesFileIdContent.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postVectorStoresVectorStoreIdSearch = os.postVectorStoresVectorStoreIdSearch.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )

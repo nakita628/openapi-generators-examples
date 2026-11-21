@@ -26,7 +26,7 @@ export const episodes = new Elysia()
     ShowBase: ShowBaseSchema,
     SimplifiedShowObject: SimplifiedShowObjectSchema,
   })
-  .get('/episodes/:id', ({ params, query }) => {}, {
+  .get('/episodes/:id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: EpisodesModel.getAnEpisodeParams,
     query: EpisodesModel.getAnEpisodeQuery,
     response: {
@@ -44,7 +44,7 @@ export const episodes = new Elysia()
       security: [{ oauth_2_0: ['user-read-playback-position'] }],
     },
   })
-  .get('/episodes', ({ query }) => {}, {
+  .get('/episodes', ({ query }) => { throw new Error('Not implemented') }, {
     query: EpisodesModel.getMultipleEpisodesQuery,
     response: {
       200: EpisodesModel.getMultipleEpisodesResponse200,

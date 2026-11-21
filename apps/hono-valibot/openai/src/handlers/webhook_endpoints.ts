@@ -34,16 +34,16 @@ export const webhookEndpointsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/webhook_endpoints', sValidator('json', PublicCreateEndpointBodySchema), (c) => {})
+  .post('/webhook_endpoints', sValidator('json', PublicCreateEndpointBodySchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/webhook_endpoints/:webhook_endpoint_id',
     sValidator(
       'param',
       v.object({ webhook_endpoint_id: v.pipe(v.string(), v.metadata({ examples: ['whe_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id',
@@ -52,7 +52,7 @@ export const webhookEndpointsHandler = new Hono()
       v.object({ webhook_endpoint_id: v.pipe(v.string(), v.metadata({ examples: ['whe_123'] })) }),
     ),
     sValidator('json', PublicUpdateEndpointBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/webhook_endpoints/:webhook_endpoint_id',
@@ -60,7 +60,7 @@ export const webhookEndpointsHandler = new Hono()
       'param',
       v.object({ webhook_endpoint_id: v.pipe(v.string(), v.metadata({ examples: ['whe_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/rotate_secret',
@@ -69,7 +69,7 @@ export const webhookEndpointsHandler = new Hono()
       v.object({ webhook_endpoint_id: v.pipe(v.string(), v.metadata({ examples: ['whe_123'] })) }),
     ),
     sValidator('json', PublicRotateSecretBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/test',
@@ -78,5 +78,5 @@ export const webhookEndpointsHandler = new Hono()
       v.object({ webhook_endpoint_id: v.pipe(v.string(), v.metadata({ examples: ['whe_123'] })) }),
     ),
     sValidator('json', PublicTestEndpointBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

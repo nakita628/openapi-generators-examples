@@ -39,5 +39,5 @@ export const stickersHandler = new Hono().get(
     security: [{ BotToken: [] }],
   }),
   validator('param', Schema.toStandardSchemaV1(Schema.Struct({ sticker_id: SnowflakeTypeSchema }))),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

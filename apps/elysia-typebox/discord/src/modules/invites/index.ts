@@ -103,7 +103,7 @@ export const invites = new Elysia()
     UserResponse: UserResponseSchema,
     VerificationLevels: VerificationLevelsSchema,
   })
-  .get('/invites/:code', ({ params, query }) => {}, {
+  .get('/invites/:code', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.invite_resolveParams,
     query: InvitesModel.invite_resolveQuery,
     response: {
@@ -113,7 +113,7 @@ export const invites = new Elysia()
     },
     detail: { tags: [], operationId: 'invite_resolve', security: [{}, { BotToken: [] }] },
   })
-  .delete('/invites/:code', ({ params }) => {}, {
+  .delete('/invites/:code', ({ params }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.invite_revokeParams,
     response: {
       200: InvitesModel.invite_revokeResponse200,
@@ -122,7 +122,7 @@ export const invites = new Elysia()
     },
     detail: { tags: [], operationId: 'invite_revoke', security: [{ BotToken: [] }] },
   })
-  .get('/invites/:code/target-users', ({ params }) => {}, {
+  .get('/invites/:code/target-users', ({ params }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.get_invite_target_usersParams,
     response: { 200: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -132,7 +132,7 @@ export const invites = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .put('/invites/:code/target-users', ({ params, body }) => {}, {
+  .put('/invites/:code/target-users', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.update_invite_target_usersParams,
     body: InvitesModel.update_invite_target_usersBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -143,7 +143,7 @@ export const invites = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .post('/invites/:code/target-users/bulk-add', ({ params, body }) => {}, {
+  .post('/invites/:code/target-users/bulk-add', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.bulk_add_invite_target_usersParams,
     body: InvitesModel.bulk_add_invite_target_usersBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -154,7 +154,7 @@ export const invites = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .post('/invites/:code/target-users/bulk-delete', ({ params, body }) => {}, {
+  .post('/invites/:code/target-users/bulk-delete', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.bulk_remove_invite_target_usersParams,
     body: InvitesModel.bulk_remove_invite_target_usersBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -165,7 +165,7 @@ export const invites = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/invites/:code/target-users/job-status', ({ params }) => {}, {
+  .get('/invites/:code/target-users/job-status', ({ params }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.get_invite_target_users_job_statusParams,
     response: {
       200: 'TargetUsersJobStatusResponse',
@@ -179,7 +179,7 @@ export const invites = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .put('/invites/:code/target-users/:user_id', ({ params }) => {}, {
+  .put('/invites/:code/target-users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.add_invite_target_userParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -189,7 +189,7 @@ export const invites = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .delete('/invites/:code/target-users/:user_id', ({ params }) => {}, {
+  .delete('/invites/:code/target-users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: InvitesModel.remove_invite_target_userParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {

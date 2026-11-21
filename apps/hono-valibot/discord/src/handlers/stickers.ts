@@ -6,5 +6,5 @@ import { SnowflakeTypeSchema } from '../components'
 export const stickersHandler = new Hono().get(
   '/stickers/:sticker_id',
   sValidator('param', v.object({ sticker_id: SnowflakeTypeSchema })),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

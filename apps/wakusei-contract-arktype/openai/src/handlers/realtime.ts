@@ -3,25 +3,25 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const postRealtimeCalls = os.postRealtimeCalls.handler(async ({ input }) => {})
+export const postRealtimeCalls = os.postRealtimeCalls.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postRealtimeCallsCallIdAccept = os.postRealtimeCallsCallIdAccept.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postRealtimeCallsCallIdHangup = os.postRealtimeCallsCallIdHangup.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postRealtimeCallsCallIdRefer = os.postRealtimeCallsCallIdRefer.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postRealtimeCallsCallIdReject = os.postRealtimeCallsCallIdReject.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postRealtimeClientSecrets = os.postRealtimeClientSecrets.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
-export const postRealtimeSessions = os.postRealtimeSessions.handler(async ({ input }) => {})
+export const postRealtimeSessions = os.postRealtimeSessions.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postRealtimeTranscriptionSessions = os.postRealtimeTranscriptionSessions.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postRealtimeTranslationsClientSecrets =
-  os.postRealtimeTranslationsClientSecrets.handler(async ({ input }) => {})
+  os.postRealtimeTranslationsClientSecrets.handler(async ({ input }) => { throw new Error('Not implemented') })

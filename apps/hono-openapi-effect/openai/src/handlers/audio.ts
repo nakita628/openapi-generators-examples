@@ -108,7 +108,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(CreateSpeechRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/transcriptions',
@@ -453,7 +453,7 @@ export const audioHandler = new Hono()
         }).annotate({ parseOptions: { onExcessProperty: 'error' } }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/translations',
@@ -586,7 +586,7 @@ export const audioHandler = new Hono()
         }).annotate({ parseOptions: { onExcessProperty: 'error' } }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents',
@@ -633,7 +633,7 @@ export const audioHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents',
@@ -670,7 +670,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('form', Schema.toStandardSchemaV1(CreateVoiceConsentRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents/:consent_id',
@@ -707,7 +707,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ consent_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents/:consent_id',
@@ -745,7 +745,7 @@ export const audioHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ consent_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(UpdateVoiceConsentRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voice_consents/:consent_id',
@@ -782,7 +782,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ consent_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voices',
@@ -907,7 +907,7 @@ export const audioHandler = new Hono()
         ]),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voices/:voice_id',
@@ -946,5 +946,5 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ voice_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

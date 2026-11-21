@@ -69,5 +69,5 @@ export const responsesBetaTrueHandler = new Hono().post(
     ),
   ),
   validator('json', Schema.toStandardSchemaV1(BetaCreateResponseSchema)),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

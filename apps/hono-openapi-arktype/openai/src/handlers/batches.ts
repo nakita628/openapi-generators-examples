@@ -45,7 +45,7 @@ export const batchesHandler = new Hono()
         }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batches',
@@ -79,7 +79,7 @@ export const batchesHandler = new Hono()
       },
     }),
     validator('json', CreateBatchRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/batches/:batch_id',
@@ -108,7 +108,7 @@ export const batchesHandler = new Hono()
       },
     }),
     validator('param', type({ batch_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batches/:batch_id/cancel',
@@ -142,5 +142,5 @@ export const batchesHandler = new Hono()
       },
     }),
     validator('param', type({ batch_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

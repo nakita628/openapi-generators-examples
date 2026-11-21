@@ -52,7 +52,7 @@ export const guildsHandler = new Hono()
   .get(
     '/guilds/templates/:code',
     tbValidator('param', Type.Object({ code: Type.String({ maxLength: 152133 }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id',
@@ -67,13 +67,13 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', GuildPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/audit-logs',
@@ -93,12 +93,12 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/auto-moderation/rules',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/auto-moderation/rules',
@@ -113,7 +113,7 @@ export const guildsHandler = new Hono()
         UserProfileUpsertRequestSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
@@ -121,7 +121,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
@@ -129,7 +129,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
@@ -147,7 +147,7 @@ export const guildsHandler = new Hono()
         UserProfileUpsertRequestPartialSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/bans',
@@ -164,7 +164,7 @@ export const guildsHandler = new Hono()
         after: Type.Optional(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/bans/:user_id',
@@ -172,7 +172,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/bans/:user_id',
@@ -181,7 +181,7 @@ export const guildsHandler = new Hono()
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
     tbValidator('json', BanUserFromGuildRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/bans/:user_id',
@@ -190,24 +190,24 @@ export const guildsHandler = new Hono()
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
     tbValidator('json', UnbanUserFromGuildRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/bulk-ban',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', BulkBanUsersRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/channels',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/channels',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', CreateGuildChannelRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/channels',
@@ -227,12 +227,12 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/emojis',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/emojis',
@@ -253,7 +253,7 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/emojis/:emoji_id',
@@ -261,7 +261,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/emojis/:emoji_id',
@@ -269,7 +269,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/emojis/:emoji_id',
@@ -292,18 +292,18 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/incident-actions',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', GuildIncidentActionsRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/integrations',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/integrations/:integration_id',
@@ -311,12 +311,12 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, integration_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/invites',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/members',
@@ -332,7 +332,7 @@ export const guildsHandler = new Hono()
         after: Type.Optional(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/members/@me',
@@ -346,7 +346,7 @@ export const guildsHandler = new Hono()
         banner: Type.Optional(Type.Union([Type.String(), Type.Null()])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/members/search',
@@ -362,7 +362,7 @@ export const guildsHandler = new Hono()
         query: Type.String({ minLength: 1, maxLength: 100 }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/members/:user_id',
@@ -370,7 +370,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/members/:user_id',
@@ -379,7 +379,7 @@ export const guildsHandler = new Hono()
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
     tbValidator('json', BotAddGuildMemberRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/members/:user_id',
@@ -387,7 +387,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/members/:user_id',
@@ -419,7 +419,7 @@ export const guildsHandler = new Hono()
         flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/members/:user_id/roles/:role_id',
@@ -431,7 +431,7 @@ export const guildsHandler = new Hono()
         role_id: SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/members/:user_id/roles/:role_id',
@@ -443,7 +443,7 @@ export const guildsHandler = new Hono()
         role_id: SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/messages/search',
@@ -525,23 +525,23 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/new-member-welcome',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/onboarding',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/onboarding',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', UpdateGuildOnboardingRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/permissions/member/:user_id',
@@ -549,7 +549,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/permissions/role/:role_id',
@@ -557,12 +557,12 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/preview',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/prune',
@@ -586,18 +586,18 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/prune',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', PruneGuildRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/regions',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/requests',
@@ -615,7 +615,7 @@ export const guildsHandler = new Hono()
         after: Type.Optional(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/requests/:request_id',
@@ -638,29 +638,29 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/roles',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/roles',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', CreateRoleRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/roles',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', Type.Array(UpdateRolePositionsRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/roles/member-counts',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/roles/:role_id',
@@ -668,7 +668,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/roles/:role_id',
@@ -676,7 +676,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/roles/:role_id',
@@ -685,7 +685,7 @@ export const guildsHandler = new Hono()
       Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
     ),
     tbValidator('json', UpdateRoleRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events',
@@ -700,7 +700,7 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/scheduled-events',
@@ -713,7 +713,7 @@ export const guildsHandler = new Hono()
         VoiceScheduledEventCreateRequestSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
@@ -731,7 +731,7 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
@@ -739,7 +739,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, guild_scheduled_event_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
@@ -755,7 +755,7 @@ export const guildsHandler = new Hono()
         VoiceScheduledEventPatchRequestPartialSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions',
@@ -764,7 +764,7 @@ export const guildsHandler = new Hono()
       Type.Object({ guild_id: SnowflakeTypeSchema, guild_scheduled_event_id: SnowflakeTypeSchema }),
     ),
     tbValidator('json', GuildScheduledEventExceptionCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
@@ -776,7 +776,7 @@ export const guildsHandler = new Hono()
         exception_id: SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
@@ -789,7 +789,7 @@ export const guildsHandler = new Hono()
       }),
     ),
     tbValidator('json', GuildScheduledEventExceptionPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users',
@@ -814,7 +814,7 @@ export const guildsHandler = new Hono()
         after: Type.Optional(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users/counts',
@@ -830,7 +830,7 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/:guild_scheduled_event_exception_id/users',
@@ -859,18 +859,18 @@ export const guildsHandler = new Hono()
         after: Type.Optional(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/soundboard-sounds',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/soundboard-sounds',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', SoundboardCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
@@ -878,7 +878,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
@@ -886,7 +886,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
@@ -895,12 +895,12 @@ export const guildsHandler = new Hono()
       Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }),
     ),
     tbValidator('json', SoundboardPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/stickers',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/stickers',
@@ -914,7 +914,7 @@ export const guildsHandler = new Hono()
         file: Type.String(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/stickers/:sticker_id',
@@ -922,7 +922,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/stickers/:sticker_id',
@@ -930,7 +930,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/stickers/:sticker_id',
@@ -946,12 +946,12 @@ export const guildsHandler = new Hono()
         description: Type.Optional(Type.Union([Type.String({ maxLength: 100 }), Type.Null()])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/templates',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/templates',
@@ -963,7 +963,7 @@ export const guildsHandler = new Hono()
         description: Type.Optional(Type.Union([Type.String({ maxLength: 120 }), Type.Null()])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/templates/:code',
@@ -971,7 +971,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, code: Type.String({ maxLength: 152133 }) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/templates/:code',
@@ -979,7 +979,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, code: Type.String({ maxLength: 152133 }) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/templates/:code',
@@ -994,28 +994,28 @@ export const guildsHandler = new Hono()
         description: Type.Optional(Type.Union([Type.String({ maxLength: 120 }), Type.Null()])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/threads/active',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/vanity-url',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/voice-states/@me',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/voice-states/@me',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', UpdateSelfVoiceStateRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/voice-states/:user_id',
@@ -1023,7 +1023,7 @@ export const guildsHandler = new Hono()
       'param',
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/voice-states/:user_id',
@@ -1032,28 +1032,28 @@ export const guildsHandler = new Hono()
       Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
     tbValidator('json', UpdateVoiceStateRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/webhooks',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/welcome-screen',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/welcome-screen',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('json', WelcomeScreenPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/widget',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/widget',
@@ -1067,16 +1067,16 @@ export const guildsHandler = new Hono()
         enabled: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/widget.json',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/widget.png',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
     tbValidator('query', Type.Object({ style: Type.Optional(WidgetImageStylesSchema) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

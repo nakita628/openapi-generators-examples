@@ -3,22 +3,22 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getContainers = os.getContainers.handler(async ({ input }) => {})
-export const postContainers = os.postContainers.handler(async ({ input }) => {})
-export const getContainersContainerId = os.getContainersContainerId.handler(async ({ input }) => {})
+export const getContainers = os.getContainers.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const postContainers = os.postContainers.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const getContainersContainerId = os.getContainersContainerId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const deleteContainersContainerId = os.deleteContainersContainerId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getContainersContainerIdFiles = os.getContainersContainerIdFiles.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postContainersContainerIdFiles = os.postContainersContainerIdFiles.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getContainersContainerIdFilesFileId = os.getContainersContainerIdFilesFileId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const deleteContainersContainerIdFilesFileId =
-  os.deleteContainersContainerIdFilesFileId.handler(async ({ input }) => {})
+  os.deleteContainersContainerIdFilesFileId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getContainersContainerIdFilesFileIdContent =
-  os.getContainersContainerIdFilesFileIdContent.handler(async ({ input }) => {})
+  os.getContainersContainerIdFilesFileIdContent.handler(async ({ input }) => { throw new Error('Not implemented') })

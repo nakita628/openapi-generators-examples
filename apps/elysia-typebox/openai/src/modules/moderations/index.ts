@@ -30,7 +30,7 @@ export const moderations = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/moderations', ({ body }) => {}, {
+  .post('/moderations', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateModerationRequest',
     response: {
       200: ModerationsModel.createModerationResponse200,

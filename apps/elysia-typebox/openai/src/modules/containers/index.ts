@@ -40,7 +40,7 @@ export const containers = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/containers', ({ query }) => {}, {
+  .get('/containers', ({ query }) => { throw new Error('Not implemented') }, {
     query: ContainersModel.ListContainersQuery,
     response: { 200: 'ContainerListResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -50,7 +50,7 @@ export const containers = new Elysia()
       operationId: 'ListContainers',
     },
   })
-  .post('/containers', ({ body }) => {}, {
+  .post('/containers', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateContainerBody',
     response: { 200: 'ContainerResource', 400: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -60,7 +60,7 @@ export const containers = new Elysia()
       operationId: 'CreateContainer',
     },
   })
-  .get('/containers/:container_id', ({ params }) => {}, {
+  .get('/containers/:container_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ContainersModel.RetrieveContainerParams,
     response: { 200: 'ContainerResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -70,7 +70,7 @@ export const containers = new Elysia()
       operationId: 'RetrieveContainer',
     },
   })
-  .delete('/containers/:container_id', ({ params }) => {}, {
+  .delete('/containers/:container_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ContainersModel.DeleteContainerParams,
     response: {
       200: ContainersModel.DeleteContainerResponse200,
@@ -84,7 +84,7 @@ export const containers = new Elysia()
       operationId: 'DeleteContainer',
     },
   })
-  .get('/containers/:container_id/files', ({ params, query }) => {}, {
+  .get('/containers/:container_id/files', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ContainersModel.ListContainerFilesParams,
     query: ContainersModel.ListContainerFilesQuery,
     response: { 200: 'ContainerFileListResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
@@ -95,7 +95,7 @@ export const containers = new Elysia()
       operationId: 'ListContainerFiles',
     },
   })
-  .post('/containers/:container_id/files', ({ params, body }) => {}, {
+  .post('/containers/:container_id/files', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ContainersModel.CreateContainerFileParams,
     body: 'CreateContainerFileBody',
     response: {
@@ -112,7 +112,7 @@ export const containers = new Elysia()
       operationId: 'CreateContainerFile',
     },
   })
-  .get('/containers/:container_id/files/:file_id', ({ params }) => {}, {
+  .get('/containers/:container_id/files/:file_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ContainersModel.RetrieveContainerFileParams,
     response: { 200: 'ContainerFileResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -122,7 +122,7 @@ export const containers = new Elysia()
       operationId: 'RetrieveContainerFile',
     },
   })
-  .delete('/containers/:container_id/files/:file_id', ({ params }) => {}, {
+  .delete('/containers/:container_id/files/:file_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ContainersModel.DeleteContainerFileParams,
     response: {
       200: ContainersModel.DeleteContainerFileResponse200,
@@ -136,7 +136,7 @@ export const containers = new Elysia()
       operationId: 'DeleteContainerFile',
     },
   })
-  .get('/containers/:container_id/files/:file_id/content', ({ params }) => {}, {
+  .get('/containers/:container_id/files/:file_id/content', ({ params }) => { throw new Error('Not implemented') }, {
     params: ContainersModel.RetrieveContainerFileContentParams,
     response: { 200: t.Void(), 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {

@@ -4,7 +4,7 @@ import { Type, Codec } from 'typebox'
 import { OrderSchema } from '../components'
 
 export const storeHandler = new Hono()
-  .get('/store/inventory', (c) => {})
+  .get('/store/inventory', (c) => { throw new Error('Not implemented') })
   .post(
     '/store/order',
     tbValidator('json', OrderSchema),
@@ -40,7 +40,7 @@ export const storeHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/store/order/:orderId',
@@ -52,7 +52,7 @@ export const storeHandler = new Hono()
           .Encode((value) => String(value)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/store/order/:orderId',
@@ -64,5 +64,5 @@ export const storeHandler = new Hono()
           .Encode((value) => String(value)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

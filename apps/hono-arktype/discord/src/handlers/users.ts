@@ -9,8 +9,8 @@ import {
 } from '../components'
 
 export const usersHandler = new Hono()
-  .get('/users/@me', (c) => {})
-  .patch('/users/@me', sValidator('json', BotAccountPatchRequestSchema), (c) => {})
+  .get('/users/@me', (c) => { throw new Error('Not implemented') })
+  .patch('/users/@me', sValidator('json', BotAccountPatchRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/users/@me/applications/:application_id/entitlements',
     sValidator('param', type({ application_id: SnowflakeTypeSchema })),
@@ -57,26 +57,26 @@ export const usersHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/applications/:application_id/role-connection',
     sValidator('param', type({ application_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/users/@me/applications/:application_id/role-connection',
     sValidator('param', type({ application_id: SnowflakeTypeSchema })),
     sValidator('json', UpdateApplicationUserRoleConnectionRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/users/@me/applications/:application_id/role-connection',
     sValidator('param', type({ application_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/users/@me/channels', sValidator('json', CreatePrivateChannelRequestSchema), (c) => {})
-  .get('/users/@me/connections', (c) => {})
+  .post('/users/@me/channels', sValidator('json', CreatePrivateChannelRequestSchema), (c) => { throw new Error('Not implemented') })
+  .get('/users/@me/connections', (c) => { throw new Error('Not implemented') })
   .get(
     '/users/@me/guilds',
     sValidator(
@@ -101,16 +101,16 @@ export const usersHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/users/@me/guilds/:guild_id',
     sValidator('param', type({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/guilds/:guild_id/member',
     sValidator('param', type({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/users/:user_id', sValidator('param', type({ user_id: SnowflakeTypeSchema })), (c) => {})
+  .get('/users/:user_id', sValidator('param', type({ user_id: SnowflakeTypeSchema })), (c) => { throw new Error('Not implemented') })

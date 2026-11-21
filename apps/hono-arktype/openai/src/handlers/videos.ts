@@ -32,44 +32,44 @@ export const videosHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos',
     sValidator('json', CreateVideoJsonBodySchema),
     sValidator('form', CreateVideoMultipartBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/videos/characters', sValidator('form', CreateVideoCharacterBodySchema), (c) => {})
+  .post('/videos/characters', sValidator('form', CreateVideoCharacterBodySchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/videos/characters/:character_id',
     sValidator('param', type({ character_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/edits',
     sValidator('json', CreateVideoEditJsonBodySchema),
     sValidator('form', CreateVideoEditMultipartBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/extensions',
     sValidator('json', CreateVideoExtendJsonBodySchema),
     sValidator('form', CreateVideoExtendMultipartBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/videos/:video_id', sValidator('param', type({ video_id: 'string' })), (c) => {})
-  .delete('/videos/:video_id', sValidator('param', type({ video_id: 'string' })), (c) => {})
+  .get('/videos/:video_id', sValidator('param', type({ video_id: 'string' })), (c) => { throw new Error('Not implemented') })
+  .delete('/videos/:video_id', sValidator('param', type({ video_id: 'string' })), (c) => { throw new Error('Not implemented') })
   .get(
     '/videos/:video_id/content',
     sValidator('param', type({ video_id: 'string' })),
     sValidator('query', type({ 'variant?': VideoContentVariantSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/:video_id/remix',
     sValidator('param', type({ video_id: 'string' })),
     sValidator('json', CreateVideoRemixBodySchema),
     sValidator('form', CreateVideoRemixBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

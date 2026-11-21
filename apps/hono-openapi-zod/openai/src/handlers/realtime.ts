@@ -1012,7 +1012,7 @@ export const realtimeHandler = new Hono()
             'Parameters required to initiate a realtime call and receive the SDP answer\nneeded to complete a WebRTC peer connection. Provide an SDP offer generated\nby your client and optionally configure the session that will answer the call.',
         }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/accept',
@@ -1040,7 +1040,7 @@ export const realtimeHandler = new Hono()
     }),
     validator('param', z.object({ call_id: z.string() })),
     validator('json', RealtimeSessionCreateRequestGASchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/hangup',
@@ -1058,7 +1058,7 @@ export const realtimeHandler = new Hono()
       },
     }),
     validator('param', z.object({ call_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/refer',
@@ -1081,7 +1081,7 @@ export const realtimeHandler = new Hono()
     }),
     validator('param', z.object({ call_id: z.string() })),
     validator('json', RealtimeCallReferRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/reject',
@@ -1108,7 +1108,7 @@ export const realtimeHandler = new Hono()
     }),
     validator('param', z.object({ call_id: z.string() })),
     validator('json', RealtimeCallRejectRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/client_secrets',
@@ -1140,7 +1140,7 @@ export const realtimeHandler = new Hono()
       },
     }),
     validator('json', RealtimeCreateClientSecretRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/sessions',
@@ -1160,7 +1160,7 @@ export const realtimeHandler = new Hono()
       },
     }),
     validator('json', RealtimeSessionCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/transcription_sessions',
@@ -1182,7 +1182,7 @@ export const realtimeHandler = new Hono()
       },
     }),
     validator('json', RealtimeTranscriptionSessionCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/translations/client_secrets',
@@ -1216,5 +1216,5 @@ export const realtimeHandler = new Hono()
       },
     }),
     validator('json', RealtimeTranslationClientSecretCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

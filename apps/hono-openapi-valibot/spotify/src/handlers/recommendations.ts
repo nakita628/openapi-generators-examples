@@ -627,7 +627,7 @@ export const recommendationsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/recommendations/available-genre-seeds',
@@ -646,5 +646,5 @@ export const recommendationsHandler = new Hono()
       },
       security: [{ oauth_2_0: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

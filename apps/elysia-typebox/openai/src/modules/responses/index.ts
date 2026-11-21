@@ -1267,7 +1267,7 @@ export const responses = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/responses', ({ body }) => {}, {
+  .post('/responses', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateResponse',
     response: {
       200: 'Response',
@@ -1284,7 +1284,7 @@ export const responses = new Elysia()
       operationId: 'createResponse',
     },
   })
-  .get('/responses/:response_id', ({ params, query }) => {}, {
+  .get('/responses/:response_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.getResponseParams,
     query: ResponsesModel.getResponseQuery,
     response: { 200: 'Response', 404: 'ErrorResponse', 429: 'ErrorResponse' },
@@ -1295,7 +1295,7 @@ export const responses = new Elysia()
       operationId: 'getResponse',
     },
   })
-  .delete('/responses/:response_id', ({ params }) => {}, {
+  .delete('/responses/:response_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.deleteResponseParams,
     response: {
       200: ResponsesModel.deleteResponseResponse200,
@@ -1309,7 +1309,7 @@ export const responses = new Elysia()
       operationId: 'deleteResponse',
     },
   })
-  .post('/responses/:response_id/cancel', ({ params }) => {}, {
+  .post('/responses/:response_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.cancelResponseParams,
     response: { 200: 'Response', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -1320,7 +1320,7 @@ export const responses = new Elysia()
       operationId: 'cancelResponse',
     },
   })
-  .get('/responses/:response_id/input_items', ({ params, query }) => {}, {
+  .get('/responses/:response_id/input_items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.listInputItemsParams,
     query: ResponsesModel.listInputItemsQuery,
     response: { 200: 'ResponseItemList', 404: 'ErrorResponse', 429: 'ErrorResponse' },
@@ -1331,7 +1331,7 @@ export const responses = new Elysia()
       operationId: 'listInputItems',
     },
   })
-  .post('/responses/input_tokens', ({ body }) => {}, {
+  .post('/responses/input_tokens', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'TokenCountsBody',
     response: { 200: 'TokenCountsResource', 400: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -1342,7 +1342,7 @@ export const responses = new Elysia()
       operationId: 'Getinputtokencounts',
     },
   })
-  .post('/responses/compact', ({ body }) => {}, {
+  .post('/responses/compact', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CompactResponseMethodPublicBody',
     response: {
       200: 'CompactResource',
@@ -1358,7 +1358,7 @@ export const responses = new Elysia()
       operationId: 'Compactconversation',
     },
   })
-  .get('/responses/:response_id?beta=true', ({ params, query, headers }) => {}, {
+  .get('/responses/:response_id?beta=true', ({ params, query, headers }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.beta_getResponseParams,
     query: ResponsesModel.beta_getResponseQuery,
     headers: ResponsesModel.beta_getResponseHeaders,
@@ -1370,7 +1370,7 @@ export const responses = new Elysia()
       operationId: 'beta_getResponse',
     },
   })
-  .delete('/responses/:response_id?beta=true', ({ params, headers }) => {}, {
+  .delete('/responses/:response_id?beta=true', ({ params, headers }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.beta_deleteResponseParams,
     headers: ResponsesModel.beta_deleteResponseHeaders,
     response: {
@@ -1385,7 +1385,7 @@ export const responses = new Elysia()
       operationId: 'beta_deleteResponse',
     },
   })
-  .post('/responses/:response_id/cancel?beta=true', ({ params, headers }) => {}, {
+  .post('/responses/:response_id/cancel?beta=true', ({ params, headers }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.beta_cancelResponseParams,
     headers: ResponsesModel.beta_cancelResponseHeaders,
     response: { 200: 'BetaResponse', 404: 'BetaErrorResponse', 429: 'ErrorResponse' },
@@ -1397,7 +1397,7 @@ export const responses = new Elysia()
       operationId: 'beta_cancelResponse',
     },
   })
-  .post('/responses/compact?beta=true', ({ headers, body }) => {}, {
+  .post('/responses/compact?beta=true', ({ headers, body }) => { throw new Error('Not implemented') }, {
     headers: ResponsesModel.beta_CompactconversationHeaders,
     body: 'BetaCompactResponseMethodPublicBody',
     response: {
@@ -1414,7 +1414,7 @@ export const responses = new Elysia()
       operationId: 'beta_Compactconversation',
     },
   })
-  .get('/responses/:response_id/input_items?beta=true', ({ params, query, headers }) => {}, {
+  .get('/responses/:response_id/input_items?beta=true', ({ params, query, headers }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.beta_listInputItemsParams,
     query: ResponsesModel.beta_listInputItemsQuery,
     headers: ResponsesModel.beta_listInputItemsHeaders,
@@ -1426,7 +1426,7 @@ export const responses = new Elysia()
       operationId: 'beta_listInputItems',
     },
   })
-  .post('/responses/input_tokens?beta=true', ({ headers, body }) => {}, {
+  .post('/responses/input_tokens?beta=true', ({ headers, body }) => { throw new Error('Not implemented') }, {
     headers: ResponsesModel.beta_GetinputtokencountsHeaders,
     body: 'BetaTokenCountsBody',
     response: { 200: 'BetaTokenCountsResource', 400: 'BetaErrorResponse', 429: 'ErrorResponse' },

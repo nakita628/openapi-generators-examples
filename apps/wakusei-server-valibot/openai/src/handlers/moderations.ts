@@ -17,4 +17,4 @@ export const postModerations = os
   })
   .input(CreateModerationRequestSchema)
   .output(v.union([CreateModerationResponseSchema, CreateCSAMModerationResponseSchema]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

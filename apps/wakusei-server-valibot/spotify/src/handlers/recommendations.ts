@@ -615,7 +615,7 @@ export const getRecommendations = os
     }),
   )
   .output(RecommendationsObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getRecommendationsAvailableGenreSeeds = os
   .route({
@@ -633,4 +633,4 @@ export const getRecommendationsAvailableGenreSeeds = os
       genres: v.pipe(v.array(v.string()), v.metadata({ examples: [['alternative', 'samba']] })),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

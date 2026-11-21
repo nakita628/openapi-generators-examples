@@ -99,7 +99,7 @@ export const liveHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(LiveSessionCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/accept',
@@ -159,7 +159,7 @@ export const liveHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(LiveCallAcceptRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/fork',
@@ -221,7 +221,7 @@ export const liveHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(LiveForkRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/hangup',
@@ -243,7 +243,7 @@ export const liveHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/refer',
@@ -279,7 +279,7 @@ export const liveHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(LiveCallReferRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/reject',
@@ -323,7 +323,7 @@ export const liveHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(LiveCallRejectRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/live/sessions/:session_id/content',
@@ -403,5 +403,5 @@ export const liveHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

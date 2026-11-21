@@ -9,8 +9,8 @@ import {
 } from '../components'
 
 export const usersHandler = new Hono()
-  .get('/users/@me', (c) => {})
-  .patch('/users/@me', tbValidator('json', BotAccountPatchRequestSchema), (c) => {})
+  .get('/users/@me', (c) => { throw new Error('Not implemented') })
+  .patch('/users/@me', tbValidator('json', BotAccountPatchRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/users/@me/applications/:application_id/entitlements',
     tbValidator('param', Type.Object({ application_id: SnowflakeTypeSchema })),
@@ -33,26 +33,26 @@ export const usersHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/applications/:application_id/role-connection',
     tbValidator('param', Type.Object({ application_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/users/@me/applications/:application_id/role-connection',
     tbValidator('param', Type.Object({ application_id: SnowflakeTypeSchema })),
     tbValidator('json', UpdateApplicationUserRoleConnectionRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/users/@me/applications/:application_id/role-connection',
     tbValidator('param', Type.Object({ application_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/users/@me/channels', tbValidator('json', CreatePrivateChannelRequestSchema), (c) => {})
-  .get('/users/@me/connections', (c) => {})
+  .post('/users/@me/channels', tbValidator('json', CreatePrivateChannelRequestSchema), (c) => { throw new Error('Not implemented') })
+  .get('/users/@me/connections', (c) => { throw new Error('Not implemented') })
   .get(
     '/users/@me/guilds',
     tbValidator(
@@ -77,20 +77,20 @@ export const usersHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/users/@me/guilds/:guild_id',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/guilds/:guild_id/member',
     tbValidator('param', Type.Object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/:user_id',
     tbValidator('param', Type.Object({ user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -21,7 +21,7 @@ export const putPartnerSdkDmsUserId1UserId2MessagesMessageIdModerationMetadata =
       message_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPartnerSdkProvisionalAccountsUnmerge = os
   .route({
@@ -38,7 +38,7 @@ export const postPartnerSdkProvisionalAccountsUnmerge = os
       external_auth_type: ApplicationIdentityProviderAuthTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPartnerSdkProvisionalAccountsUnmergeBot = os
   .route({
@@ -50,7 +50,7 @@ export const postPartnerSdkProvisionalAccountsUnmergeBot = os
   .input(
     v.object({ external_user_id: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(1024)) }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPartnerSdkToken = os
   .route({
@@ -67,7 +67,7 @@ export const postPartnerSdkToken = os
     }),
   )
   .output(ProvisionalTokenResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPartnerSdkTokenBot = os
   .route({
@@ -85,4 +85,4 @@ export const postPartnerSdkTokenBot = os
     }),
   )
   .output(ProvisionalTokenResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

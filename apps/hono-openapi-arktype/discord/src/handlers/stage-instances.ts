@@ -43,7 +43,7 @@ export const stageInstancesHandler = new Hono()
         'send_start_notification?': 'boolean | null',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/stage-instances/:channel_id',
@@ -67,7 +67,7 @@ export const stageInstancesHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', type({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/stage-instances/:channel_id',
@@ -90,7 +90,7 @@ export const stageInstancesHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', type({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/stage-instances/:channel_id',
@@ -123,5 +123,5 @@ export const stageInstancesHandler = new Hono()
         'privacy_level?': StageInstancesPrivacyLevelsSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

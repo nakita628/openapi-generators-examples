@@ -35,12 +35,12 @@ export const channelsHandler = new Hono()
   .get(
     '/channels/:channel_id',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/channels/:channel_id',
@@ -54,18 +54,18 @@ export const channelsHandler = new Hono()
         UpdateThreadRequestPartialSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/followers',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
     sValidator('json', v.object({ webhook_channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/invites',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/invites',
@@ -231,7 +231,7 @@ export const channelsHandler = new Hono()
         ),
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/messages',
@@ -254,7 +254,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/messages',
@@ -6462,7 +6462,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/messages/bulk-delete',
@@ -6478,7 +6478,7 @@ export const channelsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/messages/pins',
@@ -6504,7 +6504,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/messages/pins/:message_id',
@@ -6512,7 +6512,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/messages/pins/:message_id',
@@ -6520,7 +6520,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/messages/:message_id',
@@ -6528,7 +6528,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/messages/:message_id',
@@ -6536,7 +6536,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/channels/:channel_id/messages/:message_id',
@@ -12298,7 +12298,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/messages/:message_id/crosspost',
@@ -12306,7 +12306,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions',
@@ -12314,7 +12314,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name',
@@ -12352,7 +12352,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name',
@@ -12364,7 +12364,7 @@ export const channelsHandler = new Hono()
         emoji_name: v.pipe(v.string(), v.maxCodePoints(152133)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/@me',
@@ -12376,7 +12376,7 @@ export const channelsHandler = new Hono()
         emoji_name: v.pipe(v.string(), v.maxCodePoints(152133)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/@me',
@@ -12388,7 +12388,7 @@ export const channelsHandler = new Hono()
         emoji_name: v.pipe(v.string(), v.maxCodePoints(152133)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/:user_id',
@@ -12401,7 +12401,7 @@ export const channelsHandler = new Hono()
         user_id: SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/messages/:message_id/threads',
@@ -12410,7 +12410,7 @@ export const channelsHandler = new Hono()
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
     sValidator('json', CreateTextThreadWithMessageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/permissions/member/:user_id',
@@ -12430,7 +12430,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/permissions/role/:role_id',
@@ -12450,7 +12450,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/permissions/:overwrite_id',
@@ -12468,7 +12468,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/permissions/:overwrite_id',
@@ -12476,12 +12476,12 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, overwrite_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/pins',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/pins/:message_id',
@@ -12489,7 +12489,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/pins/:message_id',
@@ -12497,7 +12497,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/polls/:message_id/answers/:answer_id',
@@ -12534,7 +12534,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/polls/:message_id/expire',
@@ -12542,7 +12542,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/recipients/:user_id',
@@ -12559,7 +12559,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/recipients/:user_id',
@@ -12567,13 +12567,13 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/send-soundboard-sound',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
     sValidator('json', SoundboardSoundSendRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/thread-members',
@@ -12599,17 +12599,17 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/thread-members/@me',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/thread-members/@me',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/thread-members/:user_id',
@@ -12629,7 +12629,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/thread-members/:user_id',
@@ -12637,7 +12637,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/channels/:channel_id/thread-members/:user_id',
@@ -12645,7 +12645,7 @@ export const channelsHandler = new Hono()
       'param',
       v.object({ channel_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/threads',
@@ -19454,7 +19454,7 @@ export const channelsHandler = new Hono()
         }),
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/threads/archived/private',
@@ -19480,7 +19480,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/threads/archived/public',
@@ -19506,7 +19506,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/threads/search',
@@ -19565,12 +19565,12 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/typing',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/users/@me/threads/archived/private',
@@ -19591,7 +19591,7 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/channels/:channel_id/voice-status',
@@ -19607,12 +19607,12 @@ export const channelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/channels/:channel_id/webhooks',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/channels/:channel_id/webhooks',
@@ -19624,5 +19624,5 @@ export const channelsHandler = new Hono()
         avatar: v.optional(v.nullable(v.string())),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

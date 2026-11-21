@@ -36,7 +36,7 @@ export const webhookEndpoints = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/webhook_endpoints', ({ query }) => {}, {
+  .get('/webhook_endpoints', ({ query }) => { throw new Error('Not implemented') }, {
     query: WebhookEndpointsModel.ListWebhookEndpointsQuery,
     response: { 200: 'WebhookEndpointListResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -46,7 +46,7 @@ export const webhookEndpoints = new Elysia()
       operationId: 'ListWebhookEndpoints',
     },
   })
-  .post('/webhook_endpoints', ({ body }) => {}, {
+  .post('/webhook_endpoints', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'PublicCreateEndpointBody',
     response: { 200: 'WebhookEndpointWithSecretResource', 400: 'ErrorResponse' },
     detail: {
@@ -56,7 +56,7 @@ export const webhookEndpoints = new Elysia()
       operationId: 'CreateWebhookEndpoint',
     },
   })
-  .get('/webhook_endpoints/:webhook_endpoint_id', ({ params }) => {}, {
+  .get('/webhook_endpoints/:webhook_endpoint_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: WebhookEndpointsModel.RetrieveWebhookEndpointParams,
     response: { 200: 'WebhookEndpointBody', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -66,7 +66,7 @@ export const webhookEndpoints = new Elysia()
       operationId: 'RetrieveWebhookEndpoint',
     },
   })
-  .post('/webhook_endpoints/:webhook_endpoint_id', ({ params, body }) => {}, {
+  .post('/webhook_endpoints/:webhook_endpoint_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: WebhookEndpointsModel.UpdateWebhookEndpointParams,
     body: 'PublicUpdateEndpointBody',
     response: { 200: 'WebhookEndpointBody', 400: 'ErrorResponse', 404: 'ErrorResponse' },
@@ -77,7 +77,7 @@ export const webhookEndpoints = new Elysia()
       operationId: 'UpdateWebhookEndpoint',
     },
   })
-  .delete('/webhook_endpoints/:webhook_endpoint_id', ({ params }) => {}, {
+  .delete('/webhook_endpoints/:webhook_endpoint_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: WebhookEndpointsModel.DeleteWebhookEndpointParams,
     response: { 200: 'DeletedWebhookEndpointResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -87,7 +87,7 @@ export const webhookEndpoints = new Elysia()
       operationId: 'DeleteWebhookEndpoint',
     },
   })
-  .post('/webhook_endpoints/:webhook_endpoint_id/rotate_secret', ({ params, body }) => {}, {
+  .post('/webhook_endpoints/:webhook_endpoint_id/rotate_secret', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: WebhookEndpointsModel.RotateWebhookEndpointSigningSecretParams,
     body: 'PublicRotateSecretBody',
     response: {
@@ -103,7 +103,7 @@ export const webhookEndpoints = new Elysia()
       operationId: 'RotateWebhookEndpointSigningSecret',
     },
   })
-  .post('/webhook_endpoints/:webhook_endpoint_id/test', ({ params, body }) => {}, {
+  .post('/webhook_endpoints/:webhook_endpoint_id/test', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: WebhookEndpointsModel.TestWebhookEndpointParams,
     body: 'PublicTestEndpointBody',
     response: {

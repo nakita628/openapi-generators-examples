@@ -4,9 +4,9 @@ import { getRecommendationsHandler, getRecommendationsAvailableGenreSeedsHandler
 export const recommendationsHandler = new Hono()
   .get(
     '/recommendations',
-    getRecommendationsHandler(async (c, { query }) => {}),
+    getRecommendationsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/recommendations/available-genre-seeds',
-    getRecommendationsAvailableGenreSeedsHandler(async (c) => {}),
+    getRecommendationsAvailableGenreSeedsHandler(async (c) => { throw new Error('Not implemented') }),
   )

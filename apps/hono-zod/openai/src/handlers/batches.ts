@@ -13,12 +13,12 @@ export const batchesHandler = new Hono()
         limit: z.coerce.number().int().default(20).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/batches', sValidator('json', CreateBatchRequestSchema), (c) => {})
-  .get('/batches/:batch_id', sValidator('param', z.object({ batch_id: z.string() })), (c) => {})
+  .post('/batches', sValidator('json', CreateBatchRequestSchema), (c) => { throw new Error('Not implemented') })
+  .get('/batches/:batch_id', sValidator('param', z.object({ batch_id: z.string() })), (c) => { throw new Error('Not implemented') })
   .post(
     '/batches/:batch_id/cancel',
     sValidator('param', z.object({ batch_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

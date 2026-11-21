@@ -56,7 +56,7 @@ export const playlists = new Elysia()
     TrackObject: TrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/playlists/:playlist_id', ({ params, query }) => {}, {
+  .get('/playlists/:playlist_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.getPlaylistParams,
     query: PlaylistsModel.getPlaylistQuery,
     response: {
@@ -73,7 +73,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .put('/playlists/:playlist_id', ({ params, body }) => {}, {
+  .put('/playlists/:playlist_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.changePlaylistDetailsParams,
     body: PlaylistsModel.changePlaylistDetailsBody,
     response: {
@@ -91,7 +91,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .get('/playlists/:playlist_id/tracks', ({ params, query }) => {}, {
+  .get('/playlists/:playlist_id/tracks', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.getPlaylistsTracksParams,
     query: PlaylistsModel.getPlaylistsTracksQuery,
     response: {
@@ -109,7 +109,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-read-private'] }],
     },
   })
-  .put('/playlists/:playlist_id/tracks', ({ params, query, body }) => {}, {
+  .put('/playlists/:playlist_id/tracks', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.reorderOrReplacePlaylistsTracksParams,
     query: PlaylistsModel.reorderOrReplacePlaylistsTracksQuery,
     body: PlaylistsModel.reorderOrReplacePlaylistsTracksBody,
@@ -128,7 +128,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .post('/playlists/:playlist_id/tracks', ({ params, query, body }) => {}, {
+  .post('/playlists/:playlist_id/tracks', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.addTracksToPlaylistParams,
     query: PlaylistsModel.addTracksToPlaylistQuery,
     body: PlaylistsModel.addTracksToPlaylistBody,
@@ -147,7 +147,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .delete('/playlists/:playlist_id/tracks', ({ params, body }) => {}, {
+  .delete('/playlists/:playlist_id/tracks', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.removeTracksPlaylistParams,
     body: PlaylistsModel.removeTracksPlaylistBody,
     response: {
@@ -165,7 +165,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .get('/playlists/:playlist_id/items', ({ params, query }) => {}, {
+  .get('/playlists/:playlist_id/items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.getPlaylistsItemsParams,
     query: PlaylistsModel.getPlaylistsItemsQuery,
     response: {
@@ -183,7 +183,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-read-private'] }],
     },
   })
-  .put('/playlists/:playlist_id/items', ({ params, query, body }) => {}, {
+  .put('/playlists/:playlist_id/items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.reorderOrReplacePlaylistsItemsParams,
     query: PlaylistsModel.reorderOrReplacePlaylistsItemsQuery,
     body: PlaylistsModel.reorderOrReplacePlaylistsItemsBody,
@@ -202,7 +202,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .post('/playlists/:playlist_id/items', ({ params, query, body }) => {}, {
+  .post('/playlists/:playlist_id/items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.addItemsToPlaylistParams,
     query: PlaylistsModel.addItemsToPlaylistQuery,
     body: PlaylistsModel.addItemsToPlaylistBody,
@@ -220,7 +220,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .delete('/playlists/:playlist_id/items', ({ params, body }) => {}, {
+  .delete('/playlists/:playlist_id/items', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.removeItemsPlaylistParams,
     body: PlaylistsModel.removeItemsPlaylistBody,
     response: {
@@ -237,7 +237,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .put('/playlists/:playlist_id/followers', ({ params, body }) => {}, {
+  .put('/playlists/:playlist_id/followers', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.followPlaylistParams,
     body: PlaylistsModel.followPlaylistBody,
     response: {
@@ -255,7 +255,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .delete('/playlists/:playlist_id/followers', ({ params }) => {}, {
+  .delete('/playlists/:playlist_id/followers', ({ params }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.unfollowPlaylistParams,
     response: {
       200: t.Void(),
@@ -272,7 +272,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .get('/playlists/:playlist_id/images', ({ params }) => {}, {
+  .get('/playlists/:playlist_id/images', ({ params }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.getPlaylistCoverParams,
     response: {
       200: PlaylistsModel.getPlaylistCoverResponse200,
@@ -288,7 +288,7 @@ export const playlists = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .put('/playlists/:playlist_id/images', ({ params }) => {}, {
+  .put('/playlists/:playlist_id/images', ({ params }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.uploadCustomPlaylistCoverParams,
     response: {
       202: t.Void(),
@@ -306,7 +306,7 @@ export const playlists = new Elysia()
       ],
     },
   })
-  .get('/playlists/:playlist_id/followers/contains', ({ params, query }) => {}, {
+  .get('/playlists/:playlist_id/followers/contains', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: PlaylistsModel.checkIfUserFollowsPlaylistParams,
     query: PlaylistsModel.checkIfUserFollowsPlaylistQuery,
     response: {

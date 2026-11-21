@@ -23,7 +23,7 @@ export const getAudiobooksId = os
     }),
   )
   .output(AudiobookObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAudiobooks = os
   .route({
@@ -48,7 +48,7 @@ export const getAudiobooks = os
     }),
   )
   .output(type({ audiobooks: type(AudiobookObjectSchema).array() }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAudiobooksIdChapters = os
   .route({
@@ -86,4 +86,4 @@ export const getAudiobooksIdChapters = os
     }),
   )
   .output(PagingSimplifiedChapterObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

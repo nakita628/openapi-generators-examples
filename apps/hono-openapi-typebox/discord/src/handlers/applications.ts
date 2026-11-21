@@ -48,7 +48,7 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/applications/@me',
@@ -74,7 +74,7 @@ export const applicationsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('json', Compile(ApplicationFormPartialSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id',
@@ -100,7 +100,7 @@ export const applicationsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/applications/:application_id',
@@ -127,7 +127,7 @@ export const applicationsHandler = new Hono()
     }),
     validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator('json', Compile(ApplicationFormPartialSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/activity-instances/:instance_id',
@@ -161,7 +161,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/applications/:application_id/attachment',
@@ -228,7 +228,7 @@ export const applicationsHandler = new Hono()
     }),
     validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator('form', Compile(Type.Object({ file: Type.String() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/commands',
@@ -270,7 +270,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/applications/:application_id/commands',
@@ -309,7 +309,7 @@ export const applicationsHandler = new Hono()
         ]),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/applications/:application_id/commands',
@@ -349,7 +349,7 @@ export const applicationsHandler = new Hono()
     }),
     validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator('json', Compile(ApplicationCommandCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/commands/:command_id',
@@ -380,7 +380,7 @@ export const applicationsHandler = new Hono()
         Type.Object({ application_id: SnowflakeTypeSchema, command_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/applications/:application_id/commands/:command_id',
@@ -408,7 +408,7 @@ export const applicationsHandler = new Hono()
         Type.Object({ application_id: SnowflakeTypeSchema, command_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/applications/:application_id/commands/:command_id',
@@ -440,7 +440,7 @@ export const applicationsHandler = new Hono()
       ),
     ),
     validator('json', Compile(ApplicationCommandPatchRequestPartialSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/emojis',
@@ -466,7 +466,7 @@ export const applicationsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/applications/:application_id/emojis',
@@ -496,7 +496,7 @@ export const applicationsHandler = new Hono()
         Type.Object({ name: Type.String({ minLength: 2, maxLength: 32 }), image: Type.String() }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/emojis/:emoji_id',
@@ -523,7 +523,7 @@ export const applicationsHandler = new Hono()
       'param',
       Compile(Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/applications/:application_id/emojis/:emoji_id',
@@ -549,7 +549,7 @@ export const applicationsHandler = new Hono()
       'param',
       Compile(Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/applications/:application_id/emojis/:emoji_id',
@@ -580,7 +580,7 @@ export const applicationsHandler = new Hono()
       'json',
       Compile(Type.Object({ name: Type.Optional(Type.String({ minLength: 2, maxLength: 32 })) })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/entitlements',
@@ -648,7 +648,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/applications/:application_id/entitlements',
@@ -673,7 +673,7 @@ export const applicationsHandler = new Hono()
     }),
     validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator('json', Compile(CreateEntitlementRequestDataSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/entitlements/:entitlement_id',
@@ -702,7 +702,7 @@ export const applicationsHandler = new Hono()
         Type.Object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/applications/:application_id/entitlements/:entitlement_id',
@@ -730,7 +730,7 @@ export const applicationsHandler = new Hono()
         Type.Object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/applications/:application_id/entitlements/:entitlement_id/consume',
@@ -758,7 +758,7 @@ export const applicationsHandler = new Hono()
         Type.Object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands',
@@ -803,7 +803,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/applications/:application_id/guilds/:guild_id/commands',
@@ -845,7 +845,7 @@ export const applicationsHandler = new Hono()
         ]),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/applications/:application_id/guilds/:guild_id/commands',
@@ -888,7 +888,7 @@ export const applicationsHandler = new Hono()
       Compile(Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema })),
     ),
     validator('json', Compile(ApplicationCommandCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands/permissions',
@@ -919,7 +919,7 @@ export const applicationsHandler = new Hono()
       'param',
       Compile(Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
@@ -954,7 +954,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
@@ -986,7 +986,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
@@ -1022,7 +1022,7 @@ export const applicationsHandler = new Hono()
       ),
     ),
     validator('json', Compile(ApplicationCommandPatchRequestPartialSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id/permissions',
@@ -1057,7 +1057,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id/permissions',
@@ -1105,7 +1105,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/applications/:application_id/role-connections/metadata',
@@ -1140,7 +1140,7 @@ export const applicationsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/applications/:application_id/role-connections/metadata',
@@ -1184,5 +1184,5 @@ export const applicationsHandler = new Hono()
         ]),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

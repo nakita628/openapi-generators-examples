@@ -173,7 +173,7 @@ export const lobbies = new Elysia()
     UserSelectDefaultValue: UserSelectDefaultValueSchema,
     VideoQualityModes: VideoQualityModesSchema,
   })
-  .put('/lobbies', ({ body }) => {}, {
+  .put('/lobbies', ({ body }) => { throw new Error('Not implemented') }, {
     body: LobbiesModel.create_or_join_lobbyBody,
     response: { 200: 'LobbyResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -182,17 +182,17 @@ export const lobbies = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     },
   })
-  .post('/lobbies', ({ body }) => {}, {
+  .post('/lobbies', ({ body }) => { throw new Error('Not implemented') }, {
     body: LobbiesModel.create_lobbyBody,
     response: { 201: 'LobbyResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_lobby', security: [{ BotToken: [] }] },
   })
-  .get('/lobbies/:lobby_id', ({ params }) => {}, {
+  .get('/lobbies/:lobby_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.get_lobbyParams,
     response: { 200: 'LobbyResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_lobby', security: [{ BotToken: [] }] },
   })
-  .delete('/lobbies/:lobby_id', ({ params }) => {}, {
+  .delete('/lobbies/:lobby_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.delete_lobbyParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -203,13 +203,13 @@ export const lobbies = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .patch('/lobbies/:lobby_id', ({ params, body }) => {}, {
+  .patch('/lobbies/:lobby_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.edit_lobbyParams,
     body: LobbiesModel.edit_lobbyBody,
     response: { 200: 'LobbyResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'edit_lobby', security: [{ BotToken: [] }] },
   })
-  .patch('/lobbies/:lobby_id/channel-linking', ({ params, body }) => {}, {
+  .patch('/lobbies/:lobby_id/channel-linking', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.edit_lobby_channel_linkParams,
     body: LobbiesModel.edit_lobby_channel_linkBody,
     response: { 200: 'LobbyResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -219,12 +219,12 @@ export const lobbies = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     },
   })
-  .delete('/lobbies/:lobby_id/members/@me', ({ params }) => {}, {
+  .delete('/lobbies/:lobby_id/members/@me', ({ params }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.leave_lobbyParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'leave_lobby', security: [{ BotToken: [] }, { OAuth2: [] }] },
   })
-  .post('/lobbies/:lobby_id/members/@me/invites', ({ params }) => {}, {
+  .post('/lobbies/:lobby_id/members/@me/invites', ({ params }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.create_linked_lobby_guild_invite_for_selfParams,
     response: {
       200: 'LobbyGuildInviteResponse',
@@ -237,7 +237,7 @@ export const lobbies = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     },
   })
-  .post('/lobbies/:lobby_id/members/bulk', ({ params, body }) => {}, {
+  .post('/lobbies/:lobby_id/members/bulk', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.bulk_update_lobby_membersParams,
     body: LobbiesModel.bulk_update_lobby_membersBody,
     response: {
@@ -247,18 +247,18 @@ export const lobbies = new Elysia()
     },
     detail: { tags: [], operationId: 'bulk_update_lobby_members', security: [{ BotToken: [] }] },
   })
-  .put('/lobbies/:lobby_id/members/:user_id', ({ params, body }) => {}, {
+  .put('/lobbies/:lobby_id/members/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.add_lobby_memberParams,
     body: LobbiesModel.add_lobby_memberBody,
     response: { 200: 'LobbyMemberResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'add_lobby_member', security: [{ BotToken: [] }] },
   })
-  .delete('/lobbies/:lobby_id/members/:user_id', ({ params }) => {}, {
+  .delete('/lobbies/:lobby_id/members/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.delete_lobby_memberParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_lobby_member', security: [{ BotToken: [] }] },
   })
-  .post('/lobbies/:lobby_id/members/:user_id/invites', ({ params }) => {}, {
+  .post('/lobbies/:lobby_id/members/:user_id/invites', ({ params }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.create_linked_lobby_guild_invite_for_userParams,
     response: {
       200: 'LobbyGuildInviteResponse',
@@ -271,7 +271,7 @@ export const lobbies = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/lobbies/:lobby_id/messages', ({ params, query }) => {}, {
+  .get('/lobbies/:lobby_id/messages', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.get_lobby_messagesParams,
     query: LobbiesModel.get_lobby_messagesQuery,
     response: {
@@ -285,7 +285,7 @@ export const lobbies = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     },
   })
-  .post('/lobbies/:lobby_id/messages', ({ params, body }) => {}, {
+  .post('/lobbies/:lobby_id/messages', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.create_lobby_messageParams,
     body: 'SDKMessageRequest',
     response: { 201: 'LobbyMessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -295,7 +295,7 @@ export const lobbies = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     },
   })
-  .put('/lobbies/:lobby_id/messages/:message_id/moderation-metadata', ({ params, body }) => {}, {
+  .put('/lobbies/:lobby_id/messages/:message_id/moderation-metadata', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LobbiesModel.update_lobby_message_external_moderation_metadataParams,
     body: LobbiesModel.update_lobby_message_external_moderation_metadataBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },

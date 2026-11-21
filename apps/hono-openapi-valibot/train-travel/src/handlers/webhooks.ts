@@ -25,5 +25,5 @@ export const webhooksHandler = new Hono().post(
       v.partial(v.object({ links: v.intersect([LinksSelfSchema, LinksPaginationSchema]) })),
     ]),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

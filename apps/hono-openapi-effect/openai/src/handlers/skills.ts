@@ -64,7 +64,7 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills',
@@ -128,7 +128,7 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id',
@@ -163,7 +163,7 @@ export const skillsHandler = new Hono()
         Schema.Struct({ skill_id: Schema.String.annotate({ jsonSchemaExamples: ['skill_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills/:skill_id',
@@ -207,7 +207,7 @@ export const skillsHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(SetDefaultSkillVersionBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/skills/:skill_id',
@@ -242,7 +242,7 @@ export const skillsHandler = new Hono()
         Schema.Struct({ skill_id: Schema.String.annotate({ jsonSchemaExamples: ['skill_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/content',
@@ -278,7 +278,7 @@ export const skillsHandler = new Hono()
         Schema.Struct({ skill_id: Schema.String.annotate({ jsonSchemaExamples: ['skill_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions',
@@ -337,7 +337,7 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills/:skill_id/versions',
@@ -427,7 +427,7 @@ export const skillsHandler = new Hono()
         }).annotate({ description: 'Uploads a new immutable version of a skill.' }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions/:version',
@@ -473,7 +473,7 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/skills/:skill_id/versions/:version',
@@ -520,7 +520,7 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions/:version/content',
@@ -567,5 +567,5 @@ export const skillsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

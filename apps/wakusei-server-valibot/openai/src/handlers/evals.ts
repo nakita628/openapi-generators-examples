@@ -34,7 +34,7 @@ export const getEvals = os
     }),
   )
   .output(EvalListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postEvals = os
   .route({
@@ -48,7 +48,7 @@ export const postEvals = os
   })
   .input(CreateEvalRequestSchema)
   .output(EvalSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getEvalsEvalId = os
   .route({
@@ -61,7 +61,7 @@ export const getEvalsEvalId = os
   })
   .input(v.object({ eval_id: v.string() }))
   .output(EvalSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postEvalsEvalId = os
   .route({
@@ -80,7 +80,7 @@ export const postEvalsEvalId = os
     }),
   )
   .output(EvalSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteEvalsEvalId = os
   .route({
@@ -99,7 +99,7 @@ export const deleteEvalsEvalId = os
       eval_id: v.pipe(v.string(), v.metadata({ examples: ['eval_abc123'] })),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getEvalsEvalIdRuns = os
   .route({
@@ -122,7 +122,7 @@ export const getEvalsEvalIdRuns = os
     }),
   )
   .output(EvalRunListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postEvalsEvalIdRuns = os
   .route({
@@ -151,7 +151,7 @@ export const postEvalsEvalIdRuns = os
     }),
   )
   .output(EvalRunSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getEvalsEvalIdRunsRunId = os
   .route({
@@ -164,7 +164,7 @@ export const getEvalsEvalIdRunsRunId = os
   })
   .input(v.object({ eval_id: v.string(), run_id: v.string() }))
   .output(EvalRunSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteEvalsEvalIdRunsRunId = os
   .route({
@@ -188,7 +188,7 @@ export const deleteEvalsEvalIdRunsRunId = os
       }),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postEvalsEvalIdRunsRunIdCancel = os
   .route({
@@ -201,7 +201,7 @@ export const postEvalsEvalIdRunsRunIdCancel = os
   })
   .input(v.object({ eval_id: v.string(), run_id: v.string() }))
   .output(EvalRunSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getEvalsEvalIdRunsRunIdOutputItems = os
   .route({
@@ -225,7 +225,7 @@ export const getEvalsEvalIdRunsRunIdOutputItems = os
     }),
   )
   .output(EvalRunOutputItemListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getEvalsEvalIdRunsRunIdOutputItemsOutputItemId = os
   .route({
@@ -238,4 +238,4 @@ export const getEvalsEvalIdRunsRunIdOutputItemsOutputItemId = os
   })
   .input(v.object({ eval_id: v.string(), run_id: v.string(), output_item_id: v.string() }))
   .output(EvalRunOutputItemSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -20,7 +20,7 @@ export const skusHandler = new Hono()
         user_id: Type.Optional(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skus/:sku_id/subscriptions/:subscription_id',
@@ -29,5 +29,5 @@ export const skusHandler = new Hono()
       Type.Object({ sku_id: SnowflakeTypeSchema, subscription_id: SnowflakeTypeSchema }),
     ),
     tbValidator('query', Type.Object({ user_id: Type.Optional(SnowflakeTypeSchema) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

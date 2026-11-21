@@ -163,7 +163,7 @@ export const chat = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/chat/completions', ({ query }) => {}, {
+  .get('/chat/completions', ({ query }) => { throw new Error('Not implemented') }, {
     query: ChatModel.listChatCompletionsQuery,
     response: {
       200: 'ChatCompletionList',
@@ -179,7 +179,7 @@ export const chat = new Elysia()
       operationId: 'listChatCompletions',
     },
   })
-  .post('/chat/completions', ({ body }) => {}, {
+  .post('/chat/completions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateChatCompletionRequest',
     response: {
       200: 'CreateChatCompletionResponse',
@@ -199,7 +199,7 @@ export const chat = new Elysia()
       operationId: 'createChatCompletion',
     },
   })
-  .get('/chat/completions/:completion_id', ({ params }) => {}, {
+  .get('/chat/completions/:completion_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChatModel.getChatCompletionParams,
     response: {
       200: 'CreateChatCompletionResponse',
@@ -215,7 +215,7 @@ export const chat = new Elysia()
       operationId: 'getChatCompletion',
     },
   })
-  .post('/chat/completions/:completion_id', ({ params, body }) => {}, {
+  .post('/chat/completions/:completion_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChatModel.updateChatCompletionParams,
     body: ChatModel.updateChatCompletionBody,
     response: {
@@ -233,7 +233,7 @@ export const chat = new Elysia()
       operationId: 'updateChatCompletion',
     },
   })
-  .delete('/chat/completions/:completion_id', ({ params }) => {}, {
+  .delete('/chat/completions/:completion_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChatModel.deleteChatCompletionParams,
     response: {
       200: 'ChatCompletionDeleted',
@@ -249,7 +249,7 @@ export const chat = new Elysia()
       operationId: 'deleteChatCompletion',
     },
   })
-  .get('/chat/completions/:completion_id/messages', ({ params, query }) => {}, {
+  .get('/chat/completions/:completion_id/messages', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChatModel.getChatCompletionMessagesParams,
     query: ChatModel.getChatCompletionMessagesQuery,
     response: {

@@ -74,5 +74,5 @@ export const embeddingsHandler = new Hono().post(
     },
   }),
   validator('json', Schema.toStandardSchemaV1(CreateEmbeddingRequestSchema)),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

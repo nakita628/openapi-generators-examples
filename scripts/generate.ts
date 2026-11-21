@@ -10,13 +10,46 @@
  * For each app × spec it writes apps/<app>/<spec>/<generator>.config.ts from the matrix below and
  * a tsconfig.json for that spec alone, removes the previous src/, and runs the generator with that
  * directory as its working directory.
- * The output is committed; `bazel test //...` type-checks it.
+ * Empty handler stubs are then filled with a placeholder (see fillStubs).
+ * The output is committed; `bun run typecheck` (or `bazel test //...`) type-checks it.
  */
 import { spawnSync } from 'node:child_process'
-import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 const root = resolve(import.meta.dirname, '..')
+
+/** The body every empty handler stub gets. */
+const PLACEHOLDER = "{ throw new Error('Not implemented') }"
+
+/**
+ * The generators leave handler bodies empty (`(c) => {}`, `async ({ input }) => {}`), and an
+ * empty body returns `void`, which no typed handler accepts. This repository has no business
+ * logic, so each stub gets a placeholder that throws instead: `never` fits every handler type
+ * (Hono, oRPC, Elysia, defineHandler), whereas a dummy response would have to match each
+ * operation's declared output. The type check then shows the generators' own problems only.
+ *
+ * Only the handler files are touched (src/handlers/, src/modules/), where `=> {}` is only ever
+ * a stub. Returns the number of stubs filled.
+ */
+function fillStubs(src: string): number {
+  let count = 0
+  for (const sub of ['handlers', 'modules']) {
+    const base = join(src, sub)
+    if (!existsSync(base)) continue
+    for (const file of readdirSync(base, { recursive: true, encoding: 'utf8' })) {
+      if (!file.endsWith('.ts')) continue
+      const path = join(base, file)
+      const code = readFileSync(path, 'utf8')
+      const filled = code.replace(/=>\s*\{\s*\}/g, () => {
+        count++
+        return `=> ${PLACEHOLDER}`
+      })
+      if (filled !== code) writeFileSync(path, filled)
+    }
+  }
+  return count
+}
 
 type Generator = 'wakusei' | 'openapi-to-trpc' | 'takibi-hono' | 'asphodelos'
 
@@ -121,7 +154,8 @@ for (const [name, app] of Object.entries(apps)) {
     const seconds = ((Date.now() - started) / 1000).toFixed(1)
     const output = `${result.stdout ?? ''}${result.stderr ?? ''}`.trim()
     if (result.status === 0 && existsSync(join(dir, 'src'))) {
-      console.log(`ok    ${name}/${spec} (${seconds}s)`)
+      const stubs = fillStubs(join(dir, 'src'))
+      console.log(`ok    ${name}/${spec} (${seconds}s, ${stubs} stubs filled)`)
     } else {
       failures.push(`${name}/${spec}`)
       console.log(`FAIL  ${name}/${spec} (${seconds}s)\n${output.split('\n').slice(-15).join('\n')}`)

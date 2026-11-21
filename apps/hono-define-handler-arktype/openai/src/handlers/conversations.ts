@@ -13,33 +13,33 @@ import {
 export const conversationsHandler = new Hono()
   .get(
     '/conversations/:conversation_id/items',
-    getConversationsConversationIdItemsHandler(async (c, { param, query }) => {}),
+    getConversationsConversationIdItemsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/conversations/:conversation_id/items',
-    postConversationsConversationIdItemsHandler(async (c, { param, query, json }) => {}),
+    postConversationsConversationIdItemsHandler(async (c, { param, query, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/conversations/:conversation_id/items/:item_id',
-    getConversationsConversationIdItemsItemIdHandler(async (c, { param, query }) => {}),
+    getConversationsConversationIdItemsItemIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/conversations/:conversation_id/items/:item_id',
-    deleteConversationsConversationIdItemsItemIdHandler(async (c, { param }) => {}),
+    deleteConversationsConversationIdItemsItemIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/conversations',
-    postConversationsHandler(async (c, { json }) => {}),
+    postConversationsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/conversations/:conversation_id',
-    getConversationsConversationIdHandler(async (c, { param }) => {}),
+    getConversationsConversationIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/conversations/:conversation_id',
-    postConversationsConversationIdHandler(async (c, { param, json }) => {}),
+    postConversationsConversationIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/conversations/:conversation_id',
-    deleteConversationsConversationIdHandler(async (c, { param }) => {}),
+    deleteConversationsConversationIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )

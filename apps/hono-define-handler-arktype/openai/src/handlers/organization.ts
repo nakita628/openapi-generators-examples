@@ -135,547 +135,547 @@ import {
 export const organizationHandler = new Hono()
   .get(
     '/organization/admin_api_keys',
-    getOrganizationAdminApiKeysHandler(async (c, { query }) => {}),
+    getOrganizationAdminApiKeysHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/admin_api_keys',
-    postOrganizationAdminApiKeysHandler(async (c, { json }) => {}),
+    postOrganizationAdminApiKeysHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/admin_api_keys/:key_id',
-    getOrganizationAdminApiKeysKeyIdHandler(async (c, { param }) => {}),
+    getOrganizationAdminApiKeysKeyIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/admin_api_keys/:key_id',
-    deleteOrganizationAdminApiKeysKeyIdHandler(async (c, { param }) => {}),
+    deleteOrganizationAdminApiKeysKeyIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/audit_logs',
-    getOrganizationAuditLogsHandler(async (c, { query }) => {}),
+    getOrganizationAuditLogsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/certificates',
-    getOrganizationCertificatesHandler(async (c, { query }) => {}),
+    getOrganizationCertificatesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/certificates',
-    postOrganizationCertificatesHandler(async (c, { json }) => {}),
+    postOrganizationCertificatesHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/certificates/activate',
-    postOrganizationCertificatesActivateHandler(async (c, { json }) => {}),
+    postOrganizationCertificatesActivateHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/certificates/deactivate',
-    postOrganizationCertificatesDeactivateHandler(async (c, { json }) => {}),
+    postOrganizationCertificatesDeactivateHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/certificates/:certificate_id',
-    getOrganizationCertificatesCertificateIdHandler(async (c, { param, query }) => {}),
+    getOrganizationCertificatesCertificateIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/certificates/:certificate_id',
-    postOrganizationCertificatesCertificateIdHandler(async (c, { param, json }) => {}),
+    postOrganizationCertificatesCertificateIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/certificates/:certificate_id',
-    deleteOrganizationCertificatesCertificateIdHandler(async (c, { param }) => {}),
+    deleteOrganizationCertificatesCertificateIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/costs',
-    getOrganizationCostsHandler(async (c, { query }) => {}),
+    getOrganizationCostsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/data_retention',
-    getOrganizationDataRetentionHandler(async (c) => {}),
+    getOrganizationDataRetentionHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/data_retention',
-    postOrganizationDataRetentionHandler(async (c, { json }) => {}),
+    postOrganizationDataRetentionHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/groups',
-    getOrganizationGroupsHandler(async (c, { query }) => {}),
+    getOrganizationGroupsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/groups',
-    postOrganizationGroupsHandler(async (c, { json }) => {}),
+    postOrganizationGroupsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/groups/:group_id',
-    getOrganizationGroupsGroupIdHandler(async (c, { param }) => {}),
+    getOrganizationGroupsGroupIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/groups/:group_id',
-    postOrganizationGroupsGroupIdHandler(async (c, { param, json }) => {}),
+    postOrganizationGroupsGroupIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/groups/:group_id',
-    deleteOrganizationGroupsGroupIdHandler(async (c, { param }) => {}),
+    deleteOrganizationGroupsGroupIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/groups/:group_id/roles',
-    getOrganizationGroupsGroupIdRolesHandler(async (c, { param, query }) => {}),
+    getOrganizationGroupsGroupIdRolesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/groups/:group_id/roles',
-    postOrganizationGroupsGroupIdRolesHandler(async (c, { param, json }) => {}),
+    postOrganizationGroupsGroupIdRolesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/groups/:group_id/roles/:role_id',
-    getOrganizationGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => {}),
+    getOrganizationGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/groups/:group_id/roles/:role_id',
-    deleteOrganizationGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteOrganizationGroupsGroupIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/groups/:group_id/users',
-    getOrganizationGroupsGroupIdUsersHandler(async (c, { param, query }) => {}),
+    getOrganizationGroupsGroupIdUsersHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/groups/:group_id/users',
-    postOrganizationGroupsGroupIdUsersHandler(async (c, { param, json }) => {}),
+    postOrganizationGroupsGroupIdUsersHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/groups/:group_id/users/:user_id',
-    getOrganizationGroupsGroupIdUsersUserIdHandler(async (c, { param }) => {}),
+    getOrganizationGroupsGroupIdUsersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/groups/:group_id/users/:user_id',
-    deleteOrganizationGroupsGroupIdUsersUserIdHandler(async (c, { param }) => {}),
+    deleteOrganizationGroupsGroupIdUsersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/invites',
-    getOrganizationInvitesHandler(async (c, { query }) => {}),
+    getOrganizationInvitesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/invites',
-    postOrganizationInvitesHandler(async (c, { json }) => {}),
+    postOrganizationInvitesHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/invites/:invite_id',
-    getOrganizationInvitesInviteIdHandler(async (c, { param }) => {}),
+    getOrganizationInvitesInviteIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/invites/:invite_id',
-    deleteOrganizationInvitesInviteIdHandler(async (c, { param }) => {}),
+    deleteOrganizationInvitesInviteIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects',
-    getOrganizationProjectsHandler(async (c, { query }) => {}),
+    getOrganizationProjectsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects',
-    postOrganizationProjectsHandler(async (c, { json }) => {}),
+    postOrganizationProjectsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id',
-    getOrganizationProjectsProjectIdHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id',
-    postOrganizationProjectsProjectIdHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/api_keys',
-    getOrganizationProjectsProjectIdApiKeysHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdApiKeysHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/api_keys/:api_key_id',
-    getOrganizationProjectsProjectIdApiKeysApiKeyIdHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdApiKeysApiKeyIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/api_keys/:api_key_id',
-    postOrganizationProjectsProjectIdApiKeysApiKeyIdHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdApiKeysApiKeyIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/projects/:project_id/api_keys/:api_key_id',
-    deleteOrganizationProjectsProjectIdApiKeysApiKeyIdHandler(async (c, { param }) => {}),
+    deleteOrganizationProjectsProjectIdApiKeysApiKeyIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/archive',
-    postOrganizationProjectsProjectIdArchiveHandler(async (c, { param }) => {}),
+    postOrganizationProjectsProjectIdArchiveHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/certificates',
-    getOrganizationProjectsProjectIdCertificatesHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdCertificatesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/certificates/activate',
-    postOrganizationProjectsProjectIdCertificatesActivateHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdCertificatesActivateHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/certificates/deactivate',
     postOrganizationProjectsProjectIdCertificatesDeactivateHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/organization/projects/:project_id/data_retention',
-    getOrganizationProjectsProjectIdDataRetentionHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdDataRetentionHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/data_retention',
-    postOrganizationProjectsProjectIdDataRetentionHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdDataRetentionHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/groups',
-    getOrganizationProjectsProjectIdGroupsHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdGroupsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/groups',
-    postOrganizationProjectsProjectIdGroupsHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdGroupsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/groups/:group_id',
-    getOrganizationProjectsProjectIdGroupsGroupIdHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdGroupsGroupIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/projects/:project_id/groups/:group_id',
-    deleteOrganizationProjectsProjectIdGroupsGroupIdHandler(async (c, { param }) => {}),
+    deleteOrganizationProjectsProjectIdGroupsGroupIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/hosted_tool_permissions',
-    getOrganizationProjectsProjectIdHostedToolPermissionsHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdHostedToolPermissionsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/hosted_tool_permissions',
-    postOrganizationProjectsProjectIdHostedToolPermissionsHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdHostedToolPermissionsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/model_permissions',
-    getOrganizationProjectsProjectIdModelPermissionsHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdModelPermissionsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/model_permissions',
-    postOrganizationProjectsProjectIdModelPermissionsHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdModelPermissionsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/projects/:project_id/model_permissions',
-    deleteOrganizationProjectsProjectIdModelPermissionsHandler(async (c, { param }) => {}),
+    deleteOrganizationProjectsProjectIdModelPermissionsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/rate_limits',
-    getOrganizationProjectsProjectIdRateLimitsHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdRateLimitsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/rate_limits/:rate_limit_id',
-    postOrganizationProjectsProjectIdRateLimitsRateLimitIdHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdRateLimitsRateLimitIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/service_accounts',
-    getOrganizationProjectsProjectIdServiceAccountsHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdServiceAccountsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/service_accounts',
-    postOrganizationProjectsProjectIdServiceAccountsHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdServiceAccountsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
     getOrganizationProjectsProjectIdServiceAccountsServiceAccountIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .post(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
     postOrganizationProjectsProjectIdServiceAccountsServiceAccountIdHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .delete(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
     deleteOrganizationProjectsProjectIdServiceAccountsServiceAccountIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/organization/projects/:project_id/spend_alerts',
-    getOrganizationProjectsProjectIdSpendAlertsHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdSpendAlertsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/spend_alerts',
-    postOrganizationProjectsProjectIdSpendAlertsHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdSpendAlertsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/spend_alerts/:alert_id',
-    getOrganizationProjectsProjectIdSpendAlertsAlertIdHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdSpendAlertsAlertIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/spend_alerts/:alert_id',
-    postOrganizationProjectsProjectIdSpendAlertsAlertIdHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdSpendAlertsAlertIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/projects/:project_id/spend_alerts/:alert_id',
-    deleteOrganizationProjectsProjectIdSpendAlertsAlertIdHandler(async (c, { param }) => {}),
+    deleteOrganizationProjectsProjectIdSpendAlertsAlertIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/users',
-    getOrganizationProjectsProjectIdUsersHandler(async (c, { param, query }) => {}),
+    getOrganizationProjectsProjectIdUsersHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/users',
-    postOrganizationProjectsProjectIdUsersHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdUsersHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/users/:user_id',
-    getOrganizationProjectsProjectIdUsersUserIdHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdUsersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/users/:user_id',
-    postOrganizationProjectsProjectIdUsersUserIdHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdUsersUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/projects/:project_id/users/:user_id',
-    deleteOrganizationProjectsProjectIdUsersUserIdHandler(async (c, { param }) => {}),
+    deleteOrganizationProjectsProjectIdUsersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/roles',
-    getOrganizationRolesHandler(async (c, { query }) => {}),
+    getOrganizationRolesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/roles',
-    postOrganizationRolesHandler(async (c, { json }) => {}),
+    postOrganizationRolesHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/roles/:role_id',
-    getOrganizationRolesRoleIdHandler(async (c, { param }) => {}),
+    getOrganizationRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/roles/:role_id',
-    postOrganizationRolesRoleIdHandler(async (c, { param, json }) => {}),
+    postOrganizationRolesRoleIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/roles/:role_id',
-    deleteOrganizationRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteOrganizationRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/spend_alerts',
-    getOrganizationSpendAlertsHandler(async (c, { query }) => {}),
+    getOrganizationSpendAlertsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/spend_alerts',
-    postOrganizationSpendAlertsHandler(async (c, { json }) => {}),
+    postOrganizationSpendAlertsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/spend_alerts/:alert_id',
-    getOrganizationSpendAlertsAlertIdHandler(async (c, { param }) => {}),
+    getOrganizationSpendAlertsAlertIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/spend_alerts/:alert_id',
-    postOrganizationSpendAlertsAlertIdHandler(async (c, { param, json }) => {}),
+    postOrganizationSpendAlertsAlertIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/spend_alerts/:alert_id',
-    deleteOrganizationSpendAlertsAlertIdHandler(async (c, { param }) => {}),
+    deleteOrganizationSpendAlertsAlertIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/audio_speeches',
-    getOrganizationUsageAudioSpeechesHandler(async (c, { query }) => {}),
+    getOrganizationUsageAudioSpeechesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/audio_transcriptions',
-    getOrganizationUsageAudioTranscriptionsHandler(async (c, { query }) => {}),
+    getOrganizationUsageAudioTranscriptionsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/code_interpreter_sessions',
-    getOrganizationUsageCodeInterpreterSessionsHandler(async (c, { query }) => {}),
+    getOrganizationUsageCodeInterpreterSessionsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/completions',
-    getOrganizationUsageCompletionsHandler(async (c, { query }) => {}),
+    getOrganizationUsageCompletionsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/embeddings',
-    getOrganizationUsageEmbeddingsHandler(async (c, { query }) => {}),
+    getOrganizationUsageEmbeddingsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/file_search_calls',
-    getOrganizationUsageFileSearchCallsHandler(async (c, { query }) => {}),
+    getOrganizationUsageFileSearchCallsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/images',
-    getOrganizationUsageImagesHandler(async (c, { query }) => {}),
+    getOrganizationUsageImagesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/moderations',
-    getOrganizationUsageModerationsHandler(async (c, { query }) => {}),
+    getOrganizationUsageModerationsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/vector_stores',
-    getOrganizationUsageVectorStoresHandler(async (c, { query }) => {}),
+    getOrganizationUsageVectorStoresHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/usage/web_search_calls',
-    getOrganizationUsageWebSearchCallsHandler(async (c, { query }) => {}),
+    getOrganizationUsageWebSearchCallsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/users',
-    getOrganizationUsersHandler(async (c, { query }) => {}),
+    getOrganizationUsersHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/users/:user_id',
-    getOrganizationUsersUserIdHandler(async (c, { param }) => {}),
+    getOrganizationUsersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/users/:user_id',
-    postOrganizationUsersUserIdHandler(async (c, { param, json }) => {}),
+    postOrganizationUsersUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/users/:user_id',
-    deleteOrganizationUsersUserIdHandler(async (c, { param }) => {}),
+    deleteOrganizationUsersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/users/:user_id/roles',
-    getOrganizationUsersUserIdRolesHandler(async (c, { param, query }) => {}),
+    getOrganizationUsersUserIdRolesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/users/:user_id/roles',
-    postOrganizationUsersUserIdRolesHandler(async (c, { param, json }) => {}),
+    postOrganizationUsersUserIdRolesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/users/:user_id/roles/:role_id',
-    getOrganizationUsersUserIdRolesRoleIdHandler(async (c, { param }) => {}),
+    getOrganizationUsersUserIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/users/:user_id/roles/:role_id',
-    deleteOrganizationUsersUserIdRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteOrganizationUsersUserIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/external_keys',
-    getOrganizationExternalKeysHandler(async (c, { query }) => {}),
+    getOrganizationExternalKeysHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/external_keys',
-    postOrganizationExternalKeysHandler(async (c, { json }) => {}),
+    postOrganizationExternalKeysHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/external_keys/:external_key_id',
-    getOrganizationExternalKeysExternalKeyIdHandler(async (c, { param }) => {}),
+    getOrganizationExternalKeysExternalKeyIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/external_keys/:external_key_id',
-    deleteOrganizationExternalKeysExternalKeyIdHandler(async (c, { param }) => {}),
+    deleteOrganizationExternalKeysExternalKeyIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/external_keys/:external_key_id/validate',
-    postOrganizationExternalKeysExternalKeyIdValidateHandler(async (c, { param }) => {}),
+    postOrganizationExternalKeysExternalKeyIdValidateHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/workload_identity_providers',
-    getOrganizationWorkloadIdentityProvidersHandler(async (c, { query }) => {}),
+    getOrganizationWorkloadIdentityProvidersHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/workload_identity_providers',
-    postOrganizationWorkloadIdentityProvidersHandler(async (c, { json }) => {}),
+    postOrganizationWorkloadIdentityProvidersHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
     getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
     postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .delete(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
     deleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules',
     getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesHandler(
-      async (c, { param, query }) => {},
+      async (c, { param, query }) => { throw new Error('Not implemented') },
     ),
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules',
     postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
     getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
     postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .delete(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
     deleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/organization/usage/decisions',
-    getOrganizationUsageDecisionsHandler(async (c, { query }) => {}),
+    getOrganizationUsageDecisionsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/external_storage',
-    getOrganizationExternalStorageHandler(async (c, { query }) => {}),
+    getOrganizationExternalStorageHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/external_storage',
-    postOrganizationExternalStorageHandler(async (c, { json }) => {}),
+    postOrganizationExternalStorageHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/external_storage/:external_storage_id',
-    getOrganizationExternalStorageExternalStorageIdHandler(async (c, { param }) => {}),
+    getOrganizationExternalStorageExternalStorageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/external_storage/:external_storage_id',
-    deleteOrganizationExternalStorageExternalStorageIdHandler(async (c, { param }) => {}),
+    deleteOrganizationExternalStorageExternalStorageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/external_storage/:external_storage_id/validate',
-    postOrganizationExternalStorageExternalStorageIdValidateHandler(async (c, { param }) => {}),
+    postOrganizationExternalStorageExternalStorageIdValidateHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/spend_limit',
-    getOrganizationSpendLimitHandler(async (c) => {}),
+    getOrganizationSpendLimitHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/spend_limit',
-    postOrganizationSpendLimitHandler(async (c, { json }) => {}),
+    postOrganizationSpendLimitHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/spend_limit',
-    deleteOrganizationSpendLimitHandler(async (c) => {}),
+    deleteOrganizationSpendLimitHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/spend_limit',
-    getOrganizationProjectsProjectIdSpendLimitHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdSpendLimitHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/spend_limit',
-    postOrganizationProjectsProjectIdSpendLimitHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdSpendLimitHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/organization/projects/:project_id/spend_limit',
-    deleteOrganizationProjectsProjectIdSpendLimitHandler(async (c, { param }) => {}),
+    deleteOrganizationProjectsProjectIdSpendLimitHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/organization/projects/:project_id/service_tier_settings',
-    getOrganizationProjectsProjectIdServiceTierSettingsHandler(async (c, { param }) => {}),
+    getOrganizationProjectsProjectIdServiceTierSettingsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/service_tier_settings',
-    postOrganizationProjectsProjectIdServiceTierSettingsHandler(async (c, { param, json }) => {}),
+    postOrganizationProjectsProjectIdServiceTierSettingsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/organization/projects/:project_id/service_accounts/:service_account_id/api_keys',
     postOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApiKeysHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )

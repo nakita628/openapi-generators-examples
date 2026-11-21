@@ -4,13 +4,13 @@ import { getShowsIdHandler, getShowsHandler, getShowsIdEpisodesHandler } from '.
 export const showsHandler = new Hono()
   .get(
     '/shows/:id',
-    getShowsIdHandler(async (c, { param, query }) => {}),
+    getShowsIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/shows',
-    getShowsHandler(async (c, { query }) => {}),
+    getShowsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/shows/:id/episodes',
-    getShowsIdEpisodesHandler(async (c, { param, query }) => {}),
+    getShowsIdEpisodesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )

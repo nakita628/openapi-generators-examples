@@ -15,18 +15,18 @@ export const containersHandler = new Hono()
         name: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/containers', sValidator('json', CreateContainerBodySchema), (c) => {})
+  .post('/containers', sValidator('json', CreateContainerBodySchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/containers/:container_id',
     sValidator('param', z.object({ container_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id',
     sValidator('param', z.object({ container_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files',
@@ -39,27 +39,27 @@ export const containersHandler = new Hono()
         after: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/containers/:container_id/files',
     sValidator('param', z.object({ container_id: z.string() })),
     sValidator('json', CreateContainerFileBodySchema),
     sValidator('form', CreateContainerFileBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id',
     sValidator('param', z.object({ container_id: z.string(), file_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id/files/:file_id',
     sValidator('param', z.object({ container_id: z.string(), file_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id/content',
     sValidator('param', z.object({ container_id: z.string(), file_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

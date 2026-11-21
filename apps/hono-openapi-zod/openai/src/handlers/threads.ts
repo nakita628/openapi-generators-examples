@@ -40,7 +40,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('json', CreateThreadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/runs',
@@ -61,7 +61,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('json', CreateThreadAndRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id',
@@ -79,7 +79,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id',
@@ -98,7 +98,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', z.object({ thread_id: z.string() })),
     validator('json', ModifyThreadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/threads/:thread_id',
@@ -116,7 +116,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/messages',
@@ -144,7 +144,7 @@ export const threadsHandler = new Hono()
         run_id: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages',
@@ -163,7 +163,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', z.object({ thread_id: z.string() })),
     validator('json', CreateMessageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/messages/:message_id',
@@ -181,7 +181,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string(), message_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages/:message_id',
@@ -200,7 +200,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', z.object({ thread_id: z.string(), message_id: z.string() })),
     validator('json', ModifyMessageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/threads/:thread_id/messages/:message_id',
@@ -218,7 +218,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string(), message_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs',
@@ -245,7 +245,7 @@ export const threadsHandler = new Hono()
         before: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs',
@@ -278,7 +278,7 @@ export const threadsHandler = new Hono()
       }),
     ),
     validator('json', CreateRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id',
@@ -296,7 +296,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string(), run_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id',
@@ -315,7 +315,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', z.object({ thread_id: z.string(), run_id: z.string() })),
     validator('json', ModifyRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/cancel',
@@ -333,7 +333,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string(), run_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps',
@@ -366,7 +366,7 @@ export const threadsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps/:step_id',
@@ -398,7 +398,7 @@ export const threadsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/submit_tool_outputs',
@@ -421,5 +421,5 @@ export const threadsHandler = new Hono()
     }),
     validator('param', z.object({ thread_id: z.string(), run_id: z.string() })),
     validator('json', SubmitToolOutputsRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

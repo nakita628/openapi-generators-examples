@@ -83,5 +83,5 @@ export const searchHandler = new Hono().get(
         .exactOptional(),
     }),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

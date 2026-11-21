@@ -12,7 +12,7 @@ export const getModels = os
       'Lists the currently available models, and provides basic information about each one such as the owner and availability.',
   })
   .output(ListModelsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getModelsModel = os
   .route({
@@ -25,7 +25,7 @@ export const getModelsModel = os
   })
   .input(type({ model: type('string') }))
   .output(ModelSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteModelsModel = os
   .route({
@@ -38,4 +38,4 @@ export const deleteModelsModel = os
   })
   .input(type({ model: type('string') }))
   .output(DeleteModelResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

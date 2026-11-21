@@ -99,7 +99,7 @@ export const fineTuning = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/fine_tuning/alpha/graders/run', ({ body }) => {}, {
+  .post('/fine_tuning/alpha/graders/run', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'RunGraderRequest',
     response: { 200: 'RunGraderResponse', 400: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -109,7 +109,7 @@ export const fineTuning = new Elysia()
       operationId: 'runGrader',
     },
   })
-  .post('/fine_tuning/alpha/graders/validate', ({ body }) => {}, {
+  .post('/fine_tuning/alpha/graders/validate', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'ValidateGraderRequest',
     response: { 200: 'ValidateGraderResponse', 400: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -121,7 +121,7 @@ export const fineTuning = new Elysia()
   })
   .get(
     '/fine_tuning/checkpoints/:fine_tuned_model_checkpoint/permissions',
-    ({ params, query }) => {},
+    ({ params, query }) => { throw new Error('Not implemented') },
     {
       params: FineTuningModel.listFineTuningCheckpointPermissionsParams,
       query: FineTuningModel.listFineTuningCheckpointPermissionsQuery,
@@ -141,7 +141,7 @@ export const fineTuning = new Elysia()
   )
   .post(
     '/fine_tuning/checkpoints/:fine_tuned_model_checkpoint/permissions',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: FineTuningModel.createFineTuningCheckpointPermissionParams,
       body: 'CreateFineTuningCheckpointPermissionRequest',
@@ -162,7 +162,7 @@ export const fineTuning = new Elysia()
   )
   .delete(
     '/fine_tuning/checkpoints/:fine_tuned_model_checkpoint/permissions/:permission_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: FineTuningModel.deleteFineTuningCheckpointPermissionParams,
       response: {
@@ -180,7 +180,7 @@ export const fineTuning = new Elysia()
       },
     },
   )
-  .get('/fine_tuning/jobs', ({ query }) => {}, {
+  .get('/fine_tuning/jobs', ({ query }) => { throw new Error('Not implemented') }, {
     query: FineTuningModel.listPaginatedFineTuningJobsQuery,
     response: {
       200: 'ListPaginatedFineTuningJobsResponse',
@@ -194,7 +194,7 @@ export const fineTuning = new Elysia()
       operationId: 'listPaginatedFineTuningJobs',
     },
   })
-  .post('/fine_tuning/jobs', ({ body }) => {}, {
+  .post('/fine_tuning/jobs', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateFineTuningJobRequest',
     response: { 200: 'FineTuningJob', 400: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -205,7 +205,7 @@ export const fineTuning = new Elysia()
       operationId: 'createFineTuningJob',
     },
   })
-  .get('/fine_tuning/jobs/:fine_tuning_job_id', ({ params }) => {}, {
+  .get('/fine_tuning/jobs/:fine_tuning_job_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: FineTuningModel.retrieveFineTuningJobParams,
     response: { 200: 'FineTuningJob', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -216,7 +216,7 @@ export const fineTuning = new Elysia()
       operationId: 'retrieveFineTuningJob',
     },
   })
-  .post('/fine_tuning/jobs/:fine_tuning_job_id/cancel', ({ params }) => {}, {
+  .post('/fine_tuning/jobs/:fine_tuning_job_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: FineTuningModel.cancelFineTuningJobParams,
     response: {
       200: 'FineTuningJob',
@@ -231,7 +231,7 @@ export const fineTuning = new Elysia()
       operationId: 'cancelFineTuningJob',
     },
   })
-  .get('/fine_tuning/jobs/:fine_tuning_job_id/checkpoints', ({ params, query }) => {}, {
+  .get('/fine_tuning/jobs/:fine_tuning_job_id/checkpoints', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: FineTuningModel.listFineTuningJobCheckpointsParams,
     query: FineTuningModel.listFineTuningJobCheckpointsQuery,
     response: {
@@ -247,7 +247,7 @@ export const fineTuning = new Elysia()
       operationId: 'listFineTuningJobCheckpoints',
     },
   })
-  .get('/fine_tuning/jobs/:fine_tuning_job_id/events', ({ params, query }) => {}, {
+  .get('/fine_tuning/jobs/:fine_tuning_job_id/events', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: FineTuningModel.listFineTuningEventsParams,
     query: FineTuningModel.listFineTuningEventsQuery,
     response: {
@@ -263,7 +263,7 @@ export const fineTuning = new Elysia()
       operationId: 'listFineTuningEvents',
     },
   })
-  .post('/fine_tuning/jobs/:fine_tuning_job_id/pause', ({ params }) => {}, {
+  .post('/fine_tuning/jobs/:fine_tuning_job_id/pause', ({ params }) => { throw new Error('Not implemented') }, {
     params: FineTuningModel.pauseFineTuningJobParams,
     response: {
       200: 'FineTuningJob',
@@ -278,7 +278,7 @@ export const fineTuning = new Elysia()
       operationId: 'pauseFineTuningJob',
     },
   })
-  .post('/fine_tuning/jobs/:fine_tuning_job_id/resume', ({ params }) => {}, {
+  .post('/fine_tuning/jobs/:fine_tuning_job_id/resume', ({ params }) => { throw new Error('Not implemented') }, {
     params: FineTuningModel.resumeFineTuningJobParams,
     response: {
       200: 'FineTuningJob',

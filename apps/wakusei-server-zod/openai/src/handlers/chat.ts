@@ -29,7 +29,7 @@ export const getChatCompletions = os
     }),
   )
   .output(ChatCompletionListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChatCompletions = os
   .route({
@@ -44,7 +44,7 @@ export const postChatCompletions = os
   })
   .input(CreateChatCompletionRequestSchema)
   .output(CreateChatCompletionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChatCompletionsCompletionId = os
   .route({
@@ -58,7 +58,7 @@ export const getChatCompletionsCompletionId = os
   })
   .input(z.object({ completion_id: z.string() }))
   .output(CreateChatCompletionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChatCompletionsCompletionId = os
   .route({
@@ -72,7 +72,7 @@ export const postChatCompletionsCompletionId = os
   })
   .input(z.object({ completion_id: z.string(), metadata: MetadataSchema }))
   .output(CreateChatCompletionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChatCompletionsCompletionId = os
   .route({
@@ -86,7 +86,7 @@ export const deleteChatCompletionsCompletionId = os
   })
   .input(z.object({ completion_id: z.string() }))
   .output(ChatCompletionDeletedSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChatCompletionsCompletionIdMessages = os
   .route({
@@ -107,4 +107,4 @@ export const getChatCompletionsCompletionIdMessages = os
     }),
   )
   .output(ChatCompletionMessageListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

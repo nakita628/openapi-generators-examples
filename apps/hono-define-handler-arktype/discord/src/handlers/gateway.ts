@@ -4,9 +4,9 @@ import { getGatewayHandler, getGatewayBotHandler } from '../routes'
 export const gatewayHandler = new Hono()
   .get(
     '/gateway',
-    getGatewayHandler(async (c) => {}),
+    getGatewayHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/gateway/bot',
-    getGatewayBotHandler(async (c) => {}),
+    getGatewayBotHandler(async (c) => { throw new Error('Not implemented') }),
   )

@@ -92,7 +92,7 @@ export const getGuildsTemplatesCode = os
   })
   .input(v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) }))
   .output(GuildTemplateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildId = os
   .route({
@@ -113,7 +113,7 @@ export const getGuildsGuildId = os
     }),
   )
   .output(GuildWithCountsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildId = os
   .route({
@@ -162,7 +162,7 @@ export const patchGuildsGuildId = os
     }),
   )
   .output(GuildResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdAuditLogs = os
   .route({
@@ -191,7 +191,7 @@ export const getGuildsGuildIdAuditLogs = os
     }),
   )
   .output(GuildAuditLogResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdAutoModerationRules = os
   .route({
@@ -214,7 +214,7 @@ export const getGuildsGuildIdAutoModerationRules = os
       ),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdAutoModerationRules = os
   .route({
@@ -232,7 +232,7 @@ export const postGuildsGuildIdAutoModerationRules = os
       UserProfileRuleResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdAutoModerationRulesRuleId = os
   .route({
@@ -250,7 +250,7 @@ export const getGuildsGuildIdAutoModerationRulesRuleId = os
       UserProfileRuleResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdAutoModerationRulesRuleId = os
   .route({
@@ -260,7 +260,7 @@ export const deleteGuildsGuildIdAutoModerationRulesRuleId = os
     successDescription: '204 response for delete_auto_moderation_rule',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdAutoModerationRulesRuleId = os
   .route({
@@ -278,7 +278,7 @@ export const patchGuildsGuildIdAutoModerationRulesRuleId = os
       UserProfileRuleResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdBans = os
   .route({
@@ -304,7 +304,7 @@ export const getGuildsGuildIdBans = os
     }),
   )
   .output(v.nullable(v.array(GuildBanResponseSchema)))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdBansUserId = os
   .route({
@@ -314,7 +314,7 @@ export const getGuildsGuildIdBansUserId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
   .output(GuildBanResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putGuildsGuildIdBansUserId = os
   .route({
@@ -335,7 +335,7 @@ export const putGuildsGuildIdBansUserId = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdBansUserId = os
   .route({
@@ -345,7 +345,7 @@ export const deleteGuildsGuildIdBansUserId = os
     successDescription: '204 response for unban_user_from_guild',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdBulkBan = os
   .route({
@@ -367,7 +367,7 @@ export const postGuildsGuildIdBulkBan = os
     }),
   )
   .output(BulkBanUsersResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdChannels = os
   .route({
@@ -388,7 +388,7 @@ export const getGuildsGuildIdChannels = os
       ),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdChannels = os
   .route({
@@ -471,7 +471,7 @@ export const postGuildsGuildIdChannels = os
     }),
   )
   .output(GuildChannelResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdChannels = os
   .route({
@@ -481,7 +481,7 @@ export const patchGuildsGuildIdChannels = os
     successDescription: '204 response for bulk_update_guild_channels',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdEmojis = os
   .route({
@@ -491,7 +491,7 @@ export const getGuildsGuildIdEmojis = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(v.nullable(v.array(EmojiResponseSchema)))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdEmojis = os
   .route({
@@ -517,7 +517,7 @@ export const postGuildsGuildIdEmojis = os
     }),
   )
   .output(EmojiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdEmojisEmojiId = os
   .route({
@@ -527,7 +527,7 @@ export const getGuildsGuildIdEmojisEmojiId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }))
   .output(EmojiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdEmojisEmojiId = os
   .route({
@@ -537,7 +537,7 @@ export const deleteGuildsGuildIdEmojisEmojiId = os
     successDescription: '204 response for delete_guild_emoji',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdEmojisEmojiId = os
   .route({
@@ -562,7 +562,7 @@ export const patchGuildsGuildIdEmojisEmojiId = os
     }),
   )
   .output(EmojiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putGuildsGuildIdIncidentActions = os
   .route({
@@ -603,7 +603,7 @@ export const putGuildsGuildIdIncidentActions = os
     }),
   )
   .output(GuildIncidentsDataResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdIntegrations = os
   .route({
@@ -623,7 +623,7 @@ export const getGuildsGuildIdIntegrations = os
       ),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdIntegrationsIntegrationId = os
   .route({
@@ -633,7 +633,7 @@ export const deleteGuildsGuildIdIntegrationsIntegrationId = os
     successDescription: '204 response for delete_guild_integration',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, integration_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdInvites = os
   .route({
@@ -654,7 +654,7 @@ export const getGuildsGuildIdInvites = os
       ),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdMembers = os
   .route({
@@ -679,7 +679,7 @@ export const getGuildsGuildIdMembers = os
     }),
   )
   .output(v.array(GuildMemberResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdMembersMe = os
   .route({
@@ -697,7 +697,7 @@ export const patchGuildsGuildIdMembersMe = os
     }),
   )
   .output(PrivateGuildMemberResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdMembersSearch = os
   .route({
@@ -722,7 +722,7 @@ export const getGuildsGuildIdMembersSearch = os
     }),
   )
   .output(v.array(GuildMemberResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdMembersUserId = os
   .route({
@@ -732,7 +732,7 @@ export const getGuildsGuildIdMembersUserId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
   .output(GuildMemberResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putGuildsGuildIdMembersUserId = os
   .route({
@@ -762,7 +762,7 @@ export const putGuildsGuildIdMembersUserId = os
     }),
   )
   .output(GuildMemberResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdMembersUserId = os
   .route({
@@ -772,7 +772,7 @@ export const deleteGuildsGuildIdMembersUserId = os
     successDescription: '204 response for delete_guild_member',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdMembersUserId = os
   .route({
@@ -811,7 +811,7 @@ export const patchGuildsGuildIdMembersUserId = os
     }),
   )
   .output(GuildMemberResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putGuildsGuildIdMembersUserIdRolesRoleId = os
   .route({
@@ -827,7 +827,7 @@ export const putGuildsGuildIdMembersUserIdRolesRoleId = os
       role_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdMembersUserIdRolesRoleId = os
   .route({
@@ -843,7 +843,7 @@ export const deleteGuildsGuildIdMembersUserIdRolesRoleId = os
       role_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdMessagesSearch = os
   .route({
@@ -1030,7 +1030,7 @@ export const getGuildsGuildIdMessagesSearch = os
     }),
   )
   .output(GuildSearchResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdNewMemberWelcome = os
   .route({
@@ -1040,7 +1040,7 @@ export const getGuildsGuildIdNewMemberWelcome = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(GuildHomeSettingsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdOnboarding = os
   .route({
@@ -1050,7 +1050,7 @@ export const getGuildsGuildIdOnboarding = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(UserGuildOnboardingResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putGuildsGuildIdOnboarding = os
   .route({
@@ -1078,7 +1078,7 @@ export const putGuildsGuildIdOnboarding = os
     }),
   )
   .output(GuildOnboardingResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdPermissionsMemberUserId = os
   .route({
@@ -1090,7 +1090,7 @@ export const getGuildsGuildIdPermissionsMemberUserId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
   .output(PermissionsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdPermissionsRoleRoleId = os
   .route({
@@ -1102,7 +1102,7 @@ export const getGuildsGuildIdPermissionsRoleRoleId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }))
   .output(PermissionsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdPreview = os
   .route({
@@ -1112,7 +1112,7 @@ export const getGuildsGuildIdPreview = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(GuildPreviewResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdPrune = os
   .route({
@@ -1163,7 +1163,7 @@ export const getGuildsGuildIdPrune = os
     }),
   )
   .output(GuildPruneResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdPrune = os
   .route({
@@ -1190,7 +1190,7 @@ export const postGuildsGuildIdPrune = os
     }),
   )
   .output(GuildPruneResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdRegions = os
   .route({
@@ -1200,7 +1200,7 @@ export const getGuildsGuildIdRegions = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(v.nullable(v.array(VoiceRegionResponseSchema)))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdRequests = os
   .route({
@@ -1228,7 +1228,7 @@ export const getGuildsGuildIdRequests = os
     }),
   )
   .output(GuildJoinRequestsListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdRequestsRequestId = os
   .route({
@@ -1256,7 +1256,7 @@ export const patchGuildsGuildIdRequestsRequestId = os
     }),
   )
   .output(GuildJoinRequestResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdRoles = os
   .route({
@@ -1266,7 +1266,7 @@ export const getGuildsGuildIdRoles = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(v.array(GuildRoleResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdRoles = os
   .route({
@@ -1290,7 +1290,7 @@ export const postGuildsGuildIdRoles = os
     }),
   )
   .output(GuildRoleResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdRoles = os
   .route({
@@ -1300,7 +1300,7 @@ export const patchGuildsGuildIdRoles = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(v.array(GuildRoleResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdRolesMemberCounts = os
   .route({
@@ -1315,7 +1315,7 @@ export const getGuildsGuildIdRolesMemberCounts = os
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdRolesRoleId = os
   .route({
@@ -1325,7 +1325,7 @@ export const getGuildsGuildIdRolesRoleId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }))
   .output(GuildRoleResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdRolesRoleId = os
   .route({
@@ -1335,7 +1335,7 @@ export const deleteGuildsGuildIdRolesRoleId = os
     successDescription: '204 response for delete_guild_role',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdRolesRoleId = os
   .route({
@@ -1360,7 +1360,7 @@ export const patchGuildsGuildIdRolesRoleId = os
     }),
   )
   .output(GuildRoleResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdScheduledEvents = os
   .route({
@@ -1391,7 +1391,7 @@ export const getGuildsGuildIdScheduledEvents = os
       ),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdScheduledEvents = os
   .route({
@@ -1407,7 +1407,7 @@ export const postGuildsGuildIdScheduledEvents = os
       VoiceScheduledEventResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdScheduledEventsGuildScheduledEventId = os
   .route({
@@ -1435,7 +1435,7 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventId = os
       VoiceScheduledEventResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdScheduledEventsGuildScheduledEventId = os
   .route({
@@ -1445,7 +1445,7 @@ export const deleteGuildsGuildIdScheduledEventsGuildScheduledEventId = os
     successDescription: '204 response for delete_guild_scheduled_event',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, guild_scheduled_event_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdScheduledEventsGuildScheduledEventId = os
   .route({
@@ -1461,7 +1461,7 @@ export const patchGuildsGuildIdScheduledEventsGuildScheduledEventId = os
       VoiceScheduledEventResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptions = os
   .route({
@@ -1515,7 +1515,7 @@ export const postGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptions = o
     }),
   )
   .output(GuildScheduledEventExceptionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsExceptionId = os
   .route({
@@ -1532,7 +1532,7 @@ export const deleteGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsEx
       exception_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsExceptionId = os
   .route({
@@ -1578,7 +1578,7 @@ export const patchGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsExc
     }),
   )
   .output(GuildScheduledEventExceptionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsers = os
   .route({
@@ -1612,7 +1612,7 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsers = os
     }),
   )
   .output(v.nullable(v.array(ScheduledEventUserResponseSchema)))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersCounts = os
   .route({
@@ -1636,7 +1636,7 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersCounts = o
     }),
   )
   .output(ScheduledEventUserCountResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildScheduledEventExceptionIdUsers =
   os
@@ -1673,7 +1673,7 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildScheduledE
       }),
     )
     .output(v.nullable(v.array(ScheduledEventUserResponseSchema)))
-    .handler(async ({ input }) => {})
+    .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdSoundboardSounds = os
   .route({
@@ -1683,7 +1683,7 @@ export const getGuildsGuildIdSoundboardSounds = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(ListGuildSoundboardSoundsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdSoundboardSounds = os
   .route({
@@ -1705,7 +1705,7 @@ export const postGuildsGuildIdSoundboardSounds = os
     }),
   )
   .output(SoundboardSoundResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdSoundboardSoundsSoundId = os
   .route({
@@ -1715,7 +1715,7 @@ export const getGuildsGuildIdSoundboardSoundsSoundId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }))
   .output(SoundboardSoundResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdSoundboardSoundsSoundId = os
   .route({
@@ -1725,7 +1725,7 @@ export const deleteGuildsGuildIdSoundboardSoundsSoundId = os
     successDescription: '204 response for delete_guild_soundboard_sound',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdSoundboardSoundsSoundId = os
   .route({
@@ -1746,7 +1746,7 @@ export const patchGuildsGuildIdSoundboardSoundsSoundId = os
     }),
   )
   .output(SoundboardSoundResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdStickers = os
   .route({
@@ -1756,7 +1756,7 @@ export const getGuildsGuildIdStickers = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(v.array(GuildStickerResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdStickers = os
   .route({
@@ -1767,7 +1767,7 @@ export const postGuildsGuildIdStickers = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(GuildStickerResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdStickersStickerId = os
   .route({
@@ -1777,7 +1777,7 @@ export const getGuildsGuildIdStickersStickerId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }))
   .output(GuildStickerResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdStickersStickerId = os
   .route({
@@ -1787,7 +1787,7 @@ export const deleteGuildsGuildIdStickersStickerId = os
     successDescription: '204 response for delete_guild_sticker',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdStickersStickerId = os
   .route({
@@ -1805,7 +1805,7 @@ export const patchGuildsGuildIdStickersStickerId = os
     }),
   )
   .output(GuildStickerResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdTemplates = os
   .route({
@@ -1815,7 +1815,7 @@ export const getGuildsGuildIdTemplates = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(v.nullable(v.array(GuildTemplateResponseSchema)))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postGuildsGuildIdTemplates = os
   .route({
@@ -1831,7 +1831,7 @@ export const postGuildsGuildIdTemplates = os
     }),
   )
   .output(GuildTemplateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putGuildsGuildIdTemplatesCode = os
   .route({
@@ -1843,7 +1843,7 @@ export const putGuildsGuildIdTemplatesCode = os
     v.object({ guild_id: SnowflakeTypeSchema, code: v.pipe(v.string(), v.maxCodePoints(152133)) }),
   )
   .output(GuildTemplateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteGuildsGuildIdTemplatesCode = os
   .route({
@@ -1855,7 +1855,7 @@ export const deleteGuildsGuildIdTemplatesCode = os
     v.object({ guild_id: SnowflakeTypeSchema, code: v.pipe(v.string(), v.maxCodePoints(152133)) }),
   )
   .output(GuildTemplateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdTemplatesCode = os
   .route({
@@ -1872,7 +1872,7 @@ export const patchGuildsGuildIdTemplatesCode = os
     }),
   )
   .output(GuildTemplateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdThreadsActive = os
   .route({
@@ -1882,7 +1882,7 @@ export const getGuildsGuildIdThreadsActive = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(ThreadsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdVanityUrl = os
   .route({
@@ -1892,7 +1892,7 @@ export const getGuildsGuildIdVanityUrl = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(VanityURLResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdVoiceStatesMe = os
   .route({
@@ -1902,7 +1902,7 @@ export const getGuildsGuildIdVoiceStatesMe = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(VoiceStateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdVoiceStatesMe = os
   .route({
@@ -1928,7 +1928,7 @@ export const patchGuildsGuildIdVoiceStatesMe = os
       channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdVoiceStatesUserId = os
   .route({
@@ -1938,7 +1938,7 @@ export const getGuildsGuildIdVoiceStatesUserId = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
   .output(VoiceStateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdVoiceStatesUserId = os
   .route({
@@ -1955,7 +1955,7 @@ export const patchGuildsGuildIdVoiceStatesUserId = os
       channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdWebhooks = os
   .route({
@@ -1975,7 +1975,7 @@ export const getGuildsGuildIdWebhooks = os
       ),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdWelcomeScreen = os
   .route({
@@ -1985,7 +1985,7 @@ export const getGuildsGuildIdWelcomeScreen = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(GuildWelcomeScreenResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdWelcomeScreen = os
   .route({
@@ -2004,7 +2004,7 @@ export const patchGuildsGuildIdWelcomeScreen = os
     }),
   )
   .output(GuildWelcomeScreenResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdWidget = os
   .route({
@@ -2014,7 +2014,7 @@ export const getGuildsGuildIdWidget = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(WidgetSettingsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchGuildsGuildIdWidget = os
   .route({
@@ -2030,7 +2030,7 @@ export const patchGuildsGuildIdWidget = os
     }),
   )
   .output(WidgetSettingsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdWidgetJson = os
   .route({
@@ -2040,7 +2040,7 @@ export const getGuildsGuildIdWidgetJson = os
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema }))
   .output(WidgetResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGuildsGuildIdWidgetPng = os
   .route({
@@ -2049,4 +2049,4 @@ export const getGuildsGuildIdWidgetPng = os
     successDescription: '200 response for get_guild_widget_png',
   })
   .input(v.object({ guild_id: SnowflakeTypeSchema, style: v.optional(WidgetImageStylesSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

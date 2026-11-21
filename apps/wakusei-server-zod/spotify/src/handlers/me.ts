@@ -56,7 +56,7 @@ export const getMeAudiobooks = os
     }),
   )
   .output(PagingSavedAudiobookObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMeAudiobooks = os
   .route({
@@ -80,7 +80,7 @@ export const putMeAudiobooks = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteMeAudiobooks = os
   .route({
@@ -104,7 +104,7 @@ export const deleteMeAudiobooks = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeAudiobooksContains = os
   .route({
@@ -129,7 +129,7 @@ export const getMeAudiobooksContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[false, true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMe = os
   .route({
@@ -142,7 +142,7 @@ export const getMe = os
     successDescription: 'A user',
   })
   .output(PrivateUserObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMePlaylists = os
   .route({
@@ -180,7 +180,7 @@ export const getMePlaylists = os
     }),
   )
   .output(PagingPlaylistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postMePlaylists = os
   .route({
@@ -231,7 +231,7 @@ export const postMePlaylists = os
       }),
   )
   .output(PlaylistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMeLibrary = os
   .route({
@@ -254,7 +254,7 @@ export const putMeLibrary = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteMeLibrary = os
   .route({
@@ -277,7 +277,7 @@ export const deleteMeLibrary = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeLibraryContains = os
   .route({
@@ -303,7 +303,7 @@ export const getMeLibraryContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[false, true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeAlbums = os
   .route({
@@ -350,7 +350,7 @@ export const getMeAlbums = os
     }),
   )
   .output(PagingSavedAlbumObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMeAlbums = os
   .route({
@@ -374,7 +374,7 @@ export const putMeAlbums = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteMeAlbums = os
   .route({
@@ -398,7 +398,7 @@ export const deleteMeAlbums = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeAlbumsContains = os
   .route({
@@ -423,7 +423,7 @@ export const getMeAlbumsContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[false, true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeTracks = os
   .route({
@@ -470,7 +470,7 @@ export const getMeTracks = os
     }),
   )
   .output(PagingSavedTrackObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMeTracks = os
   .route({
@@ -515,7 +515,7 @@ export const putMeTracks = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteMeTracks = os
   .route({
@@ -539,7 +539,7 @@ export const deleteMeTracks = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeTracksContains = os
   .route({
@@ -564,7 +564,7 @@ export const getMeTracksContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[false, true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeEpisodes = os
   .route({
@@ -610,7 +610,7 @@ export const getMeEpisodes = os
     }),
   )
   .output(PagingSavedEpisodeObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMeEpisodes = os
   .route({
@@ -634,7 +634,7 @@ export const putMeEpisodes = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteMeEpisodes = os
   .route({
@@ -658,7 +658,7 @@ export const deleteMeEpisodes = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeEpisodesContains = os
   .route({
@@ -683,7 +683,7 @@ export const getMeEpisodesContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[false, true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeShows = os
   .route({
@@ -722,7 +722,7 @@ export const getMeShows = os
     }),
   )
   .output(PagingSavedShowObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMeShows = os
   .route({
@@ -746,7 +746,7 @@ export const putMeShows = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteMeShows = os
   .route({
@@ -778,7 +778,7 @@ export const deleteMeShows = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeShowsContains = os
   .route({
@@ -803,7 +803,7 @@ export const getMeShowsContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[false, true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeFollowing = os
   .route({
@@ -844,7 +844,7 @@ export const getMeFollowing = os
     }),
   )
   .output(z.object({ artists: CursorPagingSimplifiedArtistObjectSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMeFollowing = os
   .route({
@@ -872,7 +872,7 @@ export const putMeFollowing = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteMeFollowing = os
   .route({
@@ -900,7 +900,7 @@ export const deleteMeFollowing = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeFollowingContains = os
   .route({
@@ -928,7 +928,7 @@ export const getMeFollowingContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[false, true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMePlayer = os
   .route({
@@ -960,7 +960,7 @@ export const getMePlayer = os
     }),
   )
   .output(CurrentlyPlayingContextObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMePlayer = os
   .route({
@@ -992,7 +992,7 @@ export const putMePlayer = os
       })
       .meta({ examples: [{ device_ids: ['74ASZWbe4lXaubB36ztrGX'] }] }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMePlayerDevices = os
   .route({
@@ -1005,7 +1005,7 @@ export const getMePlayerDevices = os
     successDescription: 'A set of devices',
   })
   .output(z.object({ devices: z.array(DeviceObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMePlayerCurrentlyPlaying = os
   .route({
@@ -1036,7 +1036,7 @@ export const getMePlayerCurrentlyPlaying = os
     }),
   )
   .output(CurrentlyPlayingObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMePlayerPlay = os
   .route({
@@ -1089,7 +1089,7 @@ export const putMePlayerPlay = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMePlayerPause = os
   .route({
@@ -1114,7 +1114,7 @@ export const putMePlayerPause = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postMePlayerNext = os
   .route({
@@ -1139,7 +1139,7 @@ export const postMePlayerNext = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postMePlayerPrevious = os
   .route({
@@ -1164,7 +1164,7 @@ export const postMePlayerPrevious = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMePlayerSeek = os
   .route({
@@ -1197,7 +1197,7 @@ export const putMePlayerSeek = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMePlayerRepeat = os
   .route({
@@ -1229,7 +1229,7 @@ export const putMePlayerRepeat = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMePlayerVolume = os
   .route({
@@ -1261,7 +1261,7 @@ export const putMePlayerVolume = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putMePlayerShuffle = os
   .route({
@@ -1293,7 +1293,7 @@ export const putMePlayerShuffle = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMePlayerRecentlyPlayed = os
   .route({
@@ -1339,7 +1339,7 @@ export const getMePlayerRecentlyPlayed = os
     }),
   )
   .output(CursorPagingPlayHistoryObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMePlayerQueue = os
   .route({
@@ -1351,7 +1351,7 @@ export const getMePlayerQueue = os
     successDescription: 'Information about the queue',
   })
   .output(QueueObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postMePlayerQueue = os
   .route({
@@ -1383,7 +1383,7 @@ export const postMePlayerQueue = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeTopArtists = os
   .route({
@@ -1430,7 +1430,7 @@ export const getMeTopArtists = os
     }),
   )
   .output(PagingArtistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getMeTopTracks = os
   .route({
@@ -1477,4 +1477,4 @@ export const getMeTopTracks = os
     }),
   )
   .output(PagingTrackObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

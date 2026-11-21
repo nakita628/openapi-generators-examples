@@ -78,7 +78,7 @@ export const users = new Elysia()
     UserPrimaryGuildResponse: UserPrimaryGuildResponseSchema,
     UserResponse: UserResponseSchema,
   })
-  .get('/users/@me', () => {}, {
+  .get('/users/@me', () => { throw new Error('Not implemented') }, {
     response: { 200: 'UserPIIResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
       tags: [],
@@ -86,12 +86,12 @@ export const users = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['identify'] }],
     },
   })
-  .patch('/users/@me', ({ body }) => {}, {
+  .patch('/users/@me', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'BotAccountPatchRequest',
     response: { 200: 'UserPIIResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_my_user', security: [{ BotToken: [] }] },
   })
-  .get('/users/@me/applications/:application_id/entitlements', ({ params, query }) => {}, {
+  .get('/users/@me/applications/:application_id/entitlements', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: UsersModel.get_current_user_application_entitlementsParams,
     query: UsersModel.get_current_user_application_entitlementsQuery,
     response: {
@@ -144,7 +144,7 @@ export const users = new Elysia()
       ],
     },
   })
-  .get('/users/@me/applications/:application_id/role-connection', ({ params }) => {}, {
+  .get('/users/@me/applications/:application_id/role-connection', ({ params }) => { throw new Error('Not implemented') }, {
     params: UsersModel.get_application_user_role_connectionParams,
     response: {
       200: 'ApplicationUserRoleConnectionResponse',
@@ -157,7 +157,7 @@ export const users = new Elysia()
       security: [{ OAuth2: ['role_connections.write'] }],
     },
   })
-  .put('/users/@me/applications/:application_id/role-connection', ({ params, body }) => {}, {
+  .put('/users/@me/applications/:application_id/role-connection', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: UsersModel.update_application_user_role_connectionParams,
     body: 'UpdateApplicationUserRoleConnectionRequest',
     response: {
@@ -171,7 +171,7 @@ export const users = new Elysia()
       security: [{ OAuth2: ['role_connections.write'] }],
     },
   })
-  .delete('/users/@me/applications/:application_id/role-connection', ({ params }) => {}, {
+  .delete('/users/@me/applications/:application_id/role-connection', ({ params }) => { throw new Error('Not implemented') }, {
     params: UsersModel.delete_application_user_role_connectionParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -180,7 +180,7 @@ export const users = new Elysia()
       security: [{ OAuth2: ['role_connections.write'] }],
     },
   })
-  .post('/users/@me/channels', ({ body }) => {}, {
+  .post('/users/@me/channels', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreatePrivateChannelRequest',
     response: {
       200: UsersModel.create_dmResponse200,
@@ -189,7 +189,7 @@ export const users = new Elysia()
     },
     detail: { tags: [], operationId: 'create_dm', security: [{ BotToken: [] }] },
   })
-  .get('/users/@me/connections', () => {}, {
+  .get('/users/@me/connections', () => { throw new Error('Not implemented') }, {
     response: {
       200: UsersModel.list_my_connectionsResponse200,
       429: 'RatelimitedResponse',
@@ -201,7 +201,7 @@ export const users = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['connections'] }],
     },
   })
-  .get('/users/@me/guilds', ({ query }) => {}, {
+  .get('/users/@me/guilds', ({ query }) => { throw new Error('Not implemented') }, {
     query: UsersModel.list_my_guildsQuery,
     response: {
       200: UsersModel.list_my_guildsResponse200,
@@ -214,12 +214,12 @@ export const users = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['guilds'] }],
     },
   })
-  .delete('/users/@me/guilds/:guild_id', ({ params }) => {}, {
+  .delete('/users/@me/guilds/:guild_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: UsersModel.leave_guildParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'leave_guild', security: [{ BotToken: [] }] },
   })
-  .get('/users/@me/guilds/:guild_id/member', ({ params }) => {}, {
+  .get('/users/@me/guilds/:guild_id/member', ({ params }) => { throw new Error('Not implemented') }, {
     params: UsersModel.get_my_guild_memberParams,
     response: {
       200: 'PrivateGuildMemberResponse',
@@ -232,7 +232,7 @@ export const users = new Elysia()
       security: [{ OAuth2: ['guilds.members.read'] }],
     },
   })
-  .get('/users/:user_id', ({ params }) => {}, {
+  .get('/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: UsersModel.get_userParams,
     response: { 200: 'UserResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_user', security: [{ BotToken: [] }] },

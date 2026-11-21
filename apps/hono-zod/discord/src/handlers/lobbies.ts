@@ -28,7 +28,7 @@ export const lobbiesHandler = new Hono()
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies',
@@ -43,17 +43,17 @@ export const lobbiesHandler = new Hono()
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/lobbies/:lobby_id',
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/lobbies/:lobby_id',
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/lobbies/:lobby_id',
@@ -69,7 +69,7 @@ export const lobbiesHandler = new Hono()
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/lobbies/:lobby_id/channel-linking',
@@ -78,23 +78,23 @@ export const lobbiesHandler = new Hono()
       'json',
       z.object({ channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/lobbies/:lobby_id/members/@me',
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/members/@me/invites',
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/members/bulk',
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema })),
     sValidator('json', z.array(BulkLobbyMemberRequestSchema).min(1).max(25).nullable()),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/lobbies/:lobby_id/members/:user_id',
@@ -107,17 +107,17 @@ export const lobbiesHandler = new Hono()
         additional_name: z.string().min(1).max(80).nullable().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/lobbies/:lobby_id/members/:user_id',
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/members/:user_id/invites',
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/lobbies/:lobby_id/messages',
@@ -126,7 +126,7 @@ export const lobbiesHandler = new Hono()
       'query',
       z.object({ limit: z.coerce.number().int().min(1).max(200).exactOptional() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/messages',
@@ -5079,7 +5079,7 @@ export const lobbiesHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/lobbies/:lobby_id/messages/:message_id/moderation-metadata',
@@ -5099,5 +5099,5 @@ export const lobbiesHandler = new Hono()
         .record(z.string(), z.string().max(2000))
         .meta({ description: 'The moderation metadata attached to the message' }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

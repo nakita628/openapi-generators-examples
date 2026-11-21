@@ -689,12 +689,12 @@ export const guilds = new Elysia()
     WidgetSettingsResponse: WidgetSettingsResponseSchema,
     WidgetUserDiscriminator: WidgetUserDiscriminatorSchema,
   })
-  .get('/guilds/templates/:code', ({ params }) => {}, {
+  .get('/guilds/templates/:code', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_templateParams,
     response: { 200: 'GuildTemplateResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_template', security: [{}, { BotToken: [] }] },
   })
-  .get('/guilds/:guild_id', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guildParams,
     query: GuildsModel.get_guildQuery,
     response: {
@@ -704,19 +704,19 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_guild', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guildParams,
     body: 'GuildPatchRequestPartial',
     response: { 200: 'GuildResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_guild', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/audit-logs', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/audit-logs', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_audit_log_entriesParams,
     query: GuildsModel.list_guild_audit_log_entriesQuery,
     response: { 200: 'GuildAuditLogResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'list_guild_audit_log_entries', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/auto-moderation/rules', ({ params }) => {}, {
+  .get('/guilds/:guild_id/auto-moderation/rules', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_auto_moderation_rulesParams,
     response: {
       200: GuildsModel.list_auto_moderation_rulesResponse200,
@@ -725,7 +725,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_auto_moderation_rules', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/auto-moderation/rules', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/auto-moderation/rules', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_auto_moderation_ruleParams,
     body: GuildsModel.create_auto_moderation_ruleBody,
     response: {
@@ -735,7 +735,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'create_auto_moderation_rule', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/auto-moderation/rules/:rule_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/auto-moderation/rules/:rule_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_auto_moderation_ruleParams,
     response: {
       200: GuildsModel.get_auto_moderation_ruleResponse200,
@@ -744,12 +744,12 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_auto_moderation_rule', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/auto-moderation/rules/:rule_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/auto-moderation/rules/:rule_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_auto_moderation_ruleParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_auto_moderation_rule', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/auto-moderation/rules/:rule_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/auto-moderation/rules/:rule_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_auto_moderation_ruleParams,
     body: GuildsModel.update_auto_moderation_ruleBody,
     response: {
@@ -759,7 +759,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'update_auto_moderation_rule', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/bans', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/bans', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_bansParams,
     query: GuildsModel.list_guild_bansQuery,
     response: {
@@ -769,30 +769,30 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_bans', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/bans/:user_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/bans/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_banParams,
     response: { 200: 'GuildBanResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_ban', security: [{ BotToken: [] }] },
   })
-  .put('/guilds/:guild_id/bans/:user_id', ({ params, body }) => {}, {
+  .put('/guilds/:guild_id/bans/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.ban_user_from_guildParams,
     body: 'BanUserFromGuildRequest',
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'ban_user_from_guild', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/bans/:user_id', ({ params, body }) => {}, {
+  .delete('/guilds/:guild_id/bans/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.unban_user_from_guildParams,
     body: 'UnbanUserFromGuildRequest',
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'unban_user_from_guild', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/bulk-ban', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/bulk-ban', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.bulk_ban_users_from_guildParams,
     body: 'BulkBanUsersRequest',
     response: { 200: 'BulkBanUsersResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'bulk_ban_users_from_guild', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/channels', ({ params }) => {}, {
+  .get('/guilds/:guild_id/channels', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_channelsParams,
     response: {
       200: GuildsModel.list_guild_channelsResponse200,
@@ -805,19 +805,19 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     },
   })
-  .post('/guilds/:guild_id/channels', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/channels', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_guild_channelParams,
     body: 'CreateGuildChannelRequest',
     response: { 201: 'GuildChannelResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_guild_channel', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/channels', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/channels', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.bulk_update_guild_channelsParams,
     body: GuildsModel.bulk_update_guild_channelsBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'bulk_update_guild_channels', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/emojis', ({ params }) => {}, {
+  .get('/guilds/:guild_id/emojis', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_emojisParams,
     response: {
       200: GuildsModel.list_guild_emojisResponse200,
@@ -826,29 +826,29 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_emojis', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/emojis', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/emojis', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_guild_emojiParams,
     body: GuildsModel.create_guild_emojiBody,
     response: { 201: 'EmojiResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_guild_emoji', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/emojis/:emoji_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/emojis/:emoji_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_emojiParams,
     response: { 200: 'EmojiResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_emoji', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/emojis/:emoji_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/emojis/:emoji_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_emojiParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_emoji', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/emojis/:emoji_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/emojis/:emoji_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_emojiParams,
     body: GuildsModel.update_guild_emojiBody,
     response: { 200: 'EmojiResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_guild_emoji', security: [{ BotToken: [] }] },
   })
-  .put('/guilds/:guild_id/incident-actions', ({ params, body }) => {}, {
+  .put('/guilds/:guild_id/incident-actions', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_incident_actionsParams,
     body: 'GuildIncidentActionsRequest',
     response: {
@@ -863,7 +863,7 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/guilds/:guild_id/integrations', ({ params }) => {}, {
+  .get('/guilds/:guild_id/integrations', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_integrationsParams,
     response: {
       200: GuildsModel.list_guild_integrationsResponse200,
@@ -872,12 +872,12 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_integrations', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/integrations/:integration_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/integrations/:integration_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_integrationParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_integration', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/invites', ({ params }) => {}, {
+  .get('/guilds/:guild_id/invites', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_invitesParams,
     response: {
       200: GuildsModel.list_guild_invitesResponse200,
@@ -886,7 +886,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_invites', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/members', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/members', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_membersParams,
     query: GuildsModel.list_guild_membersQuery,
     response: {
@@ -896,7 +896,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_members', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/members/@me', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/members/@me', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_my_guild_memberParams,
     body: GuildsModel.update_my_guild_memberBody,
     response: {
@@ -906,7 +906,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'update_my_guild_member', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/members/search', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/members/search', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.search_guild_membersParams,
     query: GuildsModel.search_guild_membersQuery,
     response: {
@@ -916,12 +916,12 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'search_guild_members', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/members/:user_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/members/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_memberParams,
     response: { 200: 'GuildMemberResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_member', security: [{ BotToken: [] }] },
   })
-  .put('/guilds/:guild_id/members/:user_id', ({ params, body }) => {}, {
+  .put('/guilds/:guild_id/members/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.add_guild_memberParams,
     body: 'BotAddGuildMemberRequest',
     response: {
@@ -932,12 +932,12 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'add_guild_member', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/members/:user_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/members/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_memberParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_member', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/members/:user_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/members/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_memberParams,
     body: GuildsModel.update_guild_memberBody,
     response: {
@@ -948,17 +948,17 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'update_guild_member', security: [{ BotToken: [] }] },
   })
-  .put('/guilds/:guild_id/members/:user_id/roles/:role_id', ({ params }) => {}, {
+  .put('/guilds/:guild_id/members/:user_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.add_guild_member_roleParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'add_guild_member_role', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/members/:user_id/roles/:role_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/members/:user_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_member_roleParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_member_role', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/messages/search', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/messages/search', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.guild_searchParams,
     query: GuildsModel.guild_searchQuery,
     response: {
@@ -969,7 +969,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'guild_search', security: [{ BotToken: [] }, { OAuth2: [] }] },
   })
-  .get('/guilds/:guild_id/new-member-welcome', ({ params }) => {}, {
+  .get('/guilds/:guild_id/new-member-welcome', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_new_member_welcomeParams,
     response: {
       200: 'GuildHomeSettingsResponse',
@@ -979,7 +979,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_guild_new_member_welcome', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/onboarding', ({ params }) => {}, {
+  .get('/guilds/:guild_id/onboarding', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guilds_onboardingParams,
     response: {
       200: 'UserGuildOnboardingResponse',
@@ -988,7 +988,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_guilds_onboarding', security: [{ BotToken: [] }] },
   })
-  .put('/guilds/:guild_id/onboarding', ({ params, body }) => {}, {
+  .put('/guilds/:guild_id/onboarding', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.put_guilds_onboardingParams,
     body: 'UpdateGuildOnboardingRequest',
     response: {
@@ -998,7 +998,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'put_guilds_onboarding', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/permissions/member/:user_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/permissions/member/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_member_permissionsParams,
     response: { 200: 'PermissionsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -1009,7 +1009,7 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/guilds/:guild_id/permissions/role/:role_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/permissions/role/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_role_permissionsParams,
     response: { 200: 'PermissionsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -1020,24 +1020,24 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/guilds/:guild_id/preview', ({ params }) => {}, {
+  .get('/guilds/:guild_id/preview', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_previewParams,
     response: { 200: 'GuildPreviewResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_preview', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/prune', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/prune', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.preview_prune_guildParams,
     query: GuildsModel.preview_prune_guildQuery,
     response: { 200: 'GuildPruneResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'preview_prune_guild', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/prune', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/prune', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.prune_guildParams,
     body: 'PruneGuildRequest',
     response: { 200: 'GuildPruneResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'prune_guild', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/regions', ({ params }) => {}, {
+  .get('/guilds/:guild_id/regions', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_voice_regionsParams,
     response: {
       200: GuildsModel.list_guild_voice_regionsResponse200,
@@ -1046,7 +1046,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_voice_regions', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/requests', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/requests', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_join_requestsParams,
     query: GuildsModel.get_guild_join_requestsQuery,
     response: {
@@ -1061,7 +1061,7 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .patch('/guilds/:guild_id/requests/:request_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/requests/:request_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.action_guild_join_requestParams,
     body: GuildsModel.action_guild_join_requestBody,
     response: {
@@ -1076,7 +1076,7 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/guilds/:guild_id/roles', ({ params }) => {}, {
+  .get('/guilds/:guild_id/roles', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_rolesParams,
     response: {
       200: GuildsModel.list_guild_rolesResponse200,
@@ -1085,13 +1085,13 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_roles', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/roles', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/roles', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_guild_roleParams,
     body: 'CreateRoleRequest',
     response: { 200: 'GuildRoleResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_guild_role', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/roles', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/roles', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.bulk_update_guild_rolesParams,
     body: GuildsModel.bulk_update_guild_rolesBody,
     response: {
@@ -1101,7 +1101,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'bulk_update_guild_roles', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/roles/member-counts', ({ params }) => {}, {
+  .get('/guilds/:guild_id/roles/member-counts', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.guild_role_member_countsParams,
     response: {
       200: GuildsModel.guild_role_member_countsResponse200,
@@ -1110,23 +1110,23 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'guild_role_member_counts', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/roles/:role_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_roleParams,
     response: { 200: 'GuildRoleResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_role', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/roles/:role_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_roleParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_role', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/roles/:role_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/roles/:role_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_roleParams,
     body: 'UpdateRoleRequestPartial',
     response: { 200: 'GuildRoleResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_guild_role', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/scheduled-events', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/scheduled-events', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_scheduled_eventsParams,
     query: GuildsModel.list_guild_scheduled_eventsQuery,
     response: {
@@ -1136,7 +1136,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_scheduled_events', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/scheduled-events', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/scheduled-events', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_guild_scheduled_eventParams,
     body: GuildsModel.create_guild_scheduled_eventBody,
     response: {
@@ -1146,7 +1146,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'create_guild_scheduled_event', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_scheduled_eventParams,
     query: GuildsModel.get_guild_scheduled_eventQuery,
     response: {
@@ -1156,12 +1156,12 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_guild_scheduled_event', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_scheduled_eventParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_scheduled_event', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_scheduled_eventParams,
     body: GuildsModel.update_guild_scheduled_eventBody,
     response: {
@@ -1173,7 +1173,7 @@ export const guilds = new Elysia()
   })
   .post(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: GuildsModel.create_guild_scheduled_event_exceptionParams,
       body: 'GuildScheduledEventExceptionCreateRequest',
@@ -1192,7 +1192,7 @@ export const guilds = new Elysia()
   )
   .delete(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: GuildsModel.delete_guild_scheduled_event_exceptionParams,
       response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -1206,7 +1206,7 @@ export const guilds = new Elysia()
   )
   .patch(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: GuildsModel.update_guild_scheduled_event_exceptionParams,
       body: 'GuildScheduledEventExceptionPatchRequestPartial',
@@ -1225,7 +1225,7 @@ export const guilds = new Elysia()
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users',
-    ({ params, query }) => {},
+    ({ params, query }) => { throw new Error('Not implemented') },
     {
       params: GuildsModel.list_guild_scheduled_event_usersParams,
       query: GuildsModel.list_guild_scheduled_event_usersQuery,
@@ -1243,7 +1243,7 @@ export const guilds = new Elysia()
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users/counts',
-    ({ params, query }) => {},
+    ({ params, query }) => { throw new Error('Not implemented') },
     {
       params: GuildsModel.count_guild_scheduled_event_usersParams,
       query: GuildsModel.count_guild_scheduled_event_usersQuery,
@@ -1262,7 +1262,7 @@ export const guilds = new Elysia()
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/:guild_scheduled_event_exception_id/users',
-    ({ params, query }) => {},
+    ({ params, query }) => { throw new Error('Not implemented') },
     {
       params: GuildsModel.list_guild_scheduled_event_exception_usersParams,
       query: GuildsModel.list_guild_scheduled_event_exception_usersQuery,
@@ -1279,7 +1279,7 @@ export const guilds = new Elysia()
       },
     },
   )
-  .get('/guilds/:guild_id/soundboard-sounds', ({ params }) => {}, {
+  .get('/guilds/:guild_id/soundboard-sounds', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_soundboard_soundsParams,
     response: {
       200: 'ListGuildSoundboardSoundsResponse',
@@ -1288,7 +1288,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_soundboard_sounds', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/soundboard-sounds', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/soundboard-sounds', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_guild_soundboard_soundParams,
     body: 'SoundboardCreateRequest',
     response: {
@@ -1302,7 +1302,7 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/guilds/:guild_id/soundboard-sounds/:sound_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/soundboard-sounds/:sound_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_soundboard_soundParams,
     response: {
       200: 'SoundboardSoundResponse',
@@ -1311,7 +1311,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_guild_soundboard_sound', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/soundboard-sounds/:sound_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/soundboard-sounds/:sound_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_soundboard_soundParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -1320,7 +1320,7 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .patch('/guilds/:guild_id/soundboard-sounds/:sound_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/soundboard-sounds/:sound_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_soundboard_soundParams,
     body: 'SoundboardPatchRequestPartial',
     response: {
@@ -1334,7 +1334,7 @@ export const guilds = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/guilds/:guild_id/stickers', ({ params }) => {}, {
+  .get('/guilds/:guild_id/stickers', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_stickersParams,
     response: {
       200: GuildsModel.list_guild_stickersResponse200,
@@ -1343,29 +1343,29 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_stickers', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/stickers', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/stickers', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_guild_stickerParams,
     body: GuildsModel.create_guild_stickerBody,
     response: { 201: 'GuildStickerResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_guild_sticker', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/stickers/:sticker_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/stickers/:sticker_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_stickerParams,
     response: { 200: 'GuildStickerResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_sticker', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/stickers/:sticker_id', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/stickers/:sticker_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_stickerParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_sticker', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/stickers/:sticker_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/stickers/:sticker_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_stickerParams,
     body: GuildsModel.update_guild_stickerBody,
     response: { 200: 'GuildStickerResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_guild_sticker', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/templates', ({ params }) => {}, {
+  .get('/guilds/:guild_id/templates', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.list_guild_templatesParams,
     response: {
       200: GuildsModel.list_guild_templatesResponse200,
@@ -1374,61 +1374,61 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'list_guild_templates', security: [{ BotToken: [] }] },
   })
-  .post('/guilds/:guild_id/templates', ({ params, body }) => {}, {
+  .post('/guilds/:guild_id/templates', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.create_guild_templateParams,
     body: GuildsModel.create_guild_templateBody,
     response: { 200: 'GuildTemplateResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_guild_template', security: [{ BotToken: [] }] },
   })
-  .put('/guilds/:guild_id/templates/:code', ({ params }) => {}, {
+  .put('/guilds/:guild_id/templates/:code', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.sync_guild_templateParams,
     response: { 200: 'GuildTemplateResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'sync_guild_template', security: [{ BotToken: [] }] },
   })
-  .delete('/guilds/:guild_id/templates/:code', ({ params }) => {}, {
+  .delete('/guilds/:guild_id/templates/:code', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.delete_guild_templateParams,
     response: { 200: 'GuildTemplateResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_guild_template', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/templates/:code', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/templates/:code', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_templateParams,
     body: GuildsModel.update_guild_templateBody,
     response: { 200: 'GuildTemplateResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_guild_template', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/threads/active', ({ params }) => {}, {
+  .get('/guilds/:guild_id/threads/active', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_active_guild_threadsParams,
     response: { 200: 'ThreadsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_active_guild_threads', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/vanity-url', ({ params }) => {}, {
+  .get('/guilds/:guild_id/vanity-url', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_vanity_urlParams,
     response: { 200: 'VanityURLResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_vanity_url', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/voice-states/@me', ({ params }) => {}, {
+  .get('/guilds/:guild_id/voice-states/@me', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_self_voice_stateParams,
     response: { 200: 'VoiceStateResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_self_voice_state', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/voice-states/@me', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/voice-states/@me', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_self_voice_stateParams,
     body: 'UpdateSelfVoiceStateRequestPartial',
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_self_voice_state', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/voice-states/:user_id', ({ params }) => {}, {
+  .get('/guilds/:guild_id/voice-states/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_voice_stateParams,
     response: { 200: 'VoiceStateResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_voice_state', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/voice-states/:user_id', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/voice-states/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_voice_stateParams,
     body: 'UpdateVoiceStateRequestPartial',
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_voice_state', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/webhooks', ({ params }) => {}, {
+  .get('/guilds/:guild_id/webhooks', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_webhooksParams,
     response: {
       200: GuildsModel.get_guild_webhooksResponse200,
@@ -1437,7 +1437,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_guild_webhooks', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/welcome-screen', ({ params }) => {}, {
+  .get('/guilds/:guild_id/welcome-screen', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_welcome_screenParams,
     response: {
       200: 'GuildWelcomeScreenResponse',
@@ -1446,7 +1446,7 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'get_guild_welcome_screen', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/welcome-screen', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/welcome-screen', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_welcome_screenParams,
     body: 'WelcomeScreenPatchRequestPartial',
     response: {
@@ -1456,23 +1456,23 @@ export const guilds = new Elysia()
     },
     detail: { tags: [], operationId: 'update_guild_welcome_screen', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/widget', ({ params }) => {}, {
+  .get('/guilds/:guild_id/widget', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_widget_settingsParams,
     response: { 200: 'WidgetSettingsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_widget_settings', security: [{ BotToken: [] }] },
   })
-  .patch('/guilds/:guild_id/widget', ({ params, body }) => {}, {
+  .patch('/guilds/:guild_id/widget', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.update_guild_widget_settingsParams,
     body: GuildsModel.update_guild_widget_settingsBody,
     response: { 200: 'WidgetSettingsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_guild_widget_settings', security: [{ BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/widget.json', ({ params }) => {}, {
+  .get('/guilds/:guild_id/widget.json', ({ params }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_widgetParams,
     response: { 200: 'WidgetResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_guild_widget', security: [{}, { BotToken: [] }] },
   })
-  .get('/guilds/:guild_id/widget.png', ({ params, query }) => {}, {
+  .get('/guilds/:guild_id/widget.png', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: GuildsModel.get_guild_widget_pngParams,
     query: GuildsModel.get_guild_widget_pngQuery,
     response: { 200: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },

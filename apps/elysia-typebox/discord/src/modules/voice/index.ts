@@ -18,7 +18,7 @@ export const voice = new Elysia()
     RatelimitedResponse: RatelimitedResponseSchema,
     VoiceRegionResponse: VoiceRegionResponseSchema,
   })
-  .get('/voice/regions', () => {}, {
+  .get('/voice/regions', () => { throw new Error('Not implemented') }, {
     response: {
       200: VoiceModel.list_voice_regionsResponse200,
       429: 'RatelimitedResponse',

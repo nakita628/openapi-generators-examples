@@ -73,7 +73,7 @@ export const petHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet',
@@ -144,7 +144,7 @@ export const petHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByStatus',
@@ -152,7 +152,7 @@ export const petHandler = new Hono()
       'query',
       v.object({ status: v.optional(v.picklist(['available', 'pending', 'sold']), 'available') }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByTags',
@@ -166,7 +166,7 @@ export const petHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/:petId',
@@ -182,7 +182,7 @@ export const petHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId',
@@ -199,7 +199,7 @@ export const petHandler = new Hono()
       }),
     ),
     sValidator('query', v.partial(v.object({ name: v.string(), status: v.string() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/pet/:petId',
@@ -216,7 +216,7 @@ export const petHandler = new Hono()
       }),
     ),
     sValidator('header', v.partial(v.object({ api_key: v.string() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId/uploadImage',
@@ -233,5 +233,5 @@ export const petHandler = new Hono()
       }),
     ),
     sValidator('query', v.partial(v.object({ additionalMetadata: v.string() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

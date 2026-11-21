@@ -57,7 +57,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('json', CreateResponseSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id',
@@ -101,7 +101,7 @@ export const responsesHandler = new Hono()
         ).pipe((data) => /^(?:true|1|yes|on|y|enabled)$/i.test(data)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/responses/:response_id',
@@ -129,7 +129,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('param', type({ response_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/:response_id/cancel',
@@ -152,7 +152,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('param', type({ response_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id/input_items',
@@ -189,7 +189,7 @@ export const responsesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/input_tokens',
@@ -213,7 +213,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('json', TokenCountsBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/compact',
@@ -237,7 +237,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('json', CompactResponseMethodPublicBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id?beta=true',
@@ -289,7 +289,7 @@ export const responsesHandler = new Hono()
           .to("'responses_multi_agent=v1'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/responses/:response_id?beta=true',
@@ -325,7 +325,7 @@ export const responsesHandler = new Hono()
           .to("'responses_multi_agent=v1'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/:response_id/cancel?beta=true',
@@ -356,7 +356,7 @@ export const responsesHandler = new Hono()
           .to("'responses_multi_agent=v1'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/compact?beta=true',
@@ -388,7 +388,7 @@ export const responsesHandler = new Hono()
       }),
     ),
     validator('json', BetaCompactResponseMethodPublicBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id/input_items?beta=true',
@@ -433,7 +433,7 @@ export const responsesHandler = new Hono()
           .to("'responses_multi_agent=v1'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/input_tokens?beta=true',
@@ -465,5 +465,5 @@ export const responsesHandler = new Hono()
       }),
     ),
     validator('json', BetaTokenCountsBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

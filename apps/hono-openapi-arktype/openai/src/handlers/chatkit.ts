@@ -70,7 +70,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('param', type({ session_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chatkit/sessions',
@@ -100,7 +100,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('json', CreateChatSessionBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads/:thread_id/items',
@@ -147,7 +147,7 @@ export const chatkitHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads/:thread_id',
@@ -176,7 +176,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chatkit/threads/:thread_id',
@@ -205,7 +205,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads',
@@ -257,5 +257,5 @@ export const chatkitHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

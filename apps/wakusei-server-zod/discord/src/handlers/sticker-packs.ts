@@ -13,7 +13,7 @@ export const getStickerPacks = os
     successDescription: '200 response for list_sticker_packs',
   })
   .output(StickerPackCollectionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getStickerPacksPackId = os
   .route({
@@ -23,4 +23,4 @@ export const getStickerPacksPackId = os
   })
   .input(z.object({ pack_id: SnowflakeTypeSchema }))
   .output(StickerPackResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

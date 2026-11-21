@@ -12,4 +12,4 @@ export const postCompletions = os
   })
   .input(CreateCompletionRequestSchema)
   .output(CreateCompletionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

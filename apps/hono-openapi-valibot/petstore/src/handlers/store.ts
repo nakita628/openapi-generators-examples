@@ -29,7 +29,7 @@ export const storeHandler = new Hono()
       },
       security: [{ api_key: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/store/order',
@@ -103,7 +103,7 @@ export const storeHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/store/order/:orderId',
@@ -138,7 +138,7 @@ export const storeHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/store/order/:orderId',
@@ -167,5 +167,5 @@ export const storeHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -26,7 +26,7 @@ export const getInvitesCode = os
   .output(
     z.xor([FriendInviteResponseSchema, GroupDMInviteResponseSchema, GuildInviteResponseSchema]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteInvitesCode = os
   .route({
@@ -38,7 +38,7 @@ export const deleteInvitesCode = os
   .output(
     z.xor([FriendInviteResponseSchema, GroupDMInviteResponseSchema, GuildInviteResponseSchema]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getInvitesCodeTargetUsers = os
   .route({
@@ -48,7 +48,7 @@ export const getInvitesCodeTargetUsers = os
     successDescription: '200 response for get_invite_target_users',
   })
   .input(z.object({ code: z.string().max(152133) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putInvitesCodeTargetUsers = os
   .route({
@@ -59,7 +59,7 @@ export const putInvitesCodeTargetUsers = os
     successDescription: '204 response for update_invite_target_users',
   })
   .input(z.object({ code: z.string().max(152133) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postInvitesCodeTargetUsersBulkAdd = os
   .route({
@@ -79,7 +79,7 @@ export const postInvitesCodeTargetUsersBulkAdd = os
         .meta({ description: 'The IDs of the users to target.' }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postInvitesCodeTargetUsersBulkDelete = os
   .route({
@@ -99,7 +99,7 @@ export const postInvitesCodeTargetUsersBulkDelete = os
         .meta({ description: 'The IDs of the users to stop targeting.' }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getInvitesCodeTargetUsersJobStatus = os
   .route({
@@ -110,7 +110,7 @@ export const getInvitesCodeTargetUsersJobStatus = os
   })
   .input(z.object({ code: z.string().max(152133) }))
   .output(TargetUsersJobStatusResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putInvitesCodeTargetUsersUserId = os
   .route({
@@ -121,7 +121,7 @@ export const putInvitesCodeTargetUsersUserId = os
     successDescription: '204 response for add_invite_target_user',
   })
   .input(z.object({ code: z.string().max(152133), user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteInvitesCodeTargetUsersUserId = os
   .route({
@@ -132,4 +132,4 @@ export const deleteInvitesCodeTargetUsersUserId = os
     successDescription: '204 response for remove_invite_target_user',
   })
   .input(z.object({ code: z.string().max(152133), user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

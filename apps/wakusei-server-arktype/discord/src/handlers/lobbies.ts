@@ -57,7 +57,7 @@ export const postLobbies = os
     }),
   )
   .output(LobbyResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putLobbies = os
   .route({
@@ -95,7 +95,7 @@ export const putLobbies = os
     }),
   )
   .output(LobbyResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getLobbiesLobbyId = os
   .route({
@@ -105,7 +105,7 @@ export const getLobbiesLobbyId = os
   })
   .input(type({ lobby_id: SnowflakeTypeSchema }))
   .output(LobbyResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteLobbiesLobbyId = os
   .route({
@@ -117,7 +117,7 @@ export const deleteLobbiesLobbyId = os
     successDescription: '204 response for delete_lobby',
   })
   .input(type({ lobby_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchLobbiesLobbyId = os
   .route({
@@ -155,7 +155,7 @@ export const patchLobbiesLobbyId = os
     }),
   )
   .output(LobbyResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchLobbiesLobbyIdChannelLinking = os
   .route({
@@ -170,7 +170,7 @@ export const patchLobbiesLobbyIdChannelLinking = os
     }),
   )
   .output(LobbyResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteLobbiesLobbyIdMembersMe = os
   .route({
@@ -180,7 +180,7 @@ export const deleteLobbiesLobbyIdMembersMe = os
     successDescription: '204 response for leave_lobby',
   })
   .input(type({ lobby_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLobbiesLobbyIdMembersMeInvites = os
   .route({
@@ -190,7 +190,7 @@ export const postLobbiesLobbyIdMembersMeInvites = os
   })
   .input(type({ lobby_id: SnowflakeTypeSchema }))
   .output(LobbyGuildInviteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLobbiesLobbyIdMembersBulk = os
   .route({
@@ -200,7 +200,7 @@ export const postLobbiesLobbyIdMembersBulk = os
   })
   .input(type({ lobby_id: SnowflakeTypeSchema }))
   .output(type(type(LobbyMemberResponseSchema).array()).or('null'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putLobbiesLobbyIdMembersUserId = os
   .route({
@@ -228,7 +228,7 @@ export const putLobbiesLobbyIdMembersUserId = os
     }),
   )
   .output(LobbyMemberResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteLobbiesLobbyIdMembersUserId = os
   .route({
@@ -238,7 +238,7 @@ export const deleteLobbiesLobbyIdMembersUserId = os
     successDescription: '204 response for delete_lobby_member',
   })
   .input(type({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLobbiesLobbyIdMembersUserIdInvites = os
   .route({
@@ -248,7 +248,7 @@ export const postLobbiesLobbyIdMembersUserIdInvites = os
   })
   .input(type({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
   .output(LobbyGuildInviteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getLobbiesLobbyIdMessages = os
   .route({
@@ -268,7 +268,7 @@ export const getLobbiesLobbyIdMessages = os
     }),
   )
   .output(type(type(LobbyMessageResponseSchema).array()).or('null'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLobbiesLobbyIdMessages = os
   .route({
@@ -345,7 +345,7 @@ export const postLobbiesLobbyIdMessages = os
     }),
   )
   .output(LobbyMessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putLobbiesLobbyIdMessagesMessageIdModerationMetadata = os
   .route({
@@ -356,4 +356,4 @@ export const putLobbiesLobbyIdMessagesMessageIdModerationMetadata = os
     successDescription: '204 response for update_lobby_message_external_moderation_metadata',
   })
   .input(type({ lobby_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

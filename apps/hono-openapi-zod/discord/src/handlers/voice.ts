@@ -30,5 +30,5 @@ export const voiceHandler = new Hono().get(
     },
     security: [{ BotToken: [] }],
   }),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

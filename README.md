@@ -1,6 +1,6 @@
 # openapi-generators-examples
 
-Code generated from the same OpenAPI documents by four generators, one app per generator × mode × validator. Business logic is left empty: the point is the generated code and whether it type-checks.
+Code generated from the same OpenAPI documents by four generators, one app per generator × mode × validator. Business logic is left out: the point is the generated code and whether it type-checks. The generators leave handler bodies empty, and an empty body returns `void`, which no typed handler accepts, so `scripts/generate.ts` fills each one with `throw new Error('Not implemented')` (its type, `never`, fits every handler).
 
 | Generator | Target |
 | --- | --- |
@@ -68,4 +68,9 @@ Problems found while generating are reported in [nakita628/truth](https://github
 | [truth#15](https://github.com/nakita628/truth/issues/15) typebox replaces a schema with `not` by `Type.Any()` | constraints lost in TypeBox output |
 | [truth#16](https://github.com/nakita628/truth/issues/16) `{ type: "null" }` in `anyOf` is emitted as a doubled null | redundant output on every target |
 | [truth#17](https://github.com/nakita628/truth/issues/17) effect `importLine` omits `SchemaTransformation` | `openapi-to-trpc-effect` fails to type-check on every spec |
-| [truth#18](https://github.com/nakita628/truth/issues/18) zod applies `not.enum` refine after `.nullable()` | `openapi-to-trpc-zod/openai` fails to type-check |
+| [truth#18](https://github.com/nakita628/truth/issues/18) zod applies `not.enum` refine after `.nullable()` | every Zod app fails to type-check on openai |
+| [truth#19](https://github.com/nakita628/truth/issues/19) effect emits `Schema.isLengthBetween` (Effect 4: `isBetweenLength`) | Effect apps fail on openai |
+| [truth#20](https://github.com/nakita628/truth/issues/20) effect puts `null` into `Schema.Literals` | Effect apps fail on openai |
+| [truth#21](https://github.com/nakita628/truth/issues/21) arktype string-DSL union of 25+ literals hits TS2589 | ArkType apps fail on discord and openai |
+
+The generators depend on `oas-truth ^0.5.1`; some failures (Valibot recursive schemas on openai) are already fixed in oas-truth 0.6.1.

@@ -32,7 +32,7 @@ export const getInvitesCode = os
       GuildInviteResponseSchema,
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteInvitesCode = os
   .route({
@@ -52,7 +52,7 @@ export const deleteInvitesCode = os
       GuildInviteResponseSchema,
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getInvitesCodeTargetUsers = os
   .route({
@@ -68,7 +68,7 @@ export const getInvitesCodeTargetUsers = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putInvitesCodeTargetUsers = os
   .route({
@@ -85,7 +85,7 @@ export const putInvitesCodeTargetUsers = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postInvitesCodeTargetUsersBulkAdd = os
   .route({
@@ -105,7 +105,7 @@ export const postInvitesCodeTargetUsersBulkAdd = os
         .describe('The IDs of the users to target.'),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postInvitesCodeTargetUsersBulkDelete = os
   .route({
@@ -125,7 +125,7 @@ export const postInvitesCodeTargetUsersBulkDelete = os
         .describe('The IDs of the users to stop targeting.'),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getInvitesCodeTargetUsersJobStatus = os
   .route({
@@ -142,7 +142,7 @@ export const getInvitesCodeTargetUsersJobStatus = os
     }),
   )
   .output(TargetUsersJobStatusResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putInvitesCodeTargetUsersUserId = os
   .route({
@@ -160,7 +160,7 @@ export const putInvitesCodeTargetUsersUserId = os
       user_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteInvitesCodeTargetUsersUserId = os
   .route({
@@ -178,4 +178,4 @@ export const deleteInvitesCodeTargetUsersUserId = os
       user_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

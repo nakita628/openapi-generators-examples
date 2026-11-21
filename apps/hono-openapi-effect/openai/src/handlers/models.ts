@@ -37,7 +37,7 @@ export const modelsHandler = new Hono()
         },
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/models/:model',
@@ -78,7 +78,7 @@ export const modelsHandler = new Hono()
         Schema.Struct({ model: Schema.String.annotate({ jsonSchemaExamples: ['gpt-6.2-astra'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/models/:model',
@@ -127,5 +127,5 @@ export const modelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

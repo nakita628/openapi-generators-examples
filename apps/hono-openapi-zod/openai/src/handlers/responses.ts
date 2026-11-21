@@ -57,7 +57,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('json', CreateResponseSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id',
@@ -101,7 +101,7 @@ export const responsesHandler = new Hono()
         include_obfuscation: z.stringbool().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/responses/:response_id',
@@ -138,7 +138,7 @@ export const responsesHandler = new Hono()
         response_id: z.string().meta({ examples: ['resp_677efb5139a88190b512bc3fef8e535d'] }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/:response_id/cancel',
@@ -166,7 +166,7 @@ export const responsesHandler = new Hono()
         response_id: z.string().meta({ examples: ['resp_677efb5139a88190b512bc3fef8e535d'] }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id/input_items',
@@ -202,7 +202,7 @@ export const responsesHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/input_tokens',
@@ -226,7 +226,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('json', TokenCountsBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/compact',
@@ -250,7 +250,7 @@ export const responsesHandler = new Hono()
       },
     }),
     validator('json', CompactResponseMethodPublicBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id?beta=true',
@@ -305,7 +305,7 @@ export const responsesHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/responses/:response_id?beta=true',
@@ -353,7 +353,7 @@ export const responsesHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/:response_id/cancel?beta=true',
@@ -392,7 +392,7 @@ export const responsesHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/compact?beta=true',
@@ -427,7 +427,7 @@ export const responsesHandler = new Hono()
       }),
     ),
     validator('json', BetaCompactResponseMethodPublicBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/responses/:response_id/input_items?beta=true',
@@ -474,7 +474,7 @@ export const responsesHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/responses/input_tokens?beta=true',
@@ -509,5 +509,5 @@ export const responsesHandler = new Hono()
       }),
     ),
     validator('json', BetaTokenCountsBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

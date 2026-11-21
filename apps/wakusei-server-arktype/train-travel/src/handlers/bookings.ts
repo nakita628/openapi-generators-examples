@@ -23,7 +23,7 @@ export const getBookings = os
       type({ 'links?': type(LinksSelfSchema).and(LinksPaginationSchema) }),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBookings = os
   .route({
@@ -38,7 +38,7 @@ export const postBookings = os
   })
   .input(BookingSchema)
   .output(type(BookingSchema).and(type({ 'links?': LinksSelfSchema })))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBookingsBookingId = os
   .route({
@@ -51,7 +51,7 @@ export const getBookingsBookingId = os
   })
   .input(type({ bookingId: type('string.uuid') }))
   .output(type(BookingSchema).and(type({ 'links?': LinksSelfSchema })))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteBookingsBookingId = os
   .route({
@@ -64,7 +64,7 @@ export const deleteBookingsBookingId = os
     successDescription: 'Booking deleted',
   })
   .input(type({ bookingId: type('string.uuid') }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBookingsBookingIdPayment = os
   .route({
@@ -153,4 +153,4 @@ export const postBookingsBookingIdPayment = os
     }),
   )
   .output(type(BookingPaymentSchema).and(type({ 'links?': LinksBookingSchema })))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

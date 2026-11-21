@@ -374,9 +374,9 @@ export const imagesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/images/generations', sValidator('json', CreateImageRequestSchema), (c) => {})
+  .post('/images/generations', sValidator('json', CreateImageRequestSchema), (c) => { throw new Error('Not implemented') })
   .post(
     '/images/variations',
     sValidator(
@@ -469,5 +469,5 @@ export const imagesHandler = new Hono()
         v.metadata({ deprecated: true }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

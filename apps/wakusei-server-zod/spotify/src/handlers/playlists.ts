@@ -50,7 +50,7 @@ export const getPlaylistsPlaylistId = os
     }),
   )
   .output(PlaylistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putPlaylistsPlaylistId = os
   .route({
@@ -100,7 +100,7 @@ export const putPlaylistsPlaylistId = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPlaylistsPlaylistIdTracks = os
   .route({
@@ -170,7 +170,7 @@ export const getPlaylistsPlaylistIdTracks = os
     }),
   )
   .output(PagingPlaylistTrackObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPlaylistsPlaylistIdTracks = os
   .route({
@@ -220,7 +220,7 @@ export const postPlaylistsPlaylistIdTracks = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putPlaylistsPlaylistIdTracks = os
   .route({
@@ -283,7 +283,7 @@ export const putPlaylistsPlaylistIdTracks = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deletePlaylistsPlaylistIdTracks = os
   .route({
@@ -328,7 +328,7 @@ export const deletePlaylistsPlaylistIdTracks = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPlaylistsPlaylistIdItems = os
   .route({
@@ -397,7 +397,7 @@ export const getPlaylistsPlaylistIdItems = os
     }),
   )
   .output(PagingPlaylistTrackObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPlaylistsPlaylistIdItems = os
   .route({
@@ -445,7 +445,7 @@ export const postPlaylistsPlaylistIdItems = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putPlaylistsPlaylistIdItems = os
   .route({
@@ -507,7 +507,7 @@ export const putPlaylistsPlaylistIdItems = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deletePlaylistsPlaylistIdItems = os
   .route({
@@ -550,7 +550,7 @@ export const deletePlaylistsPlaylistIdItems = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putPlaylistsPlaylistIdFollowers = os
   .route({
@@ -581,7 +581,7 @@ export const putPlaylistsPlaylistIdFollowers = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deletePlaylistsPlaylistIdFollowers = os
   .route({
@@ -605,7 +605,7 @@ export const deletePlaylistsPlaylistIdFollowers = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPlaylistsPlaylistIdImages = os
   .route({
@@ -628,7 +628,7 @@ export const getPlaylistsPlaylistIdImages = os
     }),
   )
   .output(z.array(ImageObjectSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putPlaylistsPlaylistIdImages = os
   .route({
@@ -651,7 +651,7 @@ export const putPlaylistsPlaylistIdImages = os
         }),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPlaylistsPlaylistIdFollowersContains = os
   .route({
@@ -684,4 +684,4 @@ export const getPlaylistsPlaylistIdFollowersContains = os
     }),
   )
   .output(z.array(z.boolean()).meta({ examples: [[true]] }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -22,5 +22,5 @@ export const webhooksHandler = new Hono().post(
     'json',
     type(BookingSchema).and(type({ 'links?': type(LinksSelfSchema).and(LinksPaginationSchema) })),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

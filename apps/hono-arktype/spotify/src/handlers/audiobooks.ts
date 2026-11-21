@@ -21,7 +21,7 @@ export const audiobooksHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audiobooks',
@@ -36,7 +36,7 @@ export const audiobooksHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audiobooks/:id/chapters',
@@ -73,5 +73,5 @@ export const audiobooksHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

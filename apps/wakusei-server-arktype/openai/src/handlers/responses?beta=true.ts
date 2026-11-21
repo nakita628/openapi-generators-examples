@@ -12,4 +12,4 @@ export const postResponsesBetaTrue = os
   })
   .input(BetaCreateResponseSchema)
   .output(BetaResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

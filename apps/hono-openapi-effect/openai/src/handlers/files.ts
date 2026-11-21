@@ -66,7 +66,7 @@ export const filesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/files',
@@ -153,7 +153,7 @@ export const filesHandler = new Hono()
         }).annotate({ parseOptions: { onExcessProperty: 'error' } }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/files/:file_id',
@@ -188,7 +188,7 @@ export const filesHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ file_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/files/:file_id',
@@ -225,7 +225,7 @@ export const filesHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ file_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/files/:file_id/content',
@@ -279,5 +279,5 @@ export const filesHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ file_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

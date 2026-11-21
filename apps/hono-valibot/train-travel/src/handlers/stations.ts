@@ -1,3 +1,3 @@
 import { Hono } from 'hono'
 
-export const stationsHandler = new Hono().get('/stations', (c) => {})
+export const stationsHandler = new Hono().get('/stations', (c) => { throw new Error('Not implemented') })

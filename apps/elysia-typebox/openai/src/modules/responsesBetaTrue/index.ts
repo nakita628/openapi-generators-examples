@@ -636,7 +636,7 @@ export const responsesBetaTrue = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/responses?beta=true', ({ headers, body }) => {}, {
+  .post('/responses?beta=true', ({ headers, body }) => { throw new Error('Not implemented') }, {
     headers: ResponsesBetaTrueModel.beta_createResponseHeaders,
     body: 'BetaCreateResponse',
     response: {

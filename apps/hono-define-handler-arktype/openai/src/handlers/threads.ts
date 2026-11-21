@@ -23,73 +23,73 @@ import {
 export const threadsHandler = new Hono()
   .post(
     '/threads',
-    postThreadsHandler(async (c, { json }) => {}),
+    postThreadsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/runs',
-    postThreadsRunsHandler(async (c, { json }) => {}),
+    postThreadsRunsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/threads/:thread_id',
-    getThreadsThreadIdHandler(async (c, { param }) => {}),
+    getThreadsThreadIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/:thread_id',
-    postThreadsThreadIdHandler(async (c, { param, json }) => {}),
+    postThreadsThreadIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/threads/:thread_id',
-    deleteThreadsThreadIdHandler(async (c, { param }) => {}),
+    deleteThreadsThreadIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/threads/:thread_id/messages',
-    getThreadsThreadIdMessagesHandler(async (c, { param, query }) => {}),
+    getThreadsThreadIdMessagesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/:thread_id/messages',
-    postThreadsThreadIdMessagesHandler(async (c, { param, json }) => {}),
+    postThreadsThreadIdMessagesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/threads/:thread_id/messages/:message_id',
-    getThreadsThreadIdMessagesMessageIdHandler(async (c, { param }) => {}),
+    getThreadsThreadIdMessagesMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/:thread_id/messages/:message_id',
-    postThreadsThreadIdMessagesMessageIdHandler(async (c, { param, json }) => {}),
+    postThreadsThreadIdMessagesMessageIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/threads/:thread_id/messages/:message_id',
-    deleteThreadsThreadIdMessagesMessageIdHandler(async (c, { param }) => {}),
+    deleteThreadsThreadIdMessagesMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/threads/:thread_id/runs',
-    getThreadsThreadIdRunsHandler(async (c, { param, query }) => {}),
+    getThreadsThreadIdRunsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/:thread_id/runs',
-    postThreadsThreadIdRunsHandler(async (c, { param, query, json }) => {}),
+    postThreadsThreadIdRunsHandler(async (c, { param, query, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/threads/:thread_id/runs/:run_id',
-    getThreadsThreadIdRunsRunIdHandler(async (c, { param }) => {}),
+    getThreadsThreadIdRunsRunIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/:thread_id/runs/:run_id',
-    postThreadsThreadIdRunsRunIdHandler(async (c, { param, json }) => {}),
+    postThreadsThreadIdRunsRunIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/:thread_id/runs/:run_id/cancel',
-    postThreadsThreadIdRunsRunIdCancelHandler(async (c, { param }) => {}),
+    postThreadsThreadIdRunsRunIdCancelHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps',
-    getThreadsThreadIdRunsRunIdStepsHandler(async (c, { param, query }) => {}),
+    getThreadsThreadIdRunsRunIdStepsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps/:step_id',
-    getThreadsThreadIdRunsRunIdStepsStepIdHandler(async (c, { param, query }) => {}),
+    getThreadsThreadIdRunsRunIdStepsStepIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/threads/:thread_id/runs/:run_id/submit_tool_outputs',
-    postThreadsThreadIdRunsRunIdSubmitToolOutputsHandler(async (c, { param, json }) => {}),
+    postThreadsThreadIdRunsRunIdSubmitToolOutputsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )

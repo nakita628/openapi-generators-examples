@@ -12,4 +12,4 @@ export const getMarkets = os
     successDescription: 'A markets object with an array of country codes',
   })
   .output(type({ 'markets?': 'string[]' }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

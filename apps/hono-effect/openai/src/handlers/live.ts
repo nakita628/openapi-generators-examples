@@ -13,36 +13,36 @@ export const liveHandler = new Hono()
   .post(
     '/live/sessions',
     sValidator('json', Schema.toStandardSchemaV1(LiveSessionCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/accept',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(LiveCallAcceptRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/fork',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(LiveForkRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/hangup',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/refer',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(LiveCallReferRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live/sessions/:session_id/reject',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ session_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(LiveCallRejectRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/live/sessions/:session_id/content',
@@ -59,5 +59,5 @@ export const liveHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

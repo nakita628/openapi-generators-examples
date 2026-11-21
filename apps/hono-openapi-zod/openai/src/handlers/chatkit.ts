@@ -70,7 +70,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('param', z.object({ session_id: z.string().meta({ examples: ['cksess_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chatkit/sessions',
@@ -100,7 +100,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('json', CreateChatSessionBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads/:thread_id/items',
@@ -150,7 +150,7 @@ export const chatkitHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads/:thread_id',
@@ -179,7 +179,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string().meta({ examples: ['cthr_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chatkit/threads/:thread_id',
@@ -208,7 +208,7 @@ export const chatkitHandler = new Hono()
       },
     }),
     validator('param', z.object({ thread_id: z.string().meta({ examples: ['cthr_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads',
@@ -266,5 +266,5 @@ export const chatkitHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

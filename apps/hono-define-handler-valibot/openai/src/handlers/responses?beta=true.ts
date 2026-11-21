@@ -3,5 +3,5 @@ import { postResponsesBetaTrueHandler } from '../routes'
 
 export const responsesBetaTrueHandler = new Hono().post(
   '/responses?beta=true',
-  postResponsesBetaTrueHandler(async (c, { header, json }) => {}),
+  postResponsesBetaTrueHandler(async (c, { header, json }) => { throw new Error('Not implemented') }),
 )

@@ -18,7 +18,7 @@ export const webhookEventTypes = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/webhook_event_types', () => {}, {
+  .get('/webhook_event_types', () => { throw new Error('Not implemented') }, {
     response: { 200: 'WebhookEventTypeListResource', 401: 'ErrorResponse' },
     detail: {
       tags: [],

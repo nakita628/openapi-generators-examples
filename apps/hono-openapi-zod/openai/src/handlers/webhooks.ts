@@ -48,7 +48,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentEnvironmentExpiredSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_environment_failed',
@@ -63,7 +63,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentEnvironmentFailedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_environment_ready',
@@ -78,7 +78,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentEnvironmentReadySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_environment_suspended',
@@ -92,7 +92,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentEnvironmentSuspendedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_session_action_required',
@@ -107,7 +107,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentSessionActionRequiredSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_session_created',
@@ -121,7 +121,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentSessionCreatedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_session_failed',
@@ -135,7 +135,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentSessionFailedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_session_idle',
@@ -149,7 +149,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentSessionIdleSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agent_session_in_progress',
@@ -163,7 +163,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookAgentSessionInProgressSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batch_cancelled',
@@ -177,7 +177,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookBatchCancelledSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batch_completed',
@@ -191,7 +191,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookBatchCompletedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batch_expired',
@@ -205,7 +205,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookBatchExpiredSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batch_failed',
@@ -219,7 +219,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookBatchFailedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/eval_run_canceled',
@@ -233,7 +233,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookEvalRunCanceledSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/eval_run_failed',
@@ -247,7 +247,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookEvalRunFailedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/eval_run_succeeded',
@@ -261,7 +261,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookEvalRunSucceededSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning_job_cancelled',
@@ -275,7 +275,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookFineTuningJobCancelledSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning_job_failed',
@@ -289,7 +289,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookFineTuningJobFailedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/fine_tuning_job_succeeded',
@@ -303,7 +303,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookFineTuningJobSucceededSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live_call_incoming',
@@ -319,7 +319,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookLiveCallIncomingSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live_transport_connected',
@@ -332,7 +332,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookLiveTransportConnectedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/live_transport_incoming',
@@ -346,7 +346,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookLiveTransportIncomingSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime_call_incoming',
@@ -360,7 +360,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookRealtimeCallIncomingSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/response_cancelled',
@@ -374,7 +374,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookResponseCancelledSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/response_completed',
@@ -388,7 +388,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookResponseCompletedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/response_failed',
@@ -402,7 +402,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookResponseFailedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/response_incomplete',
@@ -416,7 +416,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookResponseIncompleteSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/safety_alert_created',
@@ -431,7 +431,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookSafetyAlertCreatedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/safety_deactivation_issued',
@@ -446,7 +446,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookSafetyDeactivationIssuedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/safety_org_alert_created',
@@ -461,7 +461,7 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookSafetyOrgAlertCreatedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/safety_warning_issued',
@@ -476,5 +476,5 @@ export const webhooksHandler = new Hono()
       },
     }),
     validator('json', WebhookSafetyWarningIssuedSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

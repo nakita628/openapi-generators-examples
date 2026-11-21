@@ -34,7 +34,7 @@ export const soundboardDefaultSounds = new Elysia()
     UserPrimaryGuildResponse: UserPrimaryGuildResponseSchema,
     UserResponse: UserResponseSchema,
   })
-  .get('/soundboard-default-sounds', () => {}, {
+  .get('/soundboard-default-sounds', () => { throw new Error('Not implemented') }, {
     response: {
       200: SoundboardDefaultSoundsModel.get_soundboard_default_soundsResponse200,
       429: 'RatelimitedResponse',

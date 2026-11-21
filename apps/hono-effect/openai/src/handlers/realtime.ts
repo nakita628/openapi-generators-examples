@@ -1283,45 +1283,45 @@ export const realtimeHandler = new Hono()
           }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/accept',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ call_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(RealtimeSessionCreateRequestGASchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/hangup',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ call_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/refer',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ call_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(RealtimeCallReferRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/reject',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ call_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(RealtimeCallRejectRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/client_secrets',
     sValidator('json', Schema.toStandardSchemaV1(RealtimeCreateClientSecretRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/sessions',
     sValidator('json', Schema.toStandardSchemaV1(RealtimeSessionCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/transcription_sessions',
     sValidator('json', Schema.toStandardSchemaV1(RealtimeTranscriptionSessionCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/translations/client_secrets',
@@ -1329,5 +1329,5 @@ export const realtimeHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(RealtimeTranslationClientSecretCreateRequestSchema),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

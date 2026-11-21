@@ -44,7 +44,7 @@ export const getWebhooksWebhookId = os
       GuildIncomingWebhookResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteWebhooksWebhookId = os
   .route({
@@ -54,7 +54,7 @@ export const deleteWebhooksWebhookId = os
     successDescription: '204 response for delete_webhook',
   })
   .input(z.object({ webhook_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchWebhooksWebhookId = os
   .route({
@@ -77,7 +77,7 @@ export const patchWebhooksWebhookId = os
       GuildIncomingWebhookResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getWebhooksWebhookIdWebhookToken = os
   .route({
@@ -93,7 +93,7 @@ export const getWebhooksWebhookIdWebhookToken = os
       GuildIncomingWebhookResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postWebhooksWebhookIdWebhookToken = os
   .route({
@@ -111,7 +111,7 @@ export const postWebhooksWebhookIdWebhookToken = os
     }),
   )
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteWebhooksWebhookIdWebhookToken = os
   .route({
@@ -121,7 +121,7 @@ export const deleteWebhooksWebhookIdWebhookToken = os
     successDescription: '204 response for delete_webhook_by_token',
   })
   .input(z.object({ webhook_id: SnowflakeTypeSchema, webhook_token: z.string().max(152133) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchWebhooksWebhookIdWebhookToken = os
   .route({
@@ -144,7 +144,7 @@ export const patchWebhooksWebhookIdWebhookToken = os
       GuildIncomingWebhookResponseSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postWebhooksWebhookIdWebhookTokenGithub = os
   .route({
@@ -181,7 +181,7 @@ export const postWebhooksWebhookIdWebhookTokenGithub = os
       answer: z.xor([z.null().nullable(), GithubCommentSchema]).exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getWebhooksWebhookIdWebhookTokenMessagesOriginal = os
   .route({
@@ -197,7 +197,7 @@ export const getWebhooksWebhookIdWebhookTokenMessagesOriginal = os
     }),
   )
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteWebhooksWebhookIdWebhookTokenMessagesOriginal = os
   .route({
@@ -213,7 +213,7 @@ export const deleteWebhooksWebhookIdWebhookTokenMessagesOriginal = os
       thread_id: SnowflakeTypeSchema.exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchWebhooksWebhookIdWebhookTokenMessagesOriginal = os
   .route({
@@ -253,7 +253,7 @@ export const patchWebhooksWebhookIdWebhookTokenMessagesOriginal = os
     }),
   )
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getWebhooksWebhookIdWebhookTokenMessagesMessageId = os
   .route({
@@ -270,7 +270,7 @@ export const getWebhooksWebhookIdWebhookTokenMessagesMessageId = os
     }),
   )
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteWebhooksWebhookIdWebhookTokenMessagesMessageId = os
   .route({
@@ -287,7 +287,7 @@ export const deleteWebhooksWebhookIdWebhookTokenMessagesMessageId = os
       thread_id: SnowflakeTypeSchema.exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchWebhooksWebhookIdWebhookTokenMessagesMessageId = os
   .route({
@@ -328,7 +328,7 @@ export const patchWebhooksWebhookIdWebhookTokenMessagesMessageId = os
     }),
   )
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postWebhooksWebhookIdWebhookTokenSlack = os
   .route({
@@ -349,4 +349,4 @@ export const postWebhooksWebhookIdWebhookTokenSlack = os
     }),
   )
   .output(z.string().nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

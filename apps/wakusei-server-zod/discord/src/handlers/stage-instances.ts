@@ -24,7 +24,7 @@ export const postStageInstances = os
     }),
   )
   .output(StageInstanceResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getStageInstancesChannelId = os
   .route({
@@ -34,7 +34,7 @@ export const getStageInstancesChannelId = os
   })
   .input(z.object({ channel_id: SnowflakeTypeSchema }))
   .output(StageInstanceResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteStageInstancesChannelId = os
   .route({
@@ -44,7 +44,7 @@ export const deleteStageInstancesChannelId = os
     successDescription: '204 response for delete_stage_instance',
   })
   .input(z.object({ channel_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchStageInstancesChannelId = os
   .route({
@@ -60,4 +60,4 @@ export const patchStageInstancesChannelId = os
     }),
   )
   .output(StageInstanceResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

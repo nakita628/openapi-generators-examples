@@ -36,7 +36,7 @@ export const uploadsHandler = new Hono()
       },
     }),
     validator('json', CreateUploadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/cancel',
@@ -75,7 +75,7 @@ export const uploadsHandler = new Hono()
       'param',
       v.object({ upload_id: v.pipe(v.string(), v.metadata({ examples: ['upload_abc123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/complete',
@@ -120,7 +120,7 @@ export const uploadsHandler = new Hono()
       v.object({ upload_id: v.pipe(v.string(), v.metadata({ examples: ['upload_abc123'] })) }),
     ),
     validator('json', CompleteUploadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/parts',
@@ -164,5 +164,5 @@ export const uploadsHandler = new Hono()
       v.object({ upload_id: v.pipe(v.string(), v.metadata({ examples: ['upload_abc123'] })) }),
     ),
     validator('form', AddUploadPartRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

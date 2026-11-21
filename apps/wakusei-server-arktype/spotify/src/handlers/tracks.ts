@@ -23,7 +23,7 @@ export const getTracksId = os
     }),
   )
   .output(TrackObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getTracks = os
   .route({
@@ -47,4 +47,4 @@ export const getTracks = os
     }),
   )
   .output(type({ tracks: type(TrackObjectSchema).array() }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

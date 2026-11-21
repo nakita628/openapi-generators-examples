@@ -44,7 +44,7 @@ export const conversationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/conversations/:conversation_id/items',
@@ -89,7 +89,7 @@ export const conversationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/conversations/:conversation_id/items/:item_id',
@@ -122,7 +122,7 @@ export const conversationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/conversations/:conversation_id/items/:item_id',
@@ -135,12 +135,12 @@ export const conversationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/conversations',
     sValidator('json', Schema.toStandardSchemaV1(CreateConversationBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/conversations/:conversation_id',
@@ -152,7 +152,7 @@ export const conversationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/conversations/:conversation_id',
@@ -165,7 +165,7 @@ export const conversationsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(UpdateConversationBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/conversations/:conversation_id',
@@ -177,5 +177,5 @@ export const conversationsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

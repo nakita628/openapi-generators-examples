@@ -34,7 +34,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/audiobooks',
@@ -52,7 +52,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/me/audiobooks',
@@ -70,7 +70,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/audiobooks/contains',
@@ -88,9 +88,9 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/me', (c) => {})
+  .get('/me', (c) => { throw new Error('Not implemented') })
   .get(
     '/me/playlists',
     sValidator(
@@ -122,7 +122,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/me/playlists',
@@ -168,7 +168,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/library',
@@ -186,7 +186,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/me/library',
@@ -204,7 +204,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/library/contains',
@@ -224,7 +224,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/albums',
@@ -266,7 +266,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/albums',
@@ -297,7 +297,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/me/albums',
@@ -328,7 +328,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/albums/contains',
@@ -346,7 +346,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/tracks',
@@ -388,7 +388,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/tracks',
@@ -431,7 +431,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/me/tracks',
@@ -462,7 +462,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/tracks/contains',
@@ -480,7 +480,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/episodes',
@@ -522,7 +522,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/episodes',
@@ -549,7 +549,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/me/episodes',
@@ -580,7 +580,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/episodes/contains',
@@ -596,7 +596,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/shows',
@@ -629,7 +629,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/shows',
@@ -658,7 +658,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/me/shows',
@@ -696,7 +696,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/shows/contains',
@@ -712,7 +712,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/following',
@@ -750,7 +750,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/following',
@@ -784,7 +784,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/me/following',
@@ -820,7 +820,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/following/contains',
@@ -843,7 +843,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/player',
@@ -867,7 +867,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/player',
@@ -893,9 +893,9 @@ export const meHandler = new Hono()
         v.metadata({ examples: [{ device_ids: ['74ASZWbe4lXaubB36ztrGX'] }] }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/me/player/devices', (c) => {})
+  .get('/me/player/devices', (c) => { throw new Error('Not implemented') })
   .get(
     '/me/player/currently-playing',
     sValidator(
@@ -918,7 +918,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/player/play',
@@ -978,7 +978,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/player/pause',
@@ -996,7 +996,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/me/player/next',
@@ -1014,7 +1014,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/me/player/previous',
@@ -1032,7 +1032,7 @@ export const meHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/player/seek',
@@ -1057,7 +1057,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/player/repeat',
@@ -1082,7 +1082,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/player/volume',
@@ -1105,7 +1105,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/me/player/shuffle',
@@ -1134,7 +1134,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/player/recently-played',
@@ -1177,9 +1177,9 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/me/player/queue', (c) => {})
+  .get('/me/player/queue', (c) => { throw new Error('Not implemented') })
   .post(
     '/me/player/queue',
     sValidator(
@@ -1203,7 +1203,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/top/artists',
@@ -1243,7 +1243,7 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/me/top/tracks',
@@ -1283,5 +1283,5 @@ export const meHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

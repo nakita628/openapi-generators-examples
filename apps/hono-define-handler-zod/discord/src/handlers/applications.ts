@@ -38,143 +38,143 @@ import {
 export const applicationsHandler = new Hono()
   .get(
     '/applications/@me',
-    getApplicationsMeHandler(async (c) => {}),
+    getApplicationsMeHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/applications/@me',
-    patchApplicationsMeHandler(async (c, { json }) => {}),
+    patchApplicationsMeHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id',
-    getApplicationsApplicationIdHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/applications/:application_id',
-    patchApplicationsApplicationIdHandler(async (c, { param, json }) => {}),
+    patchApplicationsApplicationIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/activity-instances/:instance_id',
-    getApplicationsApplicationIdActivityInstancesInstanceIdHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdActivityInstancesInstanceIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/applications/:application_id/attachment',
-    postApplicationsApplicationIdAttachmentHandler(async (c, { param, form }) => {}),
+    postApplicationsApplicationIdAttachmentHandler(async (c, { param, form }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/commands',
-    getApplicationsApplicationIdCommandsHandler(async (c, { param, query }) => {}),
+    getApplicationsApplicationIdCommandsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/applications/:application_id/commands',
-    putApplicationsApplicationIdCommandsHandler(async (c, { param, json }) => {}),
+    putApplicationsApplicationIdCommandsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/applications/:application_id/commands',
-    postApplicationsApplicationIdCommandsHandler(async (c, { param, json }) => {}),
+    postApplicationsApplicationIdCommandsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/commands/:command_id',
-    getApplicationsApplicationIdCommandsCommandIdHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdCommandsCommandIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/applications/:application_id/commands/:command_id',
-    deleteApplicationsApplicationIdCommandsCommandIdHandler(async (c, { param }) => {}),
+    deleteApplicationsApplicationIdCommandsCommandIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/applications/:application_id/commands/:command_id',
-    patchApplicationsApplicationIdCommandsCommandIdHandler(async (c, { param, json }) => {}),
+    patchApplicationsApplicationIdCommandsCommandIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/emojis',
-    getApplicationsApplicationIdEmojisHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdEmojisHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/applications/:application_id/emojis',
-    postApplicationsApplicationIdEmojisHandler(async (c, { param, json }) => {}),
+    postApplicationsApplicationIdEmojisHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/emojis/:emoji_id',
-    getApplicationsApplicationIdEmojisEmojiIdHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdEmojisEmojiIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/applications/:application_id/emojis/:emoji_id',
-    deleteApplicationsApplicationIdEmojisEmojiIdHandler(async (c, { param }) => {}),
+    deleteApplicationsApplicationIdEmojisEmojiIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/applications/:application_id/emojis/:emoji_id',
-    patchApplicationsApplicationIdEmojisEmojiIdHandler(async (c, { param, json }) => {}),
+    patchApplicationsApplicationIdEmojisEmojiIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/entitlements',
-    getApplicationsApplicationIdEntitlementsHandler(async (c, { param, query }) => {}),
+    getApplicationsApplicationIdEntitlementsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/applications/:application_id/entitlements',
-    postApplicationsApplicationIdEntitlementsHandler(async (c, { param, json }) => {}),
+    postApplicationsApplicationIdEntitlementsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/entitlements/:entitlement_id',
-    getApplicationsApplicationIdEntitlementsEntitlementIdHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdEntitlementsEntitlementIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/applications/:application_id/entitlements/:entitlement_id',
-    deleteApplicationsApplicationIdEntitlementsEntitlementIdHandler(async (c, { param }) => {}),
+    deleteApplicationsApplicationIdEntitlementsEntitlementIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/applications/:application_id/entitlements/:entitlement_id/consume',
     postApplicationsApplicationIdEntitlementsEntitlementIdConsumeHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands',
-    getApplicationsApplicationIdGuildsGuildIdCommandsHandler(async (c, { param, query }) => {}),
+    getApplicationsApplicationIdGuildsGuildIdCommandsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/applications/:application_id/guilds/:guild_id/commands',
-    putApplicationsApplicationIdGuildsGuildIdCommandsHandler(async (c, { param, json }) => {}),
+    putApplicationsApplicationIdGuildsGuildIdCommandsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/applications/:application_id/guilds/:guild_id/commands',
-    postApplicationsApplicationIdGuildsGuildIdCommandsHandler(async (c, { param, json }) => {}),
+    postApplicationsApplicationIdGuildsGuildIdCommandsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands/permissions',
-    getApplicationsApplicationIdGuildsGuildIdCommandsPermissionsHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdGuildsGuildIdCommandsPermissionsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
-    getApplicationsApplicationIdGuildsGuildIdCommandsCommandIdHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdGuildsGuildIdCommandsCommandIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
     deleteApplicationsApplicationIdGuildsGuildIdCommandsCommandIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .patch(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
     patchApplicationsApplicationIdGuildsGuildIdCommandsCommandIdHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id/permissions',
     getApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissionsHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .put(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id/permissions',
     putApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissionsHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/applications/:application_id/role-connections/metadata',
-    getApplicationsApplicationIdRoleConnectionsMetadataHandler(async (c, { param }) => {}),
+    getApplicationsApplicationIdRoleConnectionsMetadataHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/applications/:application_id/role-connections/metadata',
-    putApplicationsApplicationIdRoleConnectionsMetadataHandler(async (c, { param, json }) => {}),
+    putApplicationsApplicationIdRoleConnectionsMetadataHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )

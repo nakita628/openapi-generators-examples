@@ -83,7 +83,7 @@ export const bookingsHandler = new Hono()
         '500': InternalServerErrorResponse,
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/bookings',
@@ -129,7 +129,7 @@ export const bookingsHandler = new Hono()
       },
     }),
     validator('json', BookingSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/bookings/:bookingId',
@@ -184,7 +184,7 @@ export const bookingsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/bookings/:bookingId',
@@ -215,7 +215,7 @@ export const bookingsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/bookings/:bookingId/payment',
@@ -306,5 +306,5 @@ export const bookingsHandler = new Hono()
       }),
     ),
     validator('json', BookingPaymentSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

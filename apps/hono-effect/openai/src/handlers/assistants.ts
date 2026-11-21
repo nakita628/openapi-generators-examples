@@ -21,26 +21,26 @@ export const assistantsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants',
     sValidator('json', Schema.toStandardSchemaV1(CreateAssistantRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/assistants/:assistant_id',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ assistant_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants/:assistant_id',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ assistant_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(ModifyAssistantRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/assistants/:assistant_id',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ assistant_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

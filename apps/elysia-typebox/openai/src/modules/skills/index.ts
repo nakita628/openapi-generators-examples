@@ -36,7 +36,7 @@ export const skills = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/skills', ({ query }) => {}, {
+  .get('/skills', ({ query }) => { throw new Error('Not implemented') }, {
     query: SkillsModel.ListSkillsQuery,
     response: { 200: 'SkillListResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -46,7 +46,7 @@ export const skills = new Elysia()
       operationId: 'ListSkills',
     },
   })
-  .post('/skills', ({ body }) => {}, {
+  .post('/skills', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateSkillBody',
     response: {
       200: 'SkillResource',
@@ -61,7 +61,7 @@ export const skills = new Elysia()
       operationId: 'CreateSkill',
     },
   })
-  .get('/skills/:skill_id', ({ params }) => {}, {
+  .get('/skills/:skill_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.GetSkillParams,
     response: { 200: 'SkillResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -71,7 +71,7 @@ export const skills = new Elysia()
       operationId: 'GetSkill',
     },
   })
-  .post('/skills/:skill_id', ({ params, body }) => {}, {
+  .post('/skills/:skill_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.UpdateSkillDefaultVersionParams,
     body: 'SetDefaultSkillVersionBody',
     response: {
@@ -87,7 +87,7 @@ export const skills = new Elysia()
       operationId: 'UpdateSkillDefaultVersion',
     },
   })
-  .delete('/skills/:skill_id', ({ params }) => {}, {
+  .delete('/skills/:skill_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.DeleteSkillParams,
     response: { 200: 'DeletedSkillResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -97,7 +97,7 @@ export const skills = new Elysia()
       operationId: 'DeleteSkill',
     },
   })
-  .get('/skills/:skill_id/content', ({ params }) => {}, {
+  .get('/skills/:skill_id/content', ({ params }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.GetSkillContentParams,
     response: {
       200: SkillsModel.GetSkillContentResponse200,
@@ -111,7 +111,7 @@ export const skills = new Elysia()
       operationId: 'GetSkillContent',
     },
   })
-  .get('/skills/:skill_id/versions', ({ params, query }) => {}, {
+  .get('/skills/:skill_id/versions', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.ListSkillVersionsParams,
     query: SkillsModel.ListSkillVersionsQuery,
     response: {
@@ -127,7 +127,7 @@ export const skills = new Elysia()
       operationId: 'ListSkillVersions',
     },
   })
-  .post('/skills/:skill_id/versions', ({ params, body }) => {}, {
+  .post('/skills/:skill_id/versions', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.CreateSkillVersionParams,
     body: 'CreateSkillVersionBody',
     response: {
@@ -144,7 +144,7 @@ export const skills = new Elysia()
       operationId: 'CreateSkillVersion',
     },
   })
-  .get('/skills/:skill_id/versions/:version', ({ params }) => {}, {
+  .get('/skills/:skill_id/versions/:version', ({ params }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.GetSkillVersionParams,
     response: {
       200: 'SkillVersionResource',
@@ -159,7 +159,7 @@ export const skills = new Elysia()
       operationId: 'GetSkillVersion',
     },
   })
-  .delete('/skills/:skill_id/versions/:version', ({ params }) => {}, {
+  .delete('/skills/:skill_id/versions/:version', ({ params }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.DeleteSkillVersionParams,
     response: {
       200: 'DeletedSkillVersionResource',
@@ -174,7 +174,7 @@ export const skills = new Elysia()
       operationId: 'DeleteSkillVersion',
     },
   })
-  .get('/skills/:skill_id/versions/:version/content', ({ params }) => {}, {
+  .get('/skills/:skill_id/versions/:version/content', ({ params }) => { throw new Error('Not implemented') }, {
     params: SkillsModel.GetSkillVersionContentParams,
     response: {
       200: SkillsModel.GetSkillVersionContentResponse200,

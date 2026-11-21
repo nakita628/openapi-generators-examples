@@ -25,4 +25,4 @@ export const getStations = os
       z.object({ links: z.intersection(LinksSelfSchema, LinksPaginationSchema).exactOptional() }),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

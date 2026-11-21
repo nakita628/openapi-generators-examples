@@ -49,7 +49,7 @@ export const getVaults = os
     }),
   )
   .output(VaultListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVaults = os
   .route({
@@ -64,7 +64,7 @@ export const postVaults = os
   })
   .input(CreateVaultParamsSchema)
   .output(VaultResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVaultsVaultId = os
   .route({
@@ -78,7 +78,7 @@ export const getVaultsVaultId = os
   })
   .input(z.object({ vault_id: z.string().min(0).max(1048576) }))
   .output(VaultResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVaultsVaultId = os
   .route({
@@ -113,7 +113,7 @@ export const postVaultsVaultId = os
     }),
   )
   .output(VaultResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteVaultsVaultId = os
   .route({
@@ -127,7 +127,7 @@ export const deleteVaultsVaultId = os
   })
   .input(z.object({ vault_id: z.string().min(0).max(1048576) }))
   .output(DeletedVaultResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVaultsVaultIdCredentials = os
   .route({
@@ -165,7 +165,7 @@ export const getVaultsVaultIdCredentials = os
     }),
   )
   .output(VaultCredentialListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVaultsVaultIdCredentials = os
   .route({
@@ -200,7 +200,7 @@ export const postVaultsVaultIdCredentials = os
     }),
   )
   .output(VaultCredentialResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVaultsVaultIdCredentialsCredentialId = os
   .route({
@@ -219,7 +219,7 @@ export const getVaultsVaultIdCredentialsCredentialId = os
     }),
   )
   .output(VaultCredentialResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVaultsVaultIdCredentialsCredentialId = os
   .route({
@@ -246,7 +246,7 @@ export const postVaultsVaultIdCredentialsCredentialId = os
     }),
   )
   .output(VaultCredentialResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteVaultsVaultIdCredentialsCredentialId = os
   .route({
@@ -265,4 +265,4 @@ export const deleteVaultsVaultIdCredentialsCredentialId = os
     }),
   )
   .output(DeletedVaultCredentialResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

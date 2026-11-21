@@ -423,7 +423,7 @@ export const getRecommendations = os
     }),
   )
   .output(RecommendationsObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getRecommendationsAvailableGenreSeeds = os
   .route({
@@ -437,4 +437,4 @@ export const getRecommendationsAvailableGenreSeeds = os
     successDescription: 'A set of genres',
   })
   .output(z.object({ genres: z.array(z.string()).meta({ examples: [['alternative', 'samba']] }) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

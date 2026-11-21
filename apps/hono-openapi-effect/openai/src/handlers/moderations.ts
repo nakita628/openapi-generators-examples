@@ -54,5 +54,5 @@ export const moderationsHandler = new Hono().post(
     },
   }),
   validator('json', Schema.toStandardSchemaV1(CreateModerationRequestSchema)),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

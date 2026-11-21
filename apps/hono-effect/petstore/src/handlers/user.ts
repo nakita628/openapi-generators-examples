@@ -36,12 +36,12 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/user/createWithList',
     sValidator('json', Schema.toStandardSchemaV1(Schema.Array(UserSchema))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/user/login',
@@ -54,13 +54,13 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/user/logout', (c) => {})
+  .get('/user/logout', (c) => { throw new Error('Not implemented') })
   .get(
     '/user/:username',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ username: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/user/:username',
@@ -95,10 +95,10 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/user/:username',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ username: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

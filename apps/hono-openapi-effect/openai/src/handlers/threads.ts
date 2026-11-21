@@ -42,7 +42,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(CreateThreadRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/runs',
@@ -65,7 +65,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(CreateThreadAndRunRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id',
@@ -85,7 +85,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id',
@@ -106,7 +106,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ModifyThreadRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/threads/:thread_id',
@@ -128,7 +128,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/messages',
@@ -166,7 +166,7 @@ export const threadsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages',
@@ -189,7 +189,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(CreateMessageRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/messages/:message_id',
@@ -216,7 +216,7 @@ export const threadsHandler = new Hono()
         Schema.Struct({ thread_id: Schema.String, message_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages/:message_id',
@@ -244,7 +244,7 @@ export const threadsHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(ModifyMessageRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/threads/:thread_id/messages/:message_id',
@@ -271,7 +271,7 @@ export const threadsHandler = new Hono()
         Schema.Struct({ thread_id: Schema.String, message_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs',
@@ -308,7 +308,7 @@ export const threadsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs',
@@ -356,7 +356,7 @@ export const threadsHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(CreateRunRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id',
@@ -379,7 +379,7 @@ export const threadsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String, run_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id',
@@ -403,7 +403,7 @@ export const threadsHandler = new Hono()
       Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String, run_id: Schema.String })),
     ),
     validator('json', Schema.toStandardSchemaV1(ModifyRunRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/cancel',
@@ -426,7 +426,7 @@ export const threadsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String, run_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps',
@@ -483,7 +483,7 @@ export const threadsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps/:step_id',
@@ -534,7 +534,7 @@ export const threadsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/submit_tool_outputs',
@@ -562,5 +562,5 @@ export const threadsHandler = new Hono()
       Schema.toStandardSchemaV1(Schema.Struct({ thread_id: Schema.String, run_id: Schema.String })),
     ),
     validator('json', Schema.toStandardSchemaV1(SubmitToolOutputsRunRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

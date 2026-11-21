@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const postResponseCancelled = os.postResponseCancelled.handler(async ({ input }) => {})
+export const postResponseCancelled = os.postResponseCancelled.handler(async ({ input }) => { throw new Error('Not implemented') })

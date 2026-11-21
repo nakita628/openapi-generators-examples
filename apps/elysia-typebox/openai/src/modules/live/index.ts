@@ -233,7 +233,7 @@ export const live = new Elysia()
     TargetUri: TargetUriSchema,
     Triggers: TriggersSchema,
   })
-  .post('/live/sessions', ({ body }) => {}, {
+  .post('/live/sessions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'LiveSessionCreateRequest',
     response: {
       201: 'LiveSessionCreateResponse',
@@ -253,7 +253,7 @@ export const live = new Elysia()
       operationId: 'create-live',
     },
   })
-  .post('/live/sessions/:session_id/accept', ({ params, body }) => {}, {
+  .post('/live/sessions/:session_id/accept', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LiveModel.acceptLiveSessionParams,
     body: 'LiveCallAcceptRequest',
     response: {
@@ -273,7 +273,7 @@ export const live = new Elysia()
       operationId: 'accept-live-session',
     },
   })
-  .post('/live/sessions/:session_id/fork', ({ params, body }) => {}, {
+  .post('/live/sessions/:session_id/fork', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LiveModel.forkLiveSessionParams,
     body: 'LiveForkRequest',
     response: {
@@ -292,7 +292,7 @@ export const live = new Elysia()
       operationId: 'fork-live-session',
     },
   })
-  .post('/live/sessions/:session_id/hangup', ({ params }) => {}, {
+  .post('/live/sessions/:session_id/hangup', ({ params }) => { throw new Error('Not implemented') }, {
     params: LiveModel.hangupLiveSessionParams,
     response: { 200: t.Void(), 404: 'ErrorResponse' },
     detail: {
@@ -302,7 +302,7 @@ export const live = new Elysia()
       operationId: 'hangup-live-session',
     },
   })
-  .post('/live/sessions/:session_id/refer', ({ params, body }) => {}, {
+  .post('/live/sessions/:session_id/refer', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LiveModel.referLiveSessionParams,
     body: 'LiveCallReferRequest',
     response: { 200: t.Void(), 400: 'ErrorResponse', 404: 'ErrorResponse', 500: t.Void() },
@@ -314,7 +314,7 @@ export const live = new Elysia()
       operationId: 'refer-live-session',
     },
   })
-  .post('/live/sessions/:session_id/reject', ({ params, body }) => {}, {
+  .post('/live/sessions/:session_id/reject', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: LiveModel.rejectLiveSessionParams,
     body: 'LiveCallRejectRequest',
     response: {
@@ -332,7 +332,7 @@ export const live = new Elysia()
       operationId: 'reject-live-session',
     },
   })
-  .get('/live/sessions/:session_id/content', ({ params }) => {}, {
+  .get('/live/sessions/:session_id/content', ({ params }) => { throw new Error('Not implemented') }, {
     params: LiveModel.downloadLiveRecordingParams,
     response: {
       200: t.Void(),

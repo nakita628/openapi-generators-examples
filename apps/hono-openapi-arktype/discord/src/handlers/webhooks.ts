@@ -58,7 +58,7 @@ export const webhooksHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', type({ webhook_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/webhooks/:webhook_id',
@@ -81,7 +81,7 @@ export const webhooksHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', type({ webhook_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/webhooks/:webhook_id',
@@ -125,7 +125,7 @@ export const webhooksHandler = new Hono()
         'channel_id?': type('null | null').or(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/webhooks/:webhook_id/:webhook_token',
@@ -167,7 +167,7 @@ export const webhooksHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhooks/:webhook_id/:webhook_token',
@@ -19144,7 +19144,7 @@ export const webhooksHandler = new Hono()
         return ctx.error('one of the members')
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/webhooks/:webhook_id/:webhook_token',
@@ -19175,7 +19175,7 @@ export const webhooksHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/webhooks/:webhook_id/:webhook_token',
@@ -19226,7 +19226,7 @@ export const webhooksHandler = new Hono()
         'avatar?': 'string | null',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhooks/:webhook_id/:webhook_token/github',
@@ -19267,7 +19267,7 @@ export const webhooksHandler = new Hono()
       }),
     ),
     validator('json', GithubWebhookSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/webhooks/:webhook_id/:webhook_token/messages/@original',
@@ -19300,7 +19300,7 @@ export const webhooksHandler = new Hono()
       }),
     ),
     validator('query', type({ 'thread_id?': SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/webhooks/:webhook_id/:webhook_token/messages/@original',
@@ -19332,7 +19332,7 @@ export const webhooksHandler = new Hono()
       }),
     ),
     validator('query', type({ 'thread_id?': SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/webhooks/:webhook_id/:webhook_token/messages/@original',
@@ -28569,7 +28569,7 @@ export const webhooksHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/webhooks/:webhook_id/:webhook_token/messages/:message_id',
@@ -28603,7 +28603,7 @@ export const webhooksHandler = new Hono()
       }),
     ),
     validator('query', type({ 'thread_id?': SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/webhooks/:webhook_id/:webhook_token/messages/:message_id',
@@ -28636,7 +28636,7 @@ export const webhooksHandler = new Hono()
       }),
     ),
     validator('query', type({ 'thread_id?': SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/webhooks/:webhook_id/:webhook_token/messages/:message_id',
@@ -37874,7 +37874,7 @@ export const webhooksHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhooks/:webhook_id/:webhook_token/slack',
@@ -38069,5 +38069,5 @@ export const webhooksHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

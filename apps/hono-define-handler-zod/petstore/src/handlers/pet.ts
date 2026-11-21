@@ -13,33 +13,33 @@ import {
 export const petHandler = new Hono()
   .put(
     '/pet',
-    putPetHandler(async (c, { form, json }) => {}),
+    putPetHandler(async (c, { form, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/pet',
-    postPetHandler(async (c, { form, json }) => {}),
+    postPetHandler(async (c, { form, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/pet/findByStatus',
-    getPetFindByStatusHandler(async (c, { query }) => {}),
+    getPetFindByStatusHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/pet/findByTags',
-    getPetFindByTagsHandler(async (c, { query }) => {}),
+    getPetFindByTagsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/pet/:petId',
-    getPetPetIdHandler(async (c, { param }) => {}),
+    getPetPetIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/pet/:petId',
-    postPetPetIdHandler(async (c, { param, query }) => {}),
+    postPetPetIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/pet/:petId',
-    deletePetPetIdHandler(async (c, { param, header }) => {}),
+    deletePetPetIdHandler(async (c, { param, header }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/pet/:petId/uploadImage',
-    postPetPetIdUploadImageHandler(async (c, { param, query }) => {}),
+    postPetPetIdUploadImageHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )

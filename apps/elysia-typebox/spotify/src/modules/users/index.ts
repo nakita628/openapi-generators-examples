@@ -64,7 +64,7 @@ export const users = new Elysia()
     TrackObject: TrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/users/:user_id', ({ params }) => {}, {
+  .get('/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: UsersModel.getUsersProfileParams,
     response: {
       200: 'PublicUserObject',
@@ -80,7 +80,7 @@ export const users = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/users/:user_id/playlists', ({ params, query }) => {}, {
+  .get('/users/:user_id/playlists', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: UsersModel.getListUsersPlaylistsParams,
     query: UsersModel.getListUsersPlaylistsQuery,
     response: {
@@ -97,7 +97,7 @@ export const users = new Elysia()
       security: [{ oauth_2_0: ['playlist-read-private', 'playlist-read-collaborative'] }],
     },
   })
-  .post('/users/:user_id/playlists', ({ params, body }) => {}, {
+  .post('/users/:user_id/playlists', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: UsersModel.createPlaylistForUserParams,
     body: UsersModel.createPlaylistForUserBody,
     response: {

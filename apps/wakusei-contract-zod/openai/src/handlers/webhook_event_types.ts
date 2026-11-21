@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getWebhookEventTypes = os.getWebhookEventTypes.handler(async ({ input }) => {})
+export const getWebhookEventTypes = os.getWebhookEventTypes.handler(async ({ input }) => { throw new Error('Not implemented') })

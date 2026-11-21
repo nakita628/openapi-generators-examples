@@ -84,7 +84,7 @@ export const webhooks = new Elysia()
     WebhookSafetyOrgAlertCreated: WebhookSafetyOrgAlertCreatedSchema,
     WebhookSafetyWarningIssued: WebhookSafetyWarningIssuedSchema,
   })
-  .post('/webhooks/agent_environment_expired', ({ body }) => {}, {
+  .post('/webhooks/agent_environment_expired', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentEnvironmentExpired',
     response: { 200: t.Void() },
     detail: {
@@ -94,7 +94,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_environment_expired',
     },
   })
-  .post('/webhooks/agent_environment_failed', ({ body }) => {}, {
+  .post('/webhooks/agent_environment_failed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentEnvironmentFailed',
     response: { 200: t.Void() },
     detail: {
@@ -104,7 +104,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_environment_failed',
     },
   })
-  .post('/webhooks/agent_environment_ready', ({ body }) => {}, {
+  .post('/webhooks/agent_environment_ready', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentEnvironmentReady',
     response: { 200: t.Void() },
     detail: {
@@ -114,7 +114,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_environment_ready',
     },
   })
-  .post('/webhooks/agent_environment_suspended', ({ body }) => {}, {
+  .post('/webhooks/agent_environment_suspended', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentEnvironmentSuspended',
     response: { 200: t.Void() },
     detail: {
@@ -123,7 +123,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_environment_suspended',
     },
   })
-  .post('/webhooks/agent_session_action_required', ({ body }) => {}, {
+  .post('/webhooks/agent_session_action_required', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentSessionActionRequired',
     response: { 200: t.Void() },
     detail: {
@@ -133,7 +133,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_session_action_required',
     },
   })
-  .post('/webhooks/agent_session_created', ({ body }) => {}, {
+  .post('/webhooks/agent_session_created', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentSessionCreated',
     response: { 200: t.Void() },
     detail: {
@@ -142,7 +142,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_session_created',
     },
   })
-  .post('/webhooks/agent_session_failed', ({ body }) => {}, {
+  .post('/webhooks/agent_session_failed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentSessionFailed',
     response: { 200: t.Void() },
     detail: {
@@ -151,7 +151,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_session_failed',
     },
   })
-  .post('/webhooks/agent_session_idle', ({ body }) => {}, {
+  .post('/webhooks/agent_session_idle', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentSessionIdle',
     response: { 200: t.Void() },
     detail: {
@@ -160,7 +160,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_session_idle',
     },
   })
-  .post('/webhooks/agent_session_in_progress', ({ body }) => {}, {
+  .post('/webhooks/agent_session_in_progress', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookAgentSessionInProgress',
     response: { 200: t.Void() },
     detail: {
@@ -169,7 +169,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksAgent_session_in_progress',
     },
   })
-  .post('/webhooks/batch_cancelled', ({ body }) => {}, {
+  .post('/webhooks/batch_cancelled', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookBatchCancelled',
     response: { 200: t.Void() },
     detail: {
@@ -178,7 +178,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksBatch_cancelled',
     },
   })
-  .post('/webhooks/batch_completed', ({ body }) => {}, {
+  .post('/webhooks/batch_completed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookBatchCompleted',
     response: { 200: t.Void() },
     detail: {
@@ -187,7 +187,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksBatch_completed',
     },
   })
-  .post('/webhooks/batch_expired', ({ body }) => {}, {
+  .post('/webhooks/batch_expired', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookBatchExpired',
     response: { 200: t.Void() },
     detail: {
@@ -196,7 +196,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksBatch_expired',
     },
   })
-  .post('/webhooks/batch_failed', ({ body }) => {}, {
+  .post('/webhooks/batch_failed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookBatchFailed',
     response: { 200: t.Void() },
     detail: {
@@ -205,7 +205,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksBatch_failed',
     },
   })
-  .post('/webhooks/eval_run_canceled', ({ body }) => {}, {
+  .post('/webhooks/eval_run_canceled', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookEvalRunCanceled',
     response: { 200: t.Void() },
     detail: {
@@ -214,7 +214,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksEval_run_canceled',
     },
   })
-  .post('/webhooks/eval_run_failed', ({ body }) => {}, {
+  .post('/webhooks/eval_run_failed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookEvalRunFailed',
     response: { 200: t.Void() },
     detail: {
@@ -223,7 +223,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksEval_run_failed',
     },
   })
-  .post('/webhooks/eval_run_succeeded', ({ body }) => {}, {
+  .post('/webhooks/eval_run_succeeded', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookEvalRunSucceeded',
     response: { 200: t.Void() },
     detail: {
@@ -232,7 +232,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksEval_run_succeeded',
     },
   })
-  .post('/webhooks/fine_tuning_job_cancelled', ({ body }) => {}, {
+  .post('/webhooks/fine_tuning_job_cancelled', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookFineTuningJobCancelled',
     response: { 200: t.Void() },
     detail: {
@@ -241,7 +241,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksFine_tuning_job_cancelled',
     },
   })
-  .post('/webhooks/fine_tuning_job_failed', ({ body }) => {}, {
+  .post('/webhooks/fine_tuning_job_failed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookFineTuningJobFailed',
     response: { 200: t.Void() },
     detail: {
@@ -250,7 +250,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksFine_tuning_job_failed',
     },
   })
-  .post('/webhooks/fine_tuning_job_succeeded', ({ body }) => {}, {
+  .post('/webhooks/fine_tuning_job_succeeded', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookFineTuningJobSucceeded',
     response: { 200: t.Void() },
     detail: {
@@ -259,7 +259,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksFine_tuning_job_succeeded',
     },
   })
-  .post('/webhooks/live_call_incoming', ({ body }) => {}, {
+  .post('/webhooks/live_call_incoming', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookLiveCallIncoming',
     response: { 200: t.Void() },
     detail: {
@@ -269,7 +269,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksLive_call_incoming',
     },
   })
-  .post('/webhooks/live_transport_connected', ({ body }) => {}, {
+  .post('/webhooks/live_transport_connected', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookLiveTransportConnected',
     response: { 200: t.Void(), 204: t.Void() },
     detail: {
@@ -279,7 +279,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksLive_transport_connected',
     },
   })
-  .post('/webhooks/live_transport_incoming', ({ body }) => {}, {
+  .post('/webhooks/live_transport_incoming', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookLiveTransportIncoming',
     response: { 200: t.Void() },
     detail: {
@@ -288,7 +288,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksLive_transport_incoming',
     },
   })
-  .post('/webhooks/realtime_call_incoming', ({ body }) => {}, {
+  .post('/webhooks/realtime_call_incoming', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookRealtimeCallIncoming',
     response: { 200: t.Void() },
     detail: {
@@ -297,7 +297,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksRealtime_call_incoming',
     },
   })
-  .post('/webhooks/response_cancelled', ({ body }) => {}, {
+  .post('/webhooks/response_cancelled', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookResponseCancelled',
     response: { 200: t.Void() },
     detail: {
@@ -306,7 +306,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksResponse_cancelled',
     },
   })
-  .post('/webhooks/response_completed', ({ body }) => {}, {
+  .post('/webhooks/response_completed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookResponseCompleted',
     response: { 200: t.Void() },
     detail: {
@@ -315,7 +315,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksResponse_completed',
     },
   })
-  .post('/webhooks/response_failed', ({ body }) => {}, {
+  .post('/webhooks/response_failed', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookResponseFailed',
     response: { 200: t.Void() },
     detail: {
@@ -324,7 +324,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksResponse_failed',
     },
   })
-  .post('/webhooks/response_incomplete', ({ body }) => {}, {
+  .post('/webhooks/response_incomplete', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookResponseIncomplete',
     response: { 200: t.Void() },
     detail: {
@@ -333,7 +333,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksResponse_incomplete',
     },
   })
-  .post('/webhooks/safety_alert_created', ({ body }) => {}, {
+  .post('/webhooks/safety_alert_created', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookSafetyAlertCreated',
     response: { 200: t.Void() },
     detail: {
@@ -343,7 +343,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksSafety_alert_created',
     },
   })
-  .post('/webhooks/safety_deactivation_issued', ({ body }) => {}, {
+  .post('/webhooks/safety_deactivation_issued', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookSafetyDeactivationIssued',
     response: { 200: t.Void() },
     detail: {
@@ -353,7 +353,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksSafety_deactivation_issued',
     },
   })
-  .post('/webhooks/safety_org_alert_created', ({ body }) => {}, {
+  .post('/webhooks/safety_org_alert_created', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookSafetyOrgAlertCreated',
     response: { 200: t.Void() },
     detail: {
@@ -363,7 +363,7 @@ export const webhooks = new Elysia()
       operationId: 'postWebhooksSafety_org_alert_created',
     },
   })
-  .post('/webhooks/safety_warning_issued', ({ body }) => {}, {
+  .post('/webhooks/safety_warning_issued', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'WebhookSafetyWarningIssued',
     response: { 200: t.Void() },
     detail: {

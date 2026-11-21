@@ -78,7 +78,7 @@ export const search = new Elysia()
     TrackObject: TrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/search', ({ query }) => {}, {
+  .get('/search', ({ query }) => { throw new Error('Not implemented') }, {
     query: SearchModel.searchQuery,
     response: {
       200: SearchModel.searchResponse200,

@@ -14,5 +14,5 @@ export const responsesBetaTrueHandler = new Hono().post(
     }),
   ),
   sValidator('json', BetaCreateResponseSchema),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

@@ -12,7 +12,7 @@ import {
 } from '../components'
 
 export const audioHandler = new Hono()
-  .post('/audio/speech', sValidator('json', CreateSpeechRequestSchema), (c) => {})
+  .post('/audio/speech', sValidator('json', CreateSpeechRequestSchema), (c) => { throw new Error('Not implemented') })
   .post(
     '/audio/transcriptions',
     sValidator(
@@ -239,7 +239,7 @@ export const audioHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/translations',
@@ -281,7 +281,7 @@ export const audioHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents',
@@ -295,33 +295,33 @@ export const audioHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/audio/voice_consents', sValidator('form', CreateVoiceConsentRequestSchema), (c) => {})
+  .post('/audio/voice_consents', sValidator('form', CreateVoiceConsentRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/audio/voice_consents/:consent_id',
     sValidator('param', v.object({ consent_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents/:consent_id',
     sValidator('param', v.object({ consent_id: v.string() })),
     sValidator('json', UpdateVoiceConsentRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voice_consents/:consent_id',
     sValidator('param', v.object({ consent_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voices',
     sValidator('json', CreateVoicePromptRequestSchema),
     sValidator('form', CreateVoiceRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voices/:voice_id',
     sValidator('param', v.object({ voice_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

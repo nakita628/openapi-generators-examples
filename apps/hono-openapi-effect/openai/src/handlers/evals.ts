@@ -50,7 +50,7 @@ export const evalsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals',
@@ -79,7 +79,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(CreateEvalRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id',
@@ -107,7 +107,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ eval_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals/:eval_id',
@@ -152,7 +152,7 @@ export const evalsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/evals/:eval_id',
@@ -198,7 +198,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ eval_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs',
@@ -251,7 +251,7 @@ export const evalsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals/:eval_id/runs',
@@ -297,7 +297,7 @@ export const evalsHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ eval_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(CreateEvalRunRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs/:run_id',
@@ -336,7 +336,7 @@ export const evalsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ eval_id: Schema.String, run_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/evals/:eval_id/runs/:run_id',
@@ -393,7 +393,7 @@ export const evalsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ eval_id: Schema.String, run_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals/:eval_id/runs/:run_id/cancel',
@@ -416,7 +416,7 @@ export const evalsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ eval_id: Schema.String, run_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs/:run_id/output_items',
@@ -472,7 +472,7 @@ export const evalsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs/:run_id/output_items/:output_item_id',
@@ -520,5 +520,5 @@ export const evalsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

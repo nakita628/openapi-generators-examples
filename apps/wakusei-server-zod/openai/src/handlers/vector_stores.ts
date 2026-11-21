@@ -37,7 +37,7 @@ export const getVectorStores = os
     }),
   )
   .output(ListVectorStoresResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVectorStores = os
   .route({
@@ -49,7 +49,7 @@ export const postVectorStores = os
   })
   .input(CreateVectorStoreRequestSchema)
   .output(VectorStoreObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVectorStoresVectorStoreId = os
   .route({
@@ -61,7 +61,7 @@ export const getVectorStoresVectorStoreId = os
   })
   .input(z.object({ vector_store_id: z.string() }))
   .output(VectorStoreObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVectorStoresVectorStoreId = os
   .route({
@@ -84,7 +84,7 @@ export const postVectorStoresVectorStoreId = os
     }),
   )
   .output(VectorStoreObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteVectorStoresVectorStoreId = os
   .route({
@@ -96,7 +96,7 @@ export const deleteVectorStoresVectorStoreId = os
   })
   .input(z.object({ vector_store_id: z.string() }))
   .output(DeleteVectorStoreResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVectorStoresVectorStoreIdFileBatches = os
   .route({
@@ -132,7 +132,7 @@ export const postVectorStoresVectorStoreIdFileBatches = os
     }),
   )
   .output(VectorStoreFileBatchObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVectorStoresVectorStoreIdFileBatchesBatchId = os
   .route({
@@ -149,7 +149,7 @@ export const getVectorStoresVectorStoreIdFileBatchesBatchId = os
     }),
   )
   .output(VectorStoreFileBatchObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVectorStoresVectorStoreIdFileBatchesBatchIdCancel = os
   .route({
@@ -162,7 +162,7 @@ export const postVectorStoresVectorStoreIdFileBatchesBatchIdCancel = os
   })
   .input(z.object({ vector_store_id: z.string(), batch_id: z.string() }))
   .output(VectorStoreFileBatchObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVectorStoresVectorStoreIdFileBatchesBatchIdFiles = os
   .route({
@@ -184,7 +184,7 @@ export const getVectorStoresVectorStoreIdFileBatchesBatchIdFiles = os
     }),
   )
   .output(ListVectorStoreFilesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVectorStoresVectorStoreIdFiles = os
   .route({
@@ -205,7 +205,7 @@ export const getVectorStoresVectorStoreIdFiles = os
     }),
   )
   .output(ListVectorStoreFilesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVectorStoresVectorStoreIdFiles = os
   .route({
@@ -230,7 +230,7 @@ export const postVectorStoresVectorStoreIdFiles = os
     }),
   )
   .output(VectorStoreFileObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVectorStoresVectorStoreIdFilesFileId = os
   .route({
@@ -247,7 +247,7 @@ export const getVectorStoresVectorStoreIdFilesFileId = os
     }),
   )
   .output(VectorStoreFileObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVectorStoresVectorStoreIdFilesFileId = os
   .route({
@@ -265,7 +265,7 @@ export const postVectorStoresVectorStoreIdFilesFileId = os
     }),
   )
   .output(VectorStoreFileObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteVectorStoresVectorStoreIdFilesFileId = os
   .route({
@@ -278,7 +278,7 @@ export const deleteVectorStoresVectorStoreIdFilesFileId = os
   })
   .input(z.object({ vector_store_id: z.string(), file_id: z.string() }))
   .output(DeleteVectorStoreFileResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVectorStoresVectorStoreIdFilesFileIdContent = os
   .route({
@@ -295,7 +295,7 @@ export const getVectorStoresVectorStoreIdFilesFileIdContent = os
     }),
   )
   .output(VectorStoreFileContentResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVectorStoresVectorStoreIdSearch = os
   .route({
@@ -351,4 +351,4 @@ export const postVectorStoresVectorStoreIdSearch = os
     }),
   )
   .output(VectorStoreSearchResultsPageSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -32,7 +32,7 @@ export const shows = new Elysia()
     SimplifiedEpisodeObject: SimplifiedEpisodeObjectSchema,
     SimplifiedShowObject: SimplifiedShowObjectSchema,
   })
-  .get('/shows/:id', ({ params, query }) => {}, {
+  .get('/shows/:id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ShowsModel.getAShowParams,
     query: ShowsModel.getAShowQuery,
     response: {
@@ -50,7 +50,7 @@ export const shows = new Elysia()
       security: [{ oauth_2_0: ['user-read-playback-position'] }],
     },
   })
-  .get('/shows', ({ query }) => {}, {
+  .get('/shows', ({ query }) => { throw new Error('Not implemented') }, {
     query: ShowsModel.getMultipleShowsQuery,
     response: {
       200: ShowsModel.getMultipleShowsResponse200,
@@ -67,7 +67,7 @@ export const shows = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/shows/:id/episodes', ({ params, query }) => {}, {
+  .get('/shows/:id/episodes', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ShowsModel.getAShowsEpisodesParams,
     query: ShowsModel.getAShowsEpisodesQuery,
     response: {

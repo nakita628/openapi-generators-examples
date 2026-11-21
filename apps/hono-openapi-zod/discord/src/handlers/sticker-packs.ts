@@ -33,7 +33,7 @@ export const stickerPacksHandler = new Hono()
       },
       security: [{}, { BotToken: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/sticker-packs/:pack_id',
@@ -57,5 +57,5 @@ export const stickerPacksHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', z.object({ pack_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

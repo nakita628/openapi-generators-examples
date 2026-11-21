@@ -10,4 +10,4 @@ export const postLiveTransportConnected = os
     successDescription: 'Acknowledges delivery after the endpoint has recorded the work.',
   })
   .input(WebhookLiveTransportConnectedSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

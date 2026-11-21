@@ -20,7 +20,7 @@ export const audioFeatures = new Elysia()
     Tempo: TempoSchema,
     TimeSignature: TimeSignatureSchema,
   })
-  .get('/audio-features', ({ query }) => {}, {
+  .get('/audio-features', ({ query }) => { throw new Error('Not implemented') }, {
     query: AudioFeaturesModel.getSeveralAudioFeaturesQuery,
     response: {
       200: AudioFeaturesModel.getSeveralAudioFeaturesResponse200,
@@ -36,7 +36,7 @@ export const audioFeatures = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/audio-features/:id', ({ params }) => {}, {
+  .get('/audio-features/:id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AudioFeaturesModel.getAudioFeaturesParams,
     response: {
       200: 'AudioFeaturesObject',

@@ -16,7 +16,7 @@ export const postImagesEdits = os
   })
   .input(EditImageBodyJsonParamSchema)
   .output(ImagesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postImagesGenerations = os
   .route({
@@ -29,7 +29,7 @@ export const postImagesGenerations = os
   })
   .input(CreateImageRequestSchema)
   .output(ImagesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postImagesVariations = os
   .route({
@@ -42,4 +42,4 @@ export const postImagesVariations = os
     deprecated: true,
   })
   .output(ImagesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -17,20 +17,20 @@ export const batchesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batches',
     sValidator('json', Schema.toStandardSchemaV1(CreateBatchRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/batches/:batch_id',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ batch_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batches/:batch_id/cancel',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ batch_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -9,7 +9,7 @@ export const pet = new Elysia()
     Pet: PetSchema,
     Tag: TagSchema,
   })
-  .put('/pet', ({ body }) => {}, {
+  .put('/pet', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'Pet',
     response: { 200: 'Pet', 400: t.Void(), 404: t.Void(), 422: t.Void(), default: t.Void() },
     detail: {
@@ -20,7 +20,7 @@ export const pet = new Elysia()
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     },
   })
-  .post('/pet', ({ body }) => {}, {
+  .post('/pet', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'Pet',
     response: { 200: 'Pet', 400: t.Void(), 422: t.Void(), default: t.Void() },
     detail: {
@@ -31,7 +31,7 @@ export const pet = new Elysia()
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     },
   })
-  .get('/pet/findByStatus', ({ query }) => {}, {
+  .get('/pet/findByStatus', ({ query }) => { throw new Error('Not implemented') }, {
     query: PetModel.findPetsByStatusQuery,
     response: { 200: PetModel.findPetsByStatusResponse200, 400: t.Void(), default: t.Void() },
     detail: {
@@ -42,7 +42,7 @@ export const pet = new Elysia()
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     },
   })
-  .get('/pet/findByTags', ({ query }) => {}, {
+  .get('/pet/findByTags', ({ query }) => { throw new Error('Not implemented') }, {
     query: PetModel.findPetsByTagsQuery,
     response: { 200: PetModel.findPetsByTagsResponse200, 400: t.Void(), default: t.Void() },
     detail: {
@@ -54,7 +54,7 @@ export const pet = new Elysia()
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     },
   })
-  .get('/pet/:petId', ({ params }) => {}, {
+  .get('/pet/:petId', ({ params }) => { throw new Error('Not implemented') }, {
     params: PetModel.getPetByIdParams,
     response: { 200: 'Pet', 400: t.Void(), 404: t.Void(), default: t.Void() },
     detail: {
@@ -65,7 +65,7 @@ export const pet = new Elysia()
       security: [{ api_key: [] }, { petstore_auth: ['write:pets', 'read:pets'] }],
     },
   })
-  .post('/pet/:petId', ({ params, query }) => {}, {
+  .post('/pet/:petId', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: PetModel.updatePetWithFormParams,
     query: PetModel.updatePetWithFormQuery,
     response: { 200: 'Pet', 400: t.Void(), default: t.Void() },
@@ -77,7 +77,7 @@ export const pet = new Elysia()
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     },
   })
-  .delete('/pet/:petId', ({ params, headers }) => {}, {
+  .delete('/pet/:petId', ({ params, headers }) => { throw new Error('Not implemented') }, {
     params: PetModel.deletePetParams,
     headers: PetModel.deletePetHeaders,
     response: { 200: t.Void(), 400: t.Void(), default: t.Void() },
@@ -89,7 +89,7 @@ export const pet = new Elysia()
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     },
   })
-  .post('/pet/:petId/uploadImage', ({ params, query, body }) => {}, {
+  .post('/pet/:petId/uploadImage', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: PetModel.uploadFileParams,
     query: PetModel.uploadFileQuery,
     body: PetModel.uploadFileBody,

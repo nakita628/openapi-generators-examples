@@ -144,7 +144,7 @@ export const getOrganizationAdminApiKeys = os
     }),
   )
   .output(ApiKeyListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationAdminApiKeys = os
   .route({
@@ -169,7 +169,7 @@ export const postOrganizationAdminApiKeys = os
     }),
   )
   .output(AdminApiKeyCreateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationAdminApiKeysKeyId = os
   .route({
@@ -181,7 +181,7 @@ export const getOrganizationAdminApiKeysKeyId = os
   })
   .input(v.object({ key_id: v.pipe(v.string(), v.description('The ID of the API key.')) }))
   .output(AdminApiKeySchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationAdminApiKeysKeyId = os
   .route({
@@ -204,7 +204,7 @@ export const deleteOrganizationAdminApiKeysKeyId = os
       deleted: v.pipe(v.boolean(), v.metadata({ examples: [true] })),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationAuditLogs = os
   .route({
@@ -300,7 +300,7 @@ export const getOrganizationAuditLogs = os
     }),
   )
   .output(ListAuditLogsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationCertificates = os
   .route({
@@ -321,7 +321,7 @@ export const getOrganizationCertificates = os
     }),
   )
   .output(ListCertificatesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationCertificates = os
   .route({
@@ -335,7 +335,7 @@ export const postOrganizationCertificates = os
   })
   .input(UploadCertificateRequestSchema)
   .output(CertificateSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationCertificatesActivate = os
   .route({
@@ -349,7 +349,7 @@ export const postOrganizationCertificatesActivate = os
   })
   .input(ToggleCertificatesRequestSchema)
   .output(OrganizationCertificateActivationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationCertificatesDeactivate = os
   .route({
@@ -363,7 +363,7 @@ export const postOrganizationCertificatesDeactivate = os
   })
   .input(ToggleCertificatesRequestSchema)
   .output(OrganizationCertificateDeactivationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationCertificatesCertificateId = os
   .route({
@@ -388,7 +388,7 @@ export const getOrganizationCertificatesCertificateId = os
     }),
   )
   .output(CertificateSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationCertificatesCertificateId = os
   .route({
@@ -406,7 +406,7 @@ export const postOrganizationCertificatesCertificateId = os
     }),
   )
   .output(CertificateSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationCertificatesCertificateId = os
   .route({
@@ -420,7 +420,7 @@ export const deleteOrganizationCertificatesCertificateId = os
   })
   .input(v.object({ certificate_id: v.string() }))
   .output(DeleteCertificateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationCosts = os
   .route({
@@ -471,7 +471,7 @@ export const getOrganizationCosts = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationDataRetention = os
   .route({
@@ -483,7 +483,7 @@ export const getOrganizationDataRetention = os
     successDescription: 'Organization data retention controls retrieved successfully.',
   })
   .output(OrganizationDataRetentionSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationDataRetention = os
   .route({
@@ -496,7 +496,7 @@ export const postOrganizationDataRetention = os
   })
   .input(UpdateOrganizationDataRetentionBodySchema)
   .output(OrganizationDataRetentionSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationGroups = os
   .route({
@@ -527,7 +527,7 @@ export const getOrganizationGroups = os
     }),
   )
   .output(GroupListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationGroups = os
   .route({
@@ -540,7 +540,7 @@ export const postOrganizationGroups = os
   })
   .input(CreateGroupBodySchema)
   .output(GroupResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationGroupsGroupId = os
   .route({
@@ -553,7 +553,7 @@ export const getOrganizationGroupsGroupId = os
   })
   .input(v.object({ group_id: v.string() }))
   .output(GroupResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationGroupsGroupId = os
   .route({
@@ -574,7 +574,7 @@ export const postOrganizationGroupsGroupId = os
     }),
   )
   .output(GroupResourceWithSuccessSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationGroupsGroupId = os
   .route({
@@ -587,7 +587,7 @@ export const deleteOrganizationGroupsGroupId = os
   })
   .input(v.object({ group_id: v.string() }))
   .output(GroupDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationGroupsGroupIdRoles = os
   .route({
@@ -616,7 +616,7 @@ export const getOrganizationGroupsGroupIdRoles = os
     }),
   )
   .output(RoleListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationGroupsGroupIdRoles = os
   .route({
@@ -634,7 +634,7 @@ export const postOrganizationGroupsGroupIdRoles = os
     }),
   )
   .output(GroupRoleAssignmentSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationGroupsGroupIdRolesRoleId = os
   .route({
@@ -647,7 +647,7 @@ export const getOrganizationGroupsGroupIdRolesRoleId = os
   })
   .input(v.object({ group_id: v.string(), role_id: v.string() }))
   .output(AssignedRoleDetailsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationGroupsGroupIdRolesRoleId = os
   .route({
@@ -660,7 +660,7 @@ export const deleteOrganizationGroupsGroupIdRolesRoleId = os
   })
   .input(v.object({ group_id: v.string(), role_id: v.string() }))
   .output(DeletedRoleAssignmentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationGroupsGroupIdUsers = os
   .route({
@@ -692,7 +692,7 @@ export const getOrganizationGroupsGroupIdUsers = os
     }),
   )
   .output(UserListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationGroupsGroupIdUsers = os
   .route({
@@ -710,7 +710,7 @@ export const postOrganizationGroupsGroupIdUsers = os
     }),
   )
   .output(GroupUserAssignmentSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationGroupsGroupIdUsersUserId = os
   .route({
@@ -723,7 +723,7 @@ export const getOrganizationGroupsGroupIdUsersUserId = os
   })
   .input(v.object({ group_id: v.string(), user_id: v.string() }))
   .output(GroupMemberUserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationGroupsGroupIdUsersUserId = os
   .route({
@@ -736,7 +736,7 @@ export const deleteOrganizationGroupsGroupIdUsersUserId = os
   })
   .input(v.object({ group_id: v.string(), user_id: v.string() }))
   .output(GroupUserDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationInvites = os
   .route({
@@ -756,7 +756,7 @@ export const getOrganizationInvites = os
     }),
   )
   .output(InviteListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationInvites = os
   .route({
@@ -770,7 +770,7 @@ export const postOrganizationInvites = os
   })
   .input(InviteRequestSchema)
   .output(InviteSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationInvitesInviteId = os
   .route({
@@ -783,7 +783,7 @@ export const getOrganizationInvitesInviteId = os
   })
   .input(v.object({ invite_id: v.string() }))
   .output(InviteSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationInvitesInviteId = os
   .route({
@@ -796,7 +796,7 @@ export const deleteOrganizationInvitesInviteId = os
   })
   .input(v.object({ invite_id: v.string() }))
   .output(InviteDeleteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjects = os
   .route({
@@ -826,7 +826,7 @@ export const getOrganizationProjects = os
     }),
   )
   .output(ProjectListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjects = os
   .route({
@@ -840,7 +840,7 @@ export const postOrganizationProjects = os
   })
   .input(ProjectCreateRequestSchema)
   .output(ProjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectId = os
   .route({
@@ -853,7 +853,7 @@ export const getOrganizationProjectsProjectId = os
   })
   .input(v.object({ project_id: v.string() }))
   .output(ProjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectId = os
   .route({
@@ -891,7 +891,7 @@ export const postOrganizationProjectsProjectId = os
     }),
   )
   .output(ProjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdApiKeys = os
   .route({
@@ -913,7 +913,7 @@ export const getOrganizationProjectsProjectIdApiKeys = os
     }),
   )
   .output(ProjectApiKeyListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdApiKeysApiKeyId = os
   .route({
@@ -926,7 +926,7 @@ export const getOrganizationProjectsProjectIdApiKeysApiKeyId = os
   })
   .input(v.object({ project_id: v.string(), api_key_id: v.string() }))
   .output(ProjectApiKeySchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdApiKeysApiKeyId = os
   .route({
@@ -961,7 +961,7 @@ export const postOrganizationProjectsProjectIdApiKeysApiKeyId = os
     }),
   )
   .output(ProjectApiKeySchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationProjectsProjectIdApiKeysApiKeyId = os
   .route({
@@ -975,7 +975,7 @@ export const deleteOrganizationProjectsProjectIdApiKeysApiKeyId = os
   })
   .input(v.object({ project_id: v.string(), api_key_id: v.string() }))
   .output(ProjectApiKeyDeleteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdArchive = os
   .route({
@@ -989,7 +989,7 @@ export const postOrganizationProjectsProjectIdArchive = os
   })
   .input(v.object({ project_id: v.string() }))
   .output(ProjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdCertificates = os
   .route({
@@ -1011,7 +1011,7 @@ export const getOrganizationProjectsProjectIdCertificates = os
     }),
   )
   .output(ListProjectCertificatesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdCertificatesActivate = os
   .route({
@@ -1034,7 +1034,7 @@ export const postOrganizationProjectsProjectIdCertificatesActivate = os
     }),
   )
   .output(OrganizationProjectCertificateActivationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdCertificatesDeactivate = os
   .route({
@@ -1057,7 +1057,7 @@ export const postOrganizationProjectsProjectIdCertificatesDeactivate = os
     }),
   )
   .output(OrganizationProjectCertificateDeactivationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdDataRetention = os
   .route({
@@ -1070,7 +1070,7 @@ export const getOrganizationProjectsProjectIdDataRetention = os
   })
   .input(v.object({ project_id: v.string() }))
   .output(ProjectDataRetentionSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdDataRetention = os
   .route({
@@ -1098,7 +1098,7 @@ export const postOrganizationProjectsProjectIdDataRetention = os
     }),
   )
   .output(ProjectDataRetentionSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdGroups = os
   .route({
@@ -1130,7 +1130,7 @@ export const getOrganizationProjectsProjectIdGroups = os
     }),
   )
   .output(ProjectGroupListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdGroups = os
   .route({
@@ -1152,7 +1152,7 @@ export const postOrganizationProjectsProjectIdGroups = os
     }),
   )
   .output(ProjectGroupSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdGroupsGroupId = os
   .route({
@@ -1171,7 +1171,7 @@ export const getOrganizationProjectsProjectIdGroupsGroupId = os
     }),
   )
   .output(ProjectGroupSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationProjectsProjectIdGroupsGroupId = os
   .route({
@@ -1184,7 +1184,7 @@ export const deleteOrganizationProjectsProjectIdGroupsGroupId = os
   })
   .input(v.object({ project_id: v.string(), group_id: v.string() }))
   .output(ProjectGroupDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdHostedToolPermissions = os
   .route({
@@ -1197,7 +1197,7 @@ export const getOrganizationProjectsProjectIdHostedToolPermissions = os
   })
   .input(v.object({ project_id: v.string() }))
   .output(ProjectHostedToolPermissionsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdHostedToolPermissions = os
   .route({
@@ -1244,7 +1244,7 @@ export const postOrganizationProjectsProjectIdHostedToolPermissions = os
     }),
   )
   .output(ProjectHostedToolPermissionsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdModelPermissions = os
   .route({
@@ -1257,7 +1257,7 @@ export const getOrganizationProjectsProjectIdModelPermissions = os
   })
   .input(v.object({ project_id: v.string() }))
   .output(ProjectModelPermissionsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdModelPermissions = os
   .route({
@@ -1282,7 +1282,7 @@ export const postOrganizationProjectsProjectIdModelPermissions = os
     }),
   )
   .output(ProjectModelPermissionsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationProjectsProjectIdModelPermissions = os
   .route({
@@ -1295,7 +1295,7 @@ export const deleteOrganizationProjectsProjectIdModelPermissions = os
   })
   .input(v.object({ project_id: v.string() }))
   .output(ProjectModelPermissionsDeleteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdRateLimits = os
   .route({
@@ -1317,7 +1317,7 @@ export const getOrganizationProjectsProjectIdRateLimits = os
     }),
   )
   .output(ProjectRateLimitListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdRateLimitsRateLimitId = os
   .route({
@@ -1369,7 +1369,7 @@ export const postOrganizationProjectsProjectIdRateLimitsRateLimitId = os
     }),
   )
   .output(ProjectRateLimitSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdServiceAccounts = os
   .route({
@@ -1390,7 +1390,7 @@ export const getOrganizationProjectsProjectIdServiceAccounts = os
     }),
   )
   .output(ProjectServiceAccountListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdServiceAccounts = os
   .route({
@@ -1429,7 +1429,7 @@ export const postOrganizationProjectsProjectIdServiceAccounts = os
     }),
   )
   .output(ProjectServiceAccountCreateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdServiceAccountsServiceAccountId = os
   .route({
@@ -1442,7 +1442,7 @@ export const getOrganizationProjectsProjectIdServiceAccountsServiceAccountId = o
   })
   .input(v.object({ project_id: v.string(), service_account_id: v.string() }))
   .output(ProjectServiceAccountSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdServiceAccountsServiceAccountId = os
   .route({
@@ -1464,7 +1464,7 @@ export const postOrganizationProjectsProjectIdServiceAccountsServiceAccountId = 
     }),
   )
   .output(ProjectServiceAccountSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationProjectsProjectIdServiceAccountsServiceAccountId = os
   .route({
@@ -1478,7 +1478,7 @@ export const deleteOrganizationProjectsProjectIdServiceAccountsServiceAccountId 
   })
   .input(v.object({ project_id: v.string(), service_account_id: v.string() }))
   .output(ProjectServiceAccountDeleteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdSpendAlerts = os
   .route({
@@ -1508,7 +1508,7 @@ export const getOrganizationProjectsProjectIdSpendAlerts = os
     }),
   )
   .output(ProjectSpendAlertListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdSpendAlerts = os
   .route({
@@ -1535,7 +1535,7 @@ export const postOrganizationProjectsProjectIdSpendAlerts = os
     }),
   )
   .output(ProjectSpendAlertSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdSpendAlertsAlertId = os
   .route({
@@ -1548,7 +1548,7 @@ export const getOrganizationProjectsProjectIdSpendAlertsAlertId = os
   })
   .input(v.object({ project_id: v.string(), alert_id: v.string() }))
   .output(ProjectSpendAlertSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdSpendAlertsAlertId = os
   .route({
@@ -1576,7 +1576,7 @@ export const postOrganizationProjectsProjectIdSpendAlertsAlertId = os
     }),
   )
   .output(ProjectSpendAlertSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationProjectsProjectIdSpendAlertsAlertId = os
   .route({
@@ -1589,7 +1589,7 @@ export const deleteOrganizationProjectsProjectIdSpendAlertsAlertId = os
   })
   .input(v.object({ project_id: v.string(), alert_id: v.string() }))
   .output(ProjectSpendAlertDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdUsers = os
   .route({
@@ -1610,7 +1610,7 @@ export const getOrganizationProjectsProjectIdUsers = os
     }),
   )
   .output(ProjectUserListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdUsers = os
   .route({
@@ -1638,7 +1638,7 @@ export const postOrganizationProjectsProjectIdUsers = os
     }),
   )
   .output(ProjectUserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdUsersUserId = os
   .route({
@@ -1651,7 +1651,7 @@ export const getOrganizationProjectsProjectIdUsersUserId = os
   })
   .input(v.object({ project_id: v.string(), user_id: v.string() }))
   .output(ProjectUserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdUsersUserId = os
   .route({
@@ -1672,7 +1672,7 @@ export const postOrganizationProjectsProjectIdUsersUserId = os
     }),
   )
   .output(ProjectUserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationProjectsProjectIdUsersUserId = os
   .route({
@@ -1686,7 +1686,7 @@ export const deleteOrganizationProjectsProjectIdUsersUserId = os
   })
   .input(v.object({ project_id: v.string(), user_id: v.string() }))
   .output(ProjectUserDeleteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationRoles = os
   .route({
@@ -1717,7 +1717,7 @@ export const getOrganizationRoles = os
     }),
   )
   .output(PublicRoleListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationRoles = os
   .route({
@@ -1730,7 +1730,7 @@ export const postOrganizationRoles = os
   })
   .input(PublicCreateOrganizationRoleBodySchema)
   .output(RoleSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationRolesRoleId = os
   .route({
@@ -1743,7 +1743,7 @@ export const getOrganizationRolesRoleId = os
   })
   .input(v.object({ role_id: v.string() }))
   .output(RoleSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationRolesRoleId = os
   .route({
@@ -1778,7 +1778,7 @@ export const postOrganizationRolesRoleId = os
     }),
   )
   .output(RoleSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationRolesRoleId = os
   .route({
@@ -1791,7 +1791,7 @@ export const deleteOrganizationRolesRoleId = os
   })
   .input(v.object({ role_id: v.string() }))
   .output(RoleDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationSpendAlerts = os
   .route({
@@ -1820,7 +1820,7 @@ export const getOrganizationSpendAlerts = os
     }),
   )
   .output(OrganizationSpendAlertListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationSpendAlerts = os
   .route({
@@ -1833,7 +1833,7 @@ export const postOrganizationSpendAlerts = os
   })
   .input(CreateSpendAlertBodySchema)
   .output(OrganizationSpendAlertSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationSpendAlertsAlertId = os
   .route({
@@ -1846,7 +1846,7 @@ export const getOrganizationSpendAlertsAlertId = os
   })
   .input(v.object({ alert_id: v.string() }))
   .output(OrganizationSpendAlertSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationSpendAlertsAlertId = os
   .route({
@@ -1873,7 +1873,7 @@ export const postOrganizationSpendAlertsAlertId = os
     }),
   )
   .output(OrganizationSpendAlertSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationSpendAlertsAlertId = os
   .route({
@@ -1886,7 +1886,7 @@ export const deleteOrganizationSpendAlertsAlertId = os
   })
   .input(v.object({ alert_id: v.string() }))
   .output(OrganizationSpendAlertDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageAudioSpeeches = os
   .route({
@@ -1942,7 +1942,7 @@ export const getOrganizationUsageAudioSpeeches = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageAudioTranscriptions = os
   .route({
@@ -1998,7 +1998,7 @@ export const getOrganizationUsageAudioTranscriptions = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageCodeInterpreterSessions = os
   .route({
@@ -2033,7 +2033,7 @@ export const getOrganizationUsageCodeInterpreterSessions = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageCompletions = os
   .route({
@@ -2106,7 +2106,7 @@ export const getOrganizationUsageCompletions = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageEmbeddings = os
   .route({
@@ -2162,7 +2162,7 @@ export const getOrganizationUsageEmbeddings = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageFileSearchCalls = os
   .route({
@@ -2218,7 +2218,7 @@ export const getOrganizationUsageFileSearchCalls = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageImages = os
   .route({
@@ -2288,7 +2288,7 @@ export const getOrganizationUsageImages = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageModerations = os
   .route({
@@ -2344,7 +2344,7 @@ export const getOrganizationUsageModerations = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageVectorStores = os
   .route({
@@ -2379,7 +2379,7 @@ export const getOrganizationUsageVectorStores = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageWebSearchCalls = os
   .route({
@@ -2451,7 +2451,7 @@ export const getOrganizationUsageWebSearchCalls = os
     }),
   )
   .output(UsageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsers = os
   .route({
@@ -2478,7 +2478,7 @@ export const getOrganizationUsers = os
     }),
   )
   .output(UserListResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsersUserId = os
   .route({
@@ -2491,7 +2491,7 @@ export const getOrganizationUsersUserId = os
   })
   .input(v.object({ user_id: v.string() }))
   .output(UserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationUsersUserId = os
   .route({
@@ -2529,7 +2529,7 @@ export const postOrganizationUsersUserId = os
     }),
   )
   .output(UserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationUsersUserId = os
   .route({
@@ -2542,7 +2542,7 @@ export const deleteOrganizationUsersUserId = os
   })
   .input(v.object({ user_id: v.string() }))
   .output(UserDeleteResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsersUserIdRoles = os
   .route({
@@ -2571,7 +2571,7 @@ export const getOrganizationUsersUserIdRoles = os
     }),
   )
   .output(RoleListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationUsersUserIdRoles = os
   .route({
@@ -2589,7 +2589,7 @@ export const postOrganizationUsersUserIdRoles = os
     }),
   )
   .output(UserRoleAssignmentSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsersUserIdRolesRoleId = os
   .route({
@@ -2602,7 +2602,7 @@ export const getOrganizationUsersUserIdRolesRoleId = os
   })
   .input(v.object({ user_id: v.string(), role_id: v.string() }))
   .output(AssignedRoleDetailsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationUsersUserIdRolesRoleId = os
   .route({
@@ -2615,7 +2615,7 @@ export const deleteOrganizationUsersUserIdRolesRoleId = os
   })
   .input(v.object({ user_id: v.string(), role_id: v.string() }))
   .output(DeletedRoleAssignmentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationExternalKeys = os
   .route({
@@ -2652,7 +2652,7 @@ export const getOrganizationExternalKeys = os
     }),
   )
   .output(ListExternalKeysResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationExternalKeys = os
   .route({
@@ -2664,7 +2664,7 @@ export const postOrganizationExternalKeys = os
   })
   .input(V1OrganizationExternalKeysPostRequestSchema)
   .output(ExternalKeyResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationExternalKeysExternalKeyId = os
   .route({
@@ -2676,7 +2676,7 @@ export const getOrganizationExternalKeysExternalKeyId = os
   })
   .input(v.object({ external_key_id: v.string() }))
   .output(ExternalKeyResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationExternalKeysExternalKeyId = os
   .route({
@@ -2688,7 +2688,7 @@ export const deleteOrganizationExternalKeysExternalKeyId = os
   })
   .input(v.object({ external_key_id: v.string() }))
   .output(ExternalKeyResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationExternalKeysExternalKeyIdValidate = os
   .route({
@@ -2700,7 +2700,7 @@ export const postOrganizationExternalKeysExternalKeyIdValidate = os
   })
   .input(v.object({ external_key_id: v.string() }))
   .output(ValidateExternalKeyResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationWorkloadIdentityProviders = os
   .route({
@@ -2729,7 +2729,7 @@ export const getOrganizationWorkloadIdentityProviders = os
     }),
   )
   .output(PlatformProviderListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationWorkloadIdentityProviders = os
   .route({
@@ -2741,7 +2741,7 @@ export const postOrganizationWorkloadIdentityProviders = os
   })
   .input(CreatePlatformWorkloadIdentityProviderBodySchema)
   .output(PlatformProviderSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId = os
   .route({
@@ -2753,7 +2753,7 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId 
   })
   .input(v.object({ workload_identity_provider_id: v.pipe(v.string(), v.minCodePoints(1)) }))
   .output(PlatformProviderSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId = os
   .route({
@@ -2780,7 +2780,7 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
     }),
   )
   .output(PlatformProviderSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId = os
   .route({
@@ -2792,7 +2792,7 @@ export const deleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProvider
   })
   .input(v.object({ workload_identity_provider_id: v.pipe(v.string(), v.minCodePoints(1)) }))
   .output(PlatformProviderDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRules = os
   .route({
@@ -2823,7 +2823,7 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
     }),
   )
   .output(PlatformFederationRuleListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRules = os
   .route({
@@ -2851,7 +2851,7 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
     }),
   )
   .output(PlatformFederationRuleSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleId =
   os
@@ -2870,7 +2870,7 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
       }),
     )
     .output(PlatformFederationRuleSchema)
-    .handler(async ({ input }) => {})
+    .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleId =
   os
@@ -2904,7 +2904,7 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
       }),
     )
     .output(PlatformFederationRuleSchema)
-    .handler(async ({ input }) => {})
+    .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleId =
   os
@@ -2922,7 +2922,7 @@ export const deleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProvider
       }),
     )
     .output(PlatformFederationRuleDeletedResourceSchema)
-    .handler(async ({ input }) => {})
+    .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationUsageDecisions = os
   .route({
@@ -3163,7 +3163,7 @@ export const getOrganizationUsageDecisions = os
     }),
   )
   .output(PublicDecisionsUsageResponseResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationExternalStorage = os
   .route({
@@ -3212,7 +3212,7 @@ export const getOrganizationExternalStorage = os
     }),
   )
   .output(ExternalStorageListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationExternalStorage = os
   .route({
@@ -3224,7 +3224,7 @@ export const postOrganizationExternalStorage = os
   })
   .input(CreateExternalStorageBodySchema)
   .output(ExternalStorageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationExternalStorageExternalStorageId = os
   .route({
@@ -3240,7 +3240,7 @@ export const getOrganizationExternalStorageExternalStorageId = os
     }),
   )
   .output(ExternalStorageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationExternalStorageExternalStorageId = os
   .route({
@@ -3257,7 +3257,7 @@ export const deleteOrganizationExternalStorageExternalStorageId = os
     }),
   )
   .output(ExternalStorageDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationExternalStorageExternalStorageIdValidate = os
   .route({
@@ -3273,7 +3273,7 @@ export const postOrganizationExternalStorageExternalStorageIdValidate = os
     }),
   )
   .output(ExternalStorageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationSpendLimit = os
   .route({
@@ -3284,7 +3284,7 @@ export const getOrganizationSpendLimit = os
     successDescription: 'Hard spend limit retrieved successfully.',
   })
   .output(OrganizationSpendLimitResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationSpendLimit = os
   .route({
@@ -3296,7 +3296,7 @@ export const postOrganizationSpendLimit = os
   })
   .input(UpdateOrganizationSpendLimitBodySchema)
   .output(OrganizationSpendLimitResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationSpendLimit = os
   .route({
@@ -3307,7 +3307,7 @@ export const deleteOrganizationSpendLimit = os
     successDescription: 'Hard spend limit deleted successfully.',
   })
   .output(OrganizationSpendLimitDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdSpendLimit = os
   .route({
@@ -3319,7 +3319,7 @@ export const getOrganizationProjectsProjectIdSpendLimit = os
   })
   .input(v.object({ project_id: v.pipe(v.string(), v.metadata({ examples: ['proj_123'] })) }))
   .output(ProjectSpendLimitResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdSpendLimit = os
   .route({
@@ -3360,7 +3360,7 @@ export const postOrganizationProjectsProjectIdSpendLimit = os
     }),
   )
   .output(ProjectSpendLimitResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteOrganizationProjectsProjectIdSpendLimit = os
   .route({
@@ -3372,7 +3372,7 @@ export const deleteOrganizationProjectsProjectIdSpendLimit = os
   })
   .input(v.object({ project_id: v.pipe(v.string(), v.metadata({ examples: ['proj_123'] })) }))
   .output(ProjectSpendLimitDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOrganizationProjectsProjectIdServiceTierSettings = os
   .route({
@@ -3384,7 +3384,7 @@ export const getOrganizationProjectsProjectIdServiceTierSettings = os
   })
   .input(v.object({ project_id: v.pipe(v.string(), v.description('The ID of the project')) }))
   .output(ProjectServiceTierSettingsResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdServiceTierSettings = os
   .route({
@@ -3410,7 +3410,7 @@ export const postOrganizationProjectsProjectIdServiceTierSettings = os
     }),
   )
   .output(ProjectServiceTierSettingsResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApiKeys = os
   .route({
@@ -3443,4 +3443,4 @@ export const postOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApi
     }),
   )
   .output(ServiceAccountApiKeyBodySchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

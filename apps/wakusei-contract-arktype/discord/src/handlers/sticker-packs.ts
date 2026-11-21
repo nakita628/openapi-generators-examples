@@ -3,5 +3,5 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getStickerPacks = os.getStickerPacks.handler(async ({ input }) => {})
-export const getStickerPacksPackId = os.getStickerPacksPackId.handler(async ({ input }) => {})
+export const getStickerPacks = os.getStickerPacks.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const getStickerPacksPackId = os.getStickerPacksPackId.handler(async ({ input }) => { throw new Error('Not implemented') })

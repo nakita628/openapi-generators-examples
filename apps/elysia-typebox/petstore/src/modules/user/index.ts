@@ -4,7 +4,7 @@ import { UserModel } from './model'
 
 export const user = new Elysia()
   .model({ User: UserSchema })
-  .post('/user', ({ body }) => {}, {
+  .post('/user', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'User',
     response: { 200: 'User', default: t.Void() },
     detail: {
@@ -14,7 +14,7 @@ export const user = new Elysia()
       operationId: 'createUser',
     },
   })
-  .post('/user/createWithList', ({ body }) => {}, {
+  .post('/user/createWithList', ({ body }) => { throw new Error('Not implemented') }, {
     body: UserModel.createUsersWithListInputBody,
     response: { 200: 'User', default: t.Void() },
     detail: {
@@ -24,7 +24,7 @@ export const user = new Elysia()
       operationId: 'createUsersWithListInput',
     },
   })
-  .get('/user/login', ({ query }) => {}, {
+  .get('/user/login', ({ query }) => { throw new Error('Not implemented') }, {
     query: UserModel.loginUserQuery,
     response: { 200: UserModel.loginUserResponse200, 400: t.Void(), default: t.Void() },
     detail: {
@@ -34,7 +34,7 @@ export const user = new Elysia()
       operationId: 'loginUser',
     },
   })
-  .get('/user/logout', () => {}, {
+  .get('/user/logout', () => { throw new Error('Not implemented') }, {
     response: { 200: t.Void(), default: t.Void() },
     detail: {
       tags: ['user'],
@@ -43,7 +43,7 @@ export const user = new Elysia()
       operationId: 'logoutUser',
     },
   })
-  .get('/user/:username', ({ params }) => {}, {
+  .get('/user/:username', ({ params }) => { throw new Error('Not implemented') }, {
     params: UserModel.getUserByNameParams,
     response: { 200: 'User', 400: t.Void(), 404: t.Void(), default: t.Void() },
     detail: {
@@ -53,7 +53,7 @@ export const user = new Elysia()
       operationId: 'getUserByName',
     },
   })
-  .put('/user/:username', ({ params, body }) => {}, {
+  .put('/user/:username', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: UserModel.updateUserParams,
     body: 'User',
     response: { 200: t.Void(), 400: t.Void(), 404: t.Void(), default: t.Void() },
@@ -64,7 +64,7 @@ export const user = new Elysia()
       operationId: 'updateUser',
     },
   })
-  .delete('/user/:username', ({ params }) => {}, {
+  .delete('/user/:username', ({ params }) => { throw new Error('Not implemented') }, {
     params: UserModel.deleteUserParams,
     response: { 200: t.Void(), 400: t.Void(), 404: t.Void(), default: t.Void() },
     detail: {

@@ -96,7 +96,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('json', CreateSpeechRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/transcriptions',
@@ -358,7 +358,7 @@ export const audioHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/translations',
@@ -478,7 +478,7 @@ export const audioHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents',
@@ -509,7 +509,7 @@ export const audioHandler = new Hono()
         limit: z.coerce.number().int().default(20).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents',
@@ -534,7 +534,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('form', CreateVoiceConsentRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents/:consent_id',
@@ -559,7 +559,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', z.object({ consent_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents/:consent_id',
@@ -585,7 +585,7 @@ export const audioHandler = new Hono()
     }),
     validator('param', z.object({ consent_id: z.string() })),
     validator('json', UpdateVoiceConsentRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voice_consents/:consent_id',
@@ -610,7 +610,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', z.object({ consent_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voices',
@@ -645,7 +645,7 @@ export const audioHandler = new Hono()
       'form',
       z.union([CreateVoiceFromConsentRequestSchema, CreateVoicePromptRequestSchema]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voices/:voice_id',
@@ -672,5 +672,5 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', z.object({ voice_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

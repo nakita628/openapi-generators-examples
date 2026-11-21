@@ -8,13 +8,13 @@ import {
 export const usersHandler = new Hono()
   .get(
     '/users/:user_id',
-    getUsersUserIdHandler(async (c, { param }) => {}),
+    getUsersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/users/:user_id/playlists',
-    getUsersUserIdPlaylistsHandler(async (c, { param, query }) => {}),
+    getUsersUserIdPlaylistsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/users/:user_id/playlists',
-    postUsersUserIdPlaylistsHandler(async (c, { param, json }) => {}),
+    postUsersUserIdPlaylistsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )

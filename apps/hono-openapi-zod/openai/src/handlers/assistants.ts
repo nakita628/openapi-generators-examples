@@ -36,7 +36,7 @@ export const assistantsHandler = new Hono()
         before: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants',
@@ -55,7 +55,7 @@ export const assistantsHandler = new Hono()
       },
     }),
     validator('json', CreateAssistantRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/assistants/:assistant_id',
@@ -74,7 +74,7 @@ export const assistantsHandler = new Hono()
       },
     }),
     validator('param', z.object({ assistant_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants/:assistant_id',
@@ -94,7 +94,7 @@ export const assistantsHandler = new Hono()
     }),
     validator('param', z.object({ assistant_id: z.string() })),
     validator('json', ModifyAssistantRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/assistants/:assistant_id',
@@ -113,5 +113,5 @@ export const assistantsHandler = new Hono()
       },
     }),
     validator('param', z.object({ assistant_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

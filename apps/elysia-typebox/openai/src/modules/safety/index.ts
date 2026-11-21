@@ -26,7 +26,7 @@ export const safety = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/safety/cases/:id', ({ params }) => {}, {
+  .get('/safety/cases/:id', ({ params }) => { throw new Error('Not implemented') }, {
     params: SafetyModel.GetsafetycaseParams,
     response: {
       200: 'SafetyCaseResource',
@@ -43,7 +43,7 @@ export const safety = new Elysia()
       operationId: 'Getsafetycase',
     },
   })
-  .get('/safety/alerts/:id', ({ params }) => {}, {
+  .get('/safety/alerts/:id', ({ params }) => { throw new Error('Not implemented') }, {
     params: SafetyModel.GetprojectsafetyalertParams,
     response: {
       200: 'SafetyAlertResource',

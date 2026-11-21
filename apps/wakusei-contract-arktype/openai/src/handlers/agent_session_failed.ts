@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const postAgentSessionFailed = os.postAgentSessionFailed.handler(async ({ input }) => {})
+export const postAgentSessionFailed = os.postAgentSessionFailed.handler(async ({ input }) => { throw new Error('Not implemented') })

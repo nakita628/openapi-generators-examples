@@ -3,36 +3,36 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const postLobbies = os.postLobbies.handler(async ({ input }) => {})
-export const putLobbies = os.putLobbies.handler(async ({ input }) => {})
-export const getLobbiesLobbyId = os.getLobbiesLobbyId.handler(async ({ input }) => {})
-export const deleteLobbiesLobbyId = os.deleteLobbiesLobbyId.handler(async ({ input }) => {})
-export const patchLobbiesLobbyId = os.patchLobbiesLobbyId.handler(async ({ input }) => {})
+export const postLobbies = os.postLobbies.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const putLobbies = os.putLobbies.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const getLobbiesLobbyId = os.getLobbiesLobbyId.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const deleteLobbiesLobbyId = os.deleteLobbiesLobbyId.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const patchLobbiesLobbyId = os.patchLobbiesLobbyId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const patchLobbiesLobbyIdChannelLinking = os.patchLobbiesLobbyIdChannelLinking.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const deleteLobbiesLobbyIdMembersMe = os.deleteLobbiesLobbyIdMembersMe.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postLobbiesLobbyIdMembersMeInvites = os.postLobbiesLobbyIdMembersMeInvites.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postLobbiesLobbyIdMembersBulk = os.postLobbiesLobbyIdMembersBulk.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const putLobbiesLobbyIdMembersUserId = os.putLobbiesLobbyIdMembersUserId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const deleteLobbiesLobbyIdMembersUserId = os.deleteLobbiesLobbyIdMembersUserId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postLobbiesLobbyIdMembersUserIdInvites =
-  os.postLobbiesLobbyIdMembersUserIdInvites.handler(async ({ input }) => {})
+  os.postLobbiesLobbyIdMembersUserIdInvites.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getLobbiesLobbyIdMessages = os.getLobbiesLobbyIdMessages.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postLobbiesLobbyIdMessages = os.postLobbiesLobbyIdMessages.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const putLobbiesLobbyIdMessagesMessageIdModerationMetadata =
-  os.putLobbiesLobbyIdMessagesMessageIdModerationMetadata.handler(async ({ input }) => {})
+  os.putLobbiesLobbyIdMessagesMessageIdModerationMetadata.handler(async ({ input }) => { throw new Error('Not implemented') })

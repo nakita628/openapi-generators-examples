@@ -30,7 +30,7 @@ export const contentProvenanceChecks = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/content_provenance_checks', ({ body }) => {}, {
+  .post('/content_provenance_checks', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateContentProvenanceBody',
     response: {
       200: 'ProvenanceResource',

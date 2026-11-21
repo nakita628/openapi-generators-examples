@@ -187,7 +187,7 @@ export const applications = new Elysia()
     UserPrimaryGuildResponse: UserPrimaryGuildResponseSchema,
     UserResponse: UserResponseSchema,
   })
-  .get('/applications/@me', () => {}, {
+  .get('/applications/@me', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'PrivateApplicationResponse',
       429: 'RatelimitedResponse',
@@ -195,7 +195,7 @@ export const applications = new Elysia()
     },
     detail: { tags: [], operationId: 'get_my_application', security: [{ BotToken: [] }] },
   })
-  .patch('/applications/@me', ({ body }) => {}, {
+  .patch('/applications/@me', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'ApplicationFormPartial',
     response: {
       200: 'PrivateApplicationResponse',
@@ -204,7 +204,7 @@ export const applications = new Elysia()
     },
     detail: { tags: [], operationId: 'update_my_application', security: [{ BotToken: [] }] },
   })
-  .get('/applications/:application_id', ({ params }) => {}, {
+  .get('/applications/:application_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.get_applicationParams,
     response: {
       200: 'PrivateApplicationResponse',
@@ -213,7 +213,7 @@ export const applications = new Elysia()
     },
     detail: { tags: [], operationId: 'get_application', security: [{ BotToken: [] }] },
   })
-  .patch('/applications/:application_id', ({ params, body }) => {}, {
+  .patch('/applications/:application_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.update_applicationParams,
     body: 'ApplicationFormPartial',
     response: {
@@ -223,7 +223,7 @@ export const applications = new Elysia()
     },
     detail: { tags: [], operationId: 'update_application', security: [{ BotToken: [] }] },
   })
-  .get('/applications/:application_id/activity-instances/:instance_id', ({ params }) => {}, {
+  .get('/applications/:application_id/activity-instances/:instance_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.applications_get_activity_instanceParams,
     response: {
       200: 'EmbeddedActivityInstance',
@@ -236,7 +236,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .post('/applications/:application_id/attachment', ({ params, body }) => {}, {
+  .post('/applications/:application_id/attachment', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.upload_application_attachmentParams,
     body: ApplicationsModel.upload_application_attachmentBody,
     response: {
@@ -290,7 +290,7 @@ export const applications = new Elysia()
       ],
     },
   })
-  .get('/applications/:application_id/commands', ({ params, query }) => {}, {
+  .get('/applications/:application_id/commands', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.list_application_commandsParams,
     query: ApplicationsModel.list_application_commandsQuery,
     response: {
@@ -304,7 +304,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .put('/applications/:application_id/commands', ({ params, body }) => {}, {
+  .put('/applications/:application_id/commands', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.bulk_set_application_commandsParams,
     body: ApplicationsModel.bulk_set_application_commandsBody,
     response: {
@@ -318,7 +318,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .post('/applications/:application_id/commands', ({ params, body }) => {}, {
+  .post('/applications/:application_id/commands', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.create_application_commandParams,
     body: 'ApplicationCommandCreateRequest',
     response: {
@@ -333,7 +333,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .get('/applications/:application_id/commands/:command_id', ({ params }) => {}, {
+  .get('/applications/:application_id/commands/:command_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.get_application_commandParams,
     response: {
       200: 'ApplicationCommandResponse',
@@ -346,7 +346,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .delete('/applications/:application_id/commands/:command_id', ({ params }) => {}, {
+  .delete('/applications/:application_id/commands/:command_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.delete_application_commandParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -355,7 +355,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .patch('/applications/:application_id/commands/:command_id', ({ params, body }) => {}, {
+  .patch('/applications/:application_id/commands/:command_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.update_application_commandParams,
     body: 'ApplicationCommandPatchRequestPartial',
     response: {
@@ -369,7 +369,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .get('/applications/:application_id/emojis', ({ params }) => {}, {
+  .get('/applications/:application_id/emojis', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.list_application_emojisParams,
     response: {
       200: 'ListApplicationEmojisResponse',
@@ -378,29 +378,29 @@ export const applications = new Elysia()
     },
     detail: { tags: [], operationId: 'list_application_emojis', security: [{ BotToken: [] }] },
   })
-  .post('/applications/:application_id/emojis', ({ params, body }) => {}, {
+  .post('/applications/:application_id/emojis', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.create_application_emojiParams,
     body: ApplicationsModel.create_application_emojiBody,
     response: { 201: 'EmojiResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_application_emoji', security: [{ BotToken: [] }] },
   })
-  .get('/applications/:application_id/emojis/:emoji_id', ({ params }) => {}, {
+  .get('/applications/:application_id/emojis/:emoji_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.get_application_emojiParams,
     response: { 200: 'EmojiResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_application_emoji', security: [{ BotToken: [] }] },
   })
-  .delete('/applications/:application_id/emojis/:emoji_id', ({ params }) => {}, {
+  .delete('/applications/:application_id/emojis/:emoji_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.delete_application_emojiParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_application_emoji', security: [{ BotToken: [] }] },
   })
-  .patch('/applications/:application_id/emojis/:emoji_id', ({ params, body }) => {}, {
+  .patch('/applications/:application_id/emojis/:emoji_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.update_application_emojiParams,
     body: ApplicationsModel.update_application_emojiBody,
     response: { 200: 'EmojiResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_application_emoji', security: [{ BotToken: [] }] },
   })
-  .get('/applications/:application_id/entitlements', ({ params, query }) => {}, {
+  .get('/applications/:application_id/entitlements', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.get_entitlementsParams,
     query: ApplicationsModel.get_entitlementsQuery,
     response: {
@@ -414,13 +414,13 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.entitlements'] }],
     },
   })
-  .post('/applications/:application_id/entitlements', ({ params, body }) => {}, {
+  .post('/applications/:application_id/entitlements', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.create_entitlementParams,
     body: 'CreateEntitlementRequestData',
     response: { 200: 'EntitlementResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_entitlement', security: [{ BotToken: [] }] },
   })
-  .get('/applications/:application_id/entitlements/:entitlement_id', ({ params }) => {}, {
+  .get('/applications/:application_id/entitlements/:entitlement_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.get_entitlementParams,
     response: { 200: 'EntitlementResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -429,7 +429,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.entitlements'] }],
     },
   })
-  .delete('/applications/:application_id/entitlements/:entitlement_id', ({ params }) => {}, {
+  .delete('/applications/:application_id/entitlements/:entitlement_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.delete_entitlementParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -438,7 +438,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.entitlements'] }],
     },
   })
-  .post('/applications/:application_id/entitlements/:entitlement_id/consume', ({ params }) => {}, {
+  .post('/applications/:application_id/entitlements/:entitlement_id/consume', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.consume_entitlementParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -447,7 +447,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.entitlements'] }],
     },
   })
-  .get('/applications/:application_id/guilds/:guild_id/commands', ({ params, query }) => {}, {
+  .get('/applications/:application_id/guilds/:guild_id/commands', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.list_guild_application_commandsParams,
     query: ApplicationsModel.list_guild_application_commandsQuery,
     response: {
@@ -461,7 +461,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .put('/applications/:application_id/guilds/:guild_id/commands', ({ params, body }) => {}, {
+  .put('/applications/:application_id/guilds/:guild_id/commands', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.bulk_set_guild_application_commandsParams,
     body: ApplicationsModel.bulk_set_guild_application_commandsBody,
     response: {
@@ -475,7 +475,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .post('/applications/:application_id/guilds/:guild_id/commands', ({ params, body }) => {}, {
+  .post('/applications/:application_id/guilds/:guild_id/commands', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.create_guild_application_commandParams,
     body: 'ApplicationCommandCreateRequest',
     response: {
@@ -490,7 +490,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     },
   })
-  .get('/applications/:application_id/guilds/:guild_id/commands/permissions', ({ params }) => {}, {
+  .get('/applications/:application_id/guilds/:guild_id/commands/permissions', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.list_guild_application_command_permissionsParams,
     response: {
       200: ApplicationsModel.list_guild_application_command_permissionsResponse200,
@@ -503,7 +503,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.permissions.update'] }],
     },
   })
-  .get('/applications/:application_id/guilds/:guild_id/commands/:command_id', ({ params }) => {}, {
+  .get('/applications/:application_id/guilds/:guild_id/commands/:command_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.get_guild_application_commandParams,
     response: {
       200: 'ApplicationCommandResponse',
@@ -518,7 +518,7 @@ export const applications = new Elysia()
   })
   .delete(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: ApplicationsModel.delete_guild_application_commandParams,
       response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -531,7 +531,7 @@ export const applications = new Elysia()
   )
   .patch(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: ApplicationsModel.update_guild_application_commandParams,
       body: 'ApplicationCommandPatchRequestPartial',
@@ -549,7 +549,7 @@ export const applications = new Elysia()
   )
   .get(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id/permissions',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: ApplicationsModel.get_guild_application_command_permissionsParams,
       response: {
@@ -566,7 +566,7 @@ export const applications = new Elysia()
   )
   .put(
     '/applications/:application_id/guilds/:guild_id/commands/:command_id/permissions',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: ApplicationsModel.set_guild_application_command_permissionsParams,
       body: ApplicationsModel.set_guild_application_command_permissionsBody,
@@ -582,7 +582,7 @@ export const applications = new Elysia()
       },
     },
   )
-  .get('/applications/:application_id/role-connections/metadata', ({ params }) => {}, {
+  .get('/applications/:application_id/role-connections/metadata', ({ params }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.get_application_role_connections_metadataParams,
     response: {
       200: ApplicationsModel.get_application_role_connections_metadataResponse200,
@@ -595,7 +595,7 @@ export const applications = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .put('/applications/:application_id/role-connections/metadata', ({ params, body }) => {}, {
+  .put('/applications/:application_id/role-connections/metadata', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.update_application_role_connections_metadataParams,
     body: ApplicationsModel.update_application_role_connections_metadataBody,
     response: {

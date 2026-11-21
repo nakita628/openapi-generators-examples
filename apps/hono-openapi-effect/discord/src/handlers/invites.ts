@@ -80,7 +80,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code',
@@ -127,7 +127,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users',
@@ -173,7 +173,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users',
@@ -212,7 +212,7 @@ export const invitesHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(Schema.Struct({ target_users_file: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-add',
@@ -257,7 +257,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-delete',
@@ -302,7 +302,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users/job-status',
@@ -342,7 +342,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users/:user_id',
@@ -378,7 +378,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code/target-users/:user_id',
@@ -414,5 +414,5 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

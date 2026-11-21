@@ -58,7 +58,7 @@ export const getChannelsChannelId = os
       ),
     ).or(ThreadResponseSchema),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelId = os
   .route({
@@ -74,7 +74,7 @@ export const deleteChannelsChannelId = os
       ),
     ).or(ThreadResponseSchema),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchChannelsChannelId = os
   .route({
@@ -90,7 +90,7 @@ export const patchChannelsChannelId = os
       ),
     ).or(ThreadResponseSchema),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdFollowers = os
   .route({
@@ -100,7 +100,7 @@ export const postChannelsChannelIdFollowers = os
   })
   .input(type({ channel_id: SnowflakeTypeSchema, webhook_channel_id: SnowflakeTypeSchema }))
   .output(ChannelFollowerResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdInvites = os
   .route({
@@ -120,7 +120,7 @@ export const getChannelsChannelIdInvites = os
       ).array(),
     ).or('null'),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdInvites = os
   .route({
@@ -134,7 +134,7 @@ export const postChannelsChannelIdInvites = os
       GuildInviteResponseSchema,
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdMessages = os
   .route({
@@ -157,7 +157,7 @@ export const getChannelsChannelIdMessages = os
     }),
   )
   .output(type(type(MessageResponseSchema).array()).or('null'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdMessages = os
   .route({
@@ -233,7 +233,7 @@ export const postChannelsChannelIdMessages = os
     }),
   )
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdMessagesBulkDelete = os
   .route({
@@ -250,7 +250,7 @@ export const postChannelsChannelIdMessagesBulkDelete = os
         .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdMessagesPins = os
   .route({
@@ -273,7 +273,7 @@ export const getChannelsChannelIdMessagesPins = os
     }),
   )
   .output(PinnedMessagesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdMessagesPinsMessageId = os
   .route({
@@ -283,7 +283,7 @@ export const putChannelsChannelIdMessagesPinsMessageId = os
     successDescription: '204 response for create_pin',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdMessagesPinsMessageId = os
   .route({
@@ -293,7 +293,7 @@ export const deleteChannelsChannelIdMessagesPinsMessageId = os
     successDescription: '204 response for delete_pin',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdMessagesMessageId = os
   .route({
@@ -303,7 +303,7 @@ export const getChannelsChannelIdMessagesMessageId = os
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdMessagesMessageId = os
   .route({
@@ -313,7 +313,7 @@ export const deleteChannelsChannelIdMessagesMessageId = os
     successDescription: '204 response for delete_message',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchChannelsChannelIdMessagesMessageId = os
   .route({
@@ -361,7 +361,7 @@ export const patchChannelsChannelIdMessagesMessageId = os
     }),
   )
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdMessagesMessageIdCrosspost = os
   .route({
@@ -371,7 +371,7 @@ export const postChannelsChannelIdMessagesMessageIdCrosspost = os
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdMessagesMessageIdReactions = os
   .route({
@@ -381,7 +381,7 @@ export const deleteChannelsChannelIdMessagesMessageIdReactions = os
     successDescription: '204 response for delete_all_message_reactions',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdMessagesMessageIdReactionsEmojiName = os
   .route({
@@ -407,7 +407,7 @@ export const getChannelsChannelIdMessagesMessageIdReactionsEmojiName = os
     }),
   )
   .output(type(UserResponseSchema).array())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdMessagesMessageIdReactionsEmojiName = os
   .route({
@@ -425,7 +425,7 @@ export const deleteChannelsChannelIdMessagesMessageIdReactionsEmojiName = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdMessagesMessageIdReactionsEmojiNameMe = os
   .route({
@@ -443,7 +443,7 @@ export const putChannelsChannelIdMessagesMessageIdReactionsEmojiNameMe = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameMe = os
   .route({
@@ -461,7 +461,7 @@ export const deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameMe = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameUserId = os
   .route({
@@ -480,7 +480,7 @@ export const deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameUserId = 
       user_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdMessagesMessageIdThreads = os
   .route({
@@ -503,7 +503,7 @@ export const postChannelsChannelIdMessagesMessageIdThreads = os
     }),
   )
   .output(ThreadResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdPermissionsMemberUserId = os
   .route({
@@ -523,7 +523,7 @@ export const getChannelsChannelIdPermissionsMemberUserId = os
     }),
   )
   .output(PermissionsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdPermissionsRoleRoleId = os
   .route({
@@ -543,7 +543,7 @@ export const getChannelsChannelIdPermissionsRoleRoleId = os
     }),
   )
   .output(PermissionsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdPermissionsOverwriteId = os
   .route({
@@ -561,7 +561,7 @@ export const putChannelsChannelIdPermissionsOverwriteId = os
       'deny?': type('number.integer | null'),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdPermissionsOverwriteId = os
   .route({
@@ -571,7 +571,7 @@ export const deleteChannelsChannelIdPermissionsOverwriteId = os
     successDescription: '204 response for delete_channel_permission_overwrite',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, overwrite_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdPins = os
   .route({
@@ -581,7 +581,7 @@ export const getChannelsChannelIdPins = os
   })
   .input(type({ channel_id: SnowflakeTypeSchema }))
   .output(type(type(MessageResponseSchema).array()).or('null'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdPinsMessageId = os
   .route({
@@ -591,7 +591,7 @@ export const putChannelsChannelIdPinsMessageId = os
     successDescription: '204 response for deprecated_create_pin',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdPinsMessageId = os
   .route({
@@ -601,7 +601,7 @@ export const deleteChannelsChannelIdPinsMessageId = os
     successDescription: '204 response for deprecated_delete_pin',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdPollsMessageIdAnswersAnswerId = os
   .route({
@@ -631,7 +631,7 @@ export const getChannelsChannelIdPollsMessageIdAnswersAnswerId = os
     }),
   )
   .output(PollAnswerDetailsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdPollsMessageIdExpire = os
   .route({
@@ -641,7 +641,7 @@ export const postChannelsChannelIdPollsMessageIdExpire = os
   })
   .input(type({ channel_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }))
   .output(MessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdRecipientsUserId = os
   .route({
@@ -667,7 +667,7 @@ export const putChannelsChannelIdRecipientsUserId = os
     }),
   )
   .output(type(PrivateChannelResponseSchema).or(PrivateGroupChannelResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdRecipientsUserId = os
   .route({
@@ -677,7 +677,7 @@ export const deleteChannelsChannelIdRecipientsUserId = os
     successDescription: '204 response for delete_group_dm_user',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdSendSoundboardSound = os
   .route({
@@ -693,7 +693,7 @@ export const postChannelsChannelIdSendSoundboardSound = os
       'source_guild_id?': type('null | null').or(SnowflakeTypeSchema),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdThreadMembers = os
   .route({
@@ -717,7 +717,7 @@ export const getChannelsChannelIdThreadMembers = os
     }),
   )
   .output(type(ThreadMemberResponseSchema).array())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdThreadMembersMe = os
   .route({
@@ -727,7 +727,7 @@ export const putChannelsChannelIdThreadMembersMe = os
     successDescription: '204 response for join_thread',
   })
   .input(type({ channel_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdThreadMembersMe = os
   .route({
@@ -737,7 +737,7 @@ export const deleteChannelsChannelIdThreadMembersMe = os
     successDescription: '204 response for leave_thread',
   })
   .input(type({ channel_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdThreadMembersUserId = os
   .route({
@@ -755,7 +755,7 @@ export const getChannelsChannelIdThreadMembersUserId = os
     }),
   )
   .output(ThreadMemberResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdThreadMembersUserId = os
   .route({
@@ -765,7 +765,7 @@ export const putChannelsChannelIdThreadMembersUserId = os
     successDescription: '204 response for add_thread_member',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChannelsChannelIdThreadMembersUserId = os
   .route({
@@ -775,7 +775,7 @@ export const deleteChannelsChannelIdThreadMembersUserId = os
     successDescription: '204 response for delete_thread_member',
   })
   .input(type({ channel_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdThreads = os
   .route({
@@ -786,7 +786,7 @@ export const postChannelsChannelIdThreads = os
   })
   .input(type({ channel_id: SnowflakeTypeSchema }))
   .output(CreatedThreadResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdThreadsArchivedPrivate = os
   .route({
@@ -809,7 +809,7 @@ export const getChannelsChannelIdThreadsArchivedPrivate = os
     }),
   )
   .output(ThreadsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdThreadsArchivedPublic = os
   .route({
@@ -832,7 +832,7 @@ export const getChannelsChannelIdThreadsArchivedPublic = os
     }),
   )
   .output(ThreadsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdThreadsSearch = os
   .route({
@@ -890,7 +890,7 @@ export const getChannelsChannelIdThreadsSearch = os
     }),
   )
   .output(ThreadSearchResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdTyping = os
   .route({
@@ -900,7 +900,7 @@ export const postChannelsChannelIdTyping = os
   })
   .input(type({ channel_id: SnowflakeTypeSchema }))
   .output(TypingIndicatorResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdUsersMeThreadsArchivedPrivate = os
   .route({
@@ -921,7 +921,7 @@ export const getChannelsChannelIdUsersMeThreadsArchivedPrivate = os
     }),
   )
   .output(ThreadsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putChannelsChannelIdVoiceStatus = os
   .route({
@@ -943,7 +943,7 @@ export const putChannelsChannelIdVoiceStatus = os
         .describe('The new voice channel status'),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChannelsChannelIdWebhooks = os
   .route({
@@ -961,7 +961,7 @@ export const getChannelsChannelIdWebhooks = os
       ).array(),
     ).or('null'),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChannelsChannelIdWebhooks = os
   .route({
@@ -979,4 +979,4 @@ export const postChannelsChannelIdWebhooks = os
     }),
   )
   .output(GuildIncomingWebhookResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

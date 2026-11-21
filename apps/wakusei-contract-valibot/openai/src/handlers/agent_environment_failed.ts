@@ -4,5 +4,5 @@ import { contract } from '../contract'
 const os = implement(contract)
 
 export const postAgentEnvironmentFailed = os.postAgentEnvironmentFailed.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )

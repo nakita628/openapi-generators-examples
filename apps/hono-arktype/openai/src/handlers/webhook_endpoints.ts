@@ -34,34 +34,34 @@ export const webhookEndpointsHandler = new Hono()
         }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/webhook_endpoints', sValidator('json', PublicCreateEndpointBodySchema), (c) => {})
+  .post('/webhook_endpoints', sValidator('json', PublicCreateEndpointBodySchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/webhook_endpoints/:webhook_endpoint_id',
     sValidator('param', type({ webhook_endpoint_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id',
     sValidator('param', type({ webhook_endpoint_id: 'string' })),
     sValidator('json', PublicUpdateEndpointBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/webhook_endpoints/:webhook_endpoint_id',
     sValidator('param', type({ webhook_endpoint_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/rotate_secret',
     sValidator('param', type({ webhook_endpoint_id: 'string' })),
     sValidator('json', PublicRotateSecretBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/test',
     sValidator('param', type({ webhook_endpoint_id: 'string' })),
     sValidator('json', PublicTestEndpointBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

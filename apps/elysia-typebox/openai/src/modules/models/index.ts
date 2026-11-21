@@ -24,7 +24,7 @@ export const models = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/models', () => {}, {
+  .get('/models', () => { throw new Error('Not implemented') }, {
     response: { 200: 'ListModelsResponse', 403: 'PermissionErrorResponse' },
     detail: {
       tags: ['Models'],
@@ -34,7 +34,7 @@ export const models = new Elysia()
       operationId: 'listModels',
     },
   })
-  .get('/models/:model', ({ params }) => {}, {
+  .get('/models/:model', ({ params }) => { throw new Error('Not implemented') }, {
     params: ModelsModel.retrieveModelParams,
     response: { 200: 'Model', 403: 'PermissionErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -45,7 +45,7 @@ export const models = new Elysia()
       operationId: 'retrieveModel',
     },
   })
-  .delete('/models/:model', ({ params }) => {}, {
+  .delete('/models/:model', ({ params }) => { throw new Error('Not implemented') }, {
     params: ModelsModel.deleteModelParams,
     response: { 200: 'DeleteModelResponse', 403: 'PermissionErrorResponse', 404: 'ErrorResponse' },
     detail: {

@@ -6,5 +6,5 @@ import { CreateEmbeddingRequestSchema } from '../components'
 export const embeddingsHandler = new Hono().post(
   '/embeddings',
   sValidator('json', Schema.toStandardSchemaV1(CreateEmbeddingRequestSchema)),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

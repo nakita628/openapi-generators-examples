@@ -25,4 +25,4 @@ export const getAudioAnalysisId = os
     }),
   )
   .output(AudioAnalysisObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

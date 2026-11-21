@@ -13,4 +13,4 @@ export const postDecisions = os
   })
   .input(DecisionRequestSchema)
   .output(DecisionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

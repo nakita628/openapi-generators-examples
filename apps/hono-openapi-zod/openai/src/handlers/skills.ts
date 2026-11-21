@@ -49,7 +49,7 @@ export const skillsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills',
@@ -96,7 +96,7 @@ export const skillsHandler = new Hono()
             'Uploads a skill either as a directory (multipart `files[]`) or as a single zip file.',
         }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id',
@@ -118,7 +118,7 @@ export const skillsHandler = new Hono()
       },
     }),
     validator('param', z.object({ skill_id: z.string().meta({ examples: ['skill_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills/:skill_id',
@@ -145,7 +145,7 @@ export const skillsHandler = new Hono()
     }),
     validator('param', z.object({ skill_id: z.string().meta({ examples: ['skill_123'] }) })),
     validator('json', SetDefaultSkillVersionBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/skills/:skill_id',
@@ -167,7 +167,7 @@ export const skillsHandler = new Hono()
       },
     }),
     validator('param', z.object({ skill_id: z.string().meta({ examples: ['skill_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/content',
@@ -192,7 +192,7 @@ export const skillsHandler = new Hono()
       },
     }),
     validator('param', z.object({ skill_id: z.string().meta({ examples: ['skill_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions',
@@ -229,7 +229,7 @@ export const skillsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/skills/:skill_id/versions',
@@ -282,7 +282,7 @@ export const skillsHandler = new Hono()
         })
         .meta({ description: 'Uploads a new immutable version of a skill.' }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions/:version',
@@ -314,7 +314,7 @@ export const skillsHandler = new Hono()
         version: z.string().meta({ description: 'The version number to retrieve.' }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/skills/:skill_id/versions/:version',
@@ -347,7 +347,7 @@ export const skillsHandler = new Hono()
         version: z.string().meta({ description: 'The skill version number.' }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skills/:skill_id/versions/:version/content',
@@ -382,5 +382,5 @@ export const skillsHandler = new Hono()
         version: z.string().meta({ description: 'The skill version number.' }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

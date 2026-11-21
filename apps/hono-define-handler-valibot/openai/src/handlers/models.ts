@@ -4,13 +4,13 @@ import { getModelsHandler, getModelsModelHandler, deleteModelsModelHandler } fro
 export const modelsHandler = new Hono()
   .get(
     '/models',
-    getModelsHandler(async (c) => {}),
+    getModelsHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/models/:model',
-    getModelsModelHandler(async (c, { param }) => {}),
+    getModelsModelHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/models/:model',
-    deleteModelsModelHandler(async (c, { param }) => {}),
+    deleteModelsModelHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )

@@ -35,7 +35,7 @@ export const getProjectsProjectIdGroupsGroupIdRoles = os
     }),
   )
   .output(RoleListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postProjectsProjectIdGroupsGroupIdRoles = os
   .route({
@@ -54,7 +54,7 @@ export const postProjectsProjectIdGroupsGroupIdRoles = os
     }),
   )
   .output(GroupRoleAssignmentSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getProjectsProjectIdGroupsGroupIdRolesRoleId = os
   .route({
@@ -67,7 +67,7 @@ export const getProjectsProjectIdGroupsGroupIdRolesRoleId = os
   })
   .input(type({ project_id: type('string'), group_id: type('string'), role_id: type('string') }))
   .output(AssignedRoleDetailsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteProjectsProjectIdGroupsGroupIdRolesRoleId = os
   .route({
@@ -80,7 +80,7 @@ export const deleteProjectsProjectIdGroupsGroupIdRolesRoleId = os
   })
   .input(type({ project_id: type('string'), group_id: type('string'), role_id: type('string') }))
   .output(DeletedRoleAssignmentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getProjectsProjectIdRoles = os
   .route({
@@ -105,7 +105,7 @@ export const getProjectsProjectIdRoles = os
     }),
   )
   .output(PublicRoleListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postProjectsProjectIdRoles = os
   .route({
@@ -125,7 +125,7 @@ export const postProjectsProjectIdRoles = os
     }),
   )
   .output(RoleSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getProjectsProjectIdRolesRoleId = os
   .route({
@@ -138,7 +138,7 @@ export const getProjectsProjectIdRolesRoleId = os
   })
   .input(type({ project_id: type('string'), role_id: type('string') }))
   .output(RoleSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postProjectsProjectIdRolesRoleId = os
   .route({
@@ -161,7 +161,7 @@ export const postProjectsProjectIdRolesRoleId = os
     }),
   )
   .output(RoleSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteProjectsProjectIdRolesRoleId = os
   .route({
@@ -174,7 +174,7 @@ export const deleteProjectsProjectIdRolesRoleId = os
   })
   .input(type({ project_id: type('string'), role_id: type('string') }))
   .output(RoleDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getProjectsProjectIdUsersUserIdRoles = os
   .route({
@@ -200,7 +200,7 @@ export const getProjectsProjectIdUsersUserIdRoles = os
     }),
   )
   .output(RoleListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postProjectsProjectIdUsersUserIdRoles = os
   .route({
@@ -219,7 +219,7 @@ export const postProjectsProjectIdUsersUserIdRoles = os
     }),
   )
   .output(UserRoleAssignmentSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getProjectsProjectIdUsersUserIdRolesRoleId = os
   .route({
@@ -232,7 +232,7 @@ export const getProjectsProjectIdUsersUserIdRolesRoleId = os
   })
   .input(type({ project_id: type('string'), user_id: type('string'), role_id: type('string') }))
   .output(AssignedRoleDetailsSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteProjectsProjectIdUsersUserIdRolesRoleId = os
   .route({
@@ -245,4 +245,4 @@ export const deleteProjectsProjectIdUsersUserIdRolesRoleId = os
   })
   .input(type({ project_id: type('string'), user_id: type('string'), role_id: type('string') }))
   .output(DeletedRoleAssignmentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

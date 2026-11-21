@@ -98,7 +98,7 @@ export const chatHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chat/completions',
@@ -186,7 +186,7 @@ export const chatHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(CreateChatCompletionRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chat/completions/:completion_id',
@@ -225,7 +225,7 @@ export const chatHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ completion_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chat/completions/:completion_id',
@@ -273,7 +273,7 @@ export const chatHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ completion_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(Schema.Struct({ metadata: MetadataSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chat/completions/:completion_id',
@@ -312,7 +312,7 @@ export const chatHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ completion_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chat/completions/:completion_id/messages',
@@ -373,5 +373,5 @@ export const chatHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

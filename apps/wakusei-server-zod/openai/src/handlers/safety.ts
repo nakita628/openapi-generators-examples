@@ -12,7 +12,7 @@ export const getSafetyCasesId = os
   })
   .input(z.object({ id: z.string().max(128).meta({ description: 'Safety case ID' }) }))
   .output(SafetyCaseResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSafetyAlertsId = os
   .route({
@@ -24,4 +24,4 @@ export const getSafetyAlertsId = os
   })
   .input(z.object({ id: z.string().max(38).meta({ description: 'Project safety alert ID' }) }))
   .output(SafetyAlertResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

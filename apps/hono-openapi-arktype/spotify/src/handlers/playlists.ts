@@ -50,7 +50,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/playlists/:playlist_id',
@@ -94,7 +94,7 @@ export const playlistsHandler = new Hono()
         '+': 'delete',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/playlists/:playlist_id/tracks',
@@ -152,7 +152,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/playlists/:playlist_id/tracks',
@@ -206,7 +206,7 @@ export const playlistsHandler = new Hono()
         '+': 'delete',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/playlists/:playlist_id/tracks',
@@ -261,7 +261,7 @@ export const playlistsHandler = new Hono()
         '+': 'delete',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/playlists/:playlist_id/tracks',
@@ -301,7 +301,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/playlists/:playlist_id/items',
@@ -358,7 +358,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/playlists/:playlist_id/items',
@@ -411,7 +411,7 @@ export const playlistsHandler = new Hono()
         '+': 'delete',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/playlists/:playlist_id/items',
@@ -464,7 +464,7 @@ export const playlistsHandler = new Hono()
         '+': 'delete',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/playlists/:playlist_id/items',
@@ -502,7 +502,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/playlists/:playlist_id/followers',
@@ -538,7 +538,7 @@ export const playlistsHandler = new Hono()
         '+': 'delete',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/playlists/:playlist_id/followers',
@@ -565,7 +565,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/playlists/:playlist_id/images',
@@ -590,7 +590,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/playlists/:playlist_id/images',
@@ -617,7 +617,7 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/playlists/:playlist_id/followers/contains',
@@ -652,5 +652,5 @@ export const playlistsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

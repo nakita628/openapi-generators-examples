@@ -30,5 +30,5 @@ export const webhooksHandler = new Hono().post(
       ]),
     ),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

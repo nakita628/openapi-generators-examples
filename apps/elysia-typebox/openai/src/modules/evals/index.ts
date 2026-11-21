@@ -250,7 +250,7 @@ export const evals = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/evals', ({ query }) => {}, {
+  .get('/evals', ({ query }) => { throw new Error('Not implemented') }, {
     query: EvalsModel.listEvalsQuery,
     response: { 200: 'EvalList', 429: 'ErrorResponse' },
     detail: {
@@ -260,7 +260,7 @@ export const evals = new Elysia()
       operationId: 'listEvals',
     },
   })
-  .post('/evals', ({ body }) => {}, {
+  .post('/evals', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateEvalRequest',
     response: { 201: 'Eval', 400: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -271,7 +271,7 @@ export const evals = new Elysia()
       operationId: 'createEval',
     },
   })
-  .get('/evals/:eval_id', ({ params }) => {}, {
+  .get('/evals/:eval_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.getEvalParams,
     response: { 200: 'Eval', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -281,7 +281,7 @@ export const evals = new Elysia()
       operationId: 'getEval',
     },
   })
-  .post('/evals/:eval_id', ({ params, body }) => {}, {
+  .post('/evals/:eval_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.updateEvalParams,
     body: EvalsModel.updateEvalBody,
     response: { 200: 'Eval', 400: 'ErrorResponse', 404: 'ErrorResponse', 429: 'ErrorResponse' },
@@ -292,7 +292,7 @@ export const evals = new Elysia()
       operationId: 'updateEval',
     },
   })
-  .delete('/evals/:eval_id', ({ params }) => {}, {
+  .delete('/evals/:eval_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.deleteEvalParams,
     response: {
       200: EvalsModel.deleteEvalResponse200,
@@ -307,7 +307,7 @@ export const evals = new Elysia()
       operationId: 'deleteEval',
     },
   })
-  .get('/evals/:eval_id/runs', ({ params, query }) => {}, {
+  .get('/evals/:eval_id/runs', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.getEvalRunsParams,
     query: EvalsModel.getEvalRunsQuery,
     response: {
@@ -323,7 +323,7 @@ export const evals = new Elysia()
       operationId: 'getEvalRuns',
     },
   })
-  .post('/evals/:eval_id/runs', ({ params, body }) => {}, {
+  .post('/evals/:eval_id/runs', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.createEvalRunParams,
     body: 'CreateEvalRunRequest',
     response: {
@@ -341,7 +341,7 @@ export const evals = new Elysia()
       operationId: 'createEvalRun',
     },
   })
-  .get('/evals/:eval_id/runs/:run_id', ({ params }) => {}, {
+  .get('/evals/:eval_id/runs/:run_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.getEvalRunParams,
     response: { 200: 'EvalRun', 400: 'ErrorResponse', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -351,7 +351,7 @@ export const evals = new Elysia()
       operationId: 'getEvalRun',
     },
   })
-  .delete('/evals/:eval_id/runs/:run_id', ({ params }) => {}, {
+  .delete('/evals/:eval_id/runs/:run_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.deleteEvalRunParams,
     response: {
       200: EvalsModel.deleteEvalRunResponse200,
@@ -366,7 +366,7 @@ export const evals = new Elysia()
       operationId: 'deleteEvalRun',
     },
   })
-  .post('/evals/:eval_id/runs/:run_id/cancel', ({ params }) => {}, {
+  .post('/evals/:eval_id/runs/:run_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.cancelEvalRunParams,
     response: { 200: 'EvalRun', 429: 'ErrorResponse' },
     detail: {
@@ -376,7 +376,7 @@ export const evals = new Elysia()
       operationId: 'cancelEvalRun',
     },
   })
-  .get('/evals/:eval_id/runs/:run_id/output_items', ({ params, query }) => {}, {
+  .get('/evals/:eval_id/runs/:run_id/output_items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.getEvalRunOutputItemsParams,
     query: EvalsModel.getEvalRunOutputItemsQuery,
     response: {
@@ -392,7 +392,7 @@ export const evals = new Elysia()
       operationId: 'getEvalRunOutputItems',
     },
   })
-  .get('/evals/:eval_id/runs/:run_id/output_items/:output_item_id', ({ params }) => {}, {
+  .get('/evals/:eval_id/runs/:run_id/output_items/:output_item_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: EvalsModel.getEvalRunOutputItemParams,
     response: {
       200: 'EvalRunOutputItem',

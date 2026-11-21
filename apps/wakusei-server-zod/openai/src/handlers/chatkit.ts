@@ -21,7 +21,7 @@ export const postChatkitSessionsSessionIdCancel = os
   })
   .input(z.object({ session_id: z.string().meta({ examples: ['cksess_123'] }) }))
   .output(ChatSessionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postChatkitSessions = os
   .route({
@@ -33,7 +33,7 @@ export const postChatkitSessions = os
   })
   .input(CreateChatSessionBodySchema)
   .output(ChatSessionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChatkitThreadsThreadIdItems = os
   .route({
@@ -65,7 +65,7 @@ export const getChatkitThreadsThreadIdItems = os
     }),
   )
   .output(ThreadItemListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChatkitThreadsThreadId = os
   .route({
@@ -77,7 +77,7 @@ export const getChatkitThreadsThreadId = os
   })
   .input(z.object({ thread_id: z.string().meta({ examples: ['cthr_123'] }) }))
   .output(ThreadResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteChatkitThreadsThreadId = os
   .route({
@@ -89,7 +89,7 @@ export const deleteChatkitThreadsThreadId = os
   })
   .input(z.object({ thread_id: z.string().meta({ examples: ['cthr_123'] }) }))
   .output(DeletedThreadResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChatkitThreads = os
   .route({
@@ -129,4 +129,4 @@ export const getChatkitThreads = os
     }),
   )
   .output(ThreadListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

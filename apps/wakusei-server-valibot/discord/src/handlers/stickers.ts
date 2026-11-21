@@ -14,4 +14,4 @@ export const getStickersStickerId = os
   })
   .input(v.object({ sticker_id: SnowflakeTypeSchema }))
   .output(v.union([GuildStickerResponseSchema, StandardStickerResponseSchema]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

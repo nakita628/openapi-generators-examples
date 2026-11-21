@@ -14,4 +14,4 @@ export const getStickersStickerId = os
   })
   .input(z.object({ sticker_id: SnowflakeTypeSchema }))
   .output(z.xor([GuildStickerResponseSchema, StandardStickerResponseSchema]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

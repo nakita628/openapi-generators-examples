@@ -12,7 +12,7 @@ export const getStoreInventory = os
     successDescription: 'successful operation',
   })
   .output(z.record(z.string(), z.int32()))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postStoreOrder = os
   .route({
@@ -25,7 +25,7 @@ export const postStoreOrder = os
   })
   .input(OrderSchema)
   .output(OrderSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getStoreOrderOrderId = os
   .route({
@@ -39,7 +39,7 @@ export const getStoreOrderOrderId = os
   })
   .input(z.object({ orderId: z.coerce.bigint().pipe(z.int64()) }))
   .output(OrderSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteStoreOrderOrderId = os
   .route({
@@ -52,4 +52,4 @@ export const deleteStoreOrderOrderId = os
     successDescription: 'order deleted',
   })
   .input(z.object({ orderId: z.coerce.bigint().pipe(z.int64()) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

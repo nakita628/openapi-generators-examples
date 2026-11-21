@@ -104,7 +104,7 @@ export const decisions = new Elysia()
     ScoreLevelParam: ScoreLevelParamSchema,
     ScoreProbabilityResource: ScoreProbabilityResourceSchema,
   })
-  .post('/decisions', ({ body }) => {}, {
+  .post('/decisions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'DecisionRequest',
     response: { 200: 'DecisionResponse' },
     detail: {

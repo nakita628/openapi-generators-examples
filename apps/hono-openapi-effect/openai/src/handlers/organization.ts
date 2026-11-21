@@ -183,7 +183,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/admin_api_keys',
@@ -246,7 +246,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/admin_api_keys/:key_id',
@@ -288,7 +288,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/admin_api_keys/:key_id',
@@ -342,7 +342,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/audit_logs',
@@ -499,7 +499,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/certificates',
@@ -552,7 +552,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/certificates',
@@ -591,7 +591,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(UploadCertificateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/certificates/activate',
@@ -650,7 +650,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(ToggleCertificatesRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/certificates/deactivate',
@@ -709,7 +709,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(ToggleCertificatesRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/certificates/:certificate_id',
@@ -776,7 +776,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/certificates/:certificate_id',
@@ -831,7 +831,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ certificate_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ModifyCertificateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/certificates/:certificate_id',
@@ -880,7 +880,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ certificate_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/costs',
@@ -997,7 +997,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/data_retention',
@@ -1034,7 +1034,7 @@ export const organizationHandler = new Hono()
         },
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/data_retention',
@@ -1080,7 +1080,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(UpdateOrganizationDataRetentionBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/groups',
@@ -1144,7 +1144,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/groups',
@@ -1209,7 +1209,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(CreateGroupBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/groups/:group_id',
@@ -1266,7 +1266,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/groups/:group_id',
@@ -1324,7 +1324,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(UpdateGroupBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/groups/:group_id',
@@ -1372,7 +1372,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/groups/:group_id/roles',
@@ -1437,7 +1437,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/groups/:group_id/roles',
@@ -1487,7 +1487,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(PublicAssignOrganizationGroupRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/groups/:group_id/roles/:role_id',
@@ -1539,7 +1539,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String, role_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/groups/:group_id/roles/:role_id',
@@ -1591,7 +1591,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String, role_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/groups/:group_id/users',
@@ -1664,7 +1664,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/groups/:group_id/users',
@@ -1722,7 +1722,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(CreateGroupUserBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/groups/:group_id/users/:user_id',
@@ -1774,7 +1774,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String, user_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/groups/:group_id/users/:user_id',
@@ -1834,7 +1834,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ group_id: Schema.String, user_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/invites',
@@ -1898,7 +1898,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/invites',
@@ -1950,7 +1950,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(InviteRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/invites/:invite_id',
@@ -2010,7 +2010,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ invite_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/invites/:invite_id',
@@ -2066,7 +2066,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ invite_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects',
@@ -2143,7 +2143,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects',
@@ -2194,7 +2194,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(ProjectCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id',
@@ -2238,7 +2238,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id',
@@ -2291,7 +2291,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ProjectUpdateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/api_keys',
@@ -2357,7 +2357,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/api_keys/:api_key_id',
@@ -2416,7 +2416,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, api_key_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/api_keys/:api_key_id',
@@ -2478,7 +2478,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(UpdateProjectApiKeyBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/projects/:project_id/api_keys/:api_key_id',
@@ -2538,7 +2538,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, api_key_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/archive',
@@ -2592,7 +2592,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/certificates',
@@ -2646,7 +2646,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/certificates/activate',
@@ -2706,7 +2706,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ToggleCertificatesRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/certificates/deactivate',
@@ -2766,7 +2766,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ToggleCertificatesRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/data_retention',
@@ -2812,7 +2812,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/data_retention',
@@ -2859,7 +2859,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(UpdateProjectDataRetentionBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/groups',
@@ -2924,7 +2924,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/groups',
@@ -2980,7 +2980,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(InviteProjectGroupBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/groups/:group_id',
@@ -3042,7 +3042,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/projects/:project_id/groups/:group_id',
@@ -3096,7 +3096,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, group_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/hosted_tool_permissions',
@@ -3150,7 +3150,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/hosted_tool_permissions',
@@ -3213,7 +3213,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ProjectHostedToolPermissionsUpdateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/model_permissions',
@@ -3267,7 +3267,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/model_permissions',
@@ -3322,7 +3322,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ProjectModelPermissionsUpdateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/projects/:project_id/model_permissions',
@@ -3378,7 +3378,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/rate_limits',
@@ -3444,7 +3444,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/rate_limits/:rate_limit_id',
@@ -3504,7 +3504,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(ProjectRateLimitUpdateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/service_accounts',
@@ -3569,7 +3569,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/service_accounts',
@@ -3637,7 +3637,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ProjectServiceAccountCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
@@ -3696,7 +3696,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, service_account_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
@@ -3756,7 +3756,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(UpdateProjectServiceAccountBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
@@ -3819,7 +3819,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, service_account_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/spend_alerts',
@@ -3884,7 +3884,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/spend_alerts',
@@ -3931,7 +3931,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(CreateSpendAlertBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/spend_alerts/:alert_id',
@@ -3982,7 +3982,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, alert_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/spend_alerts/:alert_id',
@@ -4034,7 +4034,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(CreateSpendAlertBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/projects/:project_id/spend_alerts/:alert_id',
@@ -4085,7 +4085,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, alert_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/users',
@@ -4150,7 +4150,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/users',
@@ -4219,7 +4219,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(ProjectUserCreateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/users/:user_id',
@@ -4276,7 +4276,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, user_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/users/:user_id',
@@ -4334,7 +4334,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(ProjectUserUpdateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/projects/:project_id/users/:user_id',
@@ -4394,7 +4394,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, user_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/roles',
@@ -4458,7 +4458,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/roles',
@@ -4505,7 +4505,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(PublicCreateOrganizationRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/roles/:role_id',
@@ -4543,7 +4543,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ role_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/roles/:role_id',
@@ -4591,7 +4591,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ role_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(PublicUpdateOrganizationRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/roles/:role_id',
@@ -4640,7 +4640,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ role_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/spend_alerts',
@@ -4704,7 +4704,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/spend_alerts',
@@ -4742,7 +4742,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('json', Schema.toStandardSchemaV1(CreateSpendAlertBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/spend_alerts/:alert_id',
@@ -4780,7 +4780,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ alert_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/spend_alerts/:alert_id',
@@ -4827,7 +4827,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ alert_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(CreateSpendAlertBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/spend_alerts/:alert_id',
@@ -4867,7 +4867,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ alert_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/audio_speeches',
@@ -4987,7 +4987,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/audio_transcriptions',
@@ -5107,7 +5107,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/code_interpreter_sessions',
@@ -5186,7 +5186,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/completions',
@@ -5329,7 +5329,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/embeddings',
@@ -5449,7 +5449,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/file_search_calls',
@@ -5571,7 +5571,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/images',
@@ -5734,7 +5734,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/moderations',
@@ -5854,7 +5854,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/vector_stores',
@@ -5933,7 +5933,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/web_search_calls',
@@ -6075,7 +6075,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/users',
@@ -6144,7 +6144,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/users/:user_id',
@@ -6188,7 +6188,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/users/:user_id',
@@ -6241,7 +6241,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(UserRoleUpdateRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/users/:user_id',
@@ -6296,7 +6296,7 @@ export const organizationHandler = new Hono()
       },
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.String }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/users/:user_id/roles',
@@ -6361,7 +6361,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/users/:user_id/roles',
@@ -6411,7 +6411,7 @@ export const organizationHandler = new Hono()
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.String }))),
     validator('json', Schema.toStandardSchemaV1(PublicAssignOrganizationGroupRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/users/:user_id/roles/:role_id',
@@ -6463,7 +6463,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.String, role_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/users/:user_id/roles/:role_id',
@@ -6515,7 +6515,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.String, role_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/external_keys',
@@ -6566,7 +6566,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/external_keys',
@@ -6587,7 +6587,7 @@ export const organizationHandler = new Hono()
       security: [{ AdminApiKeyAuth: [] }],
     }),
     validator('json', Schema.toStandardSchemaV1(V1OrganizationExternalKeysPostRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/external_keys/:external_key_id',
@@ -6611,7 +6611,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ external_key_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/external_keys/:external_key_id',
@@ -6635,7 +6635,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ external_key_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/external_keys/:external_key_id/validate',
@@ -6659,7 +6659,7 @@ export const organizationHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ external_key_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/workload_identity_providers',
@@ -6704,7 +6704,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/workload_identity_providers',
@@ -6725,7 +6725,7 @@ export const organizationHandler = new Hono()
       security: [{ AdminApiKeyAuth: [] }],
     }),
     validator('json', Schema.toStandardSchemaV1(CreatePlatformWorkloadIdentityProviderBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
@@ -6757,7 +6757,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
@@ -6790,7 +6790,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(UpdatePlatformWorkloadIdentityProviderBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
@@ -6822,7 +6822,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules',
@@ -6886,7 +6886,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules',
@@ -6922,7 +6922,7 @@ export const organizationHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(CreatePlatformWorkloadIdentityFederationRuleBodySchema),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
@@ -6960,7 +6960,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
@@ -7001,7 +7001,7 @@ export const organizationHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(UpdatePlatformWorkloadIdentityFederationRuleBodySchema),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
@@ -7040,7 +7040,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/usage/decisions',
@@ -7436,7 +7436,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/external_storage',
@@ -7528,7 +7528,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/external_storage',
@@ -7582,7 +7582,7 @@ export const organizationHandler = new Hono()
       security: [{ AdminApiKeyAuth: [] }],
     }),
     validator('json', Schema.toStandardSchemaV1(CreateExternalStorageBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/external_storage/:external_storage_id',
@@ -7634,7 +7634,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/external_storage/:external_storage_id',
@@ -7687,7 +7687,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/external_storage/:external_storage_id/validate',
@@ -7748,7 +7748,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/spend_limit',
@@ -7784,7 +7784,7 @@ export const organizationHandler = new Hono()
       },
       security: [{ AdminApiKeyAuth: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/spend_limit',
@@ -7821,7 +7821,7 @@ export const organizationHandler = new Hono()
       security: [{ AdminApiKeyAuth: [] }],
     }),
     validator('json', Schema.toStandardSchemaV1(UpdateOrganizationSpendLimitBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/spend_limit',
@@ -7859,7 +7859,7 @@ export const organizationHandler = new Hono()
       },
       security: [{ AdminApiKeyAuth: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/spend_limit',
@@ -7909,7 +7909,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String.annotate({ jsonSchemaExamples: ['proj_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/spend_limit',
@@ -7960,7 +7960,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(UpdateProjectSpendLimitBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/organization/projects/:project_id/spend_limit',
@@ -8010,7 +8010,7 @@ export const organizationHandler = new Hono()
         Schema.Struct({ project_id: Schema.String.annotate({ jsonSchemaExamples: ['proj_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/organization/projects/:project_id/service_tier_settings',
@@ -8038,7 +8038,7 @@ export const organizationHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/service_tier_settings',
@@ -8068,7 +8068,7 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(UpdateProjectServiceTierSettingsBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/organization/projects/:project_id/service_accounts/:service_account_id/api_keys',
@@ -8132,5 +8132,5 @@ export const organizationHandler = new Hono()
       ),
     ),
     validator('json', Schema.toStandardSchemaV1(CreateProjectServiceAccountApiKeyBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

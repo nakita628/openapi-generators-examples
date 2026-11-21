@@ -54,7 +54,7 @@ export const images = new Elysia()
     FrameDurationMs: FrameDurationMsSchema,
     Svg: SvgSchema,
   })
-  .post('/images/edits', ({ body }) => {}, {
+  .post('/images/edits', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'EditImageBodyJsonParam',
     response: {
       200: 'ImagesResponse',
@@ -73,7 +73,7 @@ export const images = new Elysia()
       operationId: 'createImageEdit',
     },
   })
-  .post('/images/generations', ({ body }) => {}, {
+  .post('/images/generations', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateImageRequest',
     response: {
       200: 'ImagesResponse',
@@ -92,7 +92,7 @@ export const images = new Elysia()
       operationId: 'createImage',
     },
   })
-  .post('/images/variations', ({ body }) => {}, {
+  .post('/images/variations', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateImageVariationRequest',
     response: {
       200: 'ImagesResponse',

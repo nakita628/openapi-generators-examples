@@ -69,5 +69,5 @@ export const completionsHandler = new Hono().post(
     },
   }),
   validator('json', CreateCompletionRequestSchema),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

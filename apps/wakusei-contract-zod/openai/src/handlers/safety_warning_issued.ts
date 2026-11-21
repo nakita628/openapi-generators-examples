@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const postSafetyWarningIssued = os.postSafetyWarningIssued.handler(async ({ input }) => {})
+export const postSafetyWarningIssued = os.postSafetyWarningIssued.handler(async ({ input }) => { throw new Error('Not implemented') })

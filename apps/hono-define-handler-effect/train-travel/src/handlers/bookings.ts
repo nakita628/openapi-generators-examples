@@ -10,21 +10,21 @@ import {
 export const bookingsHandler = new Hono()
   .get(
     '/bookings',
-    getBookingsHandler(async (c) => {}),
+    getBookingsHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .post(
     '/bookings',
-    postBookingsHandler(async (c, { json }) => {}),
+    postBookingsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/bookings/:bookingId',
-    getBookingsBookingIdHandler(async (c, { param }) => {}),
+    getBookingsBookingIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/bookings/:bookingId',
-    deleteBookingsBookingIdHandler(async (c, { param }) => {}),
+    deleteBookingsBookingIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/bookings/:bookingId/payment',
-    postBookingsBookingIdPaymentHandler(async (c, { param, json }) => {}),
+    postBookingsBookingIdPaymentHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )

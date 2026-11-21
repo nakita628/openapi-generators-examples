@@ -20,23 +20,23 @@ export const invitesHandler = new Hono()
         target_message_id: Type.Optional(SnowflakeTypeSchema),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code',
     tbValidator('param', Type.Object({ code: Type.String({ maxLength: 152133 }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users',
     tbValidator('param', Type.Object({ code: Type.String({ maxLength: 152133 }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users',
     tbValidator('param', Type.Object({ code: Type.String({ maxLength: 152133 }) })),
     tbValidator('form', Type.Object({ target_users_file: Type.String() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-add',
@@ -51,7 +51,7 @@ export const invitesHandler = new Hono()
         }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-delete',
@@ -66,12 +66,12 @@ export const invitesHandler = new Hono()
         }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users/job-status',
     tbValidator('param', Type.Object({ code: Type.String({ maxLength: 152133 }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users/:user_id',
@@ -79,7 +79,7 @@ export const invitesHandler = new Hono()
       'param',
       Type.Object({ code: Type.String({ maxLength: 152133 }), user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code/target-users/:user_id',
@@ -87,5 +87,5 @@ export const invitesHandler = new Hono()
       'param',
       Type.Object({ code: Type.String({ maxLength: 152133 }), user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

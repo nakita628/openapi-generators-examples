@@ -67,7 +67,7 @@ export const partnerSdkHandler = new Hono()
         ).annotate({ description: 'The moderation metadata attached to the message' }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/provisional-accounts/unmerge',
@@ -115,7 +115,7 @@ export const partnerSdkHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/provisional-accounts/unmerge/bot',
@@ -152,7 +152,7 @@ export const partnerSdkHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/token',
@@ -205,7 +205,7 @@ export const partnerSdkHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/token/bot',
@@ -262,5 +262,5 @@ export const partnerSdkHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

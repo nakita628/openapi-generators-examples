@@ -17,7 +17,7 @@ export const artistsHandler = new Hono()
           }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/artists',
@@ -33,7 +33,7 @@ export const artistsHandler = new Hono()
           }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/artists/:id/albums',
@@ -92,7 +92,7 @@ export const artistsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/artists/:id/top-tracks',
@@ -121,7 +121,7 @@ export const artistsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/artists/:id/related-artists',
@@ -137,5 +137,5 @@ export const artistsHandler = new Hono()
           }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

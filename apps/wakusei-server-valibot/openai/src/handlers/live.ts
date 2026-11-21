@@ -24,7 +24,7 @@ export const postLiveSessions = os
   })
   .input(LiveSessionCreateRequestSchema)
   .output(LiveSessionCreateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLiveSessionsSessionIdAccept = os
   .route({
@@ -37,7 +37,7 @@ export const postLiveSessionsSessionIdAccept = os
     successDescription: 'Session accept request accepted.',
   })
   .input(v.object({ session_id: v.string(), session: LiveCallAcceptSessionSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLiveSessionsSessionIdFork = os
   .route({
@@ -57,7 +57,7 @@ export const postLiveSessionsSessionIdFork = os
     }),
   )
   .output(LiveCreateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLiveSessionsSessionIdHangup = os
   .route({
@@ -69,7 +69,7 @@ export const postLiveSessionsSessionIdHangup = os
     successDescription: 'Session hangup request accepted.',
   })
   .input(v.object({ session_id: v.string() }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLiveSessionsSessionIdRefer = os
   .route({
@@ -82,7 +82,7 @@ export const postLiveSessionsSessionIdRefer = os
     successDescription: 'Session refer request accepted.',
   })
   .input(v.object({ session_id: v.string(), target_uri: TargetUriSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postLiveSessionsSessionIdReject = os
   .route({
@@ -104,7 +104,7 @@ export const postLiveSessionsSessionIdReject = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getLiveSessionsSessionIdContent = os
   .route({
@@ -126,4 +126,4 @@ export const getLiveSessionsSessionIdContent = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

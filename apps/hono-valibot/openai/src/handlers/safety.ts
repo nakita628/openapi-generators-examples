@@ -11,7 +11,7 @@ export const safetyHandler = new Hono()
         id: v.pipe(v.pipe(v.string(), v.maxCodePoints(128)), v.description('Safety case ID')),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/safety/alerts/:id',
@@ -24,5 +24,5 @@ export const safetyHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

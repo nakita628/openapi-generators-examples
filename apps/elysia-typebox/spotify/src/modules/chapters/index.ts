@@ -30,7 +30,7 @@ export const chapters = new Elysia()
     ResumePointObject: ResumePointObjectSchema,
     SimplifiedAudiobookObject: SimplifiedAudiobookObjectSchema,
   })
-  .get('/chapters/:id', ({ params, query }) => {}, {
+  .get('/chapters/:id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChaptersModel.getAChapterParams,
     query: ChaptersModel.getAChapterQuery,
     response: {
@@ -48,7 +48,7 @@ export const chapters = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/chapters', ({ query }) => {}, {
+  .get('/chapters', ({ query }) => { throw new Error('Not implemented') }, {
     query: ChaptersModel.getSeveralChaptersQuery,
     response: {
       200: ChaptersModel.getSeveralChaptersResponse200,

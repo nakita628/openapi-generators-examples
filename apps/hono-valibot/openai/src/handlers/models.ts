@@ -3,14 +3,14 @@ import { sValidator } from '@hono/standard-validator'
 import * as v from 'valibot'
 
 export const modelsHandler = new Hono()
-  .get('/models', (c) => {})
+  .get('/models', (c) => { throw new Error('Not implemented') })
   .get(
     '/models/:model',
     sValidator(
       'param',
       v.object({ model: v.pipe(v.string(), v.metadata({ examples: ['gpt-6.2-astra'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/models/:model',
@@ -23,5 +23,5 @@ export const modelsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const postRealtimeCallIncoming = os.postRealtimeCallIncoming.handler(async ({ input }) => {})
+export const postRealtimeCallIncoming = os.postRealtimeCallIncoming.handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -101,5 +101,5 @@ export const tripsHandler = new Hono().get(
       dogs: z.stringbool().default(false).exactOptional(),
     }),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

@@ -3,5 +3,5 @@ import { postDecisionsHandler } from '../routes'
 
 export const decisionsHandler = new Hono().post(
   '/decisions',
-  postDecisionsHandler(async (c, { json }) => {}),
+  postDecisionsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
 )

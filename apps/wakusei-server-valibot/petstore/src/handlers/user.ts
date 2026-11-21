@@ -13,7 +13,7 @@ export const postUser = os
   })
   .input(UserSchema)
   .output(UserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postUserCreateWithList = os
   .route({
@@ -26,7 +26,7 @@ export const postUserCreateWithList = os
   })
   .input(v.array(UserSchema))
   .output(UserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUserLogin = os
   .route({
@@ -39,7 +39,7 @@ export const getUserLogin = os
   })
   .input(v.object({ username: v.optional(v.string()), password: v.optional(v.string()) }))
   .output(v.string())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUserLogout = os
   .route({
@@ -50,7 +50,7 @@ export const getUserLogout = os
     description: 'Log user out of the system.',
     successDescription: 'successful operation',
   })
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUserUsername = os
   .route({
@@ -63,7 +63,7 @@ export const getUserUsername = os
   })
   .input(v.object({ username: v.string() }))
   .output(UserSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putUserUsername = os
   .route({
@@ -106,7 +106,7 @@ export const putUserUsername = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteUserUsername = os
   .route({
@@ -118,4 +118,4 @@ export const deleteUserUsername = os
     successDescription: 'User deleted',
   })
   .input(v.object({ username: v.string() }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

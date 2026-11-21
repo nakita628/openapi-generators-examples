@@ -79,7 +79,7 @@ export const lobbiesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies',
@@ -137,7 +137,7 @@ export const lobbiesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/lobbies/:lobby_id',
@@ -145,7 +145,7 @@ export const lobbiesHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ lobby_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/lobbies/:lobby_id',
@@ -153,7 +153,7 @@ export const lobbiesHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ lobby_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/lobbies/:lobby_id',
@@ -215,7 +215,7 @@ export const lobbiesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/lobbies/:lobby_id/channel-linking',
@@ -233,7 +233,7 @@ export const lobbiesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/lobbies/:lobby_id/members/@me',
@@ -241,7 +241,7 @@ export const lobbiesHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ lobby_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/members/@me/invites',
@@ -249,7 +249,7 @@ export const lobbiesHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ lobby_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/members/bulk',
@@ -268,7 +268,7 @@ export const lobbiesHandler = new Hono()
         ),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/lobbies/:lobby_id/members/:user_id',
@@ -310,7 +310,7 @@ export const lobbiesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/lobbies/:lobby_id/members/:user_id',
@@ -320,7 +320,7 @@ export const lobbiesHandler = new Hono()
         Schema.Struct({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/members/:user_id/invites',
@@ -330,7 +330,7 @@ export const lobbiesHandler = new Hono()
         Schema.Struct({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/lobbies/:lobby_id/messages',
@@ -352,7 +352,7 @@ export const lobbiesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/lobbies/:lobby_id/messages',
@@ -8773,7 +8773,7 @@ export const lobbiesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/lobbies/:lobby_id/messages/:message_id/moderation-metadata',
@@ -8809,5 +8809,5 @@ export const lobbiesHandler = new Hono()
         ).annotate({ description: 'The moderation metadata attached to the message' }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

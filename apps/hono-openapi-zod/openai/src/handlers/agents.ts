@@ -145,7 +145,7 @@ export const agentsHandler = new Hono()
         session_id: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations',
@@ -190,7 +190,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('json', CreateAutomationParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/automations/:automation_id',
@@ -235,7 +235,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ automation_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id',
@@ -281,7 +281,7 @@ export const agentsHandler = new Hono()
     }),
     validator('param', z.object({ automation_id: z.string().min(0).max(1048576) })),
     validator('json', UpdateAutomationParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/automations/:automation_id',
@@ -327,7 +327,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ automation_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id/pause',
@@ -372,7 +372,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ automation_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id/resume',
@@ -418,7 +418,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ automation_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/automations/:automation_id/invocations',
@@ -521,7 +521,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/automations/:automation_id/invocations',
@@ -566,7 +566,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ automation_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/automations/:automation_id/invocations/:invocation_id',
@@ -617,7 +617,7 @@ export const agentsHandler = new Hono()
         invocation_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments',
@@ -671,7 +671,7 @@ export const agentsHandler = new Hono()
         type: EnvironmentTypeParamSchema.exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments',
@@ -725,7 +725,7 @@ export const agentsHandler = new Hono()
       z.object({ 'idempotency-key': z.string().min(1).max(256).exactOptional() }),
     ),
     validator('json', CreateAgentEnvironmentParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/:environment_id',
@@ -771,7 +771,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ environment_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/:environment_id/files',
@@ -831,7 +831,7 @@ export const agentsHandler = new Hono()
         page: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments/:environment_id/files',
@@ -882,7 +882,7 @@ export const agentsHandler = new Hono()
     }),
     validator('param', z.object({ environment_id: z.string().min(0).max(1048576) })),
     validator('json', HostedEnvironmentFileParamSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents',
@@ -982,7 +982,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id',
@@ -1034,7 +1034,7 @@ export const agentsHandler = new Hono()
         subagent_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/items',
@@ -1094,7 +1094,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/turns',
@@ -1154,7 +1154,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/turns/:turn_id',
@@ -1207,7 +1207,7 @@ export const agentsHandler = new Hono()
         turn_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/turns/:turn_id/items',
@@ -1268,7 +1268,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents',
@@ -1321,7 +1321,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents',
@@ -1367,7 +1367,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('json', CreateAgentParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/:agent_id',
@@ -1413,7 +1413,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ agent_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/:agent_id',
@@ -1460,7 +1460,7 @@ export const agentsHandler = new Hono()
     }),
     validator('param', z.object({ agent_id: z.string().min(0).max(1048576) })),
     validator('json', UpdateAgentParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/:agent_id',
@@ -1506,7 +1506,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ agent_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/templates',
@@ -1557,7 +1557,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments/templates',
@@ -1599,7 +1599,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('json', CreateEnvironmentTemplateParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/environments/templates/:environment_template_id',
@@ -1641,7 +1641,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ environment_template_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/environments/templates/:environment_template_id',
@@ -1688,7 +1688,7 @@ export const agentsHandler = new Hono()
     }),
     validator('param', z.object({ environment_template_id: z.string().min(0).max(1048576) })),
     validator('json', UpdateEnvironmentTemplateParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/environments/templates/:environment_template_id',
@@ -1736,7 +1736,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ environment_template_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions',
@@ -1791,7 +1791,7 @@ export const agentsHandler = new Hono()
         metadata: z.record(z.string(), z.string().min(0).max(512)).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/sessions',
@@ -1844,7 +1844,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('json', CreateAgentSessionParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id',
@@ -1890,7 +1890,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ session_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/sessions/:session_id',
@@ -1937,7 +1937,7 @@ export const agentsHandler = new Hono()
     }),
     validator('param', z.object({ session_id: z.string().min(0).max(1048576) })),
     validator('json', UpdateAgentSessionParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/sessions/:session_id',
@@ -1983,7 +1983,7 @@ export const agentsHandler = new Hono()
       },
     }),
     validator('param', z.object({ session_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/artifacts',
@@ -2038,7 +2038,7 @@ export const agentsHandler = new Hono()
         environment_id: z.string().min(0).max(1048576).nullable().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/artifacts/:artifact_id',
@@ -2090,7 +2090,7 @@ export const agentsHandler = new Hono()
         artifact_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/agents/sessions/:session_id/artifacts/:artifact_id',
@@ -2144,7 +2144,7 @@ export const agentsHandler = new Hono()
         artifact_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/artifacts/:artifact_id/content',
@@ -2196,7 +2196,7 @@ export const agentsHandler = new Hono()
         artifact_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/events',
@@ -2246,7 +2246,7 @@ export const agentsHandler = new Hono()
       'query',
       z.object({ include_obfuscation: z.stringbool().default(true).exactOptional() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/agents/sessions/:session_id/events',
@@ -2294,7 +2294,7 @@ export const agentsHandler = new Hono()
       z.object({ 'idempotency-key': z.string().min(1).max(256).exactOptional() }),
     ),
     validator('json', CreateSessionEventsParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/items',
@@ -2348,7 +2348,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/traces',
@@ -2402,7 +2402,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/turns',
@@ -2456,7 +2456,7 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/turns/:turn_id',
@@ -2508,7 +2508,7 @@ export const agentsHandler = new Hono()
         turn_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/agents/sessions/:session_id/turns/:turn_id/items',
@@ -2568,5 +2568,5 @@ export const agentsHandler = new Hono()
         after: z.string().min(0).max(1048576).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

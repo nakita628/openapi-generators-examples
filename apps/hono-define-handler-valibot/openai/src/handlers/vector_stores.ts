@@ -21,65 +21,65 @@ import {
 export const vectorStoresHandler = new Hono()
   .get(
     '/vector_stores',
-    getVectorStoresHandler(async (c, { query }) => {}),
+    getVectorStoresHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/vector_stores',
-    postVectorStoresHandler(async (c, { json }) => {}),
+    postVectorStoresHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/vector_stores/:vector_store_id',
-    getVectorStoresVectorStoreIdHandler(async (c, { param }) => {}),
+    getVectorStoresVectorStoreIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/vector_stores/:vector_store_id',
-    postVectorStoresVectorStoreIdHandler(async (c, { param, json }) => {}),
+    postVectorStoresVectorStoreIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/vector_stores/:vector_store_id',
-    deleteVectorStoresVectorStoreIdHandler(async (c, { param }) => {}),
+    deleteVectorStoresVectorStoreIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/vector_stores/:vector_store_id/file_batches',
-    postVectorStoresVectorStoreIdFileBatchesHandler(async (c, { param, json }) => {}),
+    postVectorStoresVectorStoreIdFileBatchesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/vector_stores/:vector_store_id/file_batches/:batch_id',
-    getVectorStoresVectorStoreIdFileBatchesBatchIdHandler(async (c, { param }) => {}),
+    getVectorStoresVectorStoreIdFileBatchesBatchIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/vector_stores/:vector_store_id/file_batches/:batch_id/cancel',
-    postVectorStoresVectorStoreIdFileBatchesBatchIdCancelHandler(async (c, { param }) => {}),
+    postVectorStoresVectorStoreIdFileBatchesBatchIdCancelHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/vector_stores/:vector_store_id/file_batches/:batch_id/files',
-    getVectorStoresVectorStoreIdFileBatchesBatchIdFilesHandler(async (c, { param, query }) => {}),
+    getVectorStoresVectorStoreIdFileBatchesBatchIdFilesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/vector_stores/:vector_store_id/files',
-    getVectorStoresVectorStoreIdFilesHandler(async (c, { param, query }) => {}),
+    getVectorStoresVectorStoreIdFilesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/vector_stores/:vector_store_id/files',
-    postVectorStoresVectorStoreIdFilesHandler(async (c, { param, json }) => {}),
+    postVectorStoresVectorStoreIdFilesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/vector_stores/:vector_store_id/files/:file_id',
-    getVectorStoresVectorStoreIdFilesFileIdHandler(async (c, { param }) => {}),
+    getVectorStoresVectorStoreIdFilesFileIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/vector_stores/:vector_store_id/files/:file_id',
-    postVectorStoresVectorStoreIdFilesFileIdHandler(async (c, { param, json }) => {}),
+    postVectorStoresVectorStoreIdFilesFileIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/vector_stores/:vector_store_id/files/:file_id',
-    deleteVectorStoresVectorStoreIdFilesFileIdHandler(async (c, { param }) => {}),
+    deleteVectorStoresVectorStoreIdFilesFileIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/vector_stores/:vector_store_id/files/:file_id/content',
-    getVectorStoresVectorStoreIdFilesFileIdContentHandler(async (c, { param }) => {}),
+    getVectorStoresVectorStoreIdFilesFileIdContentHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/vector_stores/:vector_store_id/search',
-    postVectorStoresVectorStoreIdSearchHandler(async (c, { param, json }) => {}),
+    postVectorStoresVectorStoreIdSearchHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )

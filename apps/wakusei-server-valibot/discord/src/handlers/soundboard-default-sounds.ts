@@ -9,4 +9,4 @@ export const getSoundboardDefaultSounds = os
     successDescription: '200 response for get_soundboard_default_sounds',
   })
   .output(v.array(SoundboardSoundResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

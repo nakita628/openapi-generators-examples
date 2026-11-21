@@ -23,5 +23,5 @@ export const marketsHandler = new Hono().get(
     },
     security: [{ oauth_2_0: [] }],
   }),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

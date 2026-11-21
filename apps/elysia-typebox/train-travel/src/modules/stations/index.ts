@@ -14,7 +14,7 @@ export const stations = new Elysia()
     Station: StationSchema,
     WrapperCollection: WrapperCollectionSchema,
   })
-  .get('/stations', () => {}, {
+  .get('/stations', () => { throw new Error('Not implemented') }, {
     response: {
       200: StationsModel.getStationsResponse200,
       400: t.Void(),

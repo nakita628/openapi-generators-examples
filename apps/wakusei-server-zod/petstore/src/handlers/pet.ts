@@ -13,7 +13,7 @@ export const postPet = os
   })
   .input(PetSchema)
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putPet = os
   .route({
@@ -26,7 +26,7 @@ export const putPet = os
   })
   .input(PetSchema)
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPetFindByStatus = os
   .route({
@@ -39,7 +39,7 @@ export const getPetFindByStatus = os
   })
   .input(z.object({ status: z.enum(['available', 'pending', 'sold']).default('available') }))
   .output(z.array(PetSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPetFindByTags = os
   .route({
@@ -60,7 +60,7 @@ export const getPetFindByTags = os
     }),
   )
   .output(z.array(PetSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPetPetId = os
   .route({
@@ -73,7 +73,7 @@ export const getPetPetId = os
   })
   .input(z.object({ petId: z.coerce.bigint().pipe(z.int64()) }))
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPetPetId = os
   .route({
@@ -92,7 +92,7 @@ export const postPetPetId = os
     }),
   )
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deletePetPetId = os
   .route({
@@ -104,7 +104,7 @@ export const deletePetPetId = os
     successDescription: 'Pet deleted',
   })
   .input(z.object({ petId: z.coerce.bigint().pipe(z.int64()) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPetPetIdUploadImage = os
   .route({
@@ -122,4 +122,4 @@ export const postPetPetIdUploadImage = os
     }),
   )
   .output(ApiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

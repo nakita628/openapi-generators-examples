@@ -40,7 +40,7 @@ export const stickers = new Elysia()
     UserPrimaryGuildResponse: UserPrimaryGuildResponseSchema,
     UserResponse: UserResponseSchema,
   })
-  .get('/stickers/:sticker_id', ({ params }) => {}, {
+  .get('/stickers/:sticker_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: StickersModel.get_stickerParams,
     response: {
       200: StickersModel.get_stickerResponse200,

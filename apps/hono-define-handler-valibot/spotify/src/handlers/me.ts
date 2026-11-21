@@ -52,189 +52,189 @@ import {
 export const meHandler = new Hono()
   .get(
     '/me/audiobooks',
-    getMeAudiobooksHandler(async (c, { query }) => {}),
+    getMeAudiobooksHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/audiobooks',
-    putMeAudiobooksHandler(async (c, { query }) => {}),
+    putMeAudiobooksHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/me/audiobooks',
-    deleteMeAudiobooksHandler(async (c, { query }) => {}),
+    deleteMeAudiobooksHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/audiobooks/contains',
-    getMeAudiobooksContainsHandler(async (c, { query }) => {}),
+    getMeAudiobooksContainsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me',
-    getMeHandler(async (c) => {}),
+    getMeHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/playlists',
-    getMePlaylistsHandler(async (c, { query }) => {}),
+    getMePlaylistsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/me/playlists',
-    postMePlaylistsHandler(async (c, { json }) => {}),
+    postMePlaylistsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/library',
-    putMeLibraryHandler(async (c, { query }) => {}),
+    putMeLibraryHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/me/library',
-    deleteMeLibraryHandler(async (c, { query }) => {}),
+    deleteMeLibraryHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/library/contains',
-    getMeLibraryContainsHandler(async (c, { query }) => {}),
+    getMeLibraryContainsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/albums',
-    getMeAlbumsHandler(async (c, { query }) => {}),
+    getMeAlbumsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/albums',
-    putMeAlbumsHandler(async (c, { query, json }) => {}),
+    putMeAlbumsHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/me/albums',
-    deleteMeAlbumsHandler(async (c, { query, json }) => {}),
+    deleteMeAlbumsHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/albums/contains',
-    getMeAlbumsContainsHandler(async (c, { query }) => {}),
+    getMeAlbumsContainsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/tracks',
-    getMeTracksHandler(async (c, { query }) => {}),
+    getMeTracksHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/tracks',
-    putMeTracksHandler(async (c, { json }) => {}),
+    putMeTracksHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/me/tracks',
-    deleteMeTracksHandler(async (c, { query, json }) => {}),
+    deleteMeTracksHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/tracks/contains',
-    getMeTracksContainsHandler(async (c, { query }) => {}),
+    getMeTracksContainsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/episodes',
-    getMeEpisodesHandler(async (c, { query }) => {}),
+    getMeEpisodesHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/episodes',
-    putMeEpisodesHandler(async (c, { query, json }) => {}),
+    putMeEpisodesHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/me/episodes',
-    deleteMeEpisodesHandler(async (c, { query, json }) => {}),
+    deleteMeEpisodesHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/episodes/contains',
-    getMeEpisodesContainsHandler(async (c, { query }) => {}),
+    getMeEpisodesContainsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/shows',
-    getMeShowsHandler(async (c, { query }) => {}),
+    getMeShowsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/shows',
-    putMeShowsHandler(async (c, { query, json }) => {}),
+    putMeShowsHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/me/shows',
-    deleteMeShowsHandler(async (c, { query, json }) => {}),
+    deleteMeShowsHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/shows/contains',
-    getMeShowsContainsHandler(async (c, { query }) => {}),
+    getMeShowsContainsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/following',
-    getMeFollowingHandler(async (c, { query }) => {}),
+    getMeFollowingHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/following',
-    putMeFollowingHandler(async (c, { query, json }) => {}),
+    putMeFollowingHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/me/following',
-    deleteMeFollowingHandler(async (c, { query, json }) => {}),
+    deleteMeFollowingHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/following/contains',
-    getMeFollowingContainsHandler(async (c, { query }) => {}),
+    getMeFollowingContainsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/player',
-    getMePlayerHandler(async (c, { query }) => {}),
+    getMePlayerHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/player',
-    putMePlayerHandler(async (c, { json }) => {}),
+    putMePlayerHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/player/devices',
-    getMePlayerDevicesHandler(async (c) => {}),
+    getMePlayerDevicesHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/player/currently-playing',
-    getMePlayerCurrentlyPlayingHandler(async (c, { query }) => {}),
+    getMePlayerCurrentlyPlayingHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/player/play',
-    putMePlayerPlayHandler(async (c, { query, json }) => {}),
+    putMePlayerPlayHandler(async (c, { query, json }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/player/pause',
-    putMePlayerPauseHandler(async (c, { query }) => {}),
+    putMePlayerPauseHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/me/player/next',
-    postMePlayerNextHandler(async (c, { query }) => {}),
+    postMePlayerNextHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/me/player/previous',
-    postMePlayerPreviousHandler(async (c, { query }) => {}),
+    postMePlayerPreviousHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/player/seek',
-    putMePlayerSeekHandler(async (c, { query }) => {}),
+    putMePlayerSeekHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/player/repeat',
-    putMePlayerRepeatHandler(async (c, { query }) => {}),
+    putMePlayerRepeatHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/player/volume',
-    putMePlayerVolumeHandler(async (c, { query }) => {}),
+    putMePlayerVolumeHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/me/player/shuffle',
-    putMePlayerShuffleHandler(async (c, { query }) => {}),
+    putMePlayerShuffleHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/player/recently-played',
-    getMePlayerRecentlyPlayedHandler(async (c, { query }) => {}),
+    getMePlayerRecentlyPlayedHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/player/queue',
-    getMePlayerQueueHandler(async (c) => {}),
+    getMePlayerQueueHandler(async (c) => { throw new Error('Not implemented') }),
   )
   .post(
     '/me/player/queue',
-    postMePlayerQueueHandler(async (c, { query }) => {}),
+    postMePlayerQueueHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/top/artists',
-    getMeTopArtistsHandler(async (c, { query }) => {}),
+    getMeTopArtistsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/me/top/tracks',
-    getMeTopTracksHandler(async (c, { query }) => {}),
+    getMeTopTracksHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )

@@ -28,7 +28,7 @@ export const stickerPacks = new Elysia()
     StickerPackResponse: StickerPackResponseSchema,
     StickerTypes: StickerTypesSchema,
   })
-  .get('/sticker-packs', () => {}, {
+  .get('/sticker-packs', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'StickerPackCollectionResponse',
       429: 'RatelimitedResponse',
@@ -36,7 +36,7 @@ export const stickerPacks = new Elysia()
     },
     detail: { tags: [], operationId: 'list_sticker_packs', security: [{}, { BotToken: [] }] },
   })
-  .get('/sticker-packs/:pack_id', ({ params }) => {}, {
+  .get('/sticker-packs/:pack_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: StickerPacksModel.get_sticker_packParams,
     response: { 200: 'StickerPackResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_sticker_pack', security: [{ BotToken: [] }] },

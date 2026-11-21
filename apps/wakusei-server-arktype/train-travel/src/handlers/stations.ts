@@ -21,4 +21,4 @@ export const getStations = os
       type({ 'links?': type(LinksSelfSchema).and(LinksPaginationSchema) }),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

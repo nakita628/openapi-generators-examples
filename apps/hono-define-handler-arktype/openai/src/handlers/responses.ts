@@ -18,53 +18,53 @@ import {
 export const responsesHandler = new Hono()
   .post(
     '/responses',
-    postResponsesHandler(async (c, { json }) => {}),
+    postResponsesHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/responses/:response_id',
-    getResponsesResponseIdHandler(async (c, { param, query }) => {}),
+    getResponsesResponseIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/responses/:response_id',
-    deleteResponsesResponseIdHandler(async (c, { param }) => {}),
+    deleteResponsesResponseIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/responses/:response_id/cancel',
-    postResponsesResponseIdCancelHandler(async (c, { param }) => {}),
+    postResponsesResponseIdCancelHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/responses/:response_id/input_items',
-    getResponsesResponseIdInputItemsHandler(async (c, { param, query }) => {}),
+    getResponsesResponseIdInputItemsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/responses/input_tokens',
-    postResponsesInputTokensHandler(async (c, { json }) => {}),
+    postResponsesInputTokensHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/responses/compact',
-    postResponsesCompactHandler(async (c, { json }) => {}),
+    postResponsesCompactHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/responses/:response_id?beta=true',
-    getResponsesResponseIdBetaTrueHandler(async (c, { param, query, header }) => {}),
+    getResponsesResponseIdBetaTrueHandler(async (c, { param, query, header }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/responses/:response_id?beta=true',
-    deleteResponsesResponseIdBetaTrueHandler(async (c, { param, header }) => {}),
+    deleteResponsesResponseIdBetaTrueHandler(async (c, { param, header }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/responses/:response_id/cancel?beta=true',
-    postResponsesResponseIdCancelBetaTrueHandler(async (c, { param, header }) => {}),
+    postResponsesResponseIdCancelBetaTrueHandler(async (c, { param, header }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/responses/compact?beta=true',
-    postResponsesCompactBetaTrueHandler(async (c, { header, json }) => {}),
+    postResponsesCompactBetaTrueHandler(async (c, { header, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/responses/:response_id/input_items?beta=true',
-    getResponsesResponseIdInputItemsBetaTrueHandler(async (c, { param, query, header }) => {}),
+    getResponsesResponseIdInputItemsBetaTrueHandler(async (c, { param, query, header }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/responses/input_tokens?beta=true',
-    postResponsesInputTokensBetaTrueHandler(async (c, { header, json }) => {}),
+    postResponsesInputTokensBetaTrueHandler(async (c, { header, json }) => { throw new Error('Not implemented') }),
   )

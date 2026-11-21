@@ -3,5 +3,5 @@ import { postEmbeddingsHandler } from '../routes'
 
 export const embeddingsHandler = new Hono().post(
   '/embeddings',
-  postEmbeddingsHandler(async (c, { json }) => {}),
+  postEmbeddingsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
 )

@@ -28,7 +28,7 @@ export const getSkusSkuIdSubscriptions = os
     }),
   )
   .output(v.array(SubscriptionResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSkusSkuIdSubscriptionsSubscriptionId = os
   .route({
@@ -45,4 +45,4 @@ export const getSkusSkuIdSubscriptionsSubscriptionId = os
     }),
   )
   .output(SubscriptionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

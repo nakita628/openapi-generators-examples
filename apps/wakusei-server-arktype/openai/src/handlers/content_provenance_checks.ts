@@ -11,4 +11,4 @@ export const postContentProvenanceChecks = os
     successDescription: 'Success',
   })
   .output(ProvenanceResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

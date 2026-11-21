@@ -79,7 +79,7 @@ export const videosHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos',
@@ -130,7 +130,7 @@ export const videosHandler = new Hono()
     }),
     validator('json', Schema.toStandardSchemaV1(CreateVideoJsonBodySchema)),
     validator('form', Schema.toStandardSchemaV1(CreateVideoMultipartBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/characters',
@@ -185,7 +185,7 @@ export const videosHandler = new Hono()
       deprecated: true,
     }),
     validator('form', Schema.toStandardSchemaV1(CreateVideoCharacterBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/characters/:character_id',
@@ -232,7 +232,7 @@ export const videosHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/edits',
@@ -285,7 +285,7 @@ export const videosHandler = new Hono()
     }),
     validator('json', Schema.toStandardSchemaV1(CreateVideoEditJsonBodySchema)),
     validator('form', Schema.toStandardSchemaV1(CreateVideoEditMultipartBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/extensions',
@@ -337,7 +337,7 @@ export const videosHandler = new Hono()
     }),
     validator('json', Schema.toStandardSchemaV1(CreateVideoExtendJsonBodySchema)),
     validator('form', Schema.toStandardSchemaV1(CreateVideoExtendMultipartBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/:video_id',
@@ -382,7 +382,7 @@ export const videosHandler = new Hono()
         Schema.Struct({ video_id: Schema.String.annotate({ jsonSchemaExamples: ['video_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/videos/:video_id',
@@ -435,7 +435,7 @@ export const videosHandler = new Hono()
         Schema.Struct({ video_id: Schema.String.annotate({ jsonSchemaExamples: ['video_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/:video_id/content',
@@ -498,7 +498,7 @@ export const videosHandler = new Hono()
         Schema.Struct({ variant: Schema.optional(VideoContentVariantSchema) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/:video_id/remix',
@@ -556,5 +556,5 @@ export const videosHandler = new Hono()
     ),
     validator('json', Schema.toStandardSchemaV1(CreateVideoRemixBodySchema)),
     validator('form', Schema.toStandardSchemaV1(CreateVideoRemixBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

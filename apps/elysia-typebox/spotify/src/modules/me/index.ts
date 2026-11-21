@@ -136,7 +136,7 @@ export const me = new Elysia()
     TrackObject: TrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/me/audiobooks', ({ query }) => {}, {
+  .get('/me/audiobooks', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getUsersSavedAudiobooksQuery,
     response: {
       200: 'PagingSavedAudiobookObject',
@@ -153,7 +153,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .put('/me/audiobooks', ({ query }) => {}, {
+  .put('/me/audiobooks', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.saveAudiobooksUserQuery,
     response: {
       200: t.Void(),
@@ -170,7 +170,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .delete('/me/audiobooks', ({ query }) => {}, {
+  .delete('/me/audiobooks', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.removeAudiobooksUserQuery,
     response: {
       200: t.Void(),
@@ -187,7 +187,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .get('/me/audiobooks/contains', ({ query }) => {}, {
+  .get('/me/audiobooks/contains', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.checkUsersSavedAudiobooksQuery,
     response: {
       200: MeModel.checkUsersSavedAudiobooksResponse200,
@@ -204,7 +204,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .get('/me', () => {}, {
+  .get('/me', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'PrivateUserObject',
       401: MeModel.getCurrentUsersProfileResponse401,
@@ -220,7 +220,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-read-private', 'user-read-email'] }],
     },
   })
-  .get('/me/playlists', ({ query }) => {}, {
+  .get('/me/playlists', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getAListOfCurrentUsersPlaylistsQuery,
     response: {
       200: 'PagingPlaylistObject',
@@ -236,7 +236,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['playlist-read-private'] }],
     },
   })
-  .post('/me/playlists', ({ body }) => {}, {
+  .post('/me/playlists', ({ body }) => { throw new Error('Not implemented') }, {
     body: MeModel.createPlaylistBody,
     response: {
       201: 'PlaylistObject',
@@ -253,7 +253,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['playlist-modify-public', 'playlist-modify-private'] }],
     },
   })
-  .put('/me/library', ({ query }) => {}, {
+  .put('/me/library', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.saveLibraryItemsQuery,
     response: {
       200: t.Void(),
@@ -273,7 +273,7 @@ export const me = new Elysia()
       ],
     },
   })
-  .delete('/me/library', ({ query }) => {}, {
+  .delete('/me/library', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.removeLibraryItemsQuery,
     response: {
       200: t.Void(),
@@ -293,7 +293,7 @@ export const me = new Elysia()
       ],
     },
   })
-  .get('/me/library/contains', ({ query }) => {}, {
+  .get('/me/library/contains', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.checkLibraryContainsQuery,
     response: {
       200: MeModel.checkLibraryContainsResponse200,
@@ -311,7 +311,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read', 'user-follow-read', 'playlist-read-private'] }],
     },
   })
-  .get('/me/albums', ({ query }) => {}, {
+  .get('/me/albums', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getUsersSavedAlbumsQuery,
     response: {
       200: 'PagingSavedAlbumObject',
@@ -328,7 +328,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .put('/me/albums', ({ query, body }) => {}, {
+  .put('/me/albums', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.saveAlbumsUserQuery,
     body: MeModel.saveAlbumsUserBody,
     response: {
@@ -346,7 +346,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .delete('/me/albums', ({ query, body }) => {}, {
+  .delete('/me/albums', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.removeAlbumsUserQuery,
     body: MeModel.removeAlbumsUserBody,
     response: {
@@ -364,7 +364,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .get('/me/albums/contains', ({ query }) => {}, {
+  .get('/me/albums/contains', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.checkUsersSavedAlbumsQuery,
     response: {
       200: MeModel.checkUsersSavedAlbumsResponse200,
@@ -381,7 +381,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .get('/me/tracks', ({ query }) => {}, {
+  .get('/me/tracks', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getUsersSavedTracksQuery,
     response: {
       200: 'PagingSavedTrackObject',
@@ -398,7 +398,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .put('/me/tracks', ({ body }) => {}, {
+  .put('/me/tracks', ({ body }) => { throw new Error('Not implemented') }, {
     body: MeModel.saveTracksUserBody,
     response: {
       200: t.Void(),
@@ -415,7 +415,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .delete('/me/tracks', ({ query, body }) => {}, {
+  .delete('/me/tracks', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.removeTracksUserQuery,
     body: MeModel.removeTracksUserBody,
     response: {
@@ -433,7 +433,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .get('/me/tracks/contains', ({ query }) => {}, {
+  .get('/me/tracks/contains', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.checkUsersSavedTracksQuery,
     response: {
       200: MeModel.checkUsersSavedTracksResponse200,
@@ -450,7 +450,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .get('/me/episodes', ({ query }) => {}, {
+  .get('/me/episodes', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getUsersSavedEpisodesQuery,
     response: {
       200: 'PagingSavedEpisodeObject',
@@ -466,7 +466,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read', 'user-read-playback-position'] }],
     },
   })
-  .put('/me/episodes', ({ query, body }) => {}, {
+  .put('/me/episodes', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.saveEpisodesUserQuery,
     body: MeModel.saveEpisodesUserBody,
     response: {
@@ -484,7 +484,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .delete('/me/episodes', ({ query, body }) => {}, {
+  .delete('/me/episodes', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.removeEpisodesUserQuery,
     body: MeModel.removeEpisodesUserBody,
     response: {
@@ -502,7 +502,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .get('/me/episodes/contains', ({ query }) => {}, {
+  .get('/me/episodes/contains', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.checkUsersSavedEpisodesQuery,
     response: {
       200: MeModel.checkUsersSavedEpisodesResponse200,
@@ -519,7 +519,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .get('/me/shows', ({ query }) => {}, {
+  .get('/me/shows', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getUsersSavedShowsQuery,
     response: {
       200: 'PagingSavedShowObject',
@@ -536,7 +536,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .put('/me/shows', ({ query, body }) => {}, {
+  .put('/me/shows', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.saveShowsUserQuery,
     body: MeModel.saveShowsUserBody,
     response: {
@@ -554,7 +554,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .delete('/me/shows', ({ query, body }) => {}, {
+  .delete('/me/shows', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.removeShowsUserQuery,
     body: MeModel.removeShowsUserBody,
     response: {
@@ -572,7 +572,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-modify'] }],
     },
   })
-  .get('/me/shows/contains', ({ query }) => {}, {
+  .get('/me/shows/contains', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.checkUsersSavedShowsQuery,
     response: {
       200: MeModel.checkUsersSavedShowsResponse200,
@@ -589,7 +589,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-library-read'] }],
     },
   })
-  .get('/me/following', ({ query }) => {}, {
+  .get('/me/following', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getFollowedQuery,
     response: {
       200: MeModel.getFollowedResponse200,
@@ -605,7 +605,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-follow-read'] }],
     },
   })
-  .put('/me/following', ({ query, body }) => {}, {
+  .put('/me/following', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.followArtistsUsersQuery,
     body: MeModel.followArtistsUsersBody,
     response: {
@@ -623,7 +623,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-follow-modify'] }],
     },
   })
-  .delete('/me/following', ({ query, body }) => {}, {
+  .delete('/me/following', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.unfollowArtistsUsersQuery,
     body: MeModel.unfollowArtistsUsersBody,
     response: {
@@ -641,7 +641,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-follow-modify'] }],
     },
   })
-  .get('/me/following/contains', ({ query }) => {}, {
+  .get('/me/following/contains', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.checkCurrentUserFollowsQuery,
     response: {
       200: MeModel.checkCurrentUserFollowsResponse200,
@@ -658,7 +658,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-follow-read'] }],
     },
   })
-  .get('/me/player', ({ query }) => {}, {
+  .get('/me/player', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getInformationAboutTheUsersCurrentPlaybackQuery,
     response: {
       200: 'CurrentlyPlayingContextObject',
@@ -676,7 +676,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-read-playback-state'] }],
     },
   })
-  .put('/me/player', ({ body }) => {}, {
+  .put('/me/player', ({ body }) => { throw new Error('Not implemented') }, {
     body: MeModel.transferAUsersPlaybackBody,
     response: {
       204: t.Void(),
@@ -693,7 +693,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .get('/me/player/devices', () => {}, {
+  .get('/me/player/devices', () => { throw new Error('Not implemented') }, {
     response: {
       200: MeModel.getAUsersAvailableDevicesResponse200,
       401: MeModel.getAUsersAvailableDevicesResponse401,
@@ -709,7 +709,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-read-playback-state'] }],
     },
   })
-  .get('/me/player/currently-playing', ({ query }) => {}, {
+  .get('/me/player/currently-playing', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getTheUsersCurrentlyPlayingTrackQuery,
     response: {
       200: 'CurrentlyPlayingObject',
@@ -725,7 +725,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-read-currently-playing'] }],
     },
   })
-  .put('/me/player/play', ({ query, body }) => {}, {
+  .put('/me/player/play', ({ query, body }) => { throw new Error('Not implemented') }, {
     query: MeModel.startAUsersPlaybackQuery,
     body: MeModel.startAUsersPlaybackBody,
     response: {
@@ -743,7 +743,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .put('/me/player/pause', ({ query }) => {}, {
+  .put('/me/player/pause', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.pauseAUsersPlaybackQuery,
     response: {
       204: t.Void(),
@@ -760,7 +760,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .post('/me/player/next', ({ query }) => {}, {
+  .post('/me/player/next', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.skipUsersPlaybackToNextTrackQuery,
     response: {
       204: t.Void(),
@@ -777,7 +777,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .post('/me/player/previous', ({ query }) => {}, {
+  .post('/me/player/previous', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.skipUsersPlaybackToPreviousTrackQuery,
     response: {
       204: t.Void(),
@@ -794,7 +794,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .put('/me/player/seek', ({ query }) => {}, {
+  .put('/me/player/seek', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.seekToPositionInCurrentlyPlayingTrackQuery,
     response: {
       204: t.Void(),
@@ -811,7 +811,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .put('/me/player/repeat', ({ query }) => {}, {
+  .put('/me/player/repeat', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.setRepeatModeOnUsersPlaybackQuery,
     response: {
       204: t.Void(),
@@ -828,7 +828,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .put('/me/player/volume', ({ query }) => {}, {
+  .put('/me/player/volume', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.setVolumeForUsersPlaybackQuery,
     response: {
       204: t.Void(),
@@ -845,7 +845,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .put('/me/player/shuffle', ({ query }) => {}, {
+  .put('/me/player/shuffle', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.toggleShuffleForUsersPlaybackQuery,
     response: {
       204: t.Void(),
@@ -862,7 +862,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .get('/me/player/recently-played', ({ query }) => {}, {
+  .get('/me/player/recently-played', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getRecentlyPlayedQuery,
     response: {
       200: 'CursorPagingPlayHistoryObject',
@@ -879,7 +879,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-read-recently-played'] }],
     },
   })
-  .get('/me/player/queue', () => {}, {
+  .get('/me/player/queue', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'QueueObject',
       401: MeModel.getQueueResponse401,
@@ -894,7 +894,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-read-currently-playing', 'user-read-playback-state'] }],
     },
   })
-  .post('/me/player/queue', ({ query }) => {}, {
+  .post('/me/player/queue', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.addToQueueQuery,
     response: {
       204: t.Void(),
@@ -911,7 +911,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-modify-playback-state'] }],
     },
   })
-  .get('/me/top/artists', ({ query }) => {}, {
+  .get('/me/top/artists', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getUsersTopArtistsQuery,
     response: {
       200: 'PagingArtistObject',
@@ -927,7 +927,7 @@ export const me = new Elysia()
       security: [{ oauth_2_0: ['user-top-read'] }],
     },
   })
-  .get('/me/top/tracks', ({ query }) => {}, {
+  .get('/me/top/tracks', ({ query }) => { throw new Error('Not implemented') }, {
     query: MeModel.getUsersTopTracksQuery,
     response: {
       200: 'PagingTrackObject',

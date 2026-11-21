@@ -22,7 +22,7 @@ export const embeddings = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/embeddings', ({ body }) => {}, {
+  .post('/embeddings', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateEmbeddingRequest',
     response: {
       200: 'CreateEmbeddingResponse',

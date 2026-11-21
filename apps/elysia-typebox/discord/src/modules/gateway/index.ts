@@ -22,11 +22,11 @@ export const gateway = new Elysia()
     InnerErrors: InnerErrorsSchema,
     RatelimitedResponse: RatelimitedResponseSchema,
   })
-  .get('/gateway', () => {}, {
+  .get('/gateway', () => { throw new Error('Not implemented') }, {
     response: { 200: 'GatewayResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_gateway', security: [{}, { BotToken: [] }] },
   })
-  .get('/gateway/bot', () => {}, {
+  .get('/gateway/bot', () => { throw new Error('Not implemented') }, {
     response: { 200: 'GatewayBotResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_bot_gateway', security: [{ BotToken: [] }] },
   })

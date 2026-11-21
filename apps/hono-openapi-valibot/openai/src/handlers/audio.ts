@@ -96,7 +96,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('json', CreateSpeechRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/transcriptions',
@@ -400,7 +400,7 @@ export const audioHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/translations',
@@ -517,7 +517,7 @@ export const audioHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents',
@@ -551,7 +551,7 @@ export const audioHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents',
@@ -576,7 +576,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('form', CreateVoiceConsentRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents/:consent_id',
@@ -601,7 +601,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', v.object({ consent_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents/:consent_id',
@@ -627,7 +627,7 @@ export const audioHandler = new Hono()
     }),
     validator('param', v.object({ consent_id: v.string() })),
     validator('json', UpdateVoiceConsentRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voice_consents/:consent_id',
@@ -652,7 +652,7 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', v.object({ consent_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voices',
@@ -684,7 +684,7 @@ export const audioHandler = new Hono()
     }),
     validator('json', CreateVoicePromptRequestSchema),
     validator('form', CreateVoiceRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voices/:voice_id',
@@ -711,5 +711,5 @@ export const audioHandler = new Hono()
       },
     }),
     validator('param', v.object({ voice_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

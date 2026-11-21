@@ -11,4 +11,4 @@ export const postEmbeddings = os
   })
   .input(CreateEmbeddingRequestSchema)
   .output(CreateEmbeddingResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

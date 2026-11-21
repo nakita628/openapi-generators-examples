@@ -786,44 +786,44 @@ export const realtimeHandler = new Hono()
         'Parameters required to initiate a realtime call and receive the SDP answer\nneeded to complete a WebRTC peer connection. Provide an SDP offer generated\nby your client and optionally configure the session that will answer the call.',
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/accept',
     sValidator('param', type({ call_id: 'string' })),
     sValidator('json', RealtimeSessionCreateRequestGASchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/hangup',
     sValidator('param', type({ call_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/refer',
     sValidator('param', type({ call_id: 'string' })),
     sValidator('json', RealtimeCallReferRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/calls/:call_id/reject',
     sValidator('param', type({ call_id: 'string' })),
     sValidator('json', RealtimeCallRejectRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/client_secrets',
     sValidator('json', RealtimeCreateClientSecretRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/realtime/sessions', sValidator('json', RealtimeSessionCreateRequestSchema), (c) => {})
+  .post('/realtime/sessions', sValidator('json', RealtimeSessionCreateRequestSchema), (c) => { throw new Error('Not implemented') })
   .post(
     '/realtime/transcription_sessions',
     sValidator('json', RealtimeTranscriptionSessionCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/realtime/translations/client_secrets',
     sValidator('json', RealtimeTranslationClientSecretCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

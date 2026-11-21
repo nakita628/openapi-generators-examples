@@ -72,7 +72,7 @@ export const vectorStores = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/vector_stores', ({ query }) => {}, {
+  .get('/vector_stores', ({ query }) => { throw new Error('Not implemented') }, {
     query: VectorStoresModel.listVectorStoresQuery,
     response: { 200: 'ListVectorStoresResponse', 429: 'ErrorResponse', 503: 'ErrorResponse' },
     detail: {
@@ -82,7 +82,7 @@ export const vectorStores = new Elysia()
       operationId: 'listVectorStores',
     },
   })
-  .post('/vector_stores', ({ body }) => {}, {
+  .post('/vector_stores', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVectorStoreRequest',
     response: {
       200: 'VectorStoreObject',
@@ -97,7 +97,7 @@ export const vectorStores = new Elysia()
       operationId: 'createVectorStore',
     },
   })
-  .get('/vector_stores/:vector_store_id', ({ params }) => {}, {
+  .get('/vector_stores/:vector_store_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.getVectorStoreParams,
     response: { 200: 'VectorStoreObject', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -107,7 +107,7 @@ export const vectorStores = new Elysia()
       operationId: 'getVectorStore',
     },
   })
-  .post('/vector_stores/:vector_store_id', ({ params, body }) => {}, {
+  .post('/vector_stores/:vector_store_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.modifyVectorStoreParams,
     body: 'UpdateVectorStoreRequest',
     response: {
@@ -124,7 +124,7 @@ export const vectorStores = new Elysia()
       operationId: 'modifyVectorStore',
     },
   })
-  .delete('/vector_stores/:vector_store_id', ({ params }) => {}, {
+  .delete('/vector_stores/:vector_store_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.deleteVectorStoreParams,
     response: {
       200: 'DeleteVectorStoreResponse',
@@ -139,7 +139,7 @@ export const vectorStores = new Elysia()
       operationId: 'deleteVectorStore',
     },
   })
-  .post('/vector_stores/:vector_store_id/file_batches', ({ params, body }) => {}, {
+  .post('/vector_stores/:vector_store_id/file_batches', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.createVectorStoreFileBatchParams,
     body: 'CreateVectorStoreFileBatchRequest',
     response: {
@@ -157,7 +157,7 @@ export const vectorStores = new Elysia()
       operationId: 'createVectorStoreFileBatch',
     },
   })
-  .get('/vector_stores/:vector_store_id/file_batches/:batch_id', ({ params }) => {}, {
+  .get('/vector_stores/:vector_store_id/file_batches/:batch_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.getVectorStoreFileBatchParams,
     response: {
       200: 'VectorStoreFileBatchObject',
@@ -172,7 +172,7 @@ export const vectorStores = new Elysia()
       operationId: 'getVectorStoreFileBatch',
     },
   })
-  .post('/vector_stores/:vector_store_id/file_batches/:batch_id/cancel', ({ params }) => {}, {
+  .post('/vector_stores/:vector_store_id/file_batches/:batch_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.cancelVectorStoreFileBatchParams,
     response: {
       200: 'VectorStoreFileBatchObject',
@@ -189,7 +189,7 @@ export const vectorStores = new Elysia()
       operationId: 'cancelVectorStoreFileBatch',
     },
   })
-  .get('/vector_stores/:vector_store_id/file_batches/:batch_id/files', ({ params, query }) => {}, {
+  .get('/vector_stores/:vector_store_id/file_batches/:batch_id/files', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.listFilesInVectorStoreBatchParams,
     query: VectorStoresModel.listFilesInVectorStoreBatchQuery,
     response: {
@@ -205,7 +205,7 @@ export const vectorStores = new Elysia()
       operationId: 'listFilesInVectorStoreBatch',
     },
   })
-  .get('/vector_stores/:vector_store_id/files', ({ params, query }) => {}, {
+  .get('/vector_stores/:vector_store_id/files', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.listVectorStoreFilesParams,
     query: VectorStoresModel.listVectorStoreFilesQuery,
     response: {
@@ -221,7 +221,7 @@ export const vectorStores = new Elysia()
       operationId: 'listVectorStoreFiles',
     },
   })
-  .post('/vector_stores/:vector_store_id/files', ({ params, body }) => {}, {
+  .post('/vector_stores/:vector_store_id/files', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.createVectorStoreFileParams,
     body: 'CreateVectorStoreFileRequest',
     response: {
@@ -240,7 +240,7 @@ export const vectorStores = new Elysia()
       operationId: 'createVectorStoreFile',
     },
   })
-  .get('/vector_stores/:vector_store_id/files/:file_id', ({ params }) => {}, {
+  .get('/vector_stores/:vector_store_id/files/:file_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.getVectorStoreFileParams,
     response: {
       200: 'VectorStoreFileObject',
@@ -255,7 +255,7 @@ export const vectorStores = new Elysia()
       operationId: 'getVectorStoreFile',
     },
   })
-  .post('/vector_stores/:vector_store_id/files/:file_id', ({ params, body }) => {}, {
+  .post('/vector_stores/:vector_store_id/files/:file_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.updateVectorStoreFileAttributesParams,
     body: 'UpdateVectorStoreFileAttributesRequest',
     response: {
@@ -273,7 +273,7 @@ export const vectorStores = new Elysia()
       operationId: 'updateVectorStoreFileAttributes',
     },
   })
-  .delete('/vector_stores/:vector_store_id/files/:file_id', ({ params }) => {}, {
+  .delete('/vector_stores/:vector_store_id/files/:file_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.deleteVectorStoreFileParams,
     response: {
       200: 'DeleteVectorStoreFileResponse',
@@ -291,7 +291,7 @@ export const vectorStores = new Elysia()
       operationId: 'deleteVectorStoreFile',
     },
   })
-  .get('/vector_stores/:vector_store_id/files/:file_id/content', ({ params }) => {}, {
+  .get('/vector_stores/:vector_store_id/files/:file_id/content', ({ params }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.retrieveVectorStoreFileContentParams,
     response: {
       200: 'VectorStoreFileContentResponse',
@@ -307,7 +307,7 @@ export const vectorStores = new Elysia()
       operationId: 'retrieveVectorStoreFileContent',
     },
   })
-  .post('/vector_stores/:vector_store_id/search', ({ params, body }) => {}, {
+  .post('/vector_stores/:vector_store_id/search', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VectorStoresModel.searchVectorStoreParams,
     body: 'VectorStoreSearchRequest',
     response: {

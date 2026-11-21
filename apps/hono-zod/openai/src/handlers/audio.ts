@@ -12,7 +12,7 @@ import {
 } from '../components'
 
 export const audioHandler = new Hono()
-  .post('/audio/speech', sValidator('json', CreateSpeechRequestSchema), (c) => {})
+  .post('/audio/speech', sValidator('json', CreateSpeechRequestSchema), (c) => { throw new Error('Not implemented') })
   .post(
     '/audio/transcriptions',
     sValidator(
@@ -197,7 +197,7 @@ export const audioHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/translations',
@@ -242,7 +242,7 @@ export const audioHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio/voice_consents',
@@ -253,24 +253,24 @@ export const audioHandler = new Hono()
         limit: z.coerce.number().int().default(20).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/audio/voice_consents', sValidator('form', CreateVoiceConsentRequestSchema), (c) => {})
+  .post('/audio/voice_consents', sValidator('form', CreateVoiceConsentRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/audio/voice_consents/:consent_id',
     sValidator('param', z.object({ consent_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voice_consents/:consent_id',
     sValidator('param', z.object({ consent_id: z.string() })),
     sValidator('json', UpdateVoiceConsentRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voice_consents/:consent_id',
     sValidator('param', z.object({ consent_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/audio/voices',
@@ -279,10 +279,10 @@ export const audioHandler = new Hono()
       'form',
       z.union([CreateVoiceFromConsentRequestSchema, CreateVoicePromptRequestSchema]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/audio/voices/:voice_id',
     sValidator('param', z.object({ voice_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

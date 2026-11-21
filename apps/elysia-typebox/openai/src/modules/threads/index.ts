@@ -132,7 +132,7 @@ export const threads = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/threads', ({ body }) => {}, {
+  .post('/threads', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateThreadRequest',
     response: { 200: 'ThreadObject', 429: 'ErrorResponse' },
     detail: {
@@ -142,7 +142,7 @@ export const threads = new Elysia()
       operationId: 'createThread',
     },
   })
-  .post('/threads/runs', ({ body }) => {}, {
+  .post('/threads/runs', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateThreadAndRunRequest',
     response: { 200: 'RunObject', 429: 'ErrorResponse' },
     detail: {
@@ -152,7 +152,7 @@ export const threads = new Elysia()
       operationId: 'createThreadAndRun',
     },
   })
-  .get('/threads/:thread_id', ({ params }) => {}, {
+  .get('/threads/:thread_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.getThreadParams,
     response: { 200: 'ThreadObject', 429: 'ErrorResponse' },
     detail: {
@@ -162,7 +162,7 @@ export const threads = new Elysia()
       operationId: 'getThread',
     },
   })
-  .post('/threads/:thread_id', ({ params, body }) => {}, {
+  .post('/threads/:thread_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.modifyThreadParams,
     body: 'ModifyThreadRequest',
     response: { 200: 'ThreadObject', 429: 'ErrorResponse' },
@@ -173,7 +173,7 @@ export const threads = new Elysia()
       operationId: 'modifyThread',
     },
   })
-  .delete('/threads/:thread_id', ({ params }) => {}, {
+  .delete('/threads/:thread_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.deleteThreadParams,
     response: { 200: 'DeleteThreadResponse', 429: 'ErrorResponse' },
     detail: {
@@ -183,7 +183,7 @@ export const threads = new Elysia()
       operationId: 'deleteThread',
     },
   })
-  .get('/threads/:thread_id/messages', ({ params, query }) => {}, {
+  .get('/threads/:thread_id/messages', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.listMessagesParams,
     query: ThreadsModel.listMessagesQuery,
     response: { 200: 'ListMessagesResponse', 429: 'ErrorResponse' },
@@ -194,7 +194,7 @@ export const threads = new Elysia()
       operationId: 'listMessages',
     },
   })
-  .post('/threads/:thread_id/messages', ({ params, body }) => {}, {
+  .post('/threads/:thread_id/messages', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.createMessageParams,
     body: 'CreateMessageRequest',
     response: { 200: 'MessageObject', 429: 'ErrorResponse' },
@@ -205,7 +205,7 @@ export const threads = new Elysia()
       operationId: 'createMessage',
     },
   })
-  .get('/threads/:thread_id/messages/:message_id', ({ params }) => {}, {
+  .get('/threads/:thread_id/messages/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.getMessageParams,
     response: { 200: 'MessageObject', 429: 'ErrorResponse' },
     detail: {
@@ -215,7 +215,7 @@ export const threads = new Elysia()
       operationId: 'getMessage',
     },
   })
-  .post('/threads/:thread_id/messages/:message_id', ({ params, body }) => {}, {
+  .post('/threads/:thread_id/messages/:message_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.modifyMessageParams,
     body: 'ModifyMessageRequest',
     response: { 200: 'MessageObject', 429: 'ErrorResponse' },
@@ -226,7 +226,7 @@ export const threads = new Elysia()
       operationId: 'modifyMessage',
     },
   })
-  .delete('/threads/:thread_id/messages/:message_id', ({ params }) => {}, {
+  .delete('/threads/:thread_id/messages/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.deleteMessageParams,
     response: { 200: 'DeleteMessageResponse', 429: 'ErrorResponse' },
     detail: {
@@ -236,7 +236,7 @@ export const threads = new Elysia()
       operationId: 'deleteMessage',
     },
   })
-  .get('/threads/:thread_id/runs', ({ params, query }) => {}, {
+  .get('/threads/:thread_id/runs', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.listRunsParams,
     query: ThreadsModel.listRunsQuery,
     response: { 200: 'ListRunsResponse', 429: 'ErrorResponse' },
@@ -247,7 +247,7 @@ export const threads = new Elysia()
       operationId: 'listRuns',
     },
   })
-  .post('/threads/:thread_id/runs', ({ params, query, body }) => {}, {
+  .post('/threads/:thread_id/runs', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.createRunParams,
     query: ThreadsModel.createRunQuery,
     body: 'CreateRunRequest',
@@ -259,7 +259,7 @@ export const threads = new Elysia()
       operationId: 'createRun',
     },
   })
-  .get('/threads/:thread_id/runs/:run_id', ({ params }) => {}, {
+  .get('/threads/:thread_id/runs/:run_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.getRunParams,
     response: { 200: 'RunObject', 429: 'ErrorResponse' },
     detail: {
@@ -269,7 +269,7 @@ export const threads = new Elysia()
       operationId: 'getRun',
     },
   })
-  .post('/threads/:thread_id/runs/:run_id', ({ params, body }) => {}, {
+  .post('/threads/:thread_id/runs/:run_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.modifyRunParams,
     body: 'ModifyRunRequest',
     response: { 200: 'RunObject', 429: 'ErrorResponse' },
@@ -280,7 +280,7 @@ export const threads = new Elysia()
       operationId: 'modifyRun',
     },
   })
-  .post('/threads/:thread_id/runs/:run_id/cancel', ({ params }) => {}, {
+  .post('/threads/:thread_id/runs/:run_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.cancelRunParams,
     response: { 200: 'RunObject', 429: 'ErrorResponse' },
     detail: {
@@ -290,7 +290,7 @@ export const threads = new Elysia()
       operationId: 'cancelRun',
     },
   })
-  .get('/threads/:thread_id/runs/:run_id/steps', ({ params, query }) => {}, {
+  .get('/threads/:thread_id/runs/:run_id/steps', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.listRunStepsParams,
     query: ThreadsModel.listRunStepsQuery,
     response: { 200: 'ListRunStepsResponse', 429: 'ErrorResponse' },
@@ -301,7 +301,7 @@ export const threads = new Elysia()
       operationId: 'listRunSteps',
     },
   })
-  .get('/threads/:thread_id/runs/:run_id/steps/:step_id', ({ params, query }) => {}, {
+  .get('/threads/:thread_id/runs/:run_id/steps/:step_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.getRunStepParams,
     query: ThreadsModel.getRunStepQuery,
     response: { 200: 'RunStepObject', 429: 'ErrorResponse' },
@@ -312,7 +312,7 @@ export const threads = new Elysia()
       operationId: 'getRunStep',
     },
   })
-  .post('/threads/:thread_id/runs/:run_id/submit_tool_outputs', ({ params, body }) => {}, {
+  .post('/threads/:thread_id/runs/:run_id/submit_tool_outputs', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ThreadsModel.submitToolOuputsToRunParams,
     body: 'SubmitToolOutputsRunRequest',
     response: { 200: 'RunObject', 429: 'ErrorResponse' },

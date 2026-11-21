@@ -43,7 +43,7 @@ export const containersHandler = new Hono()
         name: v.optional(v.string()),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/containers',
@@ -64,7 +64,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('json', CreateContainerBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id',
@@ -85,7 +85,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', v.object({ container_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id',
@@ -116,7 +116,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', v.object({ container_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files',
@@ -149,7 +149,7 @@ export const containersHandler = new Hono()
         after: v.optional(v.string()),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/containers/:container_id/files',
@@ -177,7 +177,7 @@ export const containersHandler = new Hono()
     validator('param', v.object({ container_id: v.string() })),
     validator('json', CreateContainerFileBodySchema),
     validator('form', CreateContainerFileBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id',
@@ -199,7 +199,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', v.object({ container_id: v.string(), file_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id/files/:file_id',
@@ -231,7 +231,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', v.object({ container_id: v.string(), file_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id/content',
@@ -250,5 +250,5 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', v.object({ container_id: v.string(), file_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

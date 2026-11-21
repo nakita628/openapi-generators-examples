@@ -38,7 +38,7 @@ export const browse = new Elysia()
     SimplifiedArtistObject: SimplifiedArtistObjectSchema,
     SimplifiedPlaylistObject: SimplifiedPlaylistObjectSchema,
   })
-  .get('/browse/featured-playlists', ({ query }) => {}, {
+  .get('/browse/featured-playlists', ({ query }) => { throw new Error('Not implemented') }, {
     query: BrowseModel.getFeaturedPlaylistsQuery,
     response: {
       200: 'PagingFeaturedPlaylistObject',
@@ -55,7 +55,7 @@ export const browse = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/browse/categories', ({ query }) => {}, {
+  .get('/browse/categories', ({ query }) => { throw new Error('Not implemented') }, {
     query: BrowseModel.getCategoriesQuery,
     response: {
       200: BrowseModel.getCategoriesResponse200,
@@ -72,7 +72,7 @@ export const browse = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/browse/categories/:category_id', ({ params, query }) => {}, {
+  .get('/browse/categories/:category_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: BrowseModel.getACategoryParams,
     query: BrowseModel.getACategoryQuery,
     response: {
@@ -90,7 +90,7 @@ export const browse = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/browse/categories/:category_id/playlists', ({ params, query }) => {}, {
+  .get('/browse/categories/:category_id/playlists', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: BrowseModel.getACategoriesPlaylistsParams,
     query: BrowseModel.getACategoriesPlaylistsQuery,
     response: {
@@ -107,7 +107,7 @@ export const browse = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/browse/new-releases', ({ query }) => {}, {
+  .get('/browse/new-releases', ({ query }) => { throw new Error('Not implemented') }, {
     query: BrowseModel.getNewReleasesQuery,
     response: {
       200: BrowseModel.getNewReleasesResponse200,

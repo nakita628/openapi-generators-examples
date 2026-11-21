@@ -18,7 +18,7 @@ import {
 export const getUsersMe = os
   .route({ method: 'GET', path: '/users/@me', successDescription: '200 response for get_my_user' })
   .output(UserPIIResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchUsersMe = os
   .route({
@@ -28,7 +28,7 @@ export const patchUsersMe = os
   })
   .input(BotAccountPatchRequestSchema)
   .output(UserPIIResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUsersMeApplicationsApplicationIdEntitlements = os
   .route({
@@ -65,7 +65,7 @@ export const getUsersMeApplicationsApplicationIdEntitlements = os
     }),
   )
   .output(z.array(EntitlementResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUsersMeApplicationsApplicationIdRoleConnection = os
   .route({
@@ -75,7 +75,7 @@ export const getUsersMeApplicationsApplicationIdRoleConnection = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
   .output(ApplicationUserRoleConnectionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putUsersMeApplicationsApplicationIdRoleConnection = os
   .route({
@@ -92,7 +92,7 @@ export const putUsersMeApplicationsApplicationIdRoleConnection = os
     }),
   )
   .output(ApplicationUserRoleConnectionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteUsersMeApplicationsApplicationIdRoleConnection = os
   .route({
@@ -102,7 +102,7 @@ export const deleteUsersMeApplicationsApplicationIdRoleConnection = os
     successDescription: '204 response for delete_application_user_role_connection',
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postUsersMeChannels = os
   .route({
@@ -112,7 +112,7 @@ export const postUsersMeChannels = os
   })
   .input(CreatePrivateChannelRequestSchema)
   .output(z.xor([PrivateChannelResponseSchema, PrivateGroupChannelResponseSchema]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUsersMeConnections = os
   .route({
@@ -121,7 +121,7 @@ export const getUsersMeConnections = os
     successDescription: '200 response for list_my_connections',
   })
   .output(z.array(ConnectedAccountResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUsersMeGuilds = os
   .route({
@@ -139,7 +139,7 @@ export const getUsersMeGuilds = os
     }),
   )
   .output(z.array(MyGuildResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteUsersMeGuildsGuildId = os
   .route({
@@ -149,7 +149,7 @@ export const deleteUsersMeGuildsGuildId = os
     successDescription: '204 response for leave_guild',
   })
   .input(z.object({ guild_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUsersMeGuildsGuildIdMember = os
   .route({
@@ -159,7 +159,7 @@ export const getUsersMeGuildsGuildIdMember = os
   })
   .input(z.object({ guild_id: SnowflakeTypeSchema }))
   .output(PrivateGuildMemberResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUsersUserId = os
   .route({
@@ -169,4 +169,4 @@ export const getUsersUserId = os
   })
   .input(z.object({ user_id: SnowflakeTypeSchema }))
   .output(UserResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

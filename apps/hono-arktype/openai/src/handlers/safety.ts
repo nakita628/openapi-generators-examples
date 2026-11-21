@@ -13,7 +13,7 @@ export const safetyHandler = new Hono()
           .describe('Safety case ID'),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/safety/alerts/:id',
@@ -25,5 +25,5 @@ export const safetyHandler = new Hono()
           .describe('Project safety alert ID'),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

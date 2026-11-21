@@ -605,6 +605,6 @@ export const recommendationsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/recommendations/available-genre-seeds', (c) => {})
+  .get('/recommendations/available-genre-seeds', (c) => { throw new Error('Not implemented') })

@@ -48,7 +48,7 @@ export const userHandler = new Hono()
           .describe('User Status'),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/user/createWithList',
@@ -69,7 +69,7 @@ export const userHandler = new Hono()
       },
     }),
     validator('json', type(UserSchema).array()),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/user/login',
@@ -101,7 +101,7 @@ export const userHandler = new Hono()
       },
     }),
     validator('query', type({ 'username?': 'string', 'password?': 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/user/logout',
@@ -115,7 +115,7 @@ export const userHandler = new Hono()
         default: { description: 'Unexpected error' },
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/user/:username',
@@ -138,7 +138,7 @@ export const userHandler = new Hono()
       },
     }),
     validator('param', type({ username: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/user/:username',
@@ -181,7 +181,7 @@ export const userHandler = new Hono()
           .describe('User Status'),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/user/:username',
@@ -198,5 +198,5 @@ export const userHandler = new Hono()
       },
     }),
     validator('param', type({ username: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

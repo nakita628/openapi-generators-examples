@@ -15,22 +15,22 @@ export const assistantsHandler = new Hono()
         before: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/assistants', sValidator('json', CreateAssistantRequestSchema), (c) => {})
+  .post('/assistants', sValidator('json', CreateAssistantRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/assistants/:assistant_id',
     sValidator('param', z.object({ assistant_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants/:assistant_id',
     sValidator('param', z.object({ assistant_id: z.string() })),
     sValidator('json', ModifyAssistantRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/assistants/:assistant_id',
     sValidator('param', z.object({ assistant_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

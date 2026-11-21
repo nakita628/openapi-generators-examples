@@ -28,9 +28,9 @@ export const userHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/user/createWithList', tbValidator('json', Type.Array(UserSchema)), (c) => {})
+  .post('/user/createWithList', tbValidator('json', Type.Array(UserSchema)), (c) => { throw new Error('Not implemented') })
   .get(
     '/user/login',
     tbValidator(
@@ -40,10 +40,10 @@ export const userHandler = new Hono()
         password: Type.Optional(Type.String()),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/user/logout', (c) => {})
-  .get('/user/:username', tbValidator('param', Type.Object({ username: Type.String() })), (c) => {})
+  .get('/user/logout', (c) => { throw new Error('Not implemented') })
+  .get('/user/:username', tbValidator('param', Type.Object({ username: Type.String() })), (c) => { throw new Error('Not implemented') })
   .put(
     '/user/:username',
     tbValidator('param', Type.Object({ username: Type.String() })),
@@ -69,10 +69,10 @@ export const userHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/user/:username',
     tbValidator('param', Type.Object({ username: Type.String() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

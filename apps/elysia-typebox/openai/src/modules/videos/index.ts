@@ -52,7 +52,7 @@ export const videos = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/videos', ({ query }) => {}, {
+  .get('/videos', ({ query }) => { throw new Error('Not implemented') }, {
     query: VideosModel.ListVideosQuery,
     response: { 200: 'VideoListResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -62,7 +62,7 @@ export const videos = new Elysia()
       operationId: 'ListVideos',
     },
   })
-  .post('/videos', ({ body }) => {}, {
+  .post('/videos', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVideoJsonBody',
     response: {
       200: 'VideoResource',
@@ -79,7 +79,7 @@ export const videos = new Elysia()
       operationId: 'createVideo',
     },
   })
-  .post('/videos/characters', ({ body }) => {}, {
+  .post('/videos/characters', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVideoCharacterBody',
     response: {
       200: 'VideoCharacterResource',
@@ -95,7 +95,7 @@ export const videos = new Elysia()
       operationId: 'CreateVideoCharacter',
     },
   })
-  .get('/videos/characters/:character_id', ({ params }) => {}, {
+  .get('/videos/characters/:character_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VideosModel.GetVideoCharacterParams,
     response: { 200: 'VideoCharacterResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -105,7 +105,7 @@ export const videos = new Elysia()
       operationId: 'GetVideoCharacter',
     },
   })
-  .post('/videos/edits', ({ body }) => {}, {
+  .post('/videos/edits', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVideoEditJsonBody',
     response: {
       200: 'VideoResource',
@@ -123,7 +123,7 @@ export const videos = new Elysia()
       operationId: 'CreateVideoEdit',
     },
   })
-  .post('/videos/extensions', ({ body }) => {}, {
+  .post('/videos/extensions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVideoExtendJsonBody',
     response: {
       200: 'VideoResource',
@@ -140,7 +140,7 @@ export const videos = new Elysia()
       operationId: 'CreateVideoExtend',
     },
   })
-  .get('/videos/:video_id', ({ params }) => {}, {
+  .get('/videos/:video_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VideosModel.GetVideoParams,
     response: { 200: 'VideoResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -150,7 +150,7 @@ export const videos = new Elysia()
       operationId: 'GetVideo',
     },
   })
-  .delete('/videos/:video_id', ({ params }) => {}, {
+  .delete('/videos/:video_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VideosModel.DeleteVideoParams,
     response: {
       200: 'DeletedVideoResource',
@@ -165,7 +165,7 @@ export const videos = new Elysia()
       operationId: 'DeleteVideo',
     },
   })
-  .get('/videos/:video_id/content', ({ params, query }) => {}, {
+  .get('/videos/:video_id/content', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: VideosModel.RetrieveVideoContentParams,
     query: VideosModel.RetrieveVideoContentQuery,
     response: {
@@ -182,7 +182,7 @@ export const videos = new Elysia()
       operationId: 'RetrieveVideoContent',
     },
   })
-  .post('/videos/:video_id/remix', ({ params, body }) => {}, {
+  .post('/videos/:video_id/remix', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VideosModel.CreateVideoRemixParams,
     body: 'CreateVideoRemixBody',
     response: {

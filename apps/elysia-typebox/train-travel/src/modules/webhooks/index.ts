@@ -8,7 +8,7 @@ export const webhooks = new Elysia()
     LinksPagination: LinksPaginationSchema,
     LinksSelf: LinksSelfSchema,
   })
-  .post('/webhooks/newBooking', ({ body }) => {}, {
+  .post('/webhooks/newBooking', ({ body }) => { throw new Error('Not implemented') }, {
     body: WebhooksModel.newBookingBody,
     response: { 200: t.Void() },
     detail: {

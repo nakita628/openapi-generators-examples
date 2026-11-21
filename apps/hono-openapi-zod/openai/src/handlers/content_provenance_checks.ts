@@ -40,5 +40,5 @@ export const contentProvenanceChecksHandler = new Hono().post(
     },
   }),
   validator('form', CreateContentProvenanceBodySchema),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

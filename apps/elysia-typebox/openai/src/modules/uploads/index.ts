@@ -30,7 +30,7 @@ export const uploads = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/uploads', ({ body }) => {}, {
+  .post('/uploads', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateUploadRequest',
     response: { 200: 'Upload', 400: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -41,7 +41,7 @@ export const uploads = new Elysia()
       operationId: 'createUpload',
     },
   })
-  .post('/uploads/:upload_id/cancel', ({ params }) => {}, {
+  .post('/uploads/:upload_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: UploadsModel.cancelUploadParams,
     response: {
       200: 'Upload',
@@ -58,7 +58,7 @@ export const uploads = new Elysia()
       operationId: 'cancelUpload',
     },
   })
-  .post('/uploads/:upload_id/complete', ({ params, body }) => {}, {
+  .post('/uploads/:upload_id/complete', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: UploadsModel.completeUploadParams,
     body: 'CompleteUploadRequest',
     response: {
@@ -77,7 +77,7 @@ export const uploads = new Elysia()
       operationId: 'completeUpload',
     },
   })
-  .post('/uploads/:upload_id/parts', ({ params, body }) => {}, {
+  .post('/uploads/:upload_id/parts', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: UploadsModel.addUploadPartParams,
     body: 'AddUploadPartRequest',
     response: {

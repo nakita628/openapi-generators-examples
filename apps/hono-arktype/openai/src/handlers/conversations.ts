@@ -27,7 +27,7 @@ export const conversationsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/conversations/:conversation_id/items',
@@ -51,7 +51,7 @@ export const conversationsHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/conversations/:conversation_id/items/:item_id',
@@ -65,27 +65,27 @@ export const conversationsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/conversations/:conversation_id/items/:item_id',
     sValidator('param', type({ conversation_id: 'string', item_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/conversations', sValidator('json', CreateConversationBodySchema), (c) => {})
+  .post('/conversations', sValidator('json', CreateConversationBodySchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/conversations/:conversation_id',
     sValidator('param', type({ conversation_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/conversations/:conversation_id',
     sValidator('param', type({ conversation_id: 'string' })),
     sValidator('json', UpdateConversationBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/conversations/:conversation_id',
     sValidator('param', type({ conversation_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

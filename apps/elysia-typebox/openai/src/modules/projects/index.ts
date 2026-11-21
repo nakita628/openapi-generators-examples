@@ -44,7 +44,7 @@ export const projects = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/projects/:project_id/groups/:group_id/roles', ({ params, query }) => {}, {
+  .get('/projects/:project_id/groups/:group_id/roles', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.listProjectGroupRoleAssignmentsParams,
     query: ProjectsModel.listProjectGroupRoleAssignmentsQuery,
     response: {
@@ -62,7 +62,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/projects/:project_id/groups/:group_id/roles', ({ params, body }) => {}, {
+  .post('/projects/:project_id/groups/:group_id/roles', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.assignProjectGroupRoleParams,
     body: 'PublicAssignOrganizationGroupRoleBody',
     response: {
@@ -80,7 +80,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/projects/:project_id/groups/:group_id/roles/:role_id', ({ params }) => {}, {
+  .get('/projects/:project_id/groups/:group_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.retrieveProjectGroupRoleParams,
     response: {
       200: 'AssignedRoleDetails',
@@ -97,7 +97,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/projects/:project_id/groups/:group_id/roles/:role_id', ({ params }) => {}, {
+  .delete('/projects/:project_id/groups/:group_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.unassignProjectGroupRoleParams,
     response: {
       200: 'DeletedRoleAssignmentResource',
@@ -114,7 +114,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/projects/:project_id/roles', ({ params, query }) => {}, {
+  .get('/projects/:project_id/roles', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.listProjectRolesParams,
     query: ProjectsModel.listProjectRolesQuery,
     response: {
@@ -132,7 +132,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/projects/:project_id/roles', ({ params, body }) => {}, {
+  .post('/projects/:project_id/roles', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.createProjectRoleParams,
     body: 'PublicCreateOrganizationRoleBody',
     response: {
@@ -150,7 +150,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/projects/:project_id/roles/:role_id', ({ params }) => {}, {
+  .get('/projects/:project_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.retrieveProjectRoleParams,
     response: {
       200: 'Role',
@@ -166,7 +166,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/projects/:project_id/roles/:role_id', ({ params, body }) => {}, {
+  .post('/projects/:project_id/roles/:role_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.updateProjectRoleParams,
     body: 'PublicUpdateOrganizationRoleBody',
     response: {
@@ -184,7 +184,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/projects/:project_id/roles/:role_id', ({ params }) => {}, {
+  .delete('/projects/:project_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.deleteProjectRoleParams,
     response: {
       200: 'RoleDeletedResource',
@@ -201,7 +201,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/projects/:project_id/users/:user_id/roles', ({ params, query }) => {}, {
+  .get('/projects/:project_id/users/:user_id/roles', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.listProjectUserRoleAssignmentsParams,
     query: ProjectsModel.listProjectUserRoleAssignmentsQuery,
     response: {
@@ -219,7 +219,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/projects/:project_id/users/:user_id/roles', ({ params, body }) => {}, {
+  .post('/projects/:project_id/users/:user_id/roles', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.assignProjectUserRoleParams,
     body: 'PublicAssignOrganizationGroupRoleBody',
     response: {
@@ -237,7 +237,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/projects/:project_id/users/:user_id/roles/:role_id', ({ params }) => {}, {
+  .get('/projects/:project_id/users/:user_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.retrieveProjectUserRoleParams,
     response: {
       200: 'AssignedRoleDetails',
@@ -254,7 +254,7 @@ export const projects = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/projects/:project_id/users/:user_id/roles/:role_id', ({ params }) => {}, {
+  .delete('/projects/:project_id/users/:user_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ProjectsModel.unassignProjectUserRoleParams,
     response: {
       200: 'DeletedRoleAssignmentResource',

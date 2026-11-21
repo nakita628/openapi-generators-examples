@@ -27,7 +27,7 @@ export const getBookings = os
       z.object({ links: z.intersection(LinksSelfSchema, LinksPaginationSchema).exactOptional() }),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBookings = os
   .route({
@@ -42,7 +42,7 @@ export const postBookings = os
   })
   .input(BookingSchema)
   .output(z.intersection(BookingSchema, z.object({ links: LinksSelfSchema.exactOptional() })))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBookingsBookingId = os
   .route({
@@ -55,7 +55,7 @@ export const getBookingsBookingId = os
   })
   .input(z.object({ bookingId: z.uuid() }))
   .output(z.intersection(BookingSchema, z.object({ links: LinksSelfSchema.exactOptional() })))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteBookingsBookingId = os
   .route({
@@ -68,7 +68,7 @@ export const deleteBookingsBookingId = os
     successDescription: 'Booking deleted',
   })
   .input(z.object({ bookingId: z.uuid() }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBookingsBookingIdPayment = os
   .route({
@@ -211,4 +211,4 @@ export const postBookingsBookingIdPayment = os
   .output(
     z.intersection(BookingPaymentSchema, z.object({ links: LinksBookingSchema.exactOptional() })),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -66,4 +66,4 @@ export const getTrips = os
       v.partial(v.object({ links: v.intersect([LinksSelfSchema, LinksPaginationSchema]) })),
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

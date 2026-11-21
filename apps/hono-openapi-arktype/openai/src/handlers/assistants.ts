@@ -39,7 +39,7 @@ export const assistantsHandler = new Hono()
         'before?': 'string',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants',
@@ -58,7 +58,7 @@ export const assistantsHandler = new Hono()
       },
     }),
     validator('json', CreateAssistantRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/assistants/:assistant_id',
@@ -77,7 +77,7 @@ export const assistantsHandler = new Hono()
       },
     }),
     validator('param', type({ assistant_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants/:assistant_id',
@@ -97,7 +97,7 @@ export const assistantsHandler = new Hono()
     }),
     validator('param', type({ assistant_id: 'string' })),
     validator('json', ModifyAssistantRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/assistants/:assistant_id',
@@ -116,5 +116,5 @@ export const assistantsHandler = new Hono()
       },
     }),
     validator('param', type({ assistant_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

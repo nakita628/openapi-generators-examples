@@ -13,7 +13,7 @@ export const postPet = os
   })
   .input(PetSchema)
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putPet = os
   .route({
@@ -26,7 +26,7 @@ export const putPet = os
   })
   .input(PetSchema)
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPetFindByStatus = os
   .route({
@@ -41,7 +41,7 @@ export const getPetFindByStatus = os
     v.object({ status: v.optional(v.picklist(['available', 'pending', 'sold']), 'available') }),
   )
   .output(v.array(PetSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPetFindByTags = os
   .route({
@@ -63,7 +63,7 @@ export const getPetFindByTags = os
     }),
   )
   .output(v.array(PetSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getPetPetId = os
   .route({
@@ -86,7 +86,7 @@ export const getPetPetId = os
     }),
   )
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPetPetId = os
   .route({
@@ -111,7 +111,7 @@ export const postPetPetId = os
     }),
   )
   .output(PetSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deletePetPetId = os
   .route({
@@ -133,7 +133,7 @@ export const deletePetPetId = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postPetPetIdUploadImage = os
   .route({
@@ -157,4 +157,4 @@ export const postPetPetIdUploadImage = os
     }),
   )
   .output(ApiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

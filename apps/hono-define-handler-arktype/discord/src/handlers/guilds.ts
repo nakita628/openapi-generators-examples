@@ -98,385 +98,385 @@ import {
 export const guildsHandler = new Hono()
   .get(
     '/guilds/templates/:code',
-    getGuildsTemplatesCodeHandler(async (c, { param }) => {}),
+    getGuildsTemplatesCodeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id',
-    getGuildsGuildIdHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id',
-    patchGuildsGuildIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/audit-logs',
-    getGuildsGuildIdAuditLogsHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdAuditLogsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/auto-moderation/rules',
-    getGuildsGuildIdAutoModerationRulesHandler(async (c, { param }) => {}),
+    getGuildsGuildIdAutoModerationRulesHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/auto-moderation/rules',
-    postGuildsGuildIdAutoModerationRulesHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdAutoModerationRulesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
-    getGuildsGuildIdAutoModerationRulesRuleIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdAutoModerationRulesRuleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
-    deleteGuildsGuildIdAutoModerationRulesRuleIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdAutoModerationRulesRuleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
-    patchGuildsGuildIdAutoModerationRulesRuleIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdAutoModerationRulesRuleIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/bans',
-    getGuildsGuildIdBansHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdBansHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/bans/:user_id',
-    getGuildsGuildIdBansUserIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdBansUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/guilds/:guild_id/bans/:user_id',
-    putGuildsGuildIdBansUserIdHandler(async (c, { param, json }) => {}),
+    putGuildsGuildIdBansUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/bans/:user_id',
-    deleteGuildsGuildIdBansUserIdHandler(async (c, { param, json }) => {}),
+    deleteGuildsGuildIdBansUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/bulk-ban',
-    postGuildsGuildIdBulkBanHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdBulkBanHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/channels',
-    getGuildsGuildIdChannelsHandler(async (c, { param }) => {}),
+    getGuildsGuildIdChannelsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/channels',
-    postGuildsGuildIdChannelsHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdChannelsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/channels',
-    patchGuildsGuildIdChannelsHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdChannelsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/emojis',
-    getGuildsGuildIdEmojisHandler(async (c, { param }) => {}),
+    getGuildsGuildIdEmojisHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/emojis',
-    postGuildsGuildIdEmojisHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdEmojisHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/emojis/:emoji_id',
-    getGuildsGuildIdEmojisEmojiIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdEmojisEmojiIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/emojis/:emoji_id',
-    deleteGuildsGuildIdEmojisEmojiIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdEmojisEmojiIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/emojis/:emoji_id',
-    patchGuildsGuildIdEmojisEmojiIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdEmojisEmojiIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/guilds/:guild_id/incident-actions',
-    putGuildsGuildIdIncidentActionsHandler(async (c, { param, json }) => {}),
+    putGuildsGuildIdIncidentActionsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/integrations',
-    getGuildsGuildIdIntegrationsHandler(async (c, { param }) => {}),
+    getGuildsGuildIdIntegrationsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/integrations/:integration_id',
-    deleteGuildsGuildIdIntegrationsIntegrationIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdIntegrationsIntegrationIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/invites',
-    getGuildsGuildIdInvitesHandler(async (c, { param }) => {}),
+    getGuildsGuildIdInvitesHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/members',
-    getGuildsGuildIdMembersHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdMembersHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/members/@me',
-    patchGuildsGuildIdMembersMeHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdMembersMeHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/members/search',
-    getGuildsGuildIdMembersSearchHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdMembersSearchHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/members/:user_id',
-    getGuildsGuildIdMembersUserIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdMembersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/guilds/:guild_id/members/:user_id',
-    putGuildsGuildIdMembersUserIdHandler(async (c, { param, json }) => {}),
+    putGuildsGuildIdMembersUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/members/:user_id',
-    deleteGuildsGuildIdMembersUserIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdMembersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/members/:user_id',
-    patchGuildsGuildIdMembersUserIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdMembersUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/guilds/:guild_id/members/:user_id/roles/:role_id',
-    putGuildsGuildIdMembersUserIdRolesRoleIdHandler(async (c, { param }) => {}),
+    putGuildsGuildIdMembersUserIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/members/:user_id/roles/:role_id',
-    deleteGuildsGuildIdMembersUserIdRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdMembersUserIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/messages/search',
-    getGuildsGuildIdMessagesSearchHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdMessagesSearchHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/new-member-welcome',
-    getGuildsGuildIdNewMemberWelcomeHandler(async (c, { param }) => {}),
+    getGuildsGuildIdNewMemberWelcomeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/onboarding',
-    getGuildsGuildIdOnboardingHandler(async (c, { param }) => {}),
+    getGuildsGuildIdOnboardingHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/guilds/:guild_id/onboarding',
-    putGuildsGuildIdOnboardingHandler(async (c, { param, json }) => {}),
+    putGuildsGuildIdOnboardingHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/permissions/member/:user_id',
-    getGuildsGuildIdPermissionsMemberUserIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdPermissionsMemberUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/permissions/role/:role_id',
-    getGuildsGuildIdPermissionsRoleRoleIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdPermissionsRoleRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/preview',
-    getGuildsGuildIdPreviewHandler(async (c, { param }) => {}),
+    getGuildsGuildIdPreviewHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/prune',
-    getGuildsGuildIdPruneHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdPruneHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/prune',
-    postGuildsGuildIdPruneHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdPruneHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/regions',
-    getGuildsGuildIdRegionsHandler(async (c, { param }) => {}),
+    getGuildsGuildIdRegionsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/requests',
-    getGuildsGuildIdRequestsHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdRequestsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/requests/:request_id',
-    patchGuildsGuildIdRequestsRequestIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdRequestsRequestIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/roles',
-    getGuildsGuildIdRolesHandler(async (c, { param }) => {}),
+    getGuildsGuildIdRolesHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/roles',
-    postGuildsGuildIdRolesHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdRolesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/roles',
-    patchGuildsGuildIdRolesHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdRolesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/roles/member-counts',
-    getGuildsGuildIdRolesMemberCountsHandler(async (c, { param }) => {}),
+    getGuildsGuildIdRolesMemberCountsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/roles/:role_id',
-    getGuildsGuildIdRolesRoleIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/roles/:role_id',
-    deleteGuildsGuildIdRolesRoleIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdRolesRoleIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/roles/:role_id',
-    patchGuildsGuildIdRolesRoleIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdRolesRoleIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/scheduled-events',
-    getGuildsGuildIdScheduledEventsHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdScheduledEventsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/scheduled-events',
-    postGuildsGuildIdScheduledEventsHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdScheduledEventsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
-    getGuildsGuildIdScheduledEventsGuildScheduledEventIdHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdScheduledEventsGuildScheduledEventIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
-    deleteGuildsGuildIdScheduledEventsGuildScheduledEventIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdScheduledEventsGuildScheduledEventIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
-    patchGuildsGuildIdScheduledEventsGuildScheduledEventIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdScheduledEventsGuildScheduledEventIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions',
     postGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .delete(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
     deleteGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsExceptionIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .patch(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
     patchGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsExceptionIdHandler(
-      async (c, { param, json }) => {},
+      async (c, { param, json }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users',
     getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersHandler(
-      async (c, { param, query }) => {},
+      async (c, { param, query }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users/counts',
     getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersCountsHandler(
-      async (c, { param, query }) => {},
+      async (c, { param, query }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/:guild_scheduled_event_exception_id/users',
     getGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildScheduledEventExceptionIdUsersHandler(
-      async (c, { param, query }) => {},
+      async (c, { param, query }) => { throw new Error('Not implemented') },
     ),
   )
   .get(
     '/guilds/:guild_id/soundboard-sounds',
-    getGuildsGuildIdSoundboardSoundsHandler(async (c, { param }) => {}),
+    getGuildsGuildIdSoundboardSoundsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/soundboard-sounds',
-    postGuildsGuildIdSoundboardSoundsHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdSoundboardSoundsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
-    getGuildsGuildIdSoundboardSoundsSoundIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdSoundboardSoundsSoundIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
-    deleteGuildsGuildIdSoundboardSoundsSoundIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdSoundboardSoundsSoundIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
-    patchGuildsGuildIdSoundboardSoundsSoundIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdSoundboardSoundsSoundIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/stickers',
-    getGuildsGuildIdStickersHandler(async (c, { param }) => {}),
+    getGuildsGuildIdStickersHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/stickers',
-    postGuildsGuildIdStickersHandler(async (c, { param, form }) => {}),
+    postGuildsGuildIdStickersHandler(async (c, { param, form }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/stickers/:sticker_id',
-    getGuildsGuildIdStickersStickerIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdStickersStickerIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/stickers/:sticker_id',
-    deleteGuildsGuildIdStickersStickerIdHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdStickersStickerIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/stickers/:sticker_id',
-    patchGuildsGuildIdStickersStickerIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdStickersStickerIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/templates',
-    getGuildsGuildIdTemplatesHandler(async (c, { param }) => {}),
+    getGuildsGuildIdTemplatesHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/guilds/:guild_id/templates',
-    postGuildsGuildIdTemplatesHandler(async (c, { param, json }) => {}),
+    postGuildsGuildIdTemplatesHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/guilds/:guild_id/templates/:code',
-    putGuildsGuildIdTemplatesCodeHandler(async (c, { param }) => {}),
+    putGuildsGuildIdTemplatesCodeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/guilds/:guild_id/templates/:code',
-    deleteGuildsGuildIdTemplatesCodeHandler(async (c, { param }) => {}),
+    deleteGuildsGuildIdTemplatesCodeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/templates/:code',
-    patchGuildsGuildIdTemplatesCodeHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdTemplatesCodeHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/threads/active',
-    getGuildsGuildIdThreadsActiveHandler(async (c, { param }) => {}),
+    getGuildsGuildIdThreadsActiveHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/vanity-url',
-    getGuildsGuildIdVanityUrlHandler(async (c, { param }) => {}),
+    getGuildsGuildIdVanityUrlHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/voice-states/@me',
-    getGuildsGuildIdVoiceStatesMeHandler(async (c, { param }) => {}),
+    getGuildsGuildIdVoiceStatesMeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/voice-states/@me',
-    patchGuildsGuildIdVoiceStatesMeHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdVoiceStatesMeHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/voice-states/:user_id',
-    getGuildsGuildIdVoiceStatesUserIdHandler(async (c, { param }) => {}),
+    getGuildsGuildIdVoiceStatesUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/voice-states/:user_id',
-    patchGuildsGuildIdVoiceStatesUserIdHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdVoiceStatesUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/webhooks',
-    getGuildsGuildIdWebhooksHandler(async (c, { param }) => {}),
+    getGuildsGuildIdWebhooksHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/welcome-screen',
-    getGuildsGuildIdWelcomeScreenHandler(async (c, { param }) => {}),
+    getGuildsGuildIdWelcomeScreenHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/welcome-screen',
-    patchGuildsGuildIdWelcomeScreenHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdWelcomeScreenHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/widget',
-    getGuildsGuildIdWidgetHandler(async (c, { param }) => {}),
+    getGuildsGuildIdWidgetHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/guilds/:guild_id/widget',
-    patchGuildsGuildIdWidgetHandler(async (c, { param, json }) => {}),
+    patchGuildsGuildIdWidgetHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/widget.json',
-    getGuildsGuildIdWidgetJsonHandler(async (c, { param }) => {}),
+    getGuildsGuildIdWidgetJsonHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/guilds/:guild_id/widget.png',
-    getGuildsGuildIdWidgetPngHandler(async (c, { param, query }) => {}),
+    getGuildsGuildIdWidgetPngHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )

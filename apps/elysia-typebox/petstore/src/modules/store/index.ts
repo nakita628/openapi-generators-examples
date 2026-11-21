@@ -4,7 +4,7 @@ import { StoreModel } from './model'
 
 export const store = new Elysia()
   .model({ Order: OrderSchema })
-  .get('/store/inventory', () => {}, {
+  .get('/store/inventory', () => { throw new Error('Not implemented') }, {
     response: { 200: StoreModel.getInventoryResponse200, default: t.Void() },
     detail: {
       tags: ['store'],
@@ -14,7 +14,7 @@ export const store = new Elysia()
       security: [{ api_key: [] }],
     },
   })
-  .post('/store/order', ({ body }) => {}, {
+  .post('/store/order', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'Order',
     response: { 200: 'Order', 400: t.Void(), 422: t.Void(), default: t.Void() },
     detail: {
@@ -24,7 +24,7 @@ export const store = new Elysia()
       operationId: 'placeOrder',
     },
   })
-  .get('/store/order/:orderId', ({ params }) => {}, {
+  .get('/store/order/:orderId', ({ params }) => { throw new Error('Not implemented') }, {
     params: StoreModel.getOrderByIdParams,
     response: { 200: 'Order', 400: t.Void(), 404: t.Void(), default: t.Void() },
     detail: {
@@ -35,7 +35,7 @@ export const store = new Elysia()
       operationId: 'getOrderById',
     },
   })
-  .delete('/store/order/:orderId', ({ params }) => {}, {
+  .delete('/store/order/:orderId', ({ params }) => { throw new Error('Not implemented') }, {
     params: StoreModel.deleteOrderParams,
     response: { 200: t.Void(), 400: t.Void(), 404: t.Void(), default: t.Void() },
     detail: {

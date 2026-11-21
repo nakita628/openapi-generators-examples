@@ -25,7 +25,7 @@ export const postAudioSpeech = os
       'Generates audio from the input text.\n\nReturns the audio file content, or a stream of audio events.\n\nThe `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts`, `gpt-4o-mini-tts-2025-03-20`, and\n`gpt-4o-mini-tts-2025-12-15` models are deprecated and scheduled to shut down\non January 6, 2027. These examples use the existing Speech API; for new\nintegrations, migrate to `gpt-realtime-2.1-mini` through the\n[Realtime API](https://developers.openai.com/api/docs/guides/realtime). See the\n[deprecation schedule](https://developers.openai.com/api/docs/deprecations) for migration details.\n',
   })
   .input(CreateSpeechRequestSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAudioTranscriptions = os
   .route({
@@ -43,7 +43,7 @@ export const postAudioTranscriptions = os
       CreateTranscriptionResponseVerboseJsonSchema,
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAudioTranslations = os
   .route({
@@ -56,7 +56,7 @@ export const postAudioTranslations = os
     deprecated: true,
   })
   .output(z.xor([CreateTranslationResponseJsonSchema, CreateTranslationResponseVerboseJsonSchema]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAudioVoiceConsents = os
   .route({
@@ -73,7 +73,7 @@ export const getAudioVoiceConsents = os
     }),
   )
   .output(VoiceConsentListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAudioVoiceConsents = os
   .route({
@@ -84,7 +84,7 @@ export const postAudioVoiceConsents = os
     description: 'Upload a voice consent recording.',
   })
   .output(VoiceConsentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAudioVoiceConsentsConsentId = os
   .route({
@@ -96,7 +96,7 @@ export const getAudioVoiceConsentsConsentId = os
   })
   .input(z.object({ consent_id: z.string() }))
   .output(VoiceConsentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAudioVoiceConsentsConsentId = os
   .route({
@@ -113,7 +113,7 @@ export const postAudioVoiceConsentsConsentId = os
     }),
   )
   .output(VoiceConsentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAudioVoiceConsentsConsentId = os
   .route({
@@ -125,7 +125,7 @@ export const deleteAudioVoiceConsentsConsentId = os
   })
   .input(z.object({ consent_id: z.string() }))
   .output(VoiceConsentDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAudioVoices = os
   .route({
@@ -138,7 +138,7 @@ export const postAudioVoices = os
   })
   .input(CreateVoicePromptRequestSchema)
   .output(VoiceResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAudioVoicesVoiceId = os
   .route({
@@ -151,4 +151,4 @@ export const deleteAudioVoicesVoiceId = os
   })
   .input(z.object({ voice_id: z.string() }))
   .output(VoiceDeletedResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

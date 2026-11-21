@@ -56,7 +56,7 @@ export const assistants = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/assistants', ({ query }) => {}, {
+  .get('/assistants', ({ query }) => { throw new Error('Not implemented') }, {
     query: AssistantsModel.listAssistantsQuery,
     response: { 200: 'ListAssistantsResponse', 429: 'ErrorResponse' },
     detail: {
@@ -66,7 +66,7 @@ export const assistants = new Elysia()
       operationId: 'listAssistants',
     },
   })
-  .post('/assistants', ({ body }) => {}, {
+  .post('/assistants', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateAssistantRequest',
     response: { 200: 'AssistantObject', 429: 'ErrorResponse' },
     detail: {
@@ -76,7 +76,7 @@ export const assistants = new Elysia()
       operationId: 'createAssistant',
     },
   })
-  .get('/assistants/:assistant_id', ({ params }) => {}, {
+  .get('/assistants/:assistant_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AssistantsModel.getAssistantParams,
     response: { 200: 'AssistantObject', 429: 'ErrorResponse' },
     detail: {
@@ -86,7 +86,7 @@ export const assistants = new Elysia()
       operationId: 'getAssistant',
     },
   })
-  .post('/assistants/:assistant_id', ({ params, body }) => {}, {
+  .post('/assistants/:assistant_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: AssistantsModel.modifyAssistantParams,
     body: 'ModifyAssistantRequest',
     response: { 200: 'AssistantObject', 429: 'ErrorResponse' },
@@ -97,7 +97,7 @@ export const assistants = new Elysia()
       operationId: 'modifyAssistant',
     },
   })
-  .delete('/assistants/:assistant_id', ({ params }) => {}, {
+  .delete('/assistants/:assistant_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AssistantsModel.deleteAssistantParams,
     response: { 200: 'DeleteAssistantResponse', 429: 'ErrorResponse' },
     detail: {

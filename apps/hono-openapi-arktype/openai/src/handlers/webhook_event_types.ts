@@ -26,5 +26,5 @@ export const webhookEventTypesHandler = new Hono().get(
       },
     },
   }),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

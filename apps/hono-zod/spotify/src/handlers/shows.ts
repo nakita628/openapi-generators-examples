@@ -30,7 +30,7 @@ export const showsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/shows',
@@ -54,7 +54,7 @@ export const showsHandler = new Hono()
           }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/shows/:id/episodes',
@@ -105,5 +105,5 @@ export const showsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -73,4 +73,4 @@ export const getSearch = os
       'audiobooks?': PagingSimplifiedAudiobookObjectSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

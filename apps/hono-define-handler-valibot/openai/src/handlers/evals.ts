@@ -17,49 +17,49 @@ import {
 export const evalsHandler = new Hono()
   .get(
     '/evals',
-    getEvalsHandler(async (c, { query }) => {}),
+    getEvalsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/evals',
-    postEvalsHandler(async (c, { json }) => {}),
+    postEvalsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/evals/:eval_id',
-    getEvalsEvalIdHandler(async (c, { param }) => {}),
+    getEvalsEvalIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/evals/:eval_id',
-    postEvalsEvalIdHandler(async (c, { param, json }) => {}),
+    postEvalsEvalIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/evals/:eval_id',
-    deleteEvalsEvalIdHandler(async (c, { param }) => {}),
+    deleteEvalsEvalIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/evals/:eval_id/runs',
-    getEvalsEvalIdRunsHandler(async (c, { param, query }) => {}),
+    getEvalsEvalIdRunsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/evals/:eval_id/runs',
-    postEvalsEvalIdRunsHandler(async (c, { param, json }) => {}),
+    postEvalsEvalIdRunsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/evals/:eval_id/runs/:run_id',
-    getEvalsEvalIdRunsRunIdHandler(async (c, { param }) => {}),
+    getEvalsEvalIdRunsRunIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/evals/:eval_id/runs/:run_id',
-    deleteEvalsEvalIdRunsRunIdHandler(async (c, { param }) => {}),
+    deleteEvalsEvalIdRunsRunIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/evals/:eval_id/runs/:run_id/cancel',
-    postEvalsEvalIdRunsRunIdCancelHandler(async (c, { param }) => {}),
+    postEvalsEvalIdRunsRunIdCancelHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/evals/:eval_id/runs/:run_id/output_items',
-    getEvalsEvalIdRunsRunIdOutputItemsHandler(async (c, { param, query }) => {}),
+    getEvalsEvalIdRunsRunIdOutputItemsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/evals/:eval_id/runs/:run_id/output_items/:output_item_id',
-    getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdHandler(async (c, { param }) => {}),
+    getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )

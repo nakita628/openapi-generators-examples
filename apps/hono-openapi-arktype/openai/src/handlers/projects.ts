@@ -63,7 +63,7 @@ export const projectsHandler = new Hono()
         'order?': "'asc' | 'desc'",
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/groups/:group_id/roles',
@@ -97,7 +97,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', type({ project_id: 'string', group_id: 'string' })),
     validator('json', PublicAssignOrganizationGroupRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
@@ -130,7 +130,7 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', type({ project_id: 'string', group_id: 'string', role_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
@@ -165,7 +165,7 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', type({ project_id: 'string', group_id: 'string', role_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/roles',
@@ -211,7 +211,7 @@ export const projectsHandler = new Hono()
         'order?': "'asc' | 'desc'",
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/roles',
@@ -245,7 +245,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', type({ project_id: 'string' })),
     validator('json', PublicCreateOrganizationRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/roles/:role_id',
@@ -273,7 +273,7 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', type({ project_id: 'string', role_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/roles/:role_id',
@@ -307,7 +307,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', type({ project_id: 'string', role_id: 'string' })),
     validator('json', PublicUpdateOrganizationRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/roles/:role_id',
@@ -340,7 +340,7 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', type({ project_id: 'string', role_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/users/:user_id/roles',
@@ -386,7 +386,7 @@ export const projectsHandler = new Hono()
         'order?': "'asc' | 'desc'",
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/users/:user_id/roles',
@@ -420,7 +420,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', type({ project_id: 'string', user_id: 'string' })),
     validator('json', PublicAssignOrganizationGroupRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/users/:user_id/roles/:role_id',
@@ -453,7 +453,7 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', type({ project_id: 'string', user_id: 'string', role_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/users/:user_id/roles/:role_id',
@@ -488,5 +488,5 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', type({ project_id: 'string', user_id: 'string', role_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

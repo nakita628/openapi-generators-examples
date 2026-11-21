@@ -37,5 +37,5 @@ export const audioAnalysisHandler = new Hono().get(
       }),
     ),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

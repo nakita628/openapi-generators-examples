@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getAudioAnalysisId = os.getAudioAnalysisId.handler(async ({ input }) => {})
+export const getAudioAnalysisId = os.getAudioAnalysisId.handler(async ({ input }) => { throw new Error('Not implemented') })

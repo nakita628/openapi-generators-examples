@@ -16,7 +16,7 @@ export const getSafetyCasesId = os
     }),
   )
   .output(SafetyCaseResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getSafetyAlertsId = os
   .route({
@@ -32,4 +32,4 @@ export const getSafetyAlertsId = os
     }),
   )
   .output(SafetyAlertResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -55,205 +55,205 @@ import {
 export const channelsHandler = new Hono()
   .get(
     '/channels/:channel_id',
-    getChannelsChannelIdHandler(async (c, { param }) => {}),
+    getChannelsChannelIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id',
-    deleteChannelsChannelIdHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/channels/:channel_id',
-    patchChannelsChannelIdHandler(async (c, { param, json }) => {}),
+    patchChannelsChannelIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/followers',
-    postChannelsChannelIdFollowersHandler(async (c, { param, json }) => {}),
+    postChannelsChannelIdFollowersHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/invites',
-    getChannelsChannelIdInvitesHandler(async (c, { param }) => {}),
+    getChannelsChannelIdInvitesHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/invites',
-    postChannelsChannelIdInvitesHandler(async (c, { param, form, json }) => {}),
+    postChannelsChannelIdInvitesHandler(async (c, { param, form, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/messages',
-    getChannelsChannelIdMessagesHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdMessagesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/messages',
-    postChannelsChannelIdMessagesHandler(async (c, { param, form, json }) => {}),
+    postChannelsChannelIdMessagesHandler(async (c, { param, form, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/messages/bulk-delete',
-    postChannelsChannelIdMessagesBulkDeleteHandler(async (c, { param, json }) => {}),
+    postChannelsChannelIdMessagesBulkDeleteHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/messages/pins',
-    getChannelsChannelIdMessagesPinsHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdMessagesPinsHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/messages/pins/:message_id',
-    putChannelsChannelIdMessagesPinsMessageIdHandler(async (c, { param }) => {}),
+    putChannelsChannelIdMessagesPinsMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/messages/pins/:message_id',
-    deleteChannelsChannelIdMessagesPinsMessageIdHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdMessagesPinsMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/messages/:message_id',
-    getChannelsChannelIdMessagesMessageIdHandler(async (c, { param }) => {}),
+    getChannelsChannelIdMessagesMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/messages/:message_id',
-    deleteChannelsChannelIdMessagesMessageIdHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdMessagesMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .patch(
     '/channels/:channel_id/messages/:message_id',
-    patchChannelsChannelIdMessagesMessageIdHandler(async (c, { param, form, json }) => {}),
+    patchChannelsChannelIdMessagesMessageIdHandler(async (c, { param, form, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/messages/:message_id/crosspost',
-    postChannelsChannelIdMessagesMessageIdCrosspostHandler(async (c, { param }) => {}),
+    postChannelsChannelIdMessagesMessageIdCrosspostHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions',
-    deleteChannelsChannelIdMessagesMessageIdReactionsHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdMessagesMessageIdReactionsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name',
     getChannelsChannelIdMessagesMessageIdReactionsEmojiNameHandler(
-      async (c, { param, query }) => {},
+      async (c, { param, query }) => { throw new Error('Not implemented') },
     ),
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name',
-    deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/@me',
-    putChannelsChannelIdMessagesMessageIdReactionsEmojiNameMeHandler(async (c, { param }) => {}),
+    putChannelsChannelIdMessagesMessageIdReactionsEmojiNameMeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/@me',
-    deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameMeHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameMeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/:user_id',
     deleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameUserIdHandler(
-      async (c, { param }) => {},
+      async (c, { param }) => { throw new Error('Not implemented') },
     ),
   )
   .post(
     '/channels/:channel_id/messages/:message_id/threads',
-    postChannelsChannelIdMessagesMessageIdThreadsHandler(async (c, { param, json }) => {}),
+    postChannelsChannelIdMessagesMessageIdThreadsHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/permissions/member/:user_id',
-    getChannelsChannelIdPermissionsMemberUserIdHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdPermissionsMemberUserIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/permissions/role/:role_id',
-    getChannelsChannelIdPermissionsRoleRoleIdHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdPermissionsRoleRoleIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/permissions/:overwrite_id',
-    putChannelsChannelIdPermissionsOverwriteIdHandler(async (c, { param, json }) => {}),
+    putChannelsChannelIdPermissionsOverwriteIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/permissions/:overwrite_id',
-    deleteChannelsChannelIdPermissionsOverwriteIdHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdPermissionsOverwriteIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/pins',
-    getChannelsChannelIdPinsHandler(async (c, { param }) => {}),
+    getChannelsChannelIdPinsHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/pins/:message_id',
-    putChannelsChannelIdPinsMessageIdHandler(async (c, { param }) => {}),
+    putChannelsChannelIdPinsMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/pins/:message_id',
-    deleteChannelsChannelIdPinsMessageIdHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdPinsMessageIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/polls/:message_id/answers/:answer_id',
-    getChannelsChannelIdPollsMessageIdAnswersAnswerIdHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdPollsMessageIdAnswersAnswerIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/polls/:message_id/expire',
-    postChannelsChannelIdPollsMessageIdExpireHandler(async (c, { param }) => {}),
+    postChannelsChannelIdPollsMessageIdExpireHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/recipients/:user_id',
-    putChannelsChannelIdRecipientsUserIdHandler(async (c, { param, json }) => {}),
+    putChannelsChannelIdRecipientsUserIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/recipients/:user_id',
-    deleteChannelsChannelIdRecipientsUserIdHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdRecipientsUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/send-soundboard-sound',
-    postChannelsChannelIdSendSoundboardSoundHandler(async (c, { param, json }) => {}),
+    postChannelsChannelIdSendSoundboardSoundHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/thread-members',
-    getChannelsChannelIdThreadMembersHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdThreadMembersHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/thread-members/@me',
-    putChannelsChannelIdThreadMembersMeHandler(async (c, { param }) => {}),
+    putChannelsChannelIdThreadMembersMeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/thread-members/@me',
-    deleteChannelsChannelIdThreadMembersMeHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdThreadMembersMeHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/thread-members/:user_id',
-    getChannelsChannelIdThreadMembersUserIdHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdThreadMembersUserIdHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/thread-members/:user_id',
-    putChannelsChannelIdThreadMembersUserIdHandler(async (c, { param }) => {}),
+    putChannelsChannelIdThreadMembersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/channels/:channel_id/thread-members/:user_id',
-    deleteChannelsChannelIdThreadMembersUserIdHandler(async (c, { param }) => {}),
+    deleteChannelsChannelIdThreadMembersUserIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/threads',
-    postChannelsChannelIdThreadsHandler(async (c, { param, form, json }) => {}),
+    postChannelsChannelIdThreadsHandler(async (c, { param, form, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/threads/archived/private',
-    getChannelsChannelIdThreadsArchivedPrivateHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdThreadsArchivedPrivateHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/threads/archived/public',
-    getChannelsChannelIdThreadsArchivedPublicHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdThreadsArchivedPublicHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/threads/search',
-    getChannelsChannelIdThreadsSearchHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdThreadsSearchHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/typing',
-    postChannelsChannelIdTypingHandler(async (c, { param }) => {}),
+    postChannelsChannelIdTypingHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/users/@me/threads/archived/private',
-    getChannelsChannelIdUsersMeThreadsArchivedPrivateHandler(async (c, { param, query }) => {}),
+    getChannelsChannelIdUsersMeThreadsArchivedPrivateHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .put(
     '/channels/:channel_id/voice-status',
-    putChannelsChannelIdVoiceStatusHandler(async (c, { param, json }) => {}),
+    putChannelsChannelIdVoiceStatusHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/channels/:channel_id/webhooks',
-    getChannelsChannelIdWebhooksHandler(async (c, { param }) => {}),
+    getChannelsChannelIdWebhooksHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/channels/:channel_id/webhooks',
-    postChannelsChannelIdWebhooksHandler(async (c, { param, json }) => {}),
+    postChannelsChannelIdWebhooksHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )

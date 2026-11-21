@@ -20,7 +20,7 @@ export const storeHandler = new Hono()
       },
       security: [{ api_key: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/store/order',
@@ -66,7 +66,7 @@ export const storeHandler = new Hono()
         complete: z.stringbool().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/store/order/:orderId',
@@ -90,7 +90,7 @@ export const storeHandler = new Hono()
       },
     }),
     validator('param', z.object({ orderId: z.coerce.bigint().pipe(z.int64()) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/store/order/:orderId',
@@ -108,5 +108,5 @@ export const storeHandler = new Hono()
       },
     }),
     validator('param', z.object({ orderId: z.coerce.bigint().pipe(z.int64()) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

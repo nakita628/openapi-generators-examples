@@ -4,4 +4,4 @@ import { contract } from '../contract'
 const os = implement(contract)
 
 export const postInteractionsInteractionIdInteractionTokenCallback =
-  os.postInteractionsInteractionIdInteractionTokenCallback.handler(async ({ input }) => {})
+  os.postInteractionsInteractionIdInteractionTokenCallback.handler(async ({ input }) => { throw new Error('Not implemented') })

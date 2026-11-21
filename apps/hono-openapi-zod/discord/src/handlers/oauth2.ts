@@ -73,7 +73,7 @@ export const oauth2Handler = new Hono()
         },
       ],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/oauth2/applications/@me',
@@ -96,7 +96,7 @@ export const oauth2Handler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/oauth2/keys',
@@ -119,7 +119,7 @@ export const oauth2Handler = new Hono()
       },
       security: [{}, { BotToken: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/oauth2/userinfo',
@@ -144,5 +144,5 @@ export const oauth2Handler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: ['openid'] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -47,7 +47,7 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/user/createWithList',
@@ -68,7 +68,7 @@ export const userHandler = new Hono()
       },
     }),
     validator('json', Compile(Type.Array(UserSchema))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/user/login',
@@ -108,7 +108,7 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/user/logout',
@@ -122,7 +122,7 @@ export const userHandler = new Hono()
         default: { description: 'Unexpected error' },
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/user/:username',
@@ -145,7 +145,7 @@ export const userHandler = new Hono()
       },
     }),
     validator('param', Compile(Type.Object({ username: Type.String() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/user/:username',
@@ -186,7 +186,7 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/user/:username',
@@ -203,5 +203,5 @@ export const userHandler = new Hono()
       },
     }),
     validator('param', Compile(Type.Object({ username: Type.String() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

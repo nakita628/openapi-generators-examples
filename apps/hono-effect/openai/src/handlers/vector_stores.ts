@@ -28,12 +28,12 @@ export const vectorStoresHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores',
     sValidator('json', Schema.toStandardSchemaV1(CreateVectorStoreRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id',
@@ -41,7 +41,7 @@ export const vectorStoresHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ vector_store_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id',
@@ -50,7 +50,7 @@ export const vectorStoresHandler = new Hono()
       Schema.toStandardSchemaV1(Schema.Struct({ vector_store_id: Schema.String })),
     ),
     sValidator('json', Schema.toStandardSchemaV1(UpdateVectorStoreRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vector_stores/:vector_store_id',
@@ -58,7 +58,7 @@ export const vectorStoresHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ vector_store_id: Schema.String })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/file_batches',
@@ -71,7 +71,7 @@ export const vectorStoresHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(CreateVectorStoreFileBatchRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/file_batches/:batch_id',
@@ -84,7 +84,7 @@ export const vectorStoresHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/file_batches/:batch_id/cancel',
@@ -94,7 +94,7 @@ export const vectorStoresHandler = new Hono()
         Schema.Struct({ vector_store_id: Schema.String, batch_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/file_batches/:batch_id/files',
@@ -122,7 +122,7 @@ export const vectorStoresHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/files',
@@ -148,7 +148,7 @@ export const vectorStoresHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/files',
@@ -161,7 +161,7 @@ export const vectorStoresHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(CreateVectorStoreFileRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/files/:file_id',
@@ -174,7 +174,7 @@ export const vectorStoresHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/files/:file_id',
@@ -188,7 +188,7 @@ export const vectorStoresHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(UpdateVectorStoreFileAttributesRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vector_stores/:vector_store_id/files/:file_id',
@@ -198,7 +198,7 @@ export const vectorStoresHandler = new Hono()
         Schema.Struct({ vector_store_id: Schema.String, file_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vector_stores/:vector_store_id/files/:file_id/content',
@@ -211,7 +211,7 @@ export const vectorStoresHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vector_stores/:vector_store_id/search',
@@ -224,5 +224,5 @@ export const vectorStoresHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(VectorStoreSearchRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

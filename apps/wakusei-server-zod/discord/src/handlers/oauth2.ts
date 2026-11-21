@@ -13,7 +13,7 @@ export const getOauth2Me = os
     successDescription: '200 response for get_my_oauth2_authorization',
   })
   .output(OAuth2GetAuthorizationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOauth2ApplicationsMe = os
   .route({
@@ -22,7 +22,7 @@ export const getOauth2ApplicationsMe = os
     successDescription: '200 response for get_my_oauth2_application',
   })
   .output(PrivateApplicationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOauth2Keys = os
   .route({
@@ -31,7 +31,7 @@ export const getOauth2Keys = os
     successDescription: '200 response for get_public_keys',
   })
   .output(OAuth2GetKeysSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getOauth2Userinfo = os
   .route({
@@ -40,4 +40,4 @@ export const getOauth2Userinfo = os
     successDescription: '200 response for get_openid_connect_userinfo',
   })
   .output(OAuth2GetOpenIDConnectUserInfoResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

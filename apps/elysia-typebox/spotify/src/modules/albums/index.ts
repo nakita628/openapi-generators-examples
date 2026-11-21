@@ -34,7 +34,7 @@ export const albums = new Elysia()
     SimplifiedTrackObject: SimplifiedTrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/albums/:id', ({ params, query }) => {}, {
+  .get('/albums/:id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AlbumsModel.getAnAlbumParams,
     query: AlbumsModel.getAnAlbumQuery,
     response: {
@@ -51,7 +51,7 @@ export const albums = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/albums', ({ query }) => {}, {
+  .get('/albums', ({ query }) => { throw new Error('Not implemented') }, {
     query: AlbumsModel.getMultipleAlbumsQuery,
     response: {
       200: AlbumsModel.getMultipleAlbumsResponse200,
@@ -68,7 +68,7 @@ export const albums = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/albums/:id/tracks', ({ params, query }) => {}, {
+  .get('/albums/:id/tracks', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AlbumsModel.getAnAlbumsTracksParams,
     query: AlbumsModel.getAnAlbumsTracksQuery,
     response: {

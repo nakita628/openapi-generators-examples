@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const postFineTuningJobFailed = os.postFineTuningJobFailed.handler(async ({ input }) => {})
+export const postFineTuningJobFailed = os.postFineTuningJobFailed.handler(async ({ input }) => { throw new Error('Not implemented') })

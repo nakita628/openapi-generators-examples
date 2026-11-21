@@ -18,17 +18,17 @@ export const stageInstancesHandler = new Hono()
         send_start_notification: v.optional(v.nullable(v.boolean())),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/stage-instances/:channel_id',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/stage-instances/:channel_id',
     sValidator('param', v.object({ channel_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/stage-instances/:channel_id',
@@ -42,5 +42,5 @@ export const stageInstancesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

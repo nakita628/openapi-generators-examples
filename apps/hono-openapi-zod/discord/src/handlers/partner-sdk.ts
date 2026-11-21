@@ -51,7 +51,7 @@ export const partnerSdkHandler = new Hono()
         .record(z.string(), z.string().max(2000))
         .meta({ description: 'The moderation metadata attached to the message' }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/provisional-accounts/unmerge',
@@ -82,7 +82,7 @@ export const partnerSdkHandler = new Hono()
         external_auth_type: ApplicationIdentityProviderAuthTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/provisional-accounts/unmerge/bot',
@@ -105,7 +105,7 @@ export const partnerSdkHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('json', z.object({ external_user_id: z.string().min(1).max(1024) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/token',
@@ -137,7 +137,7 @@ export const partnerSdkHandler = new Hono()
         external_auth_type: ApplicationIdentityProviderAuthTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/partner-sdk/token/bot',
@@ -168,5 +168,5 @@ export const partnerSdkHandler = new Hono()
         preferred_global_name: z.string().min(1).max(32).nullable().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -22,7 +22,7 @@ export const getAlbumsId = os
     }),
   )
   .output(AlbumObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAlbums = os
   .route({
@@ -46,7 +46,7 @@ export const getAlbums = os
     }),
   )
   .output(type({ albums: type(AlbumObjectSchema).array() }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAlbumsIdTracks = os
   .route({
@@ -84,4 +84,4 @@ export const getAlbumsIdTracks = os
     }),
   )
   .output(PagingSimplifiedTrackObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

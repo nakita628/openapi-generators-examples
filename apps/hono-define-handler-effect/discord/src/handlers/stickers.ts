@@ -3,5 +3,5 @@ import { getStickersStickerIdHandler } from '../routes'
 
 export const stickersHandler = new Hono().get(
   '/stickers/:sticker_id',
-  getStickersStickerIdHandler(async (c, { param }) => {}),
+  getStickersStickerIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
 )

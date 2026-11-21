@@ -4,15 +4,15 @@ import { Schema } from 'effect'
 import { BookingSchema, BookingPaymentSchema } from '../components'
 
 export const bookingsHandler = new Hono()
-  .get('/bookings', (c) => {})
-  .post('/bookings', sValidator('json', Schema.toStandardSchemaV1(BookingSchema)), (c) => {})
+  .get('/bookings', (c) => { throw new Error('Not implemented') })
+  .post('/bookings', sValidator('json', Schema.toStandardSchemaV1(BookingSchema)), (c) => { throw new Error('Not implemented') })
   .get(
     '/bookings/:bookingId',
     sValidator(
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ bookingId: Schema.String.check(Schema.isUUID()) })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/bookings/:bookingId',
@@ -20,7 +20,7 @@ export const bookingsHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ bookingId: Schema.String.check(Schema.isUUID()) })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/bookings/:bookingId/payment',
@@ -29,5 +29,5 @@ export const bookingsHandler = new Hono()
       Schema.toStandardSchemaV1(Schema.Struct({ bookingId: Schema.String.check(Schema.isUUID()) })),
     ),
     sValidator('json', Schema.toStandardSchemaV1(BookingPaymentSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

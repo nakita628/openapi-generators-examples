@@ -24,7 +24,7 @@ export const getAudioFeatures = os
     }),
   )
   .output(z.object({ audio_features: z.array(AudioFeaturesObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAudioFeaturesId = os
   .route({
@@ -49,4 +49,4 @@ export const getAudioFeaturesId = os
     }),
   )
   .output(AudioFeaturesObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

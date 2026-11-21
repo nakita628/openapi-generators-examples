@@ -83,7 +83,7 @@ export const vaultsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults',
@@ -129,7 +129,7 @@ export const vaultsHandler = new Hono()
       },
     }),
     validator('json', CreateVaultParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vaults/:vault_id',
@@ -175,7 +175,7 @@ export const vaultsHandler = new Hono()
       },
     }),
     validator('param', z.object({ vault_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults/:vault_id',
@@ -222,7 +222,7 @@ export const vaultsHandler = new Hono()
     }),
     validator('param', z.object({ vault_id: z.string().min(0).max(1048576) })),
     validator('json', UpdateVaultParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vaults/:vault_id',
@@ -268,7 +268,7 @@ export const vaultsHandler = new Hono()
       },
     }),
     validator('param', z.object({ vault_id: z.string().min(0).max(1048576) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vaults/:vault_id/credentials',
@@ -336,7 +336,7 @@ export const vaultsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults/:vault_id/credentials',
@@ -383,7 +383,7 @@ export const vaultsHandler = new Hono()
     }),
     validator('param', z.object({ vault_id: z.string().min(0).max(1048576) })),
     validator('json', CreateVaultCredentialParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vaults/:vault_id/credentials/:credential_id',
@@ -435,7 +435,7 @@ export const vaultsHandler = new Hono()
         credential_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults/:vault_id/credentials/:credential_id',
@@ -488,7 +488,7 @@ export const vaultsHandler = new Hono()
       }),
     ),
     validator('json', RotateVaultCredentialParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vaults/:vault_id/credentials/:credential_id',
@@ -542,5 +542,5 @@ export const vaultsHandler = new Hono()
         credential_id: z.string().min(0).max(1048576),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

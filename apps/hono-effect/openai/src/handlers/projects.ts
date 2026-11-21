@@ -32,7 +32,7 @@ export const projectsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/groups/:group_id/roles',
@@ -43,7 +43,7 @@ export const projectsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(PublicAssignOrganizationGroupRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
@@ -57,7 +57,7 @@ export const projectsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
@@ -71,7 +71,7 @@ export const projectsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/roles',
@@ -92,13 +92,13 @@ export const projectsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/roles',
     sValidator('param', Schema.toStandardSchemaV1(Schema.Struct({ project_id: Schema.String }))),
     sValidator('json', Schema.toStandardSchemaV1(PublicCreateOrganizationRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/roles/:role_id',
@@ -108,7 +108,7 @@ export const projectsHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, role_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/roles/:role_id',
@@ -119,7 +119,7 @@ export const projectsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(PublicUpdateOrganizationRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/roles/:role_id',
@@ -129,7 +129,7 @@ export const projectsHandler = new Hono()
         Schema.Struct({ project_id: Schema.String, role_id: Schema.String }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/users/:user_id/roles',
@@ -155,7 +155,7 @@ export const projectsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/users/:user_id/roles',
@@ -166,7 +166,7 @@ export const projectsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(PublicAssignOrganizationGroupRoleBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/users/:user_id/roles/:role_id',
@@ -180,7 +180,7 @@ export const projectsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/users/:user_id/roles/:role_id',
@@ -194,5 +194,5 @@ export const projectsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

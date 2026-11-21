@@ -11,4 +11,4 @@ export const postSafetyOrgAlertCreated = os
       'Return any 2xx status code to acknowledge receipt. A 410 Gone response also stops retries; other non-2xx responses are retried.',
   })
   .input(WebhookSafetyOrgAlertCreatedSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

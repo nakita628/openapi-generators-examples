@@ -35,7 +35,7 @@ export const getAssistants = os
     }),
   )
   .output(ListAssistantsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAssistants = os
   .route({
@@ -48,7 +48,7 @@ export const postAssistants = os
   })
   .input(CreateAssistantRequestSchema)
   .output(AssistantObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAssistantsAssistantId = os
   .route({
@@ -61,7 +61,7 @@ export const getAssistantsAssistantId = os
   })
   .input(type({ assistant_id: type('string') }))
   .output(AssistantObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAssistantsAssistantId = os
   .route({
@@ -146,7 +146,7 @@ export const postAssistantsAssistantId = os
     }),
   )
   .output(AssistantObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAssistantsAssistantId = os
   .route({
@@ -159,4 +159,4 @@ export const deleteAssistantsAssistantId = os
   })
   .input(type({ assistant_id: type('string') }))
   .output(DeleteAssistantResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

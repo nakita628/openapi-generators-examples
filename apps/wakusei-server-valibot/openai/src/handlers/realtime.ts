@@ -34,7 +34,7 @@ export const postRealtimeCalls = os
     successStatus: 201,
     successDescription: 'Realtime call created successfully.',
   })
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeCallsCallIdAccept = os
   .route({
@@ -242,7 +242,7 @@ export const postRealtimeCallsCallIdAccept = os
       prompt: v.optional(PromptSchema),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeCallsCallIdHangup = os
   .route({
@@ -254,7 +254,7 @@ export const postRealtimeCallsCallIdHangup = os
     successDescription: 'Call hangup initiated successfully.',
   })
   .input(v.object({ call_id: v.string() }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeCallsCallIdRefer = os
   .route({
@@ -277,7 +277,7 @@ export const postRealtimeCallsCallIdRefer = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeCallsCallIdReject = os
   .route({
@@ -302,7 +302,7 @@ export const postRealtimeCallsCallIdReject = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeClientSecrets = os
   .route({
@@ -316,7 +316,7 @@ export const postRealtimeClientSecrets = os
   })
   .input(RealtimeCreateClientSecretRequestSchema)
   .output(RealtimeCreateClientSecretResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeSessions = os
   .route({
@@ -330,7 +330,7 @@ export const postRealtimeSessions = os
   })
   .input(RealtimeSessionCreateRequestSchema)
   .output(RealtimeSessionCreateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeTranscriptionSessions = os
   .route({
@@ -344,7 +344,7 @@ export const postRealtimeTranscriptionSessions = os
   })
   .input(RealtimeTranscriptionSessionCreateRequestSchema)
   .output(RealtimeTranscriptionSessionCreateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postRealtimeTranslationsClientSecrets = os
   .route({
@@ -358,4 +358,4 @@ export const postRealtimeTranslationsClientSecrets = os
   })
   .input(RealtimeTranslationClientSecretCreateRequestSchema)
   .output(RealtimeTranslationClientSecretCreateResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

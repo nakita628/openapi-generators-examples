@@ -16929,5 +16929,5 @@ export const interactionsHandler = new Hono().post(
       }),
     ]),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

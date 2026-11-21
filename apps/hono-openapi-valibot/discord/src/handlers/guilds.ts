@@ -127,7 +127,7 @@ export const guildsHandler = new Hono()
       security: [{}, { BotToken: [] }],
     }),
     validator('param', v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id',
@@ -163,7 +163,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id',
@@ -188,7 +188,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', GuildPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/audit-logs',
@@ -326,7 +326,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/auto-moderation/rules',
@@ -367,7 +367,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/auto-moderation/rules',
@@ -413,7 +413,7 @@ export const guildsHandler = new Hono()
         UserProfileUpsertRequestSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
@@ -449,7 +449,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
@@ -472,7 +472,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/auto-moderation/rules/:rule_id',
@@ -518,7 +518,7 @@ export const guildsHandler = new Hono()
         UserProfileUpsertRequestPartialSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/bans',
@@ -561,7 +561,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/bans/:user_id',
@@ -585,7 +585,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/bans/:user_id',
@@ -609,7 +609,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
     validator('json', BanUserFromGuildRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/bans/:user_id',
@@ -633,7 +633,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
     validator('json', UnbanUserFromGuildRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/bulk-ban',
@@ -658,7 +658,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', BulkBanUsersRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/channels',
@@ -697,7 +697,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/channels',
@@ -722,7 +722,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', CreateGuildChannelRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/channels',
@@ -766,7 +766,7 @@ export const guildsHandler = new Hono()
         ),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/emojis',
@@ -792,7 +792,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/emojis',
@@ -832,7 +832,7 @@ export const guildsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/emojis/:emoji_id',
@@ -856,7 +856,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/emojis/:emoji_id',
@@ -879,7 +879,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/emojis/:emoji_id',
@@ -918,7 +918,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/incident-actions',
@@ -944,7 +944,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', GuildIncidentActionsRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/integrations',
@@ -982,7 +982,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/integrations/:integration_id',
@@ -1008,7 +1008,7 @@ export const guildsHandler = new Hono()
       'param',
       v.object({ guild_id: SnowflakeTypeSchema, integration_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/invites',
@@ -1047,7 +1047,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/members',
@@ -1087,7 +1087,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/members/@me',
@@ -1122,7 +1122,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/members/search',
@@ -1162,7 +1162,7 @@ export const guildsHandler = new Hono()
         query: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/members/:user_id',
@@ -1186,7 +1186,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/members/:user_id',
@@ -1221,7 +1221,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
     validator('json', BotAddGuildMemberRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/members/:user_id',
@@ -1244,7 +1244,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/members/:user_id',
@@ -1305,7 +1305,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/members/:user_id/roles/:role_id',
@@ -1335,7 +1335,7 @@ export const guildsHandler = new Hono()
         role_id: SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/members/:user_id/roles/:role_id',
@@ -1365,7 +1365,7 @@ export const guildsHandler = new Hono()
         role_id: SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/messages/search',
@@ -1542,7 +1542,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/new-member-welcome',
@@ -1576,7 +1576,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/onboarding',
@@ -1600,7 +1600,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/onboarding',
@@ -1625,7 +1625,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', UpdateGuildOnboardingRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/permissions/member/:user_id',
@@ -1651,7 +1651,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/permissions/role/:role_id',
@@ -1677,7 +1677,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/preview',
@@ -1701,7 +1701,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/prune',
@@ -1767,7 +1767,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/prune',
@@ -1792,7 +1792,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', PruneGuildRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/regions',
@@ -1820,7 +1820,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/requests',
@@ -1865,7 +1865,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/requests/:request_id',
@@ -1908,7 +1908,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/roles',
@@ -1932,7 +1932,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/roles',
@@ -1957,7 +1957,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', CreateRoleRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/roles',
@@ -1982,7 +1982,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', v.array(UpdateRolePositionsRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/roles/member-counts',
@@ -2015,7 +2015,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/roles/:role_id',
@@ -2039,7 +2039,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/roles/:role_id',
@@ -2062,7 +2062,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/roles/:role_id',
@@ -2087,7 +2087,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
     validator('json', UpdateRoleRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events',
@@ -2137,7 +2137,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/scheduled-events',
@@ -2179,7 +2179,7 @@ export const guildsHandler = new Hono()
         VoiceScheduledEventCreateRequestSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
@@ -2228,7 +2228,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
@@ -2254,7 +2254,7 @@ export const guildsHandler = new Hono()
       'param',
       v.object({ guild_id: SnowflakeTypeSchema, guild_scheduled_event_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id',
@@ -2299,7 +2299,7 @@ export const guildsHandler = new Hono()
         VoiceScheduledEventPatchRequestPartialSchema,
       ]),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions',
@@ -2330,7 +2330,7 @@ export const guildsHandler = new Hono()
       v.object({ guild_id: SnowflakeTypeSchema, guild_scheduled_event_id: SnowflakeTypeSchema }),
     ),
     validator('json', GuildScheduledEventExceptionCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
@@ -2361,7 +2361,7 @@ export const guildsHandler = new Hono()
         exception_id: SnowflakeTypeSchema,
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/exceptions/:exception_id',
@@ -2396,7 +2396,7 @@ export const guildsHandler = new Hono()
       }),
     ),
     validator('json', GuildScheduledEventExceptionPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users',
@@ -2449,7 +2449,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/users/counts',
@@ -2492,7 +2492,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/scheduled-events/:guild_scheduled_event_id/:guild_scheduled_event_exception_id/users',
@@ -2550,7 +2550,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/soundboard-sounds',
@@ -2576,7 +2576,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/soundboard-sounds',
@@ -2601,7 +2601,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', SoundboardCreateRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
@@ -2625,7 +2625,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
@@ -2648,7 +2648,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/soundboard-sounds/:sound_id',
@@ -2673,7 +2673,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema })),
     validator('json', SoundboardPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/stickers',
@@ -2699,7 +2699,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/stickers',
@@ -2732,7 +2732,7 @@ export const guildsHandler = new Hono()
         file: v.string(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/stickers/:sticker_id',
@@ -2759,7 +2759,7 @@ export const guildsHandler = new Hono()
       'param',
       v.object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/stickers/:sticker_id',
@@ -2785,7 +2785,7 @@ export const guildsHandler = new Hono()
       'param',
       v.object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/stickers/:sticker_id',
@@ -2822,7 +2822,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/templates',
@@ -2850,7 +2850,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/guilds/:guild_id/templates',
@@ -2881,7 +2881,7 @@ export const guildsHandler = new Hono()
         description: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(120)))),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/guilds/:guild_id/templates/:code',
@@ -2911,7 +2911,7 @@ export const guildsHandler = new Hono()
         code: v.pipe(v.string(), v.maxCodePoints(152133)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/guilds/:guild_id/templates/:code',
@@ -2941,7 +2941,7 @@ export const guildsHandler = new Hono()
         code: v.pipe(v.string(), v.maxCodePoints(152133)),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/templates/:code',
@@ -2980,7 +2980,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/threads/active',
@@ -3004,7 +3004,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/vanity-url',
@@ -3028,7 +3028,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/voice-states/@me',
@@ -3052,7 +3052,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/voice-states/@me',
@@ -3076,7 +3076,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', UpdateSelfVoiceStateRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/voice-states/:user_id',
@@ -3100,7 +3100,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/voice-states/:user_id',
@@ -3124,7 +3124,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
     validator('json', UpdateVoiceStateRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/webhooks',
@@ -3162,7 +3162,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/welcome-screen',
@@ -3186,7 +3186,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/welcome-screen',
@@ -3211,7 +3211,7 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('json', WelcomeScreenPatchRequestPartialSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/widget',
@@ -3235,7 +3235,7 @@ export const guildsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/guilds/:guild_id/widget',
@@ -3268,7 +3268,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/widget.json',
@@ -3292,7 +3292,7 @@ export const guildsHandler = new Hono()
       security: [{}, { BotToken: [] }],
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/guilds/:guild_id/widget.png',
@@ -3317,5 +3317,5 @@ export const guildsHandler = new Hono()
     }),
     validator('param', v.object({ guild_id: SnowflakeTypeSchema })),
     validator('query', v.partial(v.object({ style: WidgetImageStylesSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -4,7 +4,7 @@ import { Schema, SchemaTransformation } from 'effect'
 import { OrderSchema } from '../components'
 
 export const storeHandler = new Hono()
-  .get('/store/inventory', (c) => {})
+  .get('/store/inventory', (c) => { throw new Error('Not implemented') })
   .post(
     '/store/order',
     sValidator('json', Schema.toStandardSchemaV1(OrderSchema)),
@@ -60,7 +60,7 @@ export const storeHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/store/order/:orderId',
@@ -77,7 +77,7 @@ export const storeHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/store/order/:orderId',
@@ -94,5 +94,5 @@ export const storeHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

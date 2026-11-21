@@ -17,7 +17,7 @@ export const getStoreInventory = os
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postStoreOrder = os
   .route({
@@ -30,7 +30,7 @@ export const postStoreOrder = os
   })
   .input(OrderSchema)
   .output(OrderSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getStoreOrderOrderId = os
   .route({
@@ -54,7 +54,7 @@ export const getStoreOrderOrderId = os
     }),
   )
   .output(OrderSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteStoreOrderOrderId = os
   .route({
@@ -77,4 +77,4 @@ export const deleteStoreOrderOrderId = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

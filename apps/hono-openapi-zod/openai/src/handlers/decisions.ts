@@ -18,5 +18,5 @@ export const decisionsHandler = new Hono().post(
     },
   }),
   validator('json', DecisionRequestSchema),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

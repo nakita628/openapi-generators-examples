@@ -14,7 +14,7 @@ export const filesHandler = new Hono()
         after: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/files',
@@ -51,8 +51,8 @@ export const filesHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/files/:file_id', sValidator('param', z.object({ file_id: z.string() })), (c) => {})
-  .delete('/files/:file_id', sValidator('param', z.object({ file_id: z.string() })), (c) => {})
-  .get('/files/:file_id/content', sValidator('param', z.object({ file_id: z.string() })), (c) => {})
+  .get('/files/:file_id', sValidator('param', z.object({ file_id: z.string() })), (c) => { throw new Error('Not implemented') })
+  .delete('/files/:file_id', sValidator('param', z.object({ file_id: z.string() })), (c) => { throw new Error('Not implemented') })
+  .get('/files/:file_id/content', sValidator('param', z.object({ file_id: z.string() })), (c) => { throw new Error('Not implemented') })

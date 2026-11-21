@@ -4,8 +4,8 @@ import * as v from 'valibot'
 import { BookingSchema, BookingPaymentSchema } from '../components'
 
 export const bookingsHandler = new Hono()
-  .get('/bookings', (c) => {})
-  .post('/bookings', sValidator('json', BookingSchema), (c) => {})
+  .get('/bookings', (c) => { throw new Error('Not implemented') })
+  .post('/bookings', sValidator('json', BookingSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/bookings/:bookingId',
     sValidator(
@@ -19,7 +19,7 @@ export const bookingsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/bookings/:bookingId',
@@ -34,7 +34,7 @@ export const bookingsHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/bookings/:bookingId/payment',
@@ -50,5 +50,5 @@ export const bookingsHandler = new Hono()
       }),
     ),
     sValidator('json', BookingPaymentSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

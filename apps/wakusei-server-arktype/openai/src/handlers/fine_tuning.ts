@@ -24,7 +24,7 @@ export const postFineTuningAlphaGradersRun = os
   })
   .input(RunGraderRequestSchema)
   .output(RunGraderResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postFineTuningAlphaGradersValidate = os
   .route({
@@ -36,7 +36,7 @@ export const postFineTuningAlphaGradersValidate = os
   })
   .input(ValidateGraderRequestSchema)
   .output(ValidateGraderResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getFineTuningCheckpointsFineTunedModelCheckpointPermissions = os
   .route({
@@ -60,7 +60,7 @@ export const getFineTuningCheckpointsFineTunedModelCheckpointPermissions = os
     }),
   )
   .output(ListFineTuningCheckpointPermissionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postFineTuningCheckpointsFineTunedModelCheckpointPermissions = os
   .route({
@@ -78,7 +78,7 @@ export const postFineTuningCheckpointsFineTunedModelCheckpointPermissions = os
     }),
   )
   .output(ListFineTuningCheckpointPermissionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermissionId = os
   .route({
@@ -91,7 +91,7 @@ export const deleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermi
   })
   .input(type({ fine_tuned_model_checkpoint: type('string'), permission_id: type('string') }))
   .output(DeleteFineTuningCheckpointPermissionResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getFineTuningJobs = os
   .route({
@@ -125,7 +125,7 @@ export const getFineTuningJobs = os
     }),
   )
   .output(ListPaginatedFineTuningJobsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postFineTuningJobs = os
   .route({
@@ -138,7 +138,7 @@ export const postFineTuningJobs = os
   })
   .input(CreateFineTuningJobRequestSchema)
   .output(FineTuningJobSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getFineTuningJobsFineTuningJobId = os
   .route({
@@ -151,7 +151,7 @@ export const getFineTuningJobsFineTuningJobId = os
   })
   .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postFineTuningJobsFineTuningJobIdCancel = os
   .route({
@@ -163,7 +163,7 @@ export const postFineTuningJobsFineTuningJobIdCancel = os
   })
   .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getFineTuningJobsFineTuningJobIdCheckpoints = os
   .route({
@@ -184,7 +184,7 @@ export const getFineTuningJobsFineTuningJobIdCheckpoints = os
     }),
   )
   .output(ListFineTuningJobCheckpointsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getFineTuningJobsFineTuningJobIdEvents = os
   .route({
@@ -205,7 +205,7 @@ export const getFineTuningJobsFineTuningJobIdEvents = os
     }),
   )
   .output(ListFineTuningJobEventsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postFineTuningJobsFineTuningJobIdPause = os
   .route({
@@ -217,7 +217,7 @@ export const postFineTuningJobsFineTuningJobIdPause = os
   })
   .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postFineTuningJobsFineTuningJobIdResume = os
   .route({
@@ -229,4 +229,4 @@ export const postFineTuningJobsFineTuningJobIdResume = os
   })
   .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

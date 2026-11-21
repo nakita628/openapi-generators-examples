@@ -466,7 +466,7 @@ export const conversations = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/conversations/:conversation_id/items', ({ params, query }) => {}, {
+  .get('/conversations/:conversation_id/items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ConversationsModel.listConversationItemsParams,
     query: ConversationsModel.listConversationItemsQuery,
     response: {
@@ -482,7 +482,7 @@ export const conversations = new Elysia()
       operationId: 'listConversationItems',
     },
   })
-  .post('/conversations/:conversation_id/items', ({ params, query, body }) => {}, {
+  .post('/conversations/:conversation_id/items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: ConversationsModel.createConversationItemsParams,
     query: ConversationsModel.createConversationItemsQuery,
     body: ConversationsModel.createConversationItemsBody,
@@ -500,7 +500,7 @@ export const conversations = new Elysia()
       operationId: 'createConversationItems',
     },
   })
-  .get('/conversations/:conversation_id/items/:item_id', ({ params, query }) => {}, {
+  .get('/conversations/:conversation_id/items/:item_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ConversationsModel.getConversationItemParams,
     query: ConversationsModel.getConversationItemQuery,
     response: { 200: 'ConversationItem', 404: 'ErrorResponse', 429: 'ErrorResponse' },
@@ -511,7 +511,7 @@ export const conversations = new Elysia()
       operationId: 'getConversationItem',
     },
   })
-  .delete('/conversations/:conversation_id/items/:item_id', ({ params }) => {}, {
+  .delete('/conversations/:conversation_id/items/:item_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ConversationsModel.deleteConversationItemParams,
     response: {
       200: 'ConversationResource',
@@ -527,7 +527,7 @@ export const conversations = new Elysia()
       operationId: 'deleteConversationItem',
     },
   })
-  .post('/conversations', ({ body }) => {}, {
+  .post('/conversations', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateConversationBody',
     response: {
       200: 'ConversationResource',
@@ -542,7 +542,7 @@ export const conversations = new Elysia()
       operationId: 'createConversation',
     },
   })
-  .get('/conversations/:conversation_id', ({ params }) => {}, {
+  .get('/conversations/:conversation_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ConversationsModel.getConversationParams,
     response: { 200: 'ConversationResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -552,7 +552,7 @@ export const conversations = new Elysia()
       operationId: 'getConversation',
     },
   })
-  .post('/conversations/:conversation_id', ({ params, body }) => {}, {
+  .post('/conversations/:conversation_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ConversationsModel.updateConversationParams,
     body: 'UpdateConversationBody',
     response: {
@@ -569,7 +569,7 @@ export const conversations = new Elysia()
       operationId: 'updateConversation',
     },
   })
-  .delete('/conversations/:conversation_id', ({ params }) => {}, {
+  .delete('/conversations/:conversation_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ConversationsModel.deleteConversationParams,
     response: { 200: 'DeletedConversationResource', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {

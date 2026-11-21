@@ -3,5 +3,5 @@ import { getStationsHandler } from '../routes'
 
 export const stationsHandler = new Hono().get(
   '/stations',
-  getStationsHandler(async (c) => {}),
+  getStationsHandler(async (c) => { throw new Error('Not implemented') }),
 )

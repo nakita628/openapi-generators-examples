@@ -71,7 +71,7 @@ export const chatHandler = new Hono()
         'order?': "'asc' | 'desc'",
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chat/completions',
@@ -135,7 +135,7 @@ export const chatHandler = new Hono()
       },
     }),
     validator('json', CreateChatCompletionRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chat/completions/:completion_id',
@@ -162,7 +162,7 @@ export const chatHandler = new Hono()
       },
     }),
     validator('param', type({ completion_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chat/completions/:completion_id',
@@ -194,7 +194,7 @@ export const chatHandler = new Hono()
     }),
     validator('param', type({ completion_id: 'string' })),
     validator('json', type({ metadata: MetadataSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chat/completions/:completion_id',
@@ -221,7 +221,7 @@ export const chatHandler = new Hono()
       },
     }),
     validator('param', type({ completion_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chat/completions/:completion_id/messages',
@@ -263,5 +263,5 @@ export const chatHandler = new Hono()
         'order?': "'asc' | 'desc'",
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

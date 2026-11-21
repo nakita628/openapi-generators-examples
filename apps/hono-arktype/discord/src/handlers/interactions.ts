@@ -24559,5 +24559,5 @@ export const interactionsHandler = new Hono().post(
       return ctx.error('one of the members')
     }),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

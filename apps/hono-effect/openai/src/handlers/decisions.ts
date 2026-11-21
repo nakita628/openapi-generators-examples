@@ -6,5 +6,5 @@ import { DecisionRequestSchema } from '../components'
 export const decisionsHandler = new Hono().post(
   '/decisions',
   sValidator('json', Schema.toStandardSchemaV1(DecisionRequestSchema)),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

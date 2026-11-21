@@ -15,4 +15,4 @@ export const postNewBooking = os
   .input(
     type(BookingSchema).and(type({ 'links?': type(LinksSelfSchema).and(LinksPaginationSchema) })),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

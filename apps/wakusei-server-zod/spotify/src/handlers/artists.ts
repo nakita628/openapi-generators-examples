@@ -28,7 +28,7 @@ export const getArtistsId = os
     }),
   )
   .output(ArtistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getArtists = os
   .route({
@@ -53,7 +53,7 @@ export const getArtists = os
     }),
   )
   .output(z.object({ artists: z.array(ArtistObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getArtistsIdAlbums = os
   .route({
@@ -114,7 +114,7 @@ export const getArtistsIdAlbums = os
     }),
   )
   .output(PagingArtistDiscographyAlbumObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getArtistsIdTopTracks = os
   .route({
@@ -146,7 +146,7 @@ export const getArtistsIdTopTracks = os
     }),
   )
   .output(z.object({ tracks: z.array(TrackObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getArtistsIdRelatedArtists = os
   .route({
@@ -171,4 +171,4 @@ export const getArtistsIdRelatedArtists = os
     }),
   )
   .output(z.object({ artists: z.array(ArtistObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

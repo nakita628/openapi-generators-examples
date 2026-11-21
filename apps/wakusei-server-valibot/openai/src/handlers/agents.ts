@@ -113,7 +113,7 @@ export const getAgentsAutomations = os
       v.description('A page of Agents API resources, with IDs for retrieving additional pages.'),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsAutomations = os
   .route({
@@ -127,7 +127,7 @@ export const postAgentsAutomations = os
   })
   .input(CreateAutomationParamsSchema)
   .output(AutomationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsAutomationsAutomationId = os
   .route({
@@ -142,7 +142,7 @@ export const getAgentsAutomationsAutomationId = os
     v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
   )
   .output(AutomationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsAutomationsAutomationId = os
   .route({
@@ -196,7 +196,7 @@ export const postAgentsAutomationsAutomationId = os
     }),
   )
   .output(AutomationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAgentsAutomationsAutomationId = os
   .route({
@@ -212,7 +212,7 @@ export const deleteAgentsAutomationsAutomationId = os
     v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
   )
   .output(DeletedAutomationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsAutomationsAutomationIdPause = os
   .route({
@@ -227,7 +227,7 @@ export const postAgentsAutomationsAutomationIdPause = os
     v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
   )
   .output(AutomationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsAutomationsAutomationIdResume = os
   .route({
@@ -243,7 +243,7 @@ export const postAgentsAutomationsAutomationIdResume = os
     v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
   )
   .output(AutomationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsAutomationsAutomationIdInvocations = os
   .route({
@@ -304,7 +304,7 @@ export const getAgentsAutomationsAutomationIdInvocations = os
       v.description('A page of Agents API resources, with IDs for retrieving additional pages.'),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsAutomationsAutomationIdInvocations = os
   .route({
@@ -319,7 +319,7 @@ export const postAgentsAutomationsAutomationIdInvocations = os
     v.object({ automation_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
   )
   .output(AutomationInvocationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsAutomationsAutomationIdInvocationsInvocationId = os
   .route({
@@ -337,7 +337,7 @@ export const getAgentsAutomationsAutomationIdInvocationsInvocationId = os
     }),
   )
   .output(AutomationInvocationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsEnvironments = os
   .route({
@@ -371,7 +371,7 @@ export const getAgentsEnvironments = os
     }),
   )
   .output(AgentEnvironmentListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsEnvironments = os
   .route({
@@ -386,7 +386,7 @@ export const postAgentsEnvironments = os
   })
   .input(CreateAgentEnvironmentParamsSchema)
   .output(PublicEnvironmentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsEnvironmentsEnvironmentId = os
   .route({
@@ -402,7 +402,7 @@ export const getAgentsEnvironmentsEnvironmentId = os
     v.object({ environment_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
   )
   .output(PublicEnvironmentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsEnvironmentsEnvironmentIdFiles = os
   .route({
@@ -442,7 +442,7 @@ export const getAgentsEnvironmentsEnvironmentIdFiles = os
     }),
   )
   .output(EnvironmentFileListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsEnvironmentsEnvironmentIdFiles = os
   .route({
@@ -459,7 +459,7 @@ export const postAgentsEnvironmentsEnvironmentIdFiles = os
     v.object({ environment_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }),
   )
   .output(EnvironmentFileResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdSubagents = os
   .route({
@@ -521,7 +521,7 @@ export const getAgentsSessionsSessionIdSubagents = os
       v.description('A page of Agents API resources, with IDs for retrieving additional pages.'),
     ),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdSubagentsSubagentId = os
   .route({
@@ -540,7 +540,7 @@ export const getAgentsSessionsSessionIdSubagentsSubagentId = os
     }),
   )
   .output(SubagentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdSubagentsSubagentIdItems = os
   .route({
@@ -575,7 +575,7 @@ export const getAgentsSessionsSessionIdSubagentsSubagentIdItems = os
     }),
   )
   .output(SessionItemListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdSubagentsSubagentIdTurns = os
   .route({
@@ -610,7 +610,7 @@ export const getAgentsSessionsSessionIdSubagentsSubagentIdTurns = os
     }),
   )
   .output(SessionTurnListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnId = os
   .route({
@@ -630,7 +630,7 @@ export const getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnId = os
     }),
   )
   .output(TurnResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItems = os
   .route({
@@ -666,7 +666,7 @@ export const getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItems = os
     }),
   )
   .output(SessionItemListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgents = os
   .route({
@@ -699,7 +699,7 @@ export const getAgents = os
     }),
   )
   .output(AgentListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgents = os
   .route({
@@ -714,7 +714,7 @@ export const postAgents = os
   })
   .input(CreateAgentParamsSchema)
   .output(AgentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsAgentId = os
   .route({
@@ -728,7 +728,7 @@ export const getAgentsAgentId = os
   })
   .input(v.object({ agent_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }))
   .output(AgentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsAgentId = os
   .route({
@@ -821,7 +821,7 @@ export const postAgentsAgentId = os
     }),
   )
   .output(AgentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAgentsAgentId = os
   .route({
@@ -835,7 +835,7 @@ export const deleteAgentsAgentId = os
   })
   .input(v.object({ agent_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }))
   .output(DeletedAgentResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsEnvironmentsTemplates = os
   .route({
@@ -868,7 +868,7 @@ export const getAgentsEnvironmentsTemplates = os
     }),
   )
   .output(EnvironmentTemplateListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsEnvironmentsTemplates = os
   .route({
@@ -883,7 +883,7 @@ export const postAgentsEnvironmentsTemplates = os
   })
   .input(CreateEnvironmentTemplateParamsSchema)
   .output(EnvironmentTemplateResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsEnvironmentsTemplatesEnvironmentTemplateId = os
   .route({
@@ -901,7 +901,7 @@ export const getAgentsEnvironmentsTemplatesEnvironmentTemplateId = os
     }),
   )
   .output(EnvironmentTemplateResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsEnvironmentsTemplatesEnvironmentTemplateId = os
   .route({
@@ -993,7 +993,7 @@ export const postAgentsEnvironmentsTemplatesEnvironmentTemplateId = os
     }),
   )
   .output(EnvironmentTemplateResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAgentsEnvironmentsTemplatesEnvironmentTemplateId = os
   .route({
@@ -1011,7 +1011,7 @@ export const deleteAgentsEnvironmentsTemplatesEnvironmentTemplateId = os
     }),
   )
   .output(DeletedEnvironmentTemplateResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessions = os
   .route({
@@ -1062,7 +1062,7 @@ export const getAgentsSessions = os
     }),
   )
   .output(SessionListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsSessions = os
   .route({
@@ -1077,7 +1077,7 @@ export const postAgentsSessions = os
   })
   .input(CreateAgentSessionParamsSchema)
   .output(SessionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionId = os
   .route({
@@ -1091,7 +1091,7 @@ export const getAgentsSessionsSessionId = os
   })
   .input(v.object({ session_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }))
   .output(SessionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsSessionsSessionId = os
   .route({
@@ -1151,7 +1151,7 @@ export const postAgentsSessionsSessionId = os
     }),
   )
   .output(SessionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAgentsSessionsSessionId = os
   .route({
@@ -1165,7 +1165,7 @@ export const deleteAgentsSessionsSessionId = os
   })
   .input(v.object({ session_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)) }))
   .output(DeletedSessionResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdArtifacts = os
   .route({
@@ -1202,7 +1202,7 @@ export const getAgentsSessionsSessionIdArtifacts = os
     }),
   )
   .output(SessionArtifactListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdArtifactsArtifactId = os
   .route({
@@ -1221,7 +1221,7 @@ export const getAgentsSessionsSessionIdArtifactsArtifactId = os
     }),
   )
   .output(SessionArtifactResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteAgentsSessionsSessionIdArtifactsArtifactId = os
   .route({
@@ -1240,7 +1240,7 @@ export const deleteAgentsSessionsSessionIdArtifactsArtifactId = os
     }),
   )
   .output(DeletedSessionArtifactResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdArtifactsArtifactIdContent = os
   .route({
@@ -1258,7 +1258,7 @@ export const getAgentsSessionsSessionIdArtifactsArtifactIdContent = os
       artifact_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdEvents = os
   .route({
@@ -1285,7 +1285,7 @@ export const getAgentsSessionsSessionIdEvents = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postAgentsSessionsSessionIdEvents = os
   .route({
@@ -1307,7 +1307,7 @@ export const postAgentsSessionsSessionIdEvents = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdItems = os
   .route({
@@ -1341,7 +1341,7 @@ export const getAgentsSessionsSessionIdItems = os
     }),
   )
   .output(SessionItemListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdTraces = os
   .route({
@@ -1375,7 +1375,7 @@ export const getAgentsSessionsSessionIdTraces = os
     }),
   )
   .output(SessionTraceListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdTurns = os
   .route({
@@ -1409,7 +1409,7 @@ export const getAgentsSessionsSessionIdTurns = os
     }),
   )
   .output(SessionTurnListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdTurnsTurnId = os
   .route({
@@ -1428,7 +1428,7 @@ export const getAgentsSessionsSessionIdTurnsTurnId = os
     }),
   )
   .output(TurnResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getAgentsSessionsSessionIdTurnsTurnIdItems = os
   .route({
@@ -1463,4 +1463,4 @@ export const getAgentsSessionsSessionIdTurnsTurnIdItems = os
     }),
   )
   .output(SessionItemListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

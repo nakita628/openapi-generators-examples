@@ -31,24 +31,24 @@ export const chatHandler = new Hono()
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/chat/completions', sValidator('json', CreateChatCompletionRequestSchema), (c) => {})
+  .post('/chat/completions', sValidator('json', CreateChatCompletionRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/chat/completions/:completion_id',
     sValidator('param', z.object({ completion_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chat/completions/:completion_id',
     sValidator('param', z.object({ completion_id: z.string() })),
     sValidator('json', z.object({ metadata: MetadataSchema })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chat/completions/:completion_id',
     sValidator('param', z.object({ completion_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chat/completions/:completion_id/messages',
@@ -61,5 +61,5 @@ export const chatHandler = new Hono()
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

@@ -83,5 +83,5 @@ export const stationsHandler = new Hono().get(
       '500': InternalServerErrorResponse,
     },
   }),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

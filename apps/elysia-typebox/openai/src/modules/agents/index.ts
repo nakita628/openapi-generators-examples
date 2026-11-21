@@ -608,7 +608,7 @@ export const agents = new Elysia()
     WebSearchModeParam: WebSearchModeParamSchema,
     WebSearchModeResource: WebSearchModeResourceSchema,
   })
-  .get('/agents/automations', ({ query }) => {}, {
+  .get('/agents/automations', ({ query }) => { throw new Error('Not implemented') }, {
     query: AgentsModel.listAgentAutomationsQuery,
     response: {
       200: AgentsModel.listAgentAutomationsResponse200,
@@ -628,7 +628,7 @@ export const agents = new Elysia()
       operationId: 'listAgentAutomations',
     },
   })
-  .post('/agents/automations', ({ body }) => {}, {
+  .post('/agents/automations', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateAutomationParams',
     response: {
       201: 'AutomationResource',
@@ -647,7 +647,7 @@ export const agents = new Elysia()
       operationId: 'createAgentAutomation',
     },
   })
-  .get('/agents/automations/:automation_id', ({ params }) => {}, {
+  .get('/agents/automations/:automation_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.getAgentAutomationParams,
     response: {
       200: 'AutomationResource',
@@ -666,7 +666,7 @@ export const agents = new Elysia()
       operationId: 'getAgentAutomation',
     },
   })
-  .post('/agents/automations/:automation_id', ({ params, body }) => {}, {
+  .post('/agents/automations/:automation_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.updateAgentAutomationParams,
     body: 'UpdateAutomationParams',
     response: {
@@ -686,7 +686,7 @@ export const agents = new Elysia()
       operationId: 'updateAgentAutomation',
     },
   })
-  .delete('/agents/automations/:automation_id', ({ params }) => {}, {
+  .delete('/agents/automations/:automation_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.deleteAgentAutomationParams,
     response: {
       200: 'DeletedAutomationResource',
@@ -706,7 +706,7 @@ export const agents = new Elysia()
       operationId: 'deleteAgentAutomation',
     },
   })
-  .post('/agents/automations/:automation_id/pause', ({ params }) => {}, {
+  .post('/agents/automations/:automation_id/pause', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.pauseAgentAutomationParams,
     response: {
       200: 'AutomationResource',
@@ -725,7 +725,7 @@ export const agents = new Elysia()
       operationId: 'pauseAgentAutomation',
     },
   })
-  .post('/agents/automations/:automation_id/resume', ({ params }) => {}, {
+  .post('/agents/automations/:automation_id/resume', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.resumeAgentAutomationParams,
     response: {
       200: 'AutomationResource',
@@ -745,7 +745,7 @@ export const agents = new Elysia()
       operationId: 'resumeAgentAutomation',
     },
   })
-  .get('/agents/automations/:automation_id/invocations', ({ params, query }) => {}, {
+  .get('/agents/automations/:automation_id/invocations', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentAutomationInvocationsParams,
     query: AgentsModel.listAgentAutomationInvocationsQuery,
     response: {
@@ -766,7 +766,7 @@ export const agents = new Elysia()
       operationId: 'listAgentAutomationInvocations',
     },
   })
-  .post('/agents/automations/:automation_id/invocations', ({ params }) => {}, {
+  .post('/agents/automations/:automation_id/invocations', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.createAgentAutomationInvocationParams,
     response: {
       200: 'AutomationInvocationResource',
@@ -785,7 +785,7 @@ export const agents = new Elysia()
       operationId: 'createAgentAutomationInvocation',
     },
   })
-  .get('/agents/automations/:automation_id/invocations/:invocation_id', ({ params }) => {}, {
+  .get('/agents/automations/:automation_id/invocations/:invocation_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.getAgentAutomationInvocationParams,
     response: {
       200: 'AutomationInvocationResource',
@@ -804,7 +804,7 @@ export const agents = new Elysia()
       operationId: 'getAgentAutomationInvocation',
     },
   })
-  .get('/agents/environments', ({ query }) => {}, {
+  .get('/agents/environments', ({ query }) => { throw new Error('Not implemented') }, {
     query: AgentsModel.listAgentEnvironmentsQuery,
     response: {
       200: 'AgentEnvironmentListResource',
@@ -824,7 +824,7 @@ export const agents = new Elysia()
       operationId: 'listAgentEnvironments',
     },
   })
-  .post('/agents/environments', ({ headers, body }) => {}, {
+  .post('/agents/environments', ({ headers, body }) => { throw new Error('Not implemented') }, {
     headers: AgentsModel.createAgentEnvironmentHeaders,
     body: 'CreateAgentEnvironmentParams',
     response: {
@@ -846,7 +846,7 @@ export const agents = new Elysia()
       operationId: 'createAgentEnvironment',
     },
   })
-  .get('/agents/environments/:environment_id', ({ params }) => {}, {
+  .get('/agents/environments/:environment_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentEnvironmentParams,
     response: {
       200: 'PublicEnvironmentResource',
@@ -866,7 +866,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgentEnvironment',
     },
   })
-  .get('/agents/environments/:environment_id/files', ({ params, query }) => {}, {
+  .get('/agents/environments/:environment_id/files', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentEnvironmentFilesParams,
     query: AgentsModel.listAgentEnvironmentFilesQuery,
     response: {
@@ -887,7 +887,7 @@ export const agents = new Elysia()
       operationId: 'listAgentEnvironmentFiles',
     },
   })
-  .post('/agents/environments/:environment_id/files', ({ params, body }) => {}, {
+  .post('/agents/environments/:environment_id/files', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.createAgentEnvironmentFileParams,
     body: 'HostedEnvironmentFileParam',
     response: {
@@ -909,7 +909,7 @@ export const agents = new Elysia()
       operationId: 'createAgentEnvironmentFile',
     },
   })
-  .get('/agents/sessions/:session_id/subagents', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/subagents', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionSubagentsParams,
     query: AgentsModel.listAgentSessionSubagentsQuery,
     response: {
@@ -930,7 +930,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionSubagents',
     },
   })
-  .get('/agents/sessions/:session_id/subagents/:subagent_id', ({ params }) => {}, {
+  .get('/agents/sessions/:session_id/subagents/:subagent_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentSessionSubagentParams,
     response: {
       200: 'SubagentResource',
@@ -950,7 +950,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgentSessionSubagent',
     },
   })
-  .get('/agents/sessions/:session_id/subagents/:subagent_id/items', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/subagents/:subagent_id/items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionSubagentItemsParams,
     query: AgentsModel.listAgentSessionSubagentItemsQuery,
     response: {
@@ -971,7 +971,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionSubagentItems',
     },
   })
-  .get('/agents/sessions/:session_id/subagents/:subagent_id/turns', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/subagents/:subagent_id/turns', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionSubagentTurnsParams,
     query: AgentsModel.listAgentSessionSubagentTurnsQuery,
     response: {
@@ -992,7 +992,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionSubagentTurns',
     },
   })
-  .get('/agents/sessions/:session_id/subagents/:subagent_id/turns/:turn_id', ({ params }) => {}, {
+  .get('/agents/sessions/:session_id/subagents/:subagent_id/turns/:turn_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentSessionSubagentTurnParams,
     response: {
       200: 'TurnResource',
@@ -1014,7 +1014,7 @@ export const agents = new Elysia()
   })
   .get(
     '/agents/sessions/:session_id/subagents/:subagent_id/turns/:turn_id/items',
-    ({ params, query }) => {},
+    ({ params, query }) => { throw new Error('Not implemented') },
     {
       params: AgentsModel.listAgentSessionSubagentTurnItemsParams,
       query: AgentsModel.listAgentSessionSubagentTurnItemsQuery,
@@ -1037,7 +1037,7 @@ export const agents = new Elysia()
       },
     },
   )
-  .get('/agents', ({ query }) => {}, {
+  .get('/agents', ({ query }) => { throw new Error('Not implemented') }, {
     query: AgentsModel.listAgentsQuery,
     response: {
       200: 'AgentListResource',
@@ -1057,7 +1057,7 @@ export const agents = new Elysia()
       operationId: 'listAgents',
     },
   })
-  .post('/agents', ({ body }) => {}, {
+  .post('/agents', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateAgentParams',
     response: {
       201: 'AgentResource',
@@ -1077,7 +1077,7 @@ export const agents = new Elysia()
       operationId: 'createAgent',
     },
   })
-  .get('/agents/:agent_id', ({ params }) => {}, {
+  .get('/agents/:agent_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentParams,
     response: {
       200: 'AgentResource',
@@ -1097,7 +1097,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgent',
     },
   })
-  .post('/agents/:agent_id', ({ params, body }) => {}, {
+  .post('/agents/:agent_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.updateAgentParams,
     body: 'UpdateAgentParams',
     response: {
@@ -1118,7 +1118,7 @@ export const agents = new Elysia()
       operationId: 'updateAgent',
     },
   })
-  .delete('/agents/:agent_id', ({ params }) => {}, {
+  .delete('/agents/:agent_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.deleteAgentParams,
     response: {
       200: 'DeletedAgentResource',
@@ -1138,7 +1138,7 @@ export const agents = new Elysia()
       operationId: 'deleteAgent',
     },
   })
-  .get('/agents/environments/templates', ({ query }) => {}, {
+  .get('/agents/environments/templates', ({ query }) => { throw new Error('Not implemented') }, {
     query: AgentsModel.listAgentEnvironmentTemplatesQuery,
     response: {
       200: 'EnvironmentTemplateListResource',
@@ -1157,7 +1157,7 @@ export const agents = new Elysia()
       operationId: 'listAgentEnvironmentTemplates',
     },
   })
-  .post('/agents/environments/templates', ({ body }) => {}, {
+  .post('/agents/environments/templates', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateEnvironmentTemplateParams',
     response: {
       201: 'EnvironmentTemplateResource',
@@ -1176,7 +1176,7 @@ export const agents = new Elysia()
       operationId: 'createAgentEnvironmentTemplate',
     },
   })
-  .get('/agents/environments/templates/:environment_template_id', ({ params }) => {}, {
+  .get('/agents/environments/templates/:environment_template_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentEnvironmentTemplateParams,
     response: {
       200: 'EnvironmentTemplateResource',
@@ -1195,7 +1195,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgentEnvironmentTemplate',
     },
   })
-  .post('/agents/environments/templates/:environment_template_id', ({ params, body }) => {}, {
+  .post('/agents/environments/templates/:environment_template_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.updateAgentEnvironmentTemplateParams,
     body: 'UpdateEnvironmentTemplateParams',
     response: {
@@ -1216,7 +1216,7 @@ export const agents = new Elysia()
       operationId: 'updateAgentEnvironmentTemplate',
     },
   })
-  .delete('/agents/environments/templates/:environment_template_id', ({ params }) => {}, {
+  .delete('/agents/environments/templates/:environment_template_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.deleteAgentEnvironmentTemplateParams,
     response: {
       200: 'DeletedEnvironmentTemplateResource',
@@ -1236,7 +1236,7 @@ export const agents = new Elysia()
       operationId: 'deleteAgentEnvironmentTemplate',
     },
   })
-  .get('/agents/sessions', ({ query }) => {}, {
+  .get('/agents/sessions', ({ query }) => { throw new Error('Not implemented') }, {
     query: AgentsModel.listAgentSessionsQuery,
     response: {
       200: 'SessionListResource',
@@ -1256,7 +1256,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessions',
     },
   })
-  .post('/agents/sessions', ({ body }) => {}, {
+  .post('/agents/sessions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateAgentSessionParams',
     response: {
       201: 'SessionResource',
@@ -1277,7 +1277,7 @@ export const agents = new Elysia()
       operationId: 'createAgentSession',
     },
   })
-  .get('/agents/sessions/:session_id', ({ params }) => {}, {
+  .get('/agents/sessions/:session_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentSessionParams,
     response: {
       200: 'SessionResource',
@@ -1297,7 +1297,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgentSession',
     },
   })
-  .post('/agents/sessions/:session_id', ({ params, body }) => {}, {
+  .post('/agents/sessions/:session_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.updateAgentSessionParams,
     body: 'UpdateAgentSessionParams',
     response: {
@@ -1318,7 +1318,7 @@ export const agents = new Elysia()
       operationId: 'updateAgentSession',
     },
   })
-  .delete('/agents/sessions/:session_id', ({ params }) => {}, {
+  .delete('/agents/sessions/:session_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.deleteAgentSessionParams,
     response: {
       200: 'DeletedSessionResource',
@@ -1338,7 +1338,7 @@ export const agents = new Elysia()
       operationId: 'deleteAgentSession',
     },
   })
-  .get('/agents/sessions/:session_id/artifacts', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/artifacts', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionArtifactsParams,
     query: AgentsModel.listAgentSessionArtifactsQuery,
     response: {
@@ -1359,7 +1359,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionArtifacts',
     },
   })
-  .get('/agents/sessions/:session_id/artifacts/:artifact_id', ({ params }) => {}, {
+  .get('/agents/sessions/:session_id/artifacts/:artifact_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentSessionArtifactParams,
     response: {
       200: 'SessionArtifactResource',
@@ -1379,7 +1379,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgentSessionArtifact',
     },
   })
-  .delete('/agents/sessions/:session_id/artifacts/:artifact_id', ({ params }) => {}, {
+  .delete('/agents/sessions/:session_id/artifacts/:artifact_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.deleteAgentSessionArtifactParams,
     response: {
       200: 'DeletedSessionArtifactResource',
@@ -1399,7 +1399,7 @@ export const agents = new Elysia()
       operationId: 'deleteAgentSessionArtifact',
     },
   })
-  .get('/agents/sessions/:session_id/artifacts/:artifact_id/content', ({ params }) => {}, {
+  .get('/agents/sessions/:session_id/artifacts/:artifact_id/content', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentSessionArtifactContentParams,
     response: {
       200: t.Void(),
@@ -1419,7 +1419,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgentSessionArtifactContent',
     },
   })
-  .get('/agents/sessions/:session_id/events', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/events', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionEventsParams,
     query: AgentsModel.listAgentSessionEventsQuery,
     response: {
@@ -1440,7 +1440,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionEvents',
     },
   })
-  .post('/agents/sessions/:session_id/events', ({ params, headers, body }) => {}, {
+  .post('/agents/sessions/:session_id/events', ({ params, headers, body }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.createAgentSessionEventsParams,
     headers: AgentsModel.createAgentSessionEventsHeaders,
     body: 'CreateSessionEventsParams',
@@ -1462,7 +1462,7 @@ export const agents = new Elysia()
       operationId: 'createAgentSessionEvents',
     },
   })
-  .get('/agents/sessions/:session_id/items', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionItemsParams,
     query: AgentsModel.listAgentSessionItemsQuery,
     response: {
@@ -1483,7 +1483,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionItems',
     },
   })
-  .get('/agents/sessions/:session_id/traces', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/traces', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionTracesParams,
     query: AgentsModel.listAgentSessionTracesQuery,
     response: {
@@ -1504,7 +1504,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionTraces',
     },
   })
-  .get('/agents/sessions/:session_id/turns', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/turns', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionTurnsParams,
     query: AgentsModel.listAgentSessionTurnsQuery,
     response: {
@@ -1525,7 +1525,7 @@ export const agents = new Elysia()
       operationId: 'listAgentSessionTurns',
     },
   })
-  .get('/agents/sessions/:session_id/turns/:turn_id', ({ params }) => {}, {
+  .get('/agents/sessions/:session_id/turns/:turn_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.retrieveAgentSessionTurnParams,
     response: {
       200: 'TurnResource',
@@ -1545,7 +1545,7 @@ export const agents = new Elysia()
       operationId: 'retrieveAgentSessionTurn',
     },
   })
-  .get('/agents/sessions/:session_id/turns/:turn_id/items', ({ params, query }) => {}, {
+  .get('/agents/sessions/:session_id/turns/:turn_id/items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AgentsModel.listAgentSessionTurnItemsParams,
     query: AgentsModel.listAgentSessionTurnItemsQuery,
     response: {

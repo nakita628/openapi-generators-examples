@@ -51,7 +51,7 @@ export const tracksHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/tracks',
@@ -90,5 +90,5 @@ export const tracksHandler = new Hono()
           }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

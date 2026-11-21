@@ -62,7 +62,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code',
@@ -98,7 +98,7 @@ export const invitesHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users',
@@ -131,7 +131,7 @@ export const invitesHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users',
@@ -156,7 +156,7 @@ export const invitesHandler = new Hono()
     }),
     validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
     validator('form', Compile(Type.Object({ target_users_file: Type.String() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-add',
@@ -192,7 +192,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-delete',
@@ -228,7 +228,7 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users/job-status',
@@ -255,7 +255,7 @@ export const invitesHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users/:user_id',
@@ -284,7 +284,7 @@ export const invitesHandler = new Hono()
         Type.Object({ code: Type.String({ maxLength: 152133 }), user_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code/target-users/:user_id',
@@ -313,5 +313,5 @@ export const invitesHandler = new Hono()
         Type.Object({ code: Type.String({ maxLength: 152133 }), user_id: SnowflakeTypeSchema }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

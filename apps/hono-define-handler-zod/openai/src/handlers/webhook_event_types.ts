@@ -3,5 +3,5 @@ import { getWebhookEventTypesHandler } from '../routes'
 
 export const webhookEventTypesHandler = new Hono().get(
   '/webhook_event_types',
-  getWebhookEventTypesHandler(async (c) => {}),
+  getWebhookEventTypesHandler(async (c) => { throw new Error('Not implemented') }),
 )

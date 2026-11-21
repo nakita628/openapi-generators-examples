@@ -14,37 +14,37 @@ import {
 export const containersHandler = new Hono()
   .get(
     '/containers',
-    getContainersHandler(async (c, { query }) => {}),
+    getContainersHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/containers',
-    postContainersHandler(async (c, { json }) => {}),
+    postContainersHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/containers/:container_id',
-    getContainersContainerIdHandler(async (c, { param }) => {}),
+    getContainersContainerIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/containers/:container_id',
-    deleteContainersContainerIdHandler(async (c, { param }) => {}),
+    deleteContainersContainerIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/containers/:container_id/files',
-    getContainersContainerIdFilesHandler(async (c, { param, query }) => {}),
+    getContainersContainerIdFilesHandler(async (c, { param, query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/containers/:container_id/files',
-    postContainersContainerIdFilesHandler(async (c, { param, form, json }) => {}),
+    postContainersContainerIdFilesHandler(async (c, { param, form, json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/containers/:container_id/files/:file_id',
-    getContainersContainerIdFilesFileIdHandler(async (c, { param }) => {}),
+    getContainersContainerIdFilesFileIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/containers/:container_id/files/:file_id',
-    deleteContainersContainerIdFilesFileIdHandler(async (c, { param }) => {}),
+    deleteContainersContainerIdFilesFileIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/containers/:container_id/files/:file_id/content',
-    getContainersContainerIdFilesFileIdContentHandler(async (c, { param }) => {}),
+    getContainersContainerIdFilesFileIdContentHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )

@@ -22,23 +22,23 @@ export const invitesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code',
     sValidator('param', v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users',
     sValidator('param', v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users',
     sValidator('param', v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) })),
     sValidator('form', v.object({ target_users_file: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-add',
@@ -52,7 +52,7 @@ export const invitesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/invites/:code/target-users/bulk-delete',
@@ -66,12 +66,12 @@ export const invitesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/invites/:code/target-users/job-status',
     sValidator('param', v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/invites/:code/target-users/:user_id',
@@ -79,7 +79,7 @@ export const invitesHandler = new Hono()
       'param',
       v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)), user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/invites/:code/target-users/:user_id',
@@ -87,5 +87,5 @@ export const invitesHandler = new Hono()
       'param',
       v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)), user_id: SnowflakeTypeSchema }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

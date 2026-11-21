@@ -4,7 +4,7 @@ import { MarketsModel } from './model'
 
 export const markets = new Elysia()
   .model({ ErrorObject: ErrorObjectSchema })
-  .get('/markets', () => {}, {
+  .get('/markets', () => { throw new Error('Not implemented') }, {
     response: {
       200: MarketsModel.getAvailableMarketsResponse200,
       401: MarketsModel.getAvailableMarketsResponse401,

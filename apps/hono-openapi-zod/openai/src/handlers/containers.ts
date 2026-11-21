@@ -40,7 +40,7 @@ export const containersHandler = new Hono()
         name: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/containers',
@@ -61,7 +61,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('json', CreateContainerBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id',
@@ -82,7 +82,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', z.object({ container_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id',
@@ -113,7 +113,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', z.object({ container_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files',
@@ -143,7 +143,7 @@ export const containersHandler = new Hono()
         after: z.string().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/containers/:container_id/files',
@@ -171,7 +171,7 @@ export const containersHandler = new Hono()
     validator('param', z.object({ container_id: z.string() })),
     validator('json', CreateContainerFileBodySchema),
     validator('form', CreateContainerFileBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id',
@@ -193,7 +193,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', z.object({ container_id: z.string(), file_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/containers/:container_id/files/:file_id',
@@ -225,7 +225,7 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', z.object({ container_id: z.string(), file_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/containers/:container_id/files/:file_id/content',
@@ -244,5 +244,5 @@ export const containersHandler = new Hono()
       },
     }),
     validator('param', z.object({ container_id: z.string(), file_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

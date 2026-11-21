@@ -24,7 +24,7 @@ export const skusHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skus/:sku_id/subscriptions/:subscription_id',
@@ -38,5 +38,5 @@ export const skusHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.optional(SnowflakeTypeSchema) })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

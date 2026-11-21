@@ -13,7 +13,7 @@ export const audioFeaturesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/audio-features/:id',
@@ -25,5 +25,5 @@ export const audioFeaturesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

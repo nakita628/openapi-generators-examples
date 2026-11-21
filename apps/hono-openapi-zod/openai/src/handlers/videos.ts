@@ -62,7 +62,7 @@ export const videosHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos',
@@ -134,7 +134,7 @@ export const videosHandler = new Hono()
         })
         .meta({ description: 'Multipart parameters for creating a new video generation job.' }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/characters',
@@ -169,7 +169,7 @@ export const videosHandler = new Hono()
       deprecated: true,
     }),
     validator('form', CreateVideoCharacterBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/characters/:character_id',
@@ -197,7 +197,7 @@ export const videosHandler = new Hono()
       deprecated: true,
     }),
     validator('param', z.object({ character_id: z.string().meta({ examples: ['char_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/edits',
@@ -251,7 +251,7 @@ export const videosHandler = new Hono()
         })
         .meta({ description: 'Parameters for editing an existing generated video.' }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/extensions',
@@ -308,7 +308,7 @@ export const videosHandler = new Hono()
         })
         .meta({ description: 'Multipart parameters for extending an existing generated video.' }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/:video_id',
@@ -336,7 +336,7 @@ export const videosHandler = new Hono()
       deprecated: true,
     }),
     validator('param', z.object({ video_id: z.string().meta({ examples: ['video_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/videos/:video_id',
@@ -368,7 +368,7 @@ export const videosHandler = new Hono()
       deprecated: true,
     }),
     validator('param', z.object({ video_id: z.string().meta({ examples: ['video_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/:video_id/content',
@@ -406,7 +406,7 @@ export const videosHandler = new Hono()
     }),
     validator('param', z.object({ video_id: z.string().meta({ examples: ['video_123'] }) })),
     validator('query', z.object({ variant: VideoContentVariantSchema.exactOptional() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/:video_id/remix',
@@ -443,5 +443,5 @@ export const videosHandler = new Hono()
     validator('param', z.object({ video_id: z.string().meta({ examples: ['video_123'] }) })),
     validator('json', CreateVideoRemixBodySchema),
     validator('form', CreateVideoRemixBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

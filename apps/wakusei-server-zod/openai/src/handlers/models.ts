@@ -12,7 +12,7 @@ export const getModels = os
       'Lists the currently available models, and provides basic information about each one such as the owner and availability.',
   })
   .output(ListModelsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getModelsModel = os
   .route({
@@ -25,7 +25,7 @@ export const getModelsModel = os
   })
   .input(z.object({ model: z.string().meta({ examples: ['gpt-6.2-astra'] }) }))
   .output(ModelSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteModelsModel = os
   .route({
@@ -42,4 +42,4 @@ export const deleteModelsModel = os
     }),
   )
   .output(DeleteModelResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

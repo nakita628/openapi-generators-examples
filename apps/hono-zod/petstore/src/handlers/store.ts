@@ -4,7 +4,7 @@ import * as z from 'zod'
 import { OrderSchema } from '../components'
 
 export const storeHandler = new Hono()
-  .get('/store/inventory', (c) => {})
+  .get('/store/inventory', (c) => { throw new Error('Not implemented') })
   .post(
     '/store/order',
     sValidator('json', OrderSchema),
@@ -34,15 +34,15 @@ export const storeHandler = new Hono()
         complete: z.stringbool().exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/store/order/:orderId',
     sValidator('param', z.object({ orderId: z.coerce.bigint().pipe(z.int64()) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/store/order/:orderId',
     sValidator('param', z.object({ orderId: z.coerce.bigint().pipe(z.int64()) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

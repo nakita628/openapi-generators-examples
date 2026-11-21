@@ -33,7 +33,7 @@ export const getVideos = os
     }),
   )
   .output(VideoListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideos = os
   .route({
@@ -47,7 +47,7 @@ export const postVideos = os
   })
   .input(CreateVideoJsonBodySchema)
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosCharacters = os
   .route({
@@ -60,7 +60,7 @@ export const postVideosCharacters = os
     successDescription: 'Success',
   })
   .output(VideoCharacterResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVideosCharactersCharacterId = os
   .route({
@@ -74,7 +74,7 @@ export const getVideosCharactersCharacterId = os
   })
   .input(z.object({ character_id: z.string().meta({ examples: ['char_123'] }) }))
   .output(VideoCharacterResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosEdits = os
   .route({
@@ -89,7 +89,7 @@ export const postVideosEdits = os
   })
   .input(CreateVideoEditJsonBodySchema)
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosExtensions = os
   .route({
@@ -103,7 +103,7 @@ export const postVideosExtensions = os
   })
   .input(CreateVideoExtendJsonBodySchema)
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVideosVideoId = os
   .route({
@@ -117,7 +117,7 @@ export const getVideosVideoId = os
   })
   .input(z.object({ video_id: z.string().meta({ examples: ['video_123'] }) }))
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteVideosVideoId = os
   .route({
@@ -131,7 +131,7 @@ export const deleteVideosVideoId = os
   })
   .input(z.object({ video_id: z.string().meta({ examples: ['video_123'] }) }))
   .output(DeletedVideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVideosVideoIdContent = os
   .route({
@@ -151,7 +151,7 @@ export const getVideosVideoIdContent = os
     }),
   )
   .output(z.string())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosVideoIdRemix = os
   .route({
@@ -174,4 +174,4 @@ export const postVideosVideoIdRemix = os
     }),
   )
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

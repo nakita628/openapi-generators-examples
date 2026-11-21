@@ -332,7 +332,7 @@ export const imagesHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/images/generations',
@@ -372,7 +372,7 @@ export const imagesHandler = new Hono()
       },
     }),
     validator('json', CreateImageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/images/variations',
@@ -472,5 +472,5 @@ export const imagesHandler = new Hono()
         ),
       }).describe('Legacy request for the retired image variations endpoint.'),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

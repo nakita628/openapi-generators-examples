@@ -8,17 +8,17 @@ import {
 } from '../components'
 
 export const uploadsHandler = new Hono()
-  .post('/uploads', sValidator('json', CreateUploadRequestSchema), (c) => {})
-  .post('/uploads/:upload_id/cancel', sValidator('param', type({ upload_id: 'string' })), (c) => {})
+  .post('/uploads', sValidator('json', CreateUploadRequestSchema), (c) => { throw new Error('Not implemented') })
+  .post('/uploads/:upload_id/cancel', sValidator('param', type({ upload_id: 'string' })), (c) => { throw new Error('Not implemented') })
   .post(
     '/uploads/:upload_id/complete',
     sValidator('param', type({ upload_id: 'string' })),
     sValidator('json', CompleteUploadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/parts',
     sValidator('param', type({ upload_id: 'string' })),
     sValidator('form', AddUploadPartRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

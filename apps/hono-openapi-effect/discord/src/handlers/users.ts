@@ -45,7 +45,7 @@ export const usersHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: ['identify'] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/users/@me',
@@ -73,7 +73,7 @@ export const usersHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('json', Schema.toStandardSchemaV1(BotAccountPatchRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/applications/:application_id/entitlements',
@@ -208,7 +208,7 @@ export const usersHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/applications/:application_id/role-connection',
@@ -241,7 +241,7 @@ export const usersHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ application_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .put(
     '/users/@me/applications/:application_id/role-connection',
@@ -275,7 +275,7 @@ export const usersHandler = new Hono()
       Schema.toStandardSchemaV1(Schema.Struct({ application_id: SnowflakeTypeSchema })),
     ),
     validator('json', Schema.toStandardSchemaV1(UpdateApplicationUserRoleConnectionRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/users/@me/applications/:application_id/role-connection',
@@ -301,7 +301,7 @@ export const usersHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ application_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/users/@me/channels',
@@ -333,7 +333,7 @@ export const usersHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('json', Schema.toStandardSchemaV1(CreatePrivateChannelRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/connections',
@@ -364,7 +364,7 @@ export const usersHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: ['connections'] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/guilds',
@@ -425,7 +425,7 @@ export const usersHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/users/@me/guilds/:guild_id',
@@ -448,7 +448,7 @@ export const usersHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ guild_id: SnowflakeTypeSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/@me/guilds/:guild_id/member',
@@ -476,7 +476,7 @@ export const usersHandler = new Hono()
       security: [{ OAuth2: ['guilds.members.read'] }],
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ guild_id: SnowflakeTypeSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/users/:user_id',
@@ -502,5 +502,5 @@ export const usersHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', Schema.toStandardSchemaV1(Schema.Struct({ user_id: SnowflakeTypeSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

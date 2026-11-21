@@ -11,7 +11,7 @@ export const uploadsHandler = new Hono()
   .post(
     '/uploads',
     sValidator('json', Schema.toStandardSchemaV1(CreateUploadRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/cancel',
@@ -23,7 +23,7 @@ export const uploadsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/complete',
@@ -36,7 +36,7 @@ export const uploadsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(CompleteUploadRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/uploads/:upload_id/parts',
@@ -49,5 +49,5 @@ export const uploadsHandler = new Hono()
       ),
     ),
     sValidator('form', Schema.toStandardSchemaV1(AddUploadPartRequestSchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

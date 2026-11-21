@@ -110,7 +110,7 @@ export const vaults = new Elysia()
     VaultStatusFilterParam: VaultStatusFilterParamSchema,
     VaultStatusParam: VaultStatusParamSchema,
   })
-  .get('/vaults', ({ query }) => {}, {
+  .get('/vaults', ({ query }) => { throw new Error('Not implemented') }, {
     query: VaultsModel.listVaultsQuery,
     response: {
       200: 'VaultListResource',
@@ -130,7 +130,7 @@ export const vaults = new Elysia()
       operationId: 'listVaults',
     },
   })
-  .post('/vaults', ({ body }) => {}, {
+  .post('/vaults', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVaultParams',
     response: {
       201: 'VaultResource',
@@ -150,7 +150,7 @@ export const vaults = new Elysia()
       operationId: 'createVault',
     },
   })
-  .get('/vaults/:vault_id', ({ params }) => {}, {
+  .get('/vaults/:vault_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.retrieveVaultParams,
     response: {
       200: 'VaultResource',
@@ -170,7 +170,7 @@ export const vaults = new Elysia()
       operationId: 'retrieveVault',
     },
   })
-  .post('/vaults/:vault_id', ({ params, body }) => {}, {
+  .post('/vaults/:vault_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.updateVaultParams,
     body: 'UpdateVaultParams',
     response: {
@@ -191,7 +191,7 @@ export const vaults = new Elysia()
       operationId: 'updateVault',
     },
   })
-  .delete('/vaults/:vault_id', ({ params }) => {}, {
+  .delete('/vaults/:vault_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.deleteVaultParams,
     response: {
       200: 'DeletedVaultResource',
@@ -211,7 +211,7 @@ export const vaults = new Elysia()
       operationId: 'deleteVault',
     },
   })
-  .get('/vaults/:vault_id/credentials', ({ params, query }) => {}, {
+  .get('/vaults/:vault_id/credentials', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.listVaultCredentialsParams,
     query: VaultsModel.listVaultCredentialsQuery,
     response: {
@@ -232,7 +232,7 @@ export const vaults = new Elysia()
       operationId: 'listVaultCredentials',
     },
   })
-  .post('/vaults/:vault_id/credentials', ({ params, body }) => {}, {
+  .post('/vaults/:vault_id/credentials', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.createVaultCredentialParams,
     body: 'CreateVaultCredentialParams',
     response: {
@@ -253,7 +253,7 @@ export const vaults = new Elysia()
       operationId: 'createVaultCredential',
     },
   })
-  .get('/vaults/:vault_id/credentials/:credential_id', ({ params }) => {}, {
+  .get('/vaults/:vault_id/credentials/:credential_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.retrieveVaultCredentialParams,
     response: {
       200: 'VaultCredentialResource',
@@ -273,7 +273,7 @@ export const vaults = new Elysia()
       operationId: 'retrieveVaultCredential',
     },
   })
-  .post('/vaults/:vault_id/credentials/:credential_id', ({ params, body }) => {}, {
+  .post('/vaults/:vault_id/credentials/:credential_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.rotateVaultCredentialParams,
     body: 'RotateVaultCredentialParams',
     response: {
@@ -294,7 +294,7 @@ export const vaults = new Elysia()
       operationId: 'rotateVaultCredential',
     },
   })
-  .delete('/vaults/:vault_id/credentials/:credential_id', ({ params }) => {}, {
+  .delete('/vaults/:vault_id/credentials/:credential_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: VaultsModel.deleteVaultCredentialParams,
     response: {
       200: 'DeletedVaultCredentialResource',

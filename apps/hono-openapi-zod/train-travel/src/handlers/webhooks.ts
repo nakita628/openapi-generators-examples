@@ -25,5 +25,5 @@ export const webhooksHandler = new Hono().post(
       z.object({ links: z.intersection(LinksSelfSchema, LinksPaginationSchema).exactOptional() }),
     ),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

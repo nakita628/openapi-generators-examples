@@ -3,102 +3,102 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getAgentsAutomations = os.getAgentsAutomations.handler(async ({ input }) => {})
-export const postAgentsAutomations = os.postAgentsAutomations.handler(async ({ input }) => {})
+export const getAgentsAutomations = os.getAgentsAutomations.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const postAgentsAutomations = os.postAgentsAutomations.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsAutomationsAutomationId = os.getAgentsAutomationsAutomationId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postAgentsAutomationsAutomationId = os.postAgentsAutomationsAutomationId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const deleteAgentsAutomationsAutomationId = os.deleteAgentsAutomationsAutomationId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postAgentsAutomationsAutomationIdPause =
-  os.postAgentsAutomationsAutomationIdPause.handler(async ({ input }) => {})
+  os.postAgentsAutomationsAutomationIdPause.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postAgentsAutomationsAutomationIdResume =
-  os.postAgentsAutomationsAutomationIdResume.handler(async ({ input }) => {})
+  os.postAgentsAutomationsAutomationIdResume.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsAutomationsAutomationIdInvocations =
-  os.getAgentsAutomationsAutomationIdInvocations.handler(async ({ input }) => {})
+  os.getAgentsAutomationsAutomationIdInvocations.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postAgentsAutomationsAutomationIdInvocations =
-  os.postAgentsAutomationsAutomationIdInvocations.handler(async ({ input }) => {})
+  os.postAgentsAutomationsAutomationIdInvocations.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsAutomationsAutomationIdInvocationsInvocationId =
-  os.getAgentsAutomationsAutomationIdInvocationsInvocationId.handler(async ({ input }) => {})
-export const getAgentsEnvironments = os.getAgentsEnvironments.handler(async ({ input }) => {})
-export const postAgentsEnvironments = os.postAgentsEnvironments.handler(async ({ input }) => {})
+  os.getAgentsAutomationsAutomationIdInvocationsInvocationId.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const getAgentsEnvironments = os.getAgentsEnvironments.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const postAgentsEnvironments = os.postAgentsEnvironments.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsEnvironmentsEnvironmentId = os.getAgentsEnvironmentsEnvironmentId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsEnvironmentsEnvironmentIdFiles =
-  os.getAgentsEnvironmentsEnvironmentIdFiles.handler(async ({ input }) => {})
+  os.getAgentsEnvironmentsEnvironmentIdFiles.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postAgentsEnvironmentsEnvironmentIdFiles =
-  os.postAgentsEnvironmentsEnvironmentIdFiles.handler(async ({ input }) => {})
+  os.postAgentsEnvironmentsEnvironmentIdFiles.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdSubagents = os.getAgentsSessionsSessionIdSubagents.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsSessionsSessionIdSubagentsSubagentId =
-  os.getAgentsSessionsSessionIdSubagentsSubagentId.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdSubagentsSubagentId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdSubagentsSubagentIdItems =
-  os.getAgentsSessionsSessionIdSubagentsSubagentIdItems.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdSubagentsSubagentIdItems.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdSubagentsSubagentIdTurns =
-  os.getAgentsSessionsSessionIdSubagentsSubagentIdTurns.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdSubagentsSubagentIdTurns.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnId =
-  os.getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnId.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItems =
-  os.getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItems.handler(async ({ input }) => {})
-export const getAgents = os.getAgents.handler(async ({ input }) => {})
-export const postAgents = os.postAgents.handler(async ({ input }) => {})
-export const getAgentsAgentId = os.getAgentsAgentId.handler(async ({ input }) => {})
-export const postAgentsAgentId = os.postAgentsAgentId.handler(async ({ input }) => {})
-export const deleteAgentsAgentId = os.deleteAgentsAgentId.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItems.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const getAgents = os.getAgents.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const postAgents = os.postAgents.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const getAgentsAgentId = os.getAgentsAgentId.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const postAgentsAgentId = os.postAgentsAgentId.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const deleteAgentsAgentId = os.deleteAgentsAgentId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsEnvironmentsTemplates = os.getAgentsEnvironmentsTemplates.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postAgentsEnvironmentsTemplates = os.postAgentsEnvironmentsTemplates.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsEnvironmentsTemplatesEnvironmentTemplateId =
-  os.getAgentsEnvironmentsTemplatesEnvironmentTemplateId.handler(async ({ input }) => {})
+  os.getAgentsEnvironmentsTemplatesEnvironmentTemplateId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const postAgentsEnvironmentsTemplatesEnvironmentTemplateId =
-  os.postAgentsEnvironmentsTemplatesEnvironmentTemplateId.handler(async ({ input }) => {})
+  os.postAgentsEnvironmentsTemplatesEnvironmentTemplateId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const deleteAgentsEnvironmentsTemplatesEnvironmentTemplateId =
-  os.deleteAgentsEnvironmentsTemplatesEnvironmentTemplateId.handler(async ({ input }) => {})
-export const getAgentsSessions = os.getAgentsSessions.handler(async ({ input }) => {})
-export const postAgentsSessions = os.postAgentsSessions.handler(async ({ input }) => {})
+  os.deleteAgentsEnvironmentsTemplatesEnvironmentTemplateId.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const getAgentsSessions = os.getAgentsSessions.handler(async ({ input }) => { throw new Error('Not implemented') })
+export const postAgentsSessions = os.postAgentsSessions.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionId = os.getAgentsSessionsSessionId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postAgentsSessionsSessionId = os.postAgentsSessionsSessionId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const deleteAgentsSessionsSessionId = os.deleteAgentsSessionsSessionId.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsSessionsSessionIdArtifacts = os.getAgentsSessionsSessionIdArtifacts.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsSessionsSessionIdArtifactsArtifactId =
-  os.getAgentsSessionsSessionIdArtifactsArtifactId.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdArtifactsArtifactId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const deleteAgentsSessionsSessionIdArtifactsArtifactId =
-  os.deleteAgentsSessionsSessionIdArtifactsArtifactId.handler(async ({ input }) => {})
+  os.deleteAgentsSessionsSessionIdArtifactsArtifactId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdArtifactsArtifactIdContent =
-  os.getAgentsSessionsSessionIdArtifactsArtifactIdContent.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdArtifactsArtifactIdContent.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdEvents = os.getAgentsSessionsSessionIdEvents.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const postAgentsSessionsSessionIdEvents = os.postAgentsSessionsSessionIdEvents.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsSessionsSessionIdItems = os.getAgentsSessionsSessionIdItems.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsSessionsSessionIdTraces = os.getAgentsSessionsSessionIdTraces.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsSessionsSessionIdTurns = os.getAgentsSessionsSessionIdTurns.handler(
-  async ({ input }) => {},
+  async ({ input }) => { throw new Error('Not implemented') },
 )
 export const getAgentsSessionsSessionIdTurnsTurnId =
-  os.getAgentsSessionsSessionIdTurnsTurnId.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdTurnsTurnId.handler(async ({ input }) => { throw new Error('Not implemented') })
 export const getAgentsSessionsSessionIdTurnsTurnIdItems =
-  os.getAgentsSessionsSessionIdTurnsTurnIdItems.handler(async ({ input }) => {})
+  os.getAgentsSessionsSessionIdTurnsTurnIdItems.handler(async ({ input }) => { throw new Error('Not implemented') })

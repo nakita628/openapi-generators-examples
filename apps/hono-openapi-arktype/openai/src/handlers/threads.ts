@@ -40,7 +40,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('json', CreateThreadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/runs',
@@ -61,7 +61,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('json', CreateThreadAndRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id',
@@ -79,7 +79,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id',
@@ -98,7 +98,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', type({ thread_id: 'string' })),
     validator('json', ModifyThreadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/threads/:thread_id',
@@ -116,7 +116,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/messages',
@@ -147,7 +147,7 @@ export const threadsHandler = new Hono()
         'run_id?': 'string',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages',
@@ -166,7 +166,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', type({ thread_id: 'string' })),
     validator('json', CreateMessageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/messages/:message_id',
@@ -184,7 +184,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string', message_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages/:message_id',
@@ -203,7 +203,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', type({ thread_id: 'string', message_id: 'string' })),
     validator('json', ModifyMessageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/threads/:thread_id/messages/:message_id',
@@ -221,7 +221,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string', message_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs',
@@ -251,7 +251,7 @@ export const threadsHandler = new Hono()
         'before?': 'string',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs',
@@ -281,7 +281,7 @@ export const threadsHandler = new Hono()
       }),
     ),
     validator('json', CreateRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id',
@@ -299,7 +299,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string', run_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id',
@@ -318,7 +318,7 @@ export const threadsHandler = new Hono()
     }),
     validator('param', type({ thread_id: 'string', run_id: 'string' })),
     validator('json', ModifyRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/cancel',
@@ -336,7 +336,7 @@ export const threadsHandler = new Hono()
       },
     }),
     validator('param', type({ thread_id: 'string', run_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps',
@@ -369,7 +369,7 @@ export const threadsHandler = new Hono()
           .to("'step_details.tool_calls[*].file_search.results[*].content'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps/:step_id',
@@ -395,7 +395,7 @@ export const threadsHandler = new Hono()
           .to("'step_details.tool_calls[*].file_search.results[*].content'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/submit_tool_outputs',
@@ -418,5 +418,5 @@ export const threadsHandler = new Hono()
     }),
     validator('param', type({ thread_id: 'string', run_id: 'string' })),
     validator('json', SubmitToolOutputsRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

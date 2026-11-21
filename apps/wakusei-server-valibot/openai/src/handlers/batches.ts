@@ -20,7 +20,7 @@ export const getBatches = os
     }),
   )
   .output(ListBatchesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBatches = os
   .route({
@@ -33,7 +33,7 @@ export const postBatches = os
   })
   .input(CreateBatchRequestSchema)
   .output(BatchSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBatchesBatchId = os
   .route({
@@ -46,7 +46,7 @@ export const getBatchesBatchId = os
   })
   .input(v.object({ batch_id: v.string() }))
   .output(BatchSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBatchesBatchIdCancel = os
   .route({
@@ -60,4 +60,4 @@ export const postBatchesBatchIdCancel = os
   })
   .input(v.object({ batch_id: v.string() }))
   .output(BatchSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

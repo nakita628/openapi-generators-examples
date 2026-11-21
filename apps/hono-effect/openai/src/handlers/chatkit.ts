@@ -14,12 +14,12 @@ export const chatkitHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/chatkit/sessions',
     sValidator('json', Schema.toStandardSchemaV1(CreateChatSessionBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads/:thread_id/items',
@@ -56,7 +56,7 @@ export const chatkitHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads/:thread_id',
@@ -66,7 +66,7 @@ export const chatkitHandler = new Hono()
         Schema.Struct({ thread_id: Schema.String.annotate({ jsonSchemaExamples: ['cthr_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/chatkit/threads/:thread_id',
@@ -76,7 +76,7 @@ export const chatkitHandler = new Hono()
         Schema.Struct({ thread_id: Schema.String.annotate({ jsonSchemaExamples: ['cthr_123'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/chatkit/threads',
@@ -120,5 +120,5 @@ export const chatkitHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

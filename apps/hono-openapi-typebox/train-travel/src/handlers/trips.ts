@@ -112,5 +112,5 @@ export const tripsHandler = new Hono().get(
       }),
     ),
   ),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

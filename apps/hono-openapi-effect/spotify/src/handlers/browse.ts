@@ -61,7 +61,7 @@ export const browseHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/browse/categories',
@@ -112,7 +112,7 @@ export const browseHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/browse/categories/:category_id',
@@ -157,7 +157,7 @@ export const browseHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/browse/categories/:category_id/playlists',
@@ -212,7 +212,7 @@ export const browseHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/browse/new-releases',
@@ -256,5 +256,5 @@ export const browseHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

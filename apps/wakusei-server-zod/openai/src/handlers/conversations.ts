@@ -34,7 +34,7 @@ export const getConversationsConversationIdItems = os
     }),
   )
   .output(ConversationItemListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postConversationsConversationIdItems = os
   .route({
@@ -63,7 +63,7 @@ export const postConversationsConversationIdItems = os
     }),
   )
   .output(ConversationItemListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getConversationsConversationIdItemsItemId = os
   .route({
@@ -86,7 +86,7 @@ export const getConversationsConversationIdItemsItemId = os
     }),
   )
   .output(ConversationItemSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteConversationsConversationIdItemsItemId = os
   .route({
@@ -103,7 +103,7 @@ export const deleteConversationsConversationIdItemsItemId = os
     }),
   )
   .output(ConversationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postConversations = os
   .route({
@@ -116,7 +116,7 @@ export const postConversations = os
   })
   .input(CreateConversationBodySchema)
   .output(ConversationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getConversationsConversationId = os
   .route({
@@ -129,7 +129,7 @@ export const getConversationsConversationId = os
   })
   .input(z.object({ conversation_id: z.string().meta({ examples: ['conv_123'] }) }))
   .output(ConversationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postConversationsConversationId = os
   .route({
@@ -147,7 +147,7 @@ export const postConversationsConversationId = os
     }),
   )
   .output(ConversationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteConversationsConversationId = os
   .route({
@@ -160,4 +160,4 @@ export const deleteConversationsConversationId = os
   })
   .input(z.object({ conversation_id: z.string().meta({ examples: ['conv_123'] }) }))
   .output(DeletedConversationResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

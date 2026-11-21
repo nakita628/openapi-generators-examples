@@ -3,5 +3,5 @@ import { getTripsHandler } from '../routes'
 
 export const tripsHandler = new Hono().get(
   '/trips',
-  getTripsHandler(async (c, { query }) => {}),
+  getTripsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
 )

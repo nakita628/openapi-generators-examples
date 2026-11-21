@@ -43,7 +43,7 @@ export const safetyHandler = new Hono()
       'param',
       z.object({ id: z.string().max(128).meta({ description: 'Safety case ID' }) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/safety/alerts/:id',
@@ -75,5 +75,5 @@ export const safetyHandler = new Hono()
       'param',
       z.object({ id: z.string().max(38).meta({ description: 'Project safety alert ID' }) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

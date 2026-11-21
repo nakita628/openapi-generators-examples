@@ -37,34 +37,34 @@ export const videosHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos',
     sValidator('json', CreateVideoJsonBodySchema),
     sValidator('form', CreateVideoMultipartBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/videos/characters', sValidator('form', CreateVideoCharacterBodySchema), (c) => {})
+  .post('/videos/characters', sValidator('form', CreateVideoCharacterBodySchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/videos/characters/:character_id',
     sValidator(
       'param',
       v.object({ character_id: v.pipe(v.string(), v.metadata({ examples: ['char_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/edits',
     sValidator('json', CreateVideoEditJsonBodySchema),
     sValidator('form', CreateVideoEditMultipartBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/extensions',
     sValidator('json', CreateVideoExtendJsonBodySchema),
     sValidator('form', CreateVideoExtendMultipartBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/:video_id',
@@ -72,7 +72,7 @@ export const videosHandler = new Hono()
       'param',
       v.object({ video_id: v.pipe(v.string(), v.metadata({ examples: ['video_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/videos/:video_id',
@@ -80,7 +80,7 @@ export const videosHandler = new Hono()
       'param',
       v.object({ video_id: v.pipe(v.string(), v.metadata({ examples: ['video_123'] })) }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/videos/:video_id/content',
@@ -89,7 +89,7 @@ export const videosHandler = new Hono()
       v.object({ video_id: v.pipe(v.string(), v.metadata({ examples: ['video_123'] })) }),
     ),
     sValidator('query', v.partial(v.object({ variant: VideoContentVariantSchema }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/videos/:video_id/remix',
@@ -99,5 +99,5 @@ export const videosHandler = new Hono()
     ),
     sValidator('json', CreateVideoRemixBodySchema),
     sValidator('form', CreateVideoRemixBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

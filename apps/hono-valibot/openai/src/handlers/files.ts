@@ -17,7 +17,7 @@ export const filesHandler = new Hono()
         after: v.optional(v.string()),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/files',
@@ -62,8 +62,8 @@ export const filesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/files/:file_id', sValidator('param', v.object({ file_id: v.string() })), (c) => {})
-  .delete('/files/:file_id', sValidator('param', v.object({ file_id: v.string() })), (c) => {})
-  .get('/files/:file_id/content', sValidator('param', v.object({ file_id: v.string() })), (c) => {})
+  .get('/files/:file_id', sValidator('param', v.object({ file_id: v.string() })), (c) => { throw new Error('Not implemented') })
+  .delete('/files/:file_id', sValidator('param', v.object({ file_id: v.string() })), (c) => { throw new Error('Not implemented') })
+  .get('/files/:file_id/content', sValidator('param', v.object({ file_id: v.string() })), (c) => { throw new Error('Not implemented') })

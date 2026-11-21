@@ -83,7 +83,7 @@ export const skusHandler = new Hono()
         user_id: SnowflakeTypeSchema.exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/skus/:sku_id/subscriptions/:subscription_id',
@@ -152,5 +152,5 @@ export const skusHandler = new Hono()
       z.object({ sku_id: SnowflakeTypeSchema, subscription_id: SnowflakeTypeSchema }),
     ),
     validator('query', z.object({ user_id: SnowflakeTypeSchema.exactOptional() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

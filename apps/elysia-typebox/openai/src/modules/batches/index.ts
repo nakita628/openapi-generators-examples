@@ -30,7 +30,7 @@ export const batches = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/batches', ({ query }) => {}, {
+  .get('/batches', ({ query }) => { throw new Error('Not implemented') }, {
     query: BatchesModel.listBatchesQuery,
     response: {
       200: 'ListBatchesResponse',
@@ -45,7 +45,7 @@ export const batches = new Elysia()
       operationId: 'listBatches',
     },
   })
-  .post('/batches', ({ body }) => {}, {
+  .post('/batches', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateBatchRequest',
     response: {
       200: 'Batch',
@@ -61,7 +61,7 @@ export const batches = new Elysia()
       operationId: 'createBatch',
     },
   })
-  .get('/batches/:batch_id', ({ params }) => {}, {
+  .get('/batches/:batch_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: BatchesModel.retrieveBatchParams,
     response: { 200: 'Batch', 400: 'ErrorResponse', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -71,7 +71,7 @@ export const batches = new Elysia()
       operationId: 'retrieveBatch',
     },
   })
-  .post('/batches/:batch_id/cancel', ({ params }) => {}, {
+  .post('/batches/:batch_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: BatchesModel.cancelBatchParams,
     response: {
       200: 'Batch',

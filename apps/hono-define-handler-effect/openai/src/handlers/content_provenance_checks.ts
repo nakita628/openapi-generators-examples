@@ -3,5 +3,5 @@ import { postContentProvenanceChecksHandler } from '../routes'
 
 export const contentProvenanceChecksHandler = new Hono().post(
   '/content_provenance_checks',
-  postContentProvenanceChecksHandler(async (c, { form }) => {}),
+  postContentProvenanceChecksHandler(async (c, { form }) => { throw new Error('Not implemented') }),
 )

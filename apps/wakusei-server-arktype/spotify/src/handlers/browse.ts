@@ -41,7 +41,7 @@ export const getBrowseFeaturedPlaylists = os
     }),
   )
   .output(PagingFeaturedPlaylistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBrowseCategories = os
   .route({
@@ -83,7 +83,7 @@ export const getBrowseCategories = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBrowseCategoriesCategoryId = os
   .route({
@@ -107,7 +107,7 @@ export const getBrowseCategoriesCategoryId = os
     }),
   )
   .output(CategoryObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBrowseCategoriesCategoryIdPlaylists = os
   .route({
@@ -142,7 +142,7 @@ export const getBrowseCategoriesCategoryIdPlaylists = os
     }),
   )
   .output(PagingFeaturedPlaylistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBrowseNewReleases = os
   .route({
@@ -175,4 +175,4 @@ export const getBrowseNewReleases = os
     }),
   )
   .output(type({ albums: PagingSimplifiedAlbumObjectSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

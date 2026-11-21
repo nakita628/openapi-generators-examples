@@ -12,29 +12,29 @@ import {
 export const webhookEndpointsHandler = new Hono()
   .get(
     '/webhook_endpoints',
-    getWebhookEndpointsHandler(async (c, { query }) => {}),
+    getWebhookEndpointsHandler(async (c, { query }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/webhook_endpoints',
-    postWebhookEndpointsHandler(async (c, { json }) => {}),
+    postWebhookEndpointsHandler(async (c, { json }) => { throw new Error('Not implemented') }),
   )
   .get(
     '/webhook_endpoints/:webhook_endpoint_id',
-    getWebhookEndpointsWebhookEndpointIdHandler(async (c, { param }) => {}),
+    getWebhookEndpointsWebhookEndpointIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id',
-    postWebhookEndpointsWebhookEndpointIdHandler(async (c, { param, json }) => {}),
+    postWebhookEndpointsWebhookEndpointIdHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .delete(
     '/webhook_endpoints/:webhook_endpoint_id',
-    deleteWebhookEndpointsWebhookEndpointIdHandler(async (c, { param }) => {}),
+    deleteWebhookEndpointsWebhookEndpointIdHandler(async (c, { param }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/rotate_secret',
-    postWebhookEndpointsWebhookEndpointIdRotateSecretHandler(async (c, { param, json }) => {}),
+    postWebhookEndpointsWebhookEndpointIdRotateSecretHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/test',
-    postWebhookEndpointsWebhookEndpointIdTestHandler(async (c, { param, json }) => {}),
+    postWebhookEndpointsWebhookEndpointIdTestHandler(async (c, { param, json }) => { throw new Error('Not implemented') }),
   )

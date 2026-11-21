@@ -68,7 +68,7 @@ export const audio = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/audio/speech', ({ body }) => {}, {
+  .post('/audio/speech', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateSpeechRequest',
     response: {
       200: t.Void(),
@@ -87,7 +87,7 @@ export const audio = new Elysia()
       operationId: 'createSpeech',
     },
   })
-  .post('/audio/transcriptions', ({ body }) => {}, {
+  .post('/audio/transcriptions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateTranscriptionRequest',
     response: {
       200: AudioModel.createTranscriptionResponse200,
@@ -108,7 +108,7 @@ export const audio = new Elysia()
       operationId: 'createTranscription',
     },
   })
-  .post('/audio/translations', ({ body }) => {}, {
+  .post('/audio/translations', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateTranslationRequest',
     response: {
       200: AudioModel.createTranslationResponse200,
@@ -129,7 +129,7 @@ export const audio = new Elysia()
       operationId: 'createTranslation',
     },
   })
-  .get('/audio/voice_consents', ({ query }) => {}, {
+  .get('/audio/voice_consents', ({ query }) => { throw new Error('Not implemented') }, {
     query: AudioModel.listVoiceConsentsQuery,
     response: { 200: 'VoiceConsentListResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -139,7 +139,7 @@ export const audio = new Elysia()
       operationId: 'listVoiceConsents',
     },
   })
-  .post('/audio/voice_consents', ({ body }) => {}, {
+  .post('/audio/voice_consents', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVoiceConsentRequest',
     response: { 200: 'VoiceConsentResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -149,7 +149,7 @@ export const audio = new Elysia()
       operationId: 'createVoiceConsent',
     },
   })
-  .get('/audio/voice_consents/:consent_id', ({ params }) => {}, {
+  .get('/audio/voice_consents/:consent_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AudioModel.getVoiceConsentParams,
     response: { 200: 'VoiceConsentResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -159,7 +159,7 @@ export const audio = new Elysia()
       operationId: 'getVoiceConsent',
     },
   })
-  .post('/audio/voice_consents/:consent_id', ({ params, body }) => {}, {
+  .post('/audio/voice_consents/:consent_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: AudioModel.updateVoiceConsentParams,
     body: 'UpdateVoiceConsentRequest',
     response: { 200: 'VoiceConsentResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
@@ -170,7 +170,7 @@ export const audio = new Elysia()
       operationId: 'updateVoiceConsent',
     },
   })
-  .delete('/audio/voice_consents/:consent_id', ({ params }) => {}, {
+  .delete('/audio/voice_consents/:consent_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AudioModel.deleteVoiceConsentParams,
     response: { 200: 'VoiceConsentDeletedResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -180,7 +180,7 @@ export const audio = new Elysia()
       operationId: 'deleteVoiceConsent',
     },
   })
-  .post('/audio/voices', ({ body }) => {}, {
+  .post('/audio/voices', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateVoicePromptRequest',
     response: {
       200: 'VoiceResource',
@@ -196,7 +196,7 @@ export const audio = new Elysia()
       operationId: 'createVoice',
     },
   })
-  .delete('/audio/voices/:voice_id', ({ params }) => {}, {
+  .delete('/audio/voices/:voice_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: AudioModel.deleteVoiceParams,
     response: { 200: 'VoiceDeletedResource', 400: 'ErrorResponse', 404: 'ErrorResponse' },
     detail: {

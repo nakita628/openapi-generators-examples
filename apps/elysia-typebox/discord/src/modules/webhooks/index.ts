@@ -373,7 +373,7 @@ export const webhooks = new Elysia()
     WebhookSourceGuildResponse: WebhookSourceGuildResponseSchema,
     WebhookTypes: WebhookTypesSchema,
   })
-  .get('/webhooks/:webhook_id', ({ params }) => {}, {
+  .get('/webhooks/:webhook_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.get_webhookParams,
     response: {
       200: WebhooksModel.get_webhookResponse200,
@@ -382,12 +382,12 @@ export const webhooks = new Elysia()
     },
     detail: { tags: [], operationId: 'get_webhook', security: [{ BotToken: [] }] },
   })
-  .delete('/webhooks/:webhook_id', ({ params }) => {}, {
+  .delete('/webhooks/:webhook_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.delete_webhookParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_webhook', security: [{ BotToken: [] }] },
   })
-  .patch('/webhooks/:webhook_id', ({ params, body }) => {}, {
+  .patch('/webhooks/:webhook_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.update_webhookParams,
     body: WebhooksModel.update_webhookBody,
     response: {
@@ -397,7 +397,7 @@ export const webhooks = new Elysia()
     },
     detail: { tags: [], operationId: 'update_webhook', security: [{ BotToken: [] }] },
   })
-  .get('/webhooks/:webhook_id/:webhook_token', ({ params }) => {}, {
+  .get('/webhooks/:webhook_id/:webhook_token', ({ params }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.get_webhook_by_tokenParams,
     response: {
       200: WebhooksModel.get_webhook_by_tokenResponse200,
@@ -406,7 +406,7 @@ export const webhooks = new Elysia()
     },
     detail: { tags: [], operationId: 'get_webhook_by_token', security: [{}, { BotToken: [] }] },
   })
-  .post('/webhooks/:webhook_id/:webhook_token', ({ params, query, body }) => {}, {
+  .post('/webhooks/:webhook_id/:webhook_token', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.execute_webhookParams,
     query: WebhooksModel.execute_webhookQuery,
     body: WebhooksModel.execute_webhookBody,
@@ -418,12 +418,12 @@ export const webhooks = new Elysia()
     },
     detail: { tags: [], operationId: 'execute_webhook', security: [{}, { BotToken: [] }] },
   })
-  .delete('/webhooks/:webhook_id/:webhook_token', ({ params }) => {}, {
+  .delete('/webhooks/:webhook_id/:webhook_token', ({ params }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.delete_webhook_by_tokenParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_webhook_by_token', security: [{}, { BotToken: [] }] },
   })
-  .patch('/webhooks/:webhook_id/:webhook_token', ({ params, body }) => {}, {
+  .patch('/webhooks/:webhook_id/:webhook_token', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.update_webhook_by_tokenParams,
     body: WebhooksModel.update_webhook_by_tokenBody,
     response: {
@@ -433,7 +433,7 @@ export const webhooks = new Elysia()
     },
     detail: { tags: [], operationId: 'update_webhook_by_token', security: [{}, { BotToken: [] }] },
   })
-  .post('/webhooks/:webhook_id/:webhook_token/github', ({ params, query, body }) => {}, {
+  .post('/webhooks/:webhook_id/:webhook_token/github', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.execute_github_compatible_webhookParams,
     query: WebhooksModel.execute_github_compatible_webhookQuery,
     body: 'GithubWebhook',
@@ -444,7 +444,7 @@ export const webhooks = new Elysia()
       security: [{}, { BotToken: [] }],
     },
   })
-  .get('/webhooks/:webhook_id/:webhook_token/messages/@original', ({ params, query }) => {}, {
+  .get('/webhooks/:webhook_id/:webhook_token/messages/@original', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.get_original_webhook_messageParams,
     query: WebhooksModel.get_original_webhook_messageQuery,
     response: { 200: 'MessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -454,7 +454,7 @@ export const webhooks = new Elysia()
       security: [{}, { BotToken: [] }],
     },
   })
-  .delete('/webhooks/:webhook_id/:webhook_token/messages/@original', ({ params, query }) => {}, {
+  .delete('/webhooks/:webhook_id/:webhook_token/messages/@original', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.delete_original_webhook_messageParams,
     query: WebhooksModel.delete_original_webhook_messageQuery,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -466,7 +466,7 @@ export const webhooks = new Elysia()
   })
   .patch(
     '/webhooks/:webhook_id/:webhook_token/messages/@original',
-    ({ params, query, body }) => {},
+    ({ params, query, body }) => { throw new Error('Not implemented') },
     {
       params: WebhooksModel.update_original_webhook_messageParams,
       query: WebhooksModel.update_original_webhook_messageQuery,
@@ -479,13 +479,13 @@ export const webhooks = new Elysia()
       },
     },
   )
-  .get('/webhooks/:webhook_id/:webhook_token/messages/:message_id', ({ params, query }) => {}, {
+  .get('/webhooks/:webhook_id/:webhook_token/messages/:message_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.get_webhook_messageParams,
     query: WebhooksModel.get_webhook_messageQuery,
     response: { 200: 'MessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_webhook_message', security: [{}, { BotToken: [] }] },
   })
-  .delete('/webhooks/:webhook_id/:webhook_token/messages/:message_id', ({ params, query }) => {}, {
+  .delete('/webhooks/:webhook_id/:webhook_token/messages/:message_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.delete_webhook_messageParams,
     query: WebhooksModel.delete_webhook_messageQuery,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -493,7 +493,7 @@ export const webhooks = new Elysia()
   })
   .patch(
     '/webhooks/:webhook_id/:webhook_token/messages/:message_id',
-    ({ params, query, body }) => {},
+    ({ params, query, body }) => { throw new Error('Not implemented') },
     {
       params: WebhooksModel.update_webhook_messageParams,
       query: WebhooksModel.update_webhook_messageQuery,
@@ -502,7 +502,7 @@ export const webhooks = new Elysia()
       detail: { tags: [], operationId: 'update_webhook_message', security: [{}, { BotToken: [] }] },
     },
   )
-  .post('/webhooks/:webhook_id/:webhook_token/slack', ({ params, query, body }) => {}, {
+  .post('/webhooks/:webhook_id/:webhook_token/slack', ({ params, query, body }) => { throw new Error('Not implemented') }, {
     params: WebhooksModel.execute_slack_compatible_webhookParams,
     query: WebhooksModel.execute_slack_compatible_webhookQuery,
     body: 'SlackWebhook',

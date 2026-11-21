@@ -14,7 +14,7 @@ export const trips = new Elysia()
     Trip: TripSchema,
     WrapperCollection: WrapperCollectionSchema,
   })
-  .get('/trips', ({ query }) => {}, {
+  .get('/trips', ({ query }) => { throw new Error('Not implemented') }, {
     query: TripsModel.getTripsQuery,
     response: {
       200: TripsModel.getTripsResponse200,

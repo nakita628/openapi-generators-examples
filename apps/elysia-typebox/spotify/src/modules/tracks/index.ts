@@ -28,7 +28,7 @@ export const tracks = new Elysia()
     TrackObject: TrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/tracks/:id', ({ params, query }) => {}, {
+  .get('/tracks/:id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: TracksModel.getTrackParams,
     query: TracksModel.getTrackQuery,
     response: {
@@ -46,7 +46,7 @@ export const tracks = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/tracks', ({ query }) => {}, {
+  .get('/tracks', ({ query }) => { throw new Error('Not implemented') }, {
     query: TracksModel.getSeveralTracksQuery,
     response: {
       200: TracksModel.getSeveralTracksResponse200,

@@ -18,22 +18,22 @@ export const assistantsHandler = new Hono()
         before: v.optional(v.string()),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/assistants', sValidator('json', CreateAssistantRequestSchema), (c) => {})
+  .post('/assistants', sValidator('json', CreateAssistantRequestSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/assistants/:assistant_id',
     sValidator('param', v.object({ assistant_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/assistants/:assistant_id',
     sValidator('param', v.object({ assistant_id: v.string() })),
     sValidator('json', ModifyAssistantRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/assistants/:assistant_id',
     sValidator('param', v.object({ assistant_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

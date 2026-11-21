@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getTrips = os.getTrips.handler(async ({ input }) => {})
+export const getTrips = os.getTrips.handler(async ({ input }) => { throw new Error('Not implemented') })

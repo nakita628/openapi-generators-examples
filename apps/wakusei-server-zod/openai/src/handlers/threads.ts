@@ -39,7 +39,7 @@ export const postThreads = os
   })
   .input(CreateThreadRequestSchema)
   .output(ThreadObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsRuns = os
   .route({
@@ -51,7 +51,7 @@ export const postThreadsRuns = os
   })
   .input(CreateThreadAndRunRequestSchema)
   .output(RunObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getThreadsThreadId = os
   .route({
@@ -63,7 +63,7 @@ export const getThreadsThreadId = os
   })
   .input(z.object({ thread_id: z.string() }))
   .output(ThreadObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsThreadId = os
   .route({
@@ -117,7 +117,7 @@ export const postThreadsThreadId = os
     }),
   )
   .output(ThreadObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteThreadsThreadId = os
   .route({
@@ -129,7 +129,7 @@ export const deleteThreadsThreadId = os
   })
   .input(z.object({ thread_id: z.string() }))
   .output(DeleteThreadResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getThreadsThreadIdMessages = os
   .route({
@@ -150,7 +150,7 @@ export const getThreadsThreadIdMessages = os
     }),
   )
   .output(ListMessagesResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsThreadIdMessages = os
   .route({
@@ -211,7 +211,7 @@ export const postThreadsThreadIdMessages = os
     }),
   )
   .output(MessageObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getThreadsThreadIdMessagesMessageId = os
   .route({
@@ -223,7 +223,7 @@ export const getThreadsThreadIdMessagesMessageId = os
   })
   .input(z.object({ thread_id: z.string(), message_id: z.string() }))
   .output(MessageObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsThreadIdMessagesMessageId = os
   .route({
@@ -241,7 +241,7 @@ export const postThreadsThreadIdMessagesMessageId = os
     }),
   )
   .output(MessageObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteThreadsThreadIdMessagesMessageId = os
   .route({
@@ -253,7 +253,7 @@ export const deleteThreadsThreadIdMessagesMessageId = os
   })
   .input(z.object({ thread_id: z.string(), message_id: z.string() }))
   .output(DeleteMessageResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getThreadsThreadIdRuns = os
   .route({
@@ -273,7 +273,7 @@ export const getThreadsThreadIdRuns = os
     }),
   )
   .output(ListRunsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsThreadIdRuns = os
   .route({
@@ -401,7 +401,7 @@ export const postThreadsThreadIdRuns = os
     }),
   )
   .output(RunObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getThreadsThreadIdRunsRunId = os
   .route({
@@ -413,7 +413,7 @@ export const getThreadsThreadIdRunsRunId = os
   })
   .input(z.object({ thread_id: z.string(), run_id: z.string() }))
   .output(RunObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsThreadIdRunsRunId = os
   .route({
@@ -431,7 +431,7 @@ export const postThreadsThreadIdRunsRunId = os
     }),
   )
   .output(RunObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsThreadIdRunsRunIdCancel = os
   .route({
@@ -443,7 +443,7 @@ export const postThreadsThreadIdRunsRunIdCancel = os
   })
   .input(z.object({ thread_id: z.string(), run_id: z.string() }))
   .output(RunObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getThreadsThreadIdRunsRunIdSteps = os
   .route({
@@ -470,7 +470,7 @@ export const getThreadsThreadIdRunsRunIdSteps = os
     }),
   )
   .output(ListRunStepsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getThreadsThreadIdRunsRunIdStepsStepId = os
   .route({
@@ -494,7 +494,7 @@ export const getThreadsThreadIdRunsRunIdStepsStepId = os
     }),
   )
   .output(RunStepObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postThreadsThreadIdRunsRunIdSubmitToolOutputs = os
   .route({
@@ -542,4 +542,4 @@ export const postThreadsThreadIdRunsRunIdSubmitToolOutputs = os
     }),
   )
   .output(RunObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

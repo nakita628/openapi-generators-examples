@@ -3,7 +3,7 @@ import { sValidator } from '@hono/standard-validator'
 import { Schema } from 'effect'
 
 export const modelsHandler = new Hono()
-  .get('/models', (c) => {})
+  .get('/models', (c) => { throw new Error('Not implemented') })
   .get(
     '/models/:model',
     sValidator(
@@ -12,7 +12,7 @@ export const modelsHandler = new Hono()
         Schema.Struct({ model: Schema.String.annotate({ jsonSchemaExamples: ['gpt-6.2-astra'] }) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/models/:model',
@@ -26,5 +26,5 @@ export const modelsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

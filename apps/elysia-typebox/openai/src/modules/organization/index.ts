@@ -402,7 +402,7 @@ export const organization = new Elysia()
     MisalignmentSteer: MisalignmentSteerSchema,
     Provider: ProviderSchema,
   })
-  .get('/organization/admin_api_keys', ({ query }) => {}, {
+  .get('/organization/admin_api_keys', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.adminApiKeysListQuery,
     response: { 200: 'ApiKeyList', 400: 'ErrorResponse', 403: 'PermissionErrorResponse' },
     detail: {
@@ -413,7 +413,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/admin_api_keys', ({ body }) => {}, {
+  .post('/organization/admin_api_keys', ({ body }) => { throw new Error('Not implemented') }, {
     body: OrganizationModel.adminApiKeysCreateBody,
     response: {
       200: 'AdminApiKeyCreateResponse',
@@ -429,7 +429,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/admin_api_keys/:key_id', ({ params }) => {}, {
+  .get('/organization/admin_api_keys/:key_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.adminApiKeysGetParams,
     response: { 200: 'AdminApiKey', 403: 'PermissionErrorResponse', 404: 'ErrorResponse' },
     detail: {
@@ -440,7 +440,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/admin_api_keys/:key_id', ({ params }) => {}, {
+  .delete('/organization/admin_api_keys/:key_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.adminApiKeysDeleteParams,
     response: {
       200: OrganizationModel.adminApiKeysDeleteResponse200,
@@ -455,7 +455,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/audit_logs', ({ query }) => {}, {
+  .get('/organization/audit_logs', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listAuditLogsQuery,
     response: {
       200: 'ListAuditLogsResponse',
@@ -471,7 +471,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/certificates', ({ query }) => {}, {
+  .get('/organization/certificates', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listOrganizationCertificatesQuery,
     response: {
       200: 'ListCertificatesResponse',
@@ -487,7 +487,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/certificates', ({ body }) => {}, {
+  .post('/organization/certificates', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'UploadCertificateRequest',
     response: {
       200: 'Certificate',
@@ -504,7 +504,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/certificates/activate', ({ body }) => {}, {
+  .post('/organization/certificates/activate', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'ToggleCertificatesRequest',
     response: {
       200: 'OrganizationCertificateActivationResponse',
@@ -523,7 +523,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/certificates/deactivate', ({ body }) => {}, {
+  .post('/organization/certificates/deactivate', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'ToggleCertificatesRequest',
     response: {
       200: 'OrganizationCertificateDeactivationResponse',
@@ -542,7 +542,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/certificates/:certificate_id', ({ params, query }) => {}, {
+  .get('/organization/certificates/:certificate_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.getCertificateParams,
     query: OrganizationModel.getCertificateQuery,
     response: {
@@ -561,7 +561,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/certificates/:certificate_id', ({ params, body }) => {}, {
+  .post('/organization/certificates/:certificate_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.modifyCertificateParams,
     body: 'ModifyCertificateRequest',
     response: {
@@ -580,7 +580,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/certificates/:certificate_id', ({ params }) => {}, {
+  .delete('/organization/certificates/:certificate_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteCertificateParams,
     response: {
       200: 'DeleteCertificateResponse',
@@ -598,7 +598,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/costs', ({ query }) => {}, {
+  .get('/organization/costs', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageCostsQuery,
     response: {
       200: 'UsageResponse',
@@ -614,7 +614,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/data_retention', () => {}, {
+  .get('/organization/data_retention', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'OrganizationDataRetention',
       403: 'PermissionErrorResponse',
@@ -628,7 +628,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/data_retention', ({ body }) => {}, {
+  .post('/organization/data_retention', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'UpdateOrganizationDataRetentionBody',
     response: {
       200: 'OrganizationDataRetention',
@@ -644,7 +644,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/groups', ({ query }) => {}, {
+  .get('/organization/groups', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listGroupsQuery,
     response: {
       200: 'GroupListResource',
@@ -661,7 +661,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/groups', ({ body }) => {}, {
+  .post('/organization/groups', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateGroupBody',
     response: {
       200: 'GroupResponse',
@@ -680,7 +680,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/groups/:group_id', ({ params }) => {}, {
+  .get('/organization/groups/:group_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveGroupParams,
     response: {
       200: 'GroupResponse',
@@ -698,7 +698,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/groups/:group_id', ({ params, body }) => {}, {
+  .post('/organization/groups/:group_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateGroupParams,
     body: 'UpdateGroupBody',
     response: {
@@ -717,7 +717,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/groups/:group_id', ({ params }) => {}, {
+  .delete('/organization/groups/:group_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteGroupParams,
     response: {
       200: 'GroupDeletedResource',
@@ -734,7 +734,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/groups/:group_id/roles', ({ params, query }) => {}, {
+  .get('/organization/groups/:group_id/roles', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listGroupRoleAssignmentsParams,
     query: OrganizationModel.listGroupRoleAssignmentsQuery,
     response: {
@@ -752,7 +752,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/groups/:group_id/roles', ({ params, body }) => {}, {
+  .post('/organization/groups/:group_id/roles', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.assignGroupRoleParams,
     body: 'PublicAssignOrganizationGroupRoleBody',
     response: {
@@ -770,7 +770,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/groups/:group_id/roles/:role_id', ({ params }) => {}, {
+  .get('/organization/groups/:group_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveGroupRoleParams,
     response: {
       200: 'AssignedRoleDetails',
@@ -787,7 +787,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/groups/:group_id/roles/:role_id', ({ params }) => {}, {
+  .delete('/organization/groups/:group_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.unassignGroupRoleParams,
     response: {
       200: 'DeletedRoleAssignmentResource',
@@ -804,7 +804,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/groups/:group_id/users', ({ params, query }) => {}, {
+  .get('/organization/groups/:group_id/users', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listGroupUsersParams,
     query: OrganizationModel.listGroupUsersQuery,
     response: {
@@ -823,7 +823,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/groups/:group_id/users', ({ params, body }) => {}, {
+  .post('/organization/groups/:group_id/users', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.addGroupUserParams,
     body: 'CreateGroupUserBody',
     response: {
@@ -842,7 +842,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/groups/:group_id/users/:user_id', ({ params }) => {}, {
+  .get('/organization/groups/:group_id/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveGroupUserParams,
     response: {
       200: 'GroupMemberUser',
@@ -859,7 +859,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/groups/:group_id/users/:user_id', ({ params }) => {}, {
+  .delete('/organization/groups/:group_id/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.removeGroupUserParams,
     response: {
       200: 'GroupUserDeletedResource',
@@ -877,7 +877,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/invites', ({ query }) => {}, {
+  .get('/organization/invites', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listInvitesQuery,
     response: {
       200: 'InviteListResponse',
@@ -894,7 +894,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/invites', ({ body }) => {}, {
+  .post('/organization/invites', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'InviteRequest',
     response: {
       200: 'Invite',
@@ -912,7 +912,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/invites/:invite_id', ({ params }) => {}, {
+  .get('/organization/invites/:invite_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveInviteParams,
     response: {
       200: 'Invite',
@@ -930,7 +930,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/invites/:invite_id', ({ params }) => {}, {
+  .delete('/organization/invites/:invite_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteInviteParams,
     response: {
       200: 'InviteDeleteResponse',
@@ -948,7 +948,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects', ({ query }) => {}, {
+  .get('/organization/projects', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listProjectsQuery,
     response: {
       200: 'ProjectListResponse',
@@ -965,7 +965,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects', ({ body }) => {}, {
+  .post('/organization/projects', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'ProjectCreateRequest',
     response: {
       200: 'Project',
@@ -983,7 +983,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id', ({ params }) => {}, {
+  .get('/organization/projects/:project_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectParams,
     response: {
       200: 'Project',
@@ -999,7 +999,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.modifyProjectParams,
     body: 'ProjectUpdateRequest',
     response: {
@@ -1017,7 +1017,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/api_keys', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/api_keys', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listProjectApiKeysParams,
     query: OrganizationModel.listProjectApiKeysQuery,
     response: {
@@ -1035,7 +1035,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/api_keys/:api_key_id', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/api_keys/:api_key_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectApiKeyParams,
     response: {
       200: 'ProjectApiKey',
@@ -1052,7 +1052,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/api_keys/:api_key_id', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/api_keys/:api_key_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateProjectApiKeyParams,
     body: 'UpdateProjectApiKeyBody',
     response: {
@@ -1071,7 +1071,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/projects/:project_id/api_keys/:api_key_id', ({ params }) => {}, {
+  .delete('/organization/projects/:project_id/api_keys/:api_key_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteProjectApiKeyParams,
     response: {
       200: 'ProjectApiKeyDeleteResponse',
@@ -1089,7 +1089,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/archive', ({ params }) => {}, {
+  .post('/organization/projects/:project_id/archive', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.archiveProjectParams,
     response: {
       200: 'Project',
@@ -1107,7 +1107,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/certificates', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/certificates', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listProjectCertificatesParams,
     query: OrganizationModel.listProjectCertificatesQuery,
     response: {
@@ -1124,7 +1124,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/certificates/activate', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/certificates/activate', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.activateProjectCertificatesParams,
     body: 'ToggleCertificatesRequest',
     response: {
@@ -1144,7 +1144,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/certificates/deactivate', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/certificates/deactivate', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deactivateProjectCertificatesParams,
     body: 'ToggleCertificatesRequest',
     response: {
@@ -1164,7 +1164,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/data_retention', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/data_retention', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectDataRetentionParams,
     response: {
       200: 'ProjectDataRetention',
@@ -1180,7 +1180,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/data_retention', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/data_retention', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateProjectDataRetentionParams,
     body: 'UpdateProjectDataRetentionBody',
     response: {
@@ -1197,7 +1197,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/groups', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/groups', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listProjectGroupsParams,
     query: OrganizationModel.listProjectGroupsQuery,
     response: {
@@ -1215,7 +1215,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/groups', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/groups', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.addProjectGroupParams,
     body: 'InviteProjectGroupBody',
     response: {
@@ -1234,7 +1234,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/groups/:group_id', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/groups/:group_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectGroupParams,
     query: OrganizationModel.retrieveProjectGroupQuery,
     response: {
@@ -1252,7 +1252,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/projects/:project_id/groups/:group_id', ({ params }) => {}, {
+  .delete('/organization/projects/:project_id/groups/:group_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.removeProjectGroupParams,
     response: {
       200: 'ProjectGroupDeletedResource',
@@ -1269,7 +1269,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/hosted_tool_permissions', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/hosted_tool_permissions', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectHostedToolPermissionsParams,
     response: {
       200: 'ProjectHostedToolPermissions',
@@ -1286,7 +1286,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/hosted_tool_permissions', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/hosted_tool_permissions', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateProjectHostedToolPermissionsParams,
     body: 'ProjectHostedToolPermissionsUpdateRequest',
     response: {
@@ -1305,7 +1305,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/model_permissions', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/model_permissions', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectModelPermissionsParams,
     response: {
       200: 'ProjectModelPermissions',
@@ -1322,7 +1322,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/model_permissions', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/model_permissions', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateProjectModelPermissionsParams,
     body: 'ProjectModelPermissionsUpdateRequest',
     response: {
@@ -1340,7 +1340,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/projects/:project_id/model_permissions', ({ params }) => {}, {
+  .delete('/organization/projects/:project_id/model_permissions', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteProjectModelPermissionsParams,
     response: {
       200: 'ProjectModelPermissionsDeleteResponse',
@@ -1357,7 +1357,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/rate_limits', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/rate_limits', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listProjectRateLimitsParams,
     query: OrganizationModel.listProjectRateLimitsQuery,
     response: {
@@ -1374,7 +1374,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/rate_limits/:rate_limit_id', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/rate_limits/:rate_limit_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateProjectRateLimitsParams,
     body: 'ProjectRateLimitUpdateRequest',
     response: {
@@ -1391,7 +1391,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/service_accounts', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/service_accounts', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listProjectServiceAccountsParams,
     query: OrganizationModel.listProjectServiceAccountsQuery,
     response: {
@@ -1409,7 +1409,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/service_accounts', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/service_accounts', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.createProjectServiceAccountParams,
     body: 'ProjectServiceAccountCreateRequest',
     response: {
@@ -1431,7 +1431,7 @@ export const organization = new Elysia()
   })
   .get(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.retrieveProjectServiceAccountParams,
       response: {
@@ -1452,7 +1452,7 @@ export const organization = new Elysia()
   )
   .post(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.updateProjectServiceAccountParams,
       body: 'UpdateProjectServiceAccountBody',
@@ -1474,7 +1474,7 @@ export const organization = new Elysia()
   )
   .delete(
     '/organization/projects/:project_id/service_accounts/:service_account_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.deleteProjectServiceAccountParams,
       response: {
@@ -1494,7 +1494,7 @@ export const organization = new Elysia()
       },
     },
   )
-  .get('/organization/projects/:project_id/spend_alerts', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/spend_alerts', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listProjectSpendAlertsParams,
     query: OrganizationModel.listProjectSpendAlertsQuery,
     response: {
@@ -1511,7 +1511,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/spend_alerts', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/spend_alerts', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.createProjectSpendAlertParams,
     body: 'CreateSpendAlertBody',
     response: {
@@ -1528,7 +1528,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/spend_alerts/:alert_id', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/spend_alerts/:alert_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectSpendAlertParams,
     response: {
       200: 'ProjectSpendAlert',
@@ -1544,7 +1544,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/spend_alerts/:alert_id', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/spend_alerts/:alert_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateProjectSpendAlertParams,
     body: 'CreateSpendAlertBody',
     response: {
@@ -1561,7 +1561,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/projects/:project_id/spend_alerts/:alert_id', ({ params }) => {}, {
+  .delete('/organization/projects/:project_id/spend_alerts/:alert_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteProjectSpendAlertParams,
     response: {
       200: 'ProjectSpendAlertDeletedResource',
@@ -1577,7 +1577,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/users', ({ params, query }) => {}, {
+  .get('/organization/projects/:project_id/users', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listProjectUsersParams,
     query: OrganizationModel.listProjectUsersQuery,
     response: {
@@ -1595,7 +1595,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/users', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/users', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.createProjectUserParams,
     body: 'ProjectUserCreateRequest',
     response: {
@@ -1616,7 +1616,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/users/:user_id', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveProjectUserParams,
     response: {
       200: 'ProjectUser',
@@ -1633,7 +1633,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/users/:user_id', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/users/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.modifyProjectUserParams,
     body: 'ProjectUserUpdateRequest',
     response: {
@@ -1651,7 +1651,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/projects/:project_id/users/:user_id', ({ params }) => {}, {
+  .delete('/organization/projects/:project_id/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteProjectUserParams,
     response: {
       200: 'ProjectUserDeleteResponse',
@@ -1669,7 +1669,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/roles', ({ query }) => {}, {
+  .get('/organization/roles', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listRolesQuery,
     response: {
       200: 'PublicRoleListResource',
@@ -1686,7 +1686,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/roles', ({ body }) => {}, {
+  .post('/organization/roles', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'PublicCreateOrganizationRoleBody',
     response: {
       200: 'Role',
@@ -1703,7 +1703,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/roles/:role_id', ({ params }) => {}, {
+  .get('/organization/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveRoleParams,
     response: {
       200: 'Role',
@@ -1719,7 +1719,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/roles/:role_id', ({ params, body }) => {}, {
+  .post('/organization/roles/:role_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateRoleParams,
     body: 'PublicUpdateOrganizationRoleBody',
     response: {
@@ -1737,7 +1737,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/roles/:role_id', ({ params }) => {}, {
+  .delete('/organization/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteRoleParams,
     response: {
       200: 'RoleDeletedResource',
@@ -1754,7 +1754,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/spend_alerts', ({ query }) => {}, {
+  .get('/organization/spend_alerts', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listOrganizationSpendAlertsQuery,
     response: {
       200: 'OrganizationSpendAlertListResource',
@@ -1770,7 +1770,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/spend_alerts', ({ body }) => {}, {
+  .post('/organization/spend_alerts', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateSpendAlertBody',
     response: {
       200: 'OrganizationSpendAlert',
@@ -1785,7 +1785,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/spend_alerts/:alert_id', ({ params }) => {}, {
+  .get('/organization/spend_alerts/:alert_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveOrganizationSpendAlertParams,
     response: {
       200: 'OrganizationSpendAlert',
@@ -1800,7 +1800,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/spend_alerts/:alert_id', ({ params, body }) => {}, {
+  .post('/organization/spend_alerts/:alert_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.updateOrganizationSpendAlertParams,
     body: 'CreateSpendAlertBody',
     response: {
@@ -1817,7 +1817,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/spend_alerts/:alert_id', ({ params }) => {}, {
+  .delete('/organization/spend_alerts/:alert_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteOrganizationSpendAlertParams,
     response: {
       200: 'OrganizationSpendAlertDeletedResource',
@@ -1832,7 +1832,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/audio_speeches', ({ query }) => {}, {
+  .get('/organization/usage/audio_speeches', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageAudioSpeechesQuery,
     response: {
       200: 'UsageResponse',
@@ -1848,7 +1848,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/audio_transcriptions', ({ query }) => {}, {
+  .get('/organization/usage/audio_transcriptions', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageAudioTranscriptionsQuery,
     response: {
       200: 'UsageResponse',
@@ -1864,7 +1864,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/code_interpreter_sessions', ({ query }) => {}, {
+  .get('/organization/usage/code_interpreter_sessions', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageCodeInterpreterSessionsQuery,
     response: {
       200: 'UsageResponse',
@@ -1880,7 +1880,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/completions', ({ query }) => {}, {
+  .get('/organization/usage/completions', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageCompletionsQuery,
     response: {
       200: 'UsageResponse',
@@ -1896,7 +1896,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/embeddings', ({ query }) => {}, {
+  .get('/organization/usage/embeddings', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageEmbeddingsQuery,
     response: {
       200: 'UsageResponse',
@@ -1912,7 +1912,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/file_search_calls', ({ query }) => {}, {
+  .get('/organization/usage/file_search_calls', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageFileSearchCallsQuery,
     response: {
       200: 'UsageResponse',
@@ -1928,7 +1928,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/images', ({ query }) => {}, {
+  .get('/organization/usage/images', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageImagesQuery,
     response: {
       200: 'UsageResponse',
@@ -1944,7 +1944,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/moderations', ({ query }) => {}, {
+  .get('/organization/usage/moderations', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageModerationsQuery,
     response: {
       200: 'UsageResponse',
@@ -1960,7 +1960,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/vector_stores', ({ query }) => {}, {
+  .get('/organization/usage/vector_stores', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageVectorStoresQuery,
     response: {
       200: 'UsageResponse',
@@ -1976,7 +1976,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/usage/web_search_calls', ({ query }) => {}, {
+  .get('/organization/usage/web_search_calls', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.usageWebSearchCallsQuery,
     response: {
       200: 'UsageResponse',
@@ -1992,7 +1992,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/users', ({ query }) => {}, {
+  .get('/organization/users', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.listUsersQuery,
     response: {
       200: 'UserListResponse',
@@ -2008,7 +2008,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/users/:user_id', ({ params }) => {}, {
+  .get('/organization/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveUserParams,
     response: {
       200: 'User',
@@ -2024,7 +2024,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/users/:user_id', ({ params, body }) => {}, {
+  .post('/organization/users/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.modifyUserParams,
     body: 'UserRoleUpdateRequest',
     response: {
@@ -2042,7 +2042,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/users/:user_id', ({ params }) => {}, {
+  .delete('/organization/users/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.deleteUserParams,
     response: {
       200: 'UserDeleteResponse',
@@ -2059,7 +2059,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/users/:user_id/roles', ({ params, query }) => {}, {
+  .get('/organization/users/:user_id/roles', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.listUserRoleAssignmentsParams,
     query: OrganizationModel.listUserRoleAssignmentsQuery,
     response: {
@@ -2077,7 +2077,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/users/:user_id/roles', ({ params, body }) => {}, {
+  .post('/organization/users/:user_id/roles', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.assignUserRoleParams,
     body: 'PublicAssignOrganizationGroupRoleBody',
     response: {
@@ -2095,7 +2095,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/users/:user_id/roles/:role_id', ({ params }) => {}, {
+  .get('/organization/users/:user_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.retrieveUserRoleParams,
     response: {
       200: 'AssignedRoleDetails',
@@ -2112,7 +2112,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/users/:user_id/roles/:role_id', ({ params }) => {}, {
+  .delete('/organization/users/:user_id/roles/:role_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.unassignUserRoleParams,
     response: {
       200: 'DeletedRoleAssignmentResource',
@@ -2129,7 +2129,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/external_keys', ({ query }) => {}, {
+  .get('/organization/external_keys', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.ListtheexternalkeyconfigsregisteredontheuserSorganizationQuery,
     response: { 200: 'ListExternalKeysResource' },
     detail: {
@@ -2140,7 +2140,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/external_keys', ({ body }) => {}, {
+  .post('/organization/external_keys', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'V1OrganizationExternalKeysPostRequest',
     response: { 200: 'ExternalKeyResource' },
     detail: {
@@ -2151,7 +2151,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/external_keys/:external_key_id', ({ params }) => {}, {
+  .get('/organization/external_keys/:external_key_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.RetrieveanexternalkeyregistrationParams,
     response: { 200: 'ExternalKeyResource' },
     detail: {
@@ -2162,7 +2162,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/external_keys/:external_key_id', ({ params }) => {}, {
+  .delete('/organization/external_keys/:external_key_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.DeleteanexternalkeyconfigfortheuserSorganizationParams,
     response: { 200: 'ExternalKeyResource' },
     detail: {
@@ -2173,7 +2173,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/external_keys/:external_key_id/validate', ({ params }) => {}, {
+  .post('/organization/external_keys/:external_key_id/validate', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.ValidateanexternalkeyconfigfortheuserSorganizationParams,
     response: { 200: 'ValidateExternalKeyResource' },
     detail: {
@@ -2184,7 +2184,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/workload_identity_providers', ({ query }) => {}, {
+  .get('/organization/workload_identity_providers', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.ListPlatformworkloadidentityprovidersQuery,
     response: { 200: 'PlatformProviderListResource' },
     detail: {
@@ -2195,7 +2195,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/workload_identity_providers', ({ body }) => {}, {
+  .post('/organization/workload_identity_providers', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreatePlatformWorkloadIdentityProviderBody',
     response: { 200: 'PlatformProvider' },
     detail: {
@@ -2208,7 +2208,7 @@ export const organization = new Elysia()
   })
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.RetrievePlatformworkloadidentityproviderParams,
       response: { 200: 'PlatformProvider' },
@@ -2223,7 +2223,7 @@ export const organization = new Elysia()
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.UpdatePlatformworkloadidentityproviderParams,
       body: 'UpdatePlatformWorkloadIdentityProviderBody',
@@ -2239,7 +2239,7 @@ export const organization = new Elysia()
   )
   .delete(
     '/organization/workload_identity_providers/:workload_identity_provider_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.DeletePlatformworkloadidentityproviderParams,
       response: { 200: 'PlatformProviderDeletedResource' },
@@ -2254,7 +2254,7 @@ export const organization = new Elysia()
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules',
-    ({ params, query }) => {},
+    ({ params, query }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.ListPlatformworkloadidentityfederationrulesParams,
       query: OrganizationModel.ListPlatformworkloadidentityfederationrulesQuery,
@@ -2270,7 +2270,7 @@ export const organization = new Elysia()
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.CreatePlatformworkloadidentityfederationruleParams,
       body: 'CreatePlatformWorkloadIdentityFederationRuleBody',
@@ -2286,7 +2286,7 @@ export const organization = new Elysia()
   )
   .get(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.RetrievePlatformworkloadidentityfederationruleParams,
       response: { 200: 'PlatformFederationRule' },
@@ -2302,7 +2302,7 @@ export const organization = new Elysia()
   )
   .post(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.UpdatePlatformworkloadidentityfederationruleParams,
       body: 'UpdatePlatformWorkloadIdentityFederationRuleBody',
@@ -2318,7 +2318,7 @@ export const organization = new Elysia()
   )
   .delete(
     '/organization/workload_identity_providers/:workload_identity_provider_id/federation_rules/:workload_identity_federation_rule_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.DeletePlatformworkloadidentityfederationruleParams,
       response: { 200: 'PlatformFederationRuleDeletedResource' },
@@ -2331,7 +2331,7 @@ export const organization = new Elysia()
       },
     },
   )
-  .get('/organization/usage/decisions', ({ query }) => {}, {
+  .get('/organization/usage/decisions', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.OrganizationDecisionsusageQuery,
     response: {
       200: 'PublicDecisionsUsageResponseResource',
@@ -2347,7 +2347,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/external_storage', ({ query }) => {}, {
+  .get('/organization/external_storage', ({ query }) => { throw new Error('Not implemented') }, {
     query: OrganizationModel.ListexternalstorageconfigurationsQuery,
     response: {
       200: 'ExternalStorageListResource',
@@ -2363,7 +2363,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/external_storage', ({ body }) => {}, {
+  .post('/organization/external_storage', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateExternalStorageBody',
     response: {
       200: 'ExternalStorageResponse',
@@ -2380,7 +2380,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/external_storage/:external_storage_id', ({ params }) => {}, {
+  .get('/organization/external_storage/:external_storage_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.GetanexternalstorageconfigurationParams,
     response: {
       200: 'ExternalStorageResponse',
@@ -2396,7 +2396,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/external_storage/:external_storage_id', ({ params }) => {}, {
+  .delete('/organization/external_storage/:external_storage_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.DeleteanexternalstorageconfigurationParams,
     response: {
       200: 'ExternalStorageDeletedResource',
@@ -2413,7 +2413,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/external_storage/:external_storage_id/validate', ({ params }) => {}, {
+  .post('/organization/external_storage/:external_storage_id/validate', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.ValidateanexternalstorageconfigurationParams,
     response: {
       200: 'ExternalStorageResponse',
@@ -2430,7 +2430,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/spend_limit', () => {}, {
+  .get('/organization/spend_limit', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'OrganizationSpendLimitResource',
       403: 'PermissionErrorResponse',
@@ -2444,7 +2444,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/spend_limit', ({ body }) => {}, {
+  .post('/organization/spend_limit', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'UpdateOrganizationSpendLimitBody',
     response: {
       200: 'OrganizationSpendLimitResource',
@@ -2459,7 +2459,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/spend_limit', () => {}, {
+  .delete('/organization/spend_limit', () => { throw new Error('Not implemented') }, {
     response: {
       200: 'OrganizationSpendLimitDeletedResource',
       403: 'PermissionErrorResponse',
@@ -2473,7 +2473,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/spend_limit', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/spend_limit', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.GetprojectspendlimitParams,
     response: {
       200: 'ProjectSpendLimitResource',
@@ -2489,7 +2489,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/spend_limit', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/spend_limit', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.UpdateprojectspendlimitParams,
     body: 'UpdateProjectSpendLimitBody',
     response: {
@@ -2506,7 +2506,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .delete('/organization/projects/:project_id/spend_limit', ({ params }) => {}, {
+  .delete('/organization/projects/:project_id/spend_limit', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.DeleteprojectspendlimitParams,
     response: {
       200: 'ProjectSpendLimitDeletedResource',
@@ -2522,7 +2522,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .get('/organization/projects/:project_id/service_tier_settings', ({ params }) => {}, {
+  .get('/organization/projects/:project_id/service_tier_settings', ({ params }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.RetrieveprojectservicetiersettingsParams,
     response: { 200: 'ProjectServiceTierSettingsResource' },
     detail: {
@@ -2533,7 +2533,7 @@ export const organization = new Elysia()
       security: [{ AdminApiKeyAuth: [] }],
     },
   })
-  .post('/organization/projects/:project_id/service_tier_settings', ({ params, body }) => {}, {
+  .post('/organization/projects/:project_id/service_tier_settings', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: OrganizationModel.UpdateprojectservicetiersettingsParams,
     body: 'UpdateProjectServiceTierSettingsBody',
     response: { 200: 'ProjectServiceTierSettingsResource' },
@@ -2548,7 +2548,7 @@ export const organization = new Elysia()
   })
   .post(
     '/organization/projects/:project_id/service_accounts/:service_account_id/api_keys',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: OrganizationModel.CreateanAPIkeyforaserviceaccountParams,
       body: 'CreateProjectServiceAccountApiKeyBody',

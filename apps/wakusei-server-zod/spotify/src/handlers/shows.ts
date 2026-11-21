@@ -36,7 +36,7 @@ export const getShowsId = os
     }),
   )
   .output(ShowObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getShows = os
   .route({
@@ -68,7 +68,7 @@ export const getShows = os
     }),
   )
   .output(z.object({ shows: z.array(SimplifiedShowObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getShowsIdEpisodes = os
   .route({
@@ -122,4 +122,4 @@ export const getShowsIdEpisodes = os
     }),
   )
   .output(PagingSimplifiedEpisodeObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

@@ -32,7 +32,7 @@ export const getChaptersId = os
     }),
   )
   .output(ChapterObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getChapters = os
   .route({
@@ -65,4 +65,4 @@ export const getChapters = os
     }),
   )
   .output(z.object({ chapters: z.array(ChapterObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

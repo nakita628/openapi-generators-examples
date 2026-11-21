@@ -9,4 +9,4 @@ export const getVoiceRegions = os
     successDescription: '200 response for list_voice_regions',
   })
   .output(type(type(VoiceRegionResponseSchema).array()).or('null'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

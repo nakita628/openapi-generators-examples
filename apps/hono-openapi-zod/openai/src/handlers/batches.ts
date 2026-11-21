@@ -42,7 +42,7 @@ export const batchesHandler = new Hono()
         limit: z.coerce.number().int().default(20).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batches',
@@ -76,7 +76,7 @@ export const batchesHandler = new Hono()
       },
     }),
     validator('json', CreateBatchRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/batches/:batch_id',
@@ -105,7 +105,7 @@ export const batchesHandler = new Hono()
       },
     }),
     validator('param', z.object({ batch_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/batches/:batch_id/cancel',
@@ -139,5 +139,5 @@ export const batchesHandler = new Hono()
       },
     }),
     validator('param', z.object({ batch_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

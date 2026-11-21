@@ -32,7 +32,7 @@ export const getInvitesCode = os
   .output(
     v.union([FriendInviteResponseSchema, GroupDMInviteResponseSchema, GuildInviteResponseSchema]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteInvitesCode = os
   .route({
@@ -44,7 +44,7 @@ export const deleteInvitesCode = os
   .output(
     v.union([FriendInviteResponseSchema, GroupDMInviteResponseSchema, GuildInviteResponseSchema]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getInvitesCodeTargetUsers = os
   .route({
@@ -54,7 +54,7 @@ export const getInvitesCodeTargetUsers = os
     successDescription: '200 response for get_invite_target_users',
   })
   .input(v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putInvitesCodeTargetUsers = os
   .route({
@@ -65,7 +65,7 @@ export const putInvitesCodeTargetUsers = os
     successDescription: '204 response for update_invite_target_users',
   })
   .input(v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postInvitesCodeTargetUsersBulkAdd = os
   .route({
@@ -84,7 +84,7 @@ export const postInvitesCodeTargetUsersBulkAdd = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postInvitesCodeTargetUsersBulkDelete = os
   .route({
@@ -103,7 +103,7 @@ export const postInvitesCodeTargetUsersBulkDelete = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getInvitesCodeTargetUsersJobStatus = os
   .route({
@@ -114,7 +114,7 @@ export const getInvitesCodeTargetUsersJobStatus = os
   })
   .input(v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)) }))
   .output(TargetUsersJobStatusResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putInvitesCodeTargetUsersUserId = os
   .route({
@@ -127,7 +127,7 @@ export const putInvitesCodeTargetUsersUserId = os
   .input(
     v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)), user_id: SnowflakeTypeSchema }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteInvitesCodeTargetUsersUserId = os
   .route({
@@ -140,4 +140,4 @@ export const deleteInvitesCodeTargetUsersUserId = os
   .input(
     v.object({ code: v.pipe(v.string(), v.maxCodePoints(152133)), user_id: SnowflakeTypeSchema }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

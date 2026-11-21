@@ -29,7 +29,7 @@ export const postResponses = os
   })
   .input(CreateResponseSchema)
   .output(ResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getResponsesResponseId = os
   .route({
@@ -72,7 +72,7 @@ export const getResponsesResponseId = os
     }),
   )
   .output(ResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteResponsesResponseId = os
   .route({
@@ -97,7 +97,7 @@ export const deleteResponsesResponseId = os
       id: v.string(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postResponsesResponseIdCancel = os
   .route({
@@ -117,7 +117,7 @@ export const postResponsesResponseIdCancel = os
     }),
   )
   .output(ResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getResponsesResponseIdInputItems = os
   .route({
@@ -145,7 +145,7 @@ export const getResponsesResponseIdInputItems = os
     }),
   )
   .output(ResponseItemListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postResponsesInputTokens = os
   .route({
@@ -159,7 +159,7 @@ export const postResponsesInputTokens = os
   })
   .input(TokenCountsBodySchema)
   .output(TokenCountsResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postResponsesCompact = os
   .route({
@@ -173,7 +173,7 @@ export const postResponsesCompact = os
   })
   .input(CompactResponseMethodPublicBodySchema)
   .output(CompactResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getResponsesResponseIdBetaTrue = os
   .route({
@@ -216,7 +216,7 @@ export const getResponsesResponseIdBetaTrue = os
     }),
   )
   .output(BetaResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteResponsesResponseIdBetaTrue = os
   .route({
@@ -241,7 +241,7 @@ export const deleteResponsesResponseIdBetaTrue = os
       id: v.string(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postResponsesResponseIdCancelBetaTrue = os
   .route({
@@ -261,7 +261,7 @@ export const postResponsesResponseIdCancelBetaTrue = os
     }),
   )
   .output(BetaResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postResponsesCompactBetaTrue = os
   .route({
@@ -275,7 +275,7 @@ export const postResponsesCompactBetaTrue = os
   })
   .input(BetaCompactResponseMethodPublicBodySchema)
   .output(BetaCompactResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getResponsesResponseIdInputItemsBetaTrue = os
   .route({
@@ -303,7 +303,7 @@ export const getResponsesResponseIdInputItemsBetaTrue = os
     }),
   )
   .output(BetaResponseItemListSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postResponsesInputTokensBetaTrue = os
   .route({
@@ -317,4 +317,4 @@ export const postResponsesInputTokensBetaTrue = os
   })
   .input(BetaTokenCountsBodySchema)
   .output(BetaTokenCountsResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

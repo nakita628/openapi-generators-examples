@@ -4,7 +4,7 @@ import { GatewayBotResponseSchema, GatewayResponseSchema } from '../components'
 export const getGateway = os
   .route({ method: 'GET', path: '/gateway', successDescription: '200 response for get_gateway' })
   .output(GatewayResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getGatewayBot = os
   .route({
@@ -13,4 +13,4 @@ export const getGatewayBot = os
     successDescription: '200 response for get_bot_gateway',
   })
   .output(GatewayBotResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

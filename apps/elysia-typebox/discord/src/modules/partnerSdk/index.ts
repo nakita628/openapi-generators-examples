@@ -24,7 +24,7 @@ export const partnerSdk = new Elysia()
   })
   .put(
     '/partner-sdk/dms/:user_id_1/:user_id_2/messages/:message_id/moderation-metadata',
-    ({ params, body }) => {},
+    ({ params, body }) => { throw new Error('Not implemented') },
     {
       params: PartnerSdkModel.update_user_message_external_moderation_metadataParams,
       body: PartnerSdkModel.update_user_message_external_moderation_metadataBody,
@@ -37,7 +37,7 @@ export const partnerSdk = new Elysia()
       },
     },
   )
-  .post('/partner-sdk/provisional-accounts/unmerge', ({ body }) => {}, {
+  .post('/partner-sdk/provisional-accounts/unmerge', ({ body }) => { throw new Error('Not implemented') }, {
     body: PartnerSdkModel.partner_sdk_unmerge_provisional_accountBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -46,7 +46,7 @@ export const partnerSdk = new Elysia()
       security: [{}, { BotToken: [] }],
     },
   })
-  .post('/partner-sdk/provisional-accounts/unmerge/bot', ({ body }) => {}, {
+  .post('/partner-sdk/provisional-accounts/unmerge/bot', ({ body }) => { throw new Error('Not implemented') }, {
     body: PartnerSdkModel.bot_partner_sdk_unmerge_provisional_accountBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -55,7 +55,7 @@ export const partnerSdk = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .post('/partner-sdk/token', ({ body }) => {}, {
+  .post('/partner-sdk/token', ({ body }) => { throw new Error('Not implemented') }, {
     body: PartnerSdkModel.partner_sdk_tokenBody,
     response: {
       200: 'ProvisionalTokenResponse',
@@ -64,7 +64,7 @@ export const partnerSdk = new Elysia()
     },
     detail: { tags: [], operationId: 'partner_sdk_token', security: [{}, { BotToken: [] }] },
   })
-  .post('/partner-sdk/token/bot', ({ body }) => {}, {
+  .post('/partner-sdk/token/bot', ({ body }) => { throw new Error('Not implemented') }, {
     body: PartnerSdkModel.bot_partner_sdk_tokenBody,
     response: {
       200: 'ProvisionalTokenResponse',

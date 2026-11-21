@@ -103,7 +103,7 @@ export const vaultsHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults',
@@ -149,7 +149,7 @@ export const vaultsHandler = new Hono()
       },
     }),
     validator('json', CreateVaultParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vaults/:vault_id',
@@ -204,7 +204,7 @@ export const vaultsHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults/:vault_id',
@@ -260,7 +260,7 @@ export const vaultsHandler = new Hono()
       }),
     ),
     validator('json', UpdateVaultParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vaults/:vault_id',
@@ -315,7 +315,7 @@ export const vaultsHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vaults/:vault_id/credentials',
@@ -412,7 +412,7 @@ export const vaultsHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults/:vault_id/credentials',
@@ -468,7 +468,7 @@ export const vaultsHandler = new Hono()
       }),
     ),
     validator('json', CreateVaultCredentialParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/vaults/:vault_id/credentials/:credential_id',
@@ -528,7 +528,7 @@ export const vaultsHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/vaults/:vault_id/credentials/:credential_id',
@@ -589,7 +589,7 @@ export const vaultsHandler = new Hono()
       }),
     ),
     validator('json', RotateVaultCredentialParamsSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/vaults/:vault_id/credentials/:credential_id',
@@ -651,5 +651,5 @@ export const vaultsHandler = new Hono()
           ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

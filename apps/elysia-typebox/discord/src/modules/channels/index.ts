@@ -445,7 +445,7 @@ export const channels = new Elysia()
     WebhookSourceGuildResponse: WebhookSourceGuildResponseSchema,
     WebhookTypes: WebhookTypesSchema,
   })
-  .get('/channels/:channel_id', ({ params }) => {}, {
+  .get('/channels/:channel_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.get_channelParams,
     response: {
       200: ChannelsModel.get_channelResponse200,
@@ -454,7 +454,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'get_channel', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id', ({ params }) => {}, {
+  .delete('/channels/:channel_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_channelParams,
     response: {
       200: ChannelsModel.delete_channelResponse200,
@@ -463,7 +463,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'delete_channel', security: [{ BotToken: [] }] },
   })
-  .patch('/channels/:channel_id', ({ params, body }) => {}, {
+  .patch('/channels/:channel_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.update_channelParams,
     body: ChannelsModel.update_channelBody,
     response: {
@@ -473,7 +473,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'update_channel', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/followers', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/followers', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.follow_channelParams,
     body: ChannelsModel.follow_channelBody,
     response: {
@@ -483,7 +483,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'follow_channel', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/invites', ({ params }) => {}, {
+  .get('/channels/:channel_id/invites', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_channel_invitesParams,
     response: {
       200: ChannelsModel.list_channel_invitesResponse200,
@@ -492,7 +492,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'list_channel_invites', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/invites', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/invites', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.create_channel_inviteParams,
     body: ChannelsModel.create_channel_inviteBody,
     response: {
@@ -503,7 +503,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'create_channel_invite', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/messages', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/messages', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_messagesParams,
     query: ChannelsModel.list_messagesQuery,
     response: {
@@ -517,63 +517,63 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }, { OAuth2: [] }],
     },
   })
-  .post('/channels/:channel_id/messages', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/messages', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.create_messageParams,
     body: 'MessageCreateRequest',
     response: { 200: 'MessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_message', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/messages/bulk-delete', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/messages/bulk-delete', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.bulk_delete_messagesParams,
     body: ChannelsModel.bulk_delete_messagesBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'bulk_delete_messages', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/messages/pins', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/messages/pins', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_pinsParams,
     query: ChannelsModel.list_pinsQuery,
     response: { 200: 'PinnedMessagesResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'list_pins', security: [{ BotToken: [] }] },
   })
-  .put('/channels/:channel_id/messages/pins/:message_id', ({ params }) => {}, {
+  .put('/channels/:channel_id/messages/pins/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.create_pinParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_pin', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id/messages/pins/:message_id', ({ params }) => {}, {
+  .delete('/channels/:channel_id/messages/pins/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_pinParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_pin', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/messages/:message_id', ({ params }) => {}, {
+  .get('/channels/:channel_id/messages/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.get_messageParams,
     response: { 200: 'MessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_message', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id/messages/:message_id', ({ params }) => {}, {
+  .delete('/channels/:channel_id/messages/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_messageParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_message', security: [{ BotToken: [] }] },
   })
-  .patch('/channels/:channel_id/messages/:message_id', ({ params, body }) => {}, {
+  .patch('/channels/:channel_id/messages/:message_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.update_messageParams,
     body: 'MessageEditRequestPartial',
     response: { 200: 'MessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'update_message', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/messages/:message_id/crosspost', ({ params }) => {}, {
+  .post('/channels/:channel_id/messages/:message_id/crosspost', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.crosspost_messageParams,
     response: { 200: 'MessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'crosspost_message', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id/messages/:message_id/reactions', ({ params }) => {}, {
+  .delete('/channels/:channel_id/messages/:message_id/reactions', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_all_message_reactionsParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_all_message_reactions', security: [{ BotToken: [] }] },
   })
   .get(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name',
-    ({ params, query }) => {},
+    ({ params, query }) => { throw new Error('Not implemented') },
     {
       params: ChannelsModel.list_message_reactions_by_emojiParams,
       query: ChannelsModel.list_message_reactions_by_emojiQuery,
@@ -589,7 +589,7 @@ export const channels = new Elysia()
       },
     },
   )
-  .delete('/channels/:channel_id/messages/:message_id/reactions/:emoji_name', ({ params }) => {}, {
+  .delete('/channels/:channel_id/messages/:message_id/reactions/:emoji_name', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_all_message_reactions_by_emojiParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -598,14 +598,14 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .put('/channels/:channel_id/messages/:message_id/reactions/:emoji_name/@me', ({ params }) => {}, {
+  .put('/channels/:channel_id/messages/:message_id/reactions/:emoji_name/@me', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.add_my_message_reactionParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'add_my_message_reaction', security: [{ BotToken: [] }] },
   })
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/@me',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: ChannelsModel.delete_my_message_reactionParams,
       response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -614,7 +614,7 @@ export const channels = new Elysia()
   )
   .delete(
     '/channels/:channel_id/messages/:message_id/reactions/:emoji_name/:user_id',
-    ({ params }) => {},
+    ({ params }) => { throw new Error('Not implemented') },
     {
       params: ChannelsModel.delete_user_message_reactionParams,
       response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -625,13 +625,13 @@ export const channels = new Elysia()
       },
     },
   )
-  .post('/channels/:channel_id/messages/:message_id/threads', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/messages/:message_id/threads', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.create_thread_from_messageParams,
     body: 'CreateTextThreadWithMessageRequest',
     response: { 201: 'ThreadResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_thread_from_message', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/permissions/member/:user_id', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/permissions/member/:user_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.get_channel_member_permissionsParams,
     query: ChannelsModel.get_channel_member_permissionsQuery,
     response: { 200: 'PermissionsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -643,7 +643,7 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/channels/:channel_id/permissions/role/:role_id', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/permissions/role/:role_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.get_channel_role_permissionsParams,
     query: ChannelsModel.get_channel_role_permissionsQuery,
     response: { 200: 'PermissionsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -655,7 +655,7 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .put('/channels/:channel_id/permissions/:overwrite_id', ({ params, body }) => {}, {
+  .put('/channels/:channel_id/permissions/:overwrite_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.set_channel_permission_overwriteParams,
     body: ChannelsModel.set_channel_permission_overwriteBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -665,7 +665,7 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .delete('/channels/:channel_id/permissions/:overwrite_id', ({ params }) => {}, {
+  .delete('/channels/:channel_id/permissions/:overwrite_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_channel_permission_overwriteParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: {
@@ -674,7 +674,7 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/channels/:channel_id/pins', ({ params }) => {}, {
+  .get('/channels/:channel_id/pins', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.deprecated_list_pinsParams,
     response: {
       200: ChannelsModel.deprecated_list_pinsResponse200,
@@ -683,17 +683,17 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'deprecated_list_pins', security: [{ BotToken: [] }] },
   })
-  .put('/channels/:channel_id/pins/:message_id', ({ params }) => {}, {
+  .put('/channels/:channel_id/pins/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.deprecated_create_pinParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'deprecated_create_pin', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id/pins/:message_id', ({ params }) => {}, {
+  .delete('/channels/:channel_id/pins/:message_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.deprecated_delete_pinParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'deprecated_delete_pin', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/polls/:message_id/answers/:answer_id', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/polls/:message_id/answers/:answer_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.get_answer_votersParams,
     query: ChannelsModel.get_answer_votersQuery,
     response: {
@@ -703,12 +703,12 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'get_answer_voters', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/polls/:message_id/expire', ({ params }) => {}, {
+  .post('/channels/:channel_id/polls/:message_id/expire', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.poll_expireParams,
     response: { 200: 'MessageResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'poll_expire', security: [{ BotToken: [] }] },
   })
-  .put('/channels/:channel_id/recipients/:user_id', ({ params, body }) => {}, {
+  .put('/channels/:channel_id/recipients/:user_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.add_group_dm_userParams,
     body: ChannelsModel.add_group_dm_userBody,
     response: {
@@ -719,18 +719,18 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'add_group_dm_user', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id/recipients/:user_id', ({ params }) => {}, {
+  .delete('/channels/:channel_id/recipients/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_group_dm_userParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_group_dm_user', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/send-soundboard-sound', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/send-soundboard-sound', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.send_soundboard_soundParams,
     body: 'SoundboardSoundSendRequest',
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'send_soundboard_sound', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/thread-members', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/thread-members', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_thread_membersParams,
     query: ChannelsModel.list_thread_membersQuery,
     response: {
@@ -740,39 +740,39 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'list_thread_members', security: [{ BotToken: [] }] },
   })
-  .put('/channels/:channel_id/thread-members/@me', ({ params }) => {}, {
+  .put('/channels/:channel_id/thread-members/@me', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.join_threadParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'join_thread', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id/thread-members/@me', ({ params }) => {}, {
+  .delete('/channels/:channel_id/thread-members/@me', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.leave_threadParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'leave_thread', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/thread-members/:user_id', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/thread-members/:user_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.get_thread_memberParams,
     query: ChannelsModel.get_thread_memberQuery,
     response: { 200: 'ThreadMemberResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'get_thread_member', security: [{ BotToken: [] }] },
   })
-  .put('/channels/:channel_id/thread-members/:user_id', ({ params }) => {}, {
+  .put('/channels/:channel_id/thread-members/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.add_thread_memberParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'add_thread_member', security: [{ BotToken: [] }] },
   })
-  .delete('/channels/:channel_id/thread-members/:user_id', ({ params }) => {}, {
+  .delete('/channels/:channel_id/thread-members/:user_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.delete_thread_memberParams,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'delete_thread_member', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/threads', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/threads', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.create_threadParams,
     body: ChannelsModel.create_threadBody,
     response: { 201: 'CreatedThreadResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'create_thread', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/threads/archived/private', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/threads/archived/private', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_private_archived_threadsParams,
     query: ChannelsModel.list_private_archived_threadsQuery,
     response: { 200: 'ThreadsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -782,13 +782,13 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/channels/:channel_id/threads/archived/public', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/threads/archived/public', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_public_archived_threadsParams,
     query: ChannelsModel.list_public_archived_threadsQuery,
     response: { 200: 'ThreadsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
     detail: { tags: [], operationId: 'list_public_archived_threads', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/threads/search', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/threads/search', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.thread_searchParams,
     query: ChannelsModel.thread_searchQuery,
     response: {
@@ -799,7 +799,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'thread_search', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/typing', ({ params }) => {}, {
+  .post('/channels/:channel_id/typing', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.trigger_typing_indicatorParams,
     response: {
       200: 'TypingIndicatorResponse',
@@ -809,7 +809,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'trigger_typing_indicator', security: [{ BotToken: [] }] },
   })
-  .get('/channels/:channel_id/users/@me/threads/archived/private', ({ params, query }) => {}, {
+  .get('/channels/:channel_id/users/@me/threads/archived/private', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_my_private_archived_threadsParams,
     query: ChannelsModel.list_my_private_archived_threadsQuery,
     response: { 200: 'ThreadsResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -819,7 +819,7 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .put('/channels/:channel_id/voice-status', ({ params, body }) => {}, {
+  .put('/channels/:channel_id/voice-status', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.update_voice_channel_statusParams,
     body: ChannelsModel.update_voice_channel_statusBody,
     response: { 204: t.Void(), 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },
@@ -830,7 +830,7 @@ export const channels = new Elysia()
       security: [{ BotToken: [] }],
     },
   })
-  .get('/channels/:channel_id/webhooks', ({ params }) => {}, {
+  .get('/channels/:channel_id/webhooks', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.list_channel_webhooksParams,
     response: {
       200: ChannelsModel.list_channel_webhooksResponse200,
@@ -839,7 +839,7 @@ export const channels = new Elysia()
     },
     detail: { tags: [], operationId: 'list_channel_webhooks', security: [{ BotToken: [] }] },
   })
-  .post('/channels/:channel_id/webhooks', ({ params, body }) => {}, {
+  .post('/channels/:channel_id/webhooks', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ChannelsModel.create_webhookParams,
     body: ChannelsModel.create_webhookBody,
     response: {

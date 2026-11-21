@@ -58,7 +58,7 @@ export const projectsHandler = new Hono()
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/groups/:group_id/roles',
@@ -92,7 +92,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', z.object({ project_id: z.string(), group_id: z.string() })),
     validator('json', PublicAssignOrganizationGroupRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
@@ -128,7 +128,7 @@ export const projectsHandler = new Hono()
       'param',
       z.object({ project_id: z.string(), group_id: z.string(), role_id: z.string() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/groups/:group_id/roles/:role_id',
@@ -166,7 +166,7 @@ export const projectsHandler = new Hono()
       'param',
       z.object({ project_id: z.string(), group_id: z.string(), role_id: z.string() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/roles',
@@ -207,7 +207,7 @@ export const projectsHandler = new Hono()
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/roles',
@@ -241,7 +241,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', z.object({ project_id: z.string() })),
     validator('json', PublicCreateOrganizationRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/roles/:role_id',
@@ -269,7 +269,7 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', z.object({ project_id: z.string(), role_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/roles/:role_id',
@@ -303,7 +303,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', z.object({ project_id: z.string(), role_id: z.string() })),
     validator('json', PublicUpdateOrganizationRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/roles/:role_id',
@@ -336,7 +336,7 @@ export const projectsHandler = new Hono()
       },
     }),
     validator('param', z.object({ project_id: z.string(), role_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/users/:user_id/roles',
@@ -377,7 +377,7 @@ export const projectsHandler = new Hono()
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/projects/:project_id/users/:user_id/roles',
@@ -411,7 +411,7 @@ export const projectsHandler = new Hono()
     }),
     validator('param', z.object({ project_id: z.string(), user_id: z.string() })),
     validator('json', PublicAssignOrganizationGroupRoleBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/projects/:project_id/users/:user_id/roles/:role_id',
@@ -447,7 +447,7 @@ export const projectsHandler = new Hono()
       'param',
       z.object({ project_id: z.string(), user_id: z.string(), role_id: z.string() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/projects/:project_id/users/:user_id/roles/:role_id',
@@ -485,5 +485,5 @@ export const projectsHandler = new Hono()
       'param',
       z.object({ project_id: z.string(), user_id: z.string(), role_id: z.string() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

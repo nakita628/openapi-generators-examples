@@ -42,16 +42,16 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/user/createWithList', sValidator('json', v.array(UserSchema)), (c) => {})
+  .post('/user/createWithList', sValidator('json', v.array(UserSchema)), (c) => { throw new Error('Not implemented') })
   .get(
     '/user/login',
     sValidator('query', v.partial(v.object({ username: v.string(), password: v.string() }))),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/user/logout', (c) => {})
-  .get('/user/:username', sValidator('param', v.object({ username: v.string() })), (c) => {})
+  .get('/user/logout', (c) => { throw new Error('Not implemented') })
+  .get('/user/:username', sValidator('param', v.object({ username: v.string() })), (c) => { throw new Error('Not implemented') })
   .put(
     '/user/:username',
     sValidator('param', v.object({ username: v.string() })),
@@ -91,6 +91,6 @@ export const userHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .delete('/user/:username', sValidator('param', v.object({ username: v.string() })), (c) => {})
+  .delete('/user/:username', sValidator('param', v.object({ username: v.string() })), (c) => { throw new Error('Not implemented') })

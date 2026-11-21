@@ -34,7 +34,7 @@ export const gatewayHandler = new Hono()
       },
       security: [{}, { BotToken: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/gateway/bot',
@@ -61,5 +61,5 @@ export const gatewayHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

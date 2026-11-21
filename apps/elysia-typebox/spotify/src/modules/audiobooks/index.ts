@@ -34,7 +34,7 @@ export const audiobooks = new Elysia()
     ResumePointObject: ResumePointObjectSchema,
     SimplifiedChapterObject: SimplifiedChapterObjectSchema,
   })
-  .get('/audiobooks/:id', ({ params, query }) => {}, {
+  .get('/audiobooks/:id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AudiobooksModel.getAnAudiobookParams,
     query: AudiobooksModel.getAnAudiobookQuery,
     response: {
@@ -54,7 +54,7 @@ export const audiobooks = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/audiobooks', ({ query }) => {}, {
+  .get('/audiobooks', ({ query }) => { throw new Error('Not implemented') }, {
     query: AudiobooksModel.getMultipleAudiobooksQuery,
     response: {
       200: AudiobooksModel.getMultipleAudiobooksResponse200,
@@ -71,7 +71,7 @@ export const audiobooks = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/audiobooks/:id/chapters', ({ params, query }) => {}, {
+  .get('/audiobooks/:id/chapters', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: AudiobooksModel.getAudiobookChaptersParams,
     query: AudiobooksModel.getAudiobookChaptersQuery,
     response: {

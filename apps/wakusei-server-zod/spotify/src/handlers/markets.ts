@@ -19,4 +19,4 @@ export const getMarkets = os
         .exactOptional(),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

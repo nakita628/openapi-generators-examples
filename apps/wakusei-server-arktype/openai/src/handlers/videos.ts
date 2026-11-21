@@ -37,7 +37,7 @@ export const getVideos = os
     }),
   )
   .output(VideoListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideos = os
   .route({
@@ -51,7 +51,7 @@ export const postVideos = os
   })
   .input(CreateVideoJsonBodySchema)
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosCharacters = os
   .route({
@@ -64,7 +64,7 @@ export const postVideosCharacters = os
     successDescription: 'Success',
   })
   .output(VideoCharacterResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVideosCharactersCharacterId = os
   .route({
@@ -78,7 +78,7 @@ export const getVideosCharactersCharacterId = os
   })
   .input(type({ character_id: type('string') }))
   .output(VideoCharacterResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosEdits = os
   .route({
@@ -93,7 +93,7 @@ export const postVideosEdits = os
   })
   .input(CreateVideoEditJsonBodySchema)
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosExtensions = os
   .route({
@@ -107,7 +107,7 @@ export const postVideosExtensions = os
   })
   .input(CreateVideoExtendJsonBodySchema)
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVideosVideoId = os
   .route({
@@ -121,7 +121,7 @@ export const getVideosVideoId = os
   })
   .input(type({ video_id: type('string') }))
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteVideosVideoId = os
   .route({
@@ -135,7 +135,7 @@ export const deleteVideosVideoId = os
   })
   .input(type({ video_id: type('string') }))
   .output(DeletedVideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getVideosVideoIdContent = os
   .route({
@@ -150,7 +150,7 @@ export const getVideosVideoIdContent = os
   })
   .input(type({ video_id: type('string'), 'variant?': VideoContentVariantSchema }))
   .output(type('string'))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postVideosVideoIdRemix = os
   .route({
@@ -172,4 +172,4 @@ export const postVideosVideoIdRemix = os
     }),
   )
   .output(VideoResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

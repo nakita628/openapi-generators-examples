@@ -110,7 +110,7 @@ export const chatkit = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/chatkit/sessions/:session_id/cancel', ({ params }) => {}, {
+  .post('/chatkit/sessions/:session_id/cancel', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChatkitModel.CancelChatSessionMethodParams,
     response: {
       200: 'ChatSessionResource',
@@ -126,7 +126,7 @@ export const chatkit = new Elysia()
       operationId: 'CancelChatSessionMethod',
     },
   })
-  .post('/chatkit/sessions', ({ body }) => {}, {
+  .post('/chatkit/sessions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateChatSessionBody',
     response: {
       200: 'ChatSessionResource',
@@ -141,7 +141,7 @@ export const chatkit = new Elysia()
       operationId: 'CreateChatSessionMethod',
     },
   })
-  .get('/chatkit/threads/:thread_id/items', ({ params, query }) => {}, {
+  .get('/chatkit/threads/:thread_id/items', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: ChatkitModel.ListThreadItemsMethodParams,
     query: ChatkitModel.ListThreadItemsMethodQuery,
     response: {
@@ -157,7 +157,7 @@ export const chatkit = new Elysia()
       operationId: 'ListThreadItemsMethod',
     },
   })
-  .get('/chatkit/threads/:thread_id', ({ params }) => {}, {
+  .get('/chatkit/threads/:thread_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChatkitModel.GetThreadMethodParams,
     response: {
       200: 'ThreadResource',
@@ -172,7 +172,7 @@ export const chatkit = new Elysia()
       operationId: 'GetThreadMethod',
     },
   })
-  .delete('/chatkit/threads/:thread_id', ({ params }) => {}, {
+  .delete('/chatkit/threads/:thread_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: ChatkitModel.DeleteThreadMethodParams,
     response: {
       200: 'DeletedThreadResource',
@@ -187,7 +187,7 @@ export const chatkit = new Elysia()
       operationId: 'DeleteThreadMethod',
     },
   })
-  .get('/chatkit/threads', ({ query }) => {}, {
+  .get('/chatkit/threads', ({ query }) => { throw new Error('Not implemented') }, {
     query: ChatkitModel.ListThreadsMethodQuery,
     response: {
       200: 'ThreadListResource',

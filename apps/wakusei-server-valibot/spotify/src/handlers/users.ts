@@ -28,7 +28,7 @@ export const getUsersUserId = os
     }),
   )
   .output(PublicUserObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getUsersUserIdPlaylists = os
   .route({
@@ -80,7 +80,7 @@ export const getUsersUserIdPlaylists = os
     }),
   )
   .output(PagingPlaylistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postUsersUserIdPlaylists = os
   .route({
@@ -136,4 +136,4 @@ export const postUsersUserIdPlaylists = os
     }),
   )
   .output(PlaylistObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

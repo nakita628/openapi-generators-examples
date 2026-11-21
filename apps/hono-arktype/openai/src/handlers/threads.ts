@@ -13,16 +13,16 @@ import {
 } from '../components'
 
 export const threadsHandler = new Hono()
-  .post('/threads', sValidator('json', CreateThreadRequestSchema), (c) => {})
-  .post('/threads/runs', sValidator('json', CreateThreadAndRunRequestSchema), (c) => {})
-  .get('/threads/:thread_id', sValidator('param', type({ thread_id: 'string' })), (c) => {})
+  .post('/threads', sValidator('json', CreateThreadRequestSchema), (c) => { throw new Error('Not implemented') })
+  .post('/threads/runs', sValidator('json', CreateThreadAndRunRequestSchema), (c) => { throw new Error('Not implemented') })
+  .get('/threads/:thread_id', sValidator('param', type({ thread_id: 'string' })), (c) => { throw new Error('Not implemented') })
   .post(
     '/threads/:thread_id',
     sValidator('param', type({ thread_id: 'string' })),
     sValidator('json', ModifyThreadRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .delete('/threads/:thread_id', sValidator('param', type({ thread_id: 'string' })), (c) => {})
+  .delete('/threads/:thread_id', sValidator('param', type({ thread_id: 'string' })), (c) => { throw new Error('Not implemented') })
   .get(
     '/threads/:thread_id/messages',
     sValidator('param', type({ thread_id: 'string' })),
@@ -39,29 +39,29 @@ export const threadsHandler = new Hono()
         'run_id?': 'string',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages',
     sValidator('param', type({ thread_id: 'string' })),
     sValidator('json', CreateMessageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/messages/:message_id',
     sValidator('param', type({ thread_id: 'string', message_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/messages/:message_id',
     sValidator('param', type({ thread_id: 'string', message_id: 'string' })),
     sValidator('json', ModifyMessageRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/threads/:thread_id/messages/:message_id',
     sValidator('param', type({ thread_id: 'string', message_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs',
@@ -78,7 +78,7 @@ export const threadsHandler = new Hono()
         'before?': 'string',
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs',
@@ -92,23 +92,23 @@ export const threadsHandler = new Hono()
       }),
     ),
     sValidator('json', CreateRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id',
     sValidator('param', type({ thread_id: 'string', run_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id',
     sValidator('param', type({ thread_id: 'string', run_id: 'string' })),
     sValidator('json', ModifyRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/cancel',
     sValidator('param', type({ thread_id: 'string', run_id: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps',
@@ -128,7 +128,7 @@ export const threadsHandler = new Hono()
           .to("'step_details.tool_calls[*].file_search.results[*].content'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/threads/:thread_id/runs/:run_id/steps/:step_id',
@@ -141,11 +141,11 @@ export const threadsHandler = new Hono()
           .to("'step_details.tool_calls[*].file_search.results[*].content'[]"),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/threads/:thread_id/runs/:run_id/submit_tool_outputs',
     sValidator('param', type({ thread_id: 'string', run_id: 'string' })),
     sValidator('json', SubmitToolOutputsRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

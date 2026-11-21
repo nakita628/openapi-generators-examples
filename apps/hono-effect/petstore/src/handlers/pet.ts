@@ -78,7 +78,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet',
@@ -154,7 +154,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByStatus',
@@ -168,7 +168,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/findByTags',
@@ -189,7 +189,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/pet/:petId',
@@ -206,7 +206,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId',
@@ -232,7 +232,7 @@ export const petHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/pet/:petId',
@@ -253,7 +253,7 @@ export const petHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(Schema.Struct({ api_key: Schema.optional(Schema.String) })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/pet/:petId/uploadImage',
@@ -276,5 +276,5 @@ export const petHandler = new Hono()
         Schema.Struct({ additionalMetadata: Schema.optional(Schema.String) }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

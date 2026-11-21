@@ -40,12 +40,12 @@ export const webhookEndpointsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints',
     sValidator('json', Schema.toStandardSchemaV1(PublicCreateEndpointBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/webhook_endpoints/:webhook_endpoint_id',
@@ -57,7 +57,7 @@ export const webhookEndpointsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id',
@@ -70,7 +70,7 @@ export const webhookEndpointsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(PublicUpdateEndpointBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/webhook_endpoints/:webhook_endpoint_id',
@@ -82,7 +82,7 @@ export const webhookEndpointsHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/rotate_secret',
@@ -95,7 +95,7 @@ export const webhookEndpointsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(PublicRotateSecretBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/webhook_endpoints/:webhook_endpoint_id/test',
@@ -108,5 +108,5 @@ export const webhookEndpointsHandler = new Hono()
       ),
     ),
     sValidator('json', Schema.toStandardSchemaV1(PublicTestEndpointBodySchema)),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

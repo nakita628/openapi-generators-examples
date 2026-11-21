@@ -26,7 +26,7 @@ export const files = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .get('/files', ({ query }) => {}, {
+  .get('/files', ({ query }) => { throw new Error('Not implemented') }, {
     query: FilesModel.listFilesQuery,
     response: {
       200: 'ListFilesResponse',
@@ -41,7 +41,7 @@ export const files = new Elysia()
       operationId: 'listFiles',
     },
   })
-  .post('/files', ({ body }) => {}, {
+  .post('/files', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateFileRequest',
     response: {
       200: 'OpenAIFile',
@@ -57,7 +57,7 @@ export const files = new Elysia()
       operationId: 'createFile',
     },
   })
-  .get('/files/:file_id', ({ params }) => {}, {
+  .get('/files/:file_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: FilesModel.retrieveFileParams,
     response: { 200: 'OpenAIFile', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -67,7 +67,7 @@ export const files = new Elysia()
       operationId: 'retrieveFile',
     },
   })
-  .delete('/files/:file_id', ({ params }) => {}, {
+  .delete('/files/:file_id', ({ params }) => { throw new Error('Not implemented') }, {
     params: FilesModel.deleteFileParams,
     response: { 200: 'DeleteFileResponse', 404: 'ErrorResponse', 429: 'ErrorResponse' },
     detail: {
@@ -77,7 +77,7 @@ export const files = new Elysia()
       operationId: 'deleteFile',
     },
   })
-  .get('/files/:file_id/content', ({ params }) => {}, {
+  .get('/files/:file_id/content', ({ params }) => { throw new Error('Not implemented') }, {
     params: FilesModel.downloadFileParams,
     response: {
       200: t.Void(),

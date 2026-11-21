@@ -16,12 +16,12 @@ export const batchesHandler = new Hono()
         ),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/batches', sValidator('json', CreateBatchRequestSchema), (c) => {})
-  .get('/batches/:batch_id', sValidator('param', v.object({ batch_id: v.string() })), (c) => {})
+  .post('/batches', sValidator('json', CreateBatchRequestSchema), (c) => { throw new Error('Not implemented') })
+  .get('/batches/:batch_id', sValidator('param', v.object({ batch_id: v.string() })), (c) => { throw new Error('Not implemented') })
   .post(
     '/batches/:batch_id/cancel',
     sValidator('param', v.object({ batch_id: v.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

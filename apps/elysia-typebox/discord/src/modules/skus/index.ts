@@ -22,7 +22,7 @@ export const skus = new Elysia()
     SubscriptionResponse: SubscriptionResponseSchema,
     SubscriptionResponseStatusType: SubscriptionResponseStatusTypeSchema,
   })
-  .get('/skus/:sku_id/subscriptions', ({ params, query }) => {}, {
+  .get('/skus/:sku_id/subscriptions', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: SkusModel.get_sku_subscriptionsParams,
     query: SkusModel.get_sku_subscriptionsQuery,
     response: {
@@ -77,7 +77,7 @@ export const skus = new Elysia()
       ],
     },
   })
-  .get('/skus/:sku_id/subscriptions/:subscription_id', ({ params, query }) => {}, {
+  .get('/skus/:sku_id/subscriptions/:subscription_id', ({ params, query }) => { throw new Error('Not implemented') }, {
     params: SkusModel.get_sku_subscriptionParams,
     query: SkusModel.get_sku_subscriptionQuery,
     response: { 200: 'SubscriptionResponse', 429: 'RatelimitedResponse', '4XX': 'ErrorResponse' },

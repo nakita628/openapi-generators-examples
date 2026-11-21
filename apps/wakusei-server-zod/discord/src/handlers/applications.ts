@@ -44,7 +44,7 @@ export const getApplicationsMe = os
     successDescription: '200 response for get_my_application',
   })
   .output(PrivateApplicationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchApplicationsMe = os
   .route({
@@ -54,7 +54,7 @@ export const patchApplicationsMe = os
   })
   .input(ApplicationFormPartialSchema)
   .output(PrivateApplicationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationId = os
   .route({
@@ -64,7 +64,7 @@ export const getApplicationsApplicationId = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
   .output(PrivateApplicationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchApplicationsApplicationId = os
   .route({
@@ -127,7 +127,7 @@ export const patchApplicationsApplicationId = os
     }),
   )
   .output(PrivateApplicationResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdActivityInstancesInstanceId = os
   .route({
@@ -137,7 +137,7 @@ export const getApplicationsApplicationIdActivityInstancesInstanceId = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, instance_id: z.string().max(152133) }))
   .output(EmbeddedActivityInstanceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postApplicationsApplicationIdAttachment = os
   .route({
@@ -147,7 +147,7 @@ export const postApplicationsApplicationIdAttachment = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
   .output(ActivitiesAttachmentResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdCommands = os
   .route({
@@ -162,7 +162,7 @@ export const getApplicationsApplicationIdCommands = os
     }),
   )
   .output(z.array(ApplicationCommandResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postApplicationsApplicationIdCommands = os
   .route({
@@ -227,7 +227,7 @@ export const postApplicationsApplicationIdCommands = os
     }),
   )
   .output(ApplicationCommandResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putApplicationsApplicationIdCommands = os
   .route({
@@ -237,7 +237,7 @@ export const putApplicationsApplicationIdCommands = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
   .output(z.array(ApplicationCommandResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdCommandsCommandId = os
   .route({
@@ -247,7 +247,7 @@ export const getApplicationsApplicationIdCommandsCommandId = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, command_id: SnowflakeTypeSchema }))
   .output(ApplicationCommandResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteApplicationsApplicationIdCommandsCommandId = os
   .route({
@@ -257,7 +257,7 @@ export const deleteApplicationsApplicationIdCommandsCommandId = os
     successDescription: '204 response for delete_application_command',
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, command_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchApplicationsApplicationIdCommandsCommandId = os
   .route({
@@ -322,7 +322,7 @@ export const patchApplicationsApplicationIdCommandsCommandId = os
     }),
   )
   .output(ApplicationCommandResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdEmojis = os
   .route({
@@ -332,7 +332,7 @@ export const getApplicationsApplicationIdEmojis = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
   .output(ListApplicationEmojisResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postApplicationsApplicationIdEmojis = os
   .route({
@@ -349,7 +349,7 @@ export const postApplicationsApplicationIdEmojis = os
     }),
   )
   .output(EmojiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdEmojisEmojiId = os
   .route({
@@ -359,7 +359,7 @@ export const getApplicationsApplicationIdEmojisEmojiId = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }))
   .output(EmojiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteApplicationsApplicationIdEmojisEmojiId = os
   .route({
@@ -369,7 +369,7 @@ export const deleteApplicationsApplicationIdEmojisEmojiId = os
     successDescription: '204 response for delete_application_emoji',
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchApplicationsApplicationIdEmojisEmojiId = os
   .route({
@@ -385,7 +385,7 @@ export const patchApplicationsApplicationIdEmojisEmojiId = os
     }),
   )
   .output(EmojiResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdEntitlements = os
   .route({
@@ -429,7 +429,7 @@ export const getApplicationsApplicationIdEntitlements = os
     }),
   )
   .output(z.array(EntitlementResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postApplicationsApplicationIdEntitlements = os
   .route({
@@ -446,7 +446,7 @@ export const postApplicationsApplicationIdEntitlements = os
     }),
   )
   .output(EntitlementResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdEntitlementsEntitlementId = os
   .route({
@@ -456,7 +456,7 @@ export const getApplicationsApplicationIdEntitlementsEntitlementId = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }))
   .output(EntitlementResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteApplicationsApplicationIdEntitlementsEntitlementId = os
   .route({
@@ -466,7 +466,7 @@ export const deleteApplicationsApplicationIdEntitlementsEntitlementId = os
     successDescription: '204 response for delete_entitlement',
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postApplicationsApplicationIdEntitlementsEntitlementIdConsume = os
   .route({
@@ -476,7 +476,7 @@ export const postApplicationsApplicationIdEntitlementsEntitlementIdConsume = os
     successDescription: '204 response for consume_entitlement',
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdGuildsGuildIdCommands = os
   .route({
@@ -492,7 +492,7 @@ export const getApplicationsApplicationIdGuildsGuildIdCommands = os
     }),
   )
   .output(z.array(ApplicationCommandResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postApplicationsApplicationIdGuildsGuildIdCommands = os
   .route({
@@ -558,7 +558,7 @@ export const postApplicationsApplicationIdGuildsGuildIdCommands = os
     }),
   )
   .output(ApplicationCommandResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putApplicationsApplicationIdGuildsGuildIdCommands = os
   .route({
@@ -568,7 +568,7 @@ export const putApplicationsApplicationIdGuildsGuildIdCommands = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema }))
   .output(z.array(ApplicationCommandResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdGuildsGuildIdCommandsPermissions = os
   .route({
@@ -578,7 +578,7 @@ export const getApplicationsApplicationIdGuildsGuildIdCommandsPermissions = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema }))
   .output(z.array(CommandPermissionsResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
   .route({
@@ -594,7 +594,7 @@ export const getApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
     }),
   )
   .output(ApplicationCommandResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
   .route({
@@ -610,7 +610,7 @@ export const deleteApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
       command_id: SnowflakeTypeSchema,
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const patchApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
   .route({
@@ -676,7 +676,7 @@ export const patchApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
     }),
   )
   .output(ApplicationCommandResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissions = os
   .route({
@@ -692,7 +692,7 @@ export const getApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissio
     }),
   )
   .output(CommandPermissionsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissions = os
   .route({
@@ -709,7 +709,7 @@ export const putApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissio
     }),
   )
   .output(CommandPermissionsResponseSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getApplicationsApplicationIdRoleConnectionsMetadata = os
   .route({
@@ -719,7 +719,7 @@ export const getApplicationsApplicationIdRoleConnectionsMetadata = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
   .output(z.array(ApplicationRoleConnectionsMetadataItemResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const putApplicationsApplicationIdRoleConnectionsMetadata = os
   .route({
@@ -729,4 +729,4 @@ export const putApplicationsApplicationIdRoleConnectionsMetadata = os
   })
   .input(z.object({ application_id: SnowflakeTypeSchema }))
   .output(z.array(ApplicationRoleConnectionsMetadataItemResponseSchema).nullable())
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

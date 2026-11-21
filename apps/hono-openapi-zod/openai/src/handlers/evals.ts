@@ -40,7 +40,7 @@ export const evalsHandler = new Hono()
         order_by: z.enum(['created_at', 'updated_at']).default('created_at').exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals',
@@ -63,7 +63,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('json', CreateEvalRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id',
@@ -85,7 +85,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('param', z.object({ eval_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals/:eval_id',
@@ -118,7 +118,7 @@ export const evalsHandler = new Hono()
         metadata: MetadataSchema.exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/evals/:eval_id',
@@ -154,7 +154,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('param', z.object({ eval_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs',
@@ -191,7 +191,7 @@ export const evalsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals/:eval_id/runs',
@@ -223,7 +223,7 @@ export const evalsHandler = new Hono()
     }),
     validator('param', z.object({ eval_id: z.string() })),
     validator('json', CreateEvalRunRequestSchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs/:run_id',
@@ -249,7 +249,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('param', z.object({ eval_id: z.string(), run_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/evals/:eval_id/runs/:run_id',
@@ -294,7 +294,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('param', z.object({ eval_id: z.string(), run_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/evals/:eval_id/runs/:run_id/cancel',
@@ -312,7 +312,7 @@ export const evalsHandler = new Hono()
       },
     }),
     validator('param', z.object({ eval_id: z.string(), run_id: z.string() })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs/:run_id/output_items',
@@ -347,7 +347,7 @@ export const evalsHandler = new Hono()
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/evals/:eval_id/runs/:run_id/output_items/:output_item_id',
@@ -377,5 +377,5 @@ export const evalsHandler = new Hono()
       'param',
       z.object({ eval_id: z.string(), run_id: z.string(), output_item_id: z.string() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

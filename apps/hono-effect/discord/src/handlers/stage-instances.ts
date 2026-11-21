@@ -29,7 +29,7 @@ export const stageInstancesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/stage-instances/:channel_id',
@@ -37,7 +37,7 @@ export const stageInstancesHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ channel_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/stage-instances/:channel_id',
@@ -45,7 +45,7 @@ export const stageInstancesHandler = new Hono()
       'param',
       Schema.toStandardSchemaV1(Schema.Struct({ channel_id: SnowflakeTypeSchema })),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .patch(
     '/stage-instances/:channel_id',
@@ -71,5 +71,5 @@ export const stageInstancesHandler = new Hono()
         }),
       ),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

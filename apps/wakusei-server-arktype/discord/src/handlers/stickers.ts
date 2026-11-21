@@ -14,4 +14,4 @@ export const getStickersStickerId = os
   })
   .input(type({ sticker_id: SnowflakeTypeSchema }))
   .output(type(GuildStickerResponseSchema).or(StandardStickerResponseSchema))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

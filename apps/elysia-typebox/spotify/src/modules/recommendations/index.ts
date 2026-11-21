@@ -32,7 +32,7 @@ export const recommendations = new Elysia()
     TrackObject: TrackObjectSchema,
     TrackRestrictionObject: TrackRestrictionObjectSchema,
   })
-  .get('/recommendations', ({ query }) => {}, {
+  .get('/recommendations', ({ query }) => { throw new Error('Not implemented') }, {
     query: RecommendationsModel.getRecommendationsQuery,
     response: {
       200: 'RecommendationsObject',
@@ -49,7 +49,7 @@ export const recommendations = new Elysia()
       security: [{ oauth_2_0: [] }],
     },
   })
-  .get('/recommendations/available-genre-seeds', () => {}, {
+  .get('/recommendations/available-genre-seeds', () => { throw new Error('Not implemented') }, {
     response: {
       200: RecommendationsModel.getRecommendationGenresResponse200,
       401: RecommendationsModel.getRecommendationGenresResponse401,

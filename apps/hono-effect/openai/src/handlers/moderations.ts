@@ -6,5 +6,5 @@ import { CreateModerationRequestSchema } from '../components'
 export const moderationsHandler = new Hono().post(
   '/moderations',
   sValidator('json', Schema.toStandardSchemaV1(CreateModerationRequestSchema)),
-  (c) => {},
+  (c) => { throw new Error('Not implemented') },
 )

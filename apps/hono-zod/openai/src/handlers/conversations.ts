@@ -26,7 +26,7 @@ export const conversationsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/conversations/:conversation_id/items',
@@ -54,7 +54,7 @@ export const conversationsHandler = new Hono()
           }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/conversations/:conversation_id/items/:item_id',
@@ -76,7 +76,7 @@ export const conversationsHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/conversations/:conversation_id/items/:item_id',
@@ -87,22 +87,22 @@ export const conversationsHandler = new Hono()
         item_id: z.string().meta({ examples: ['msg_abc'] }),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/conversations', sValidator('json', CreateConversationBodySchema), (c) => {})
+  .post('/conversations', sValidator('json', CreateConversationBodySchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/conversations/:conversation_id',
     sValidator('param', z.object({ conversation_id: z.string().meta({ examples: ['conv_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .post(
     '/conversations/:conversation_id',
     sValidator('param', z.object({ conversation_id: z.string().meta({ examples: ['conv_123'] }) })),
     sValidator('json', UpdateConversationBodySchema),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/conversations/:conversation_id',
     sValidator('param', z.object({ conversation_id: z.string().meta({ examples: ['conv_123'] }) })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

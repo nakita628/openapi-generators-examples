@@ -25,7 +25,7 @@ export const getBookings = os
       v.partial(v.object({ links: v.intersect([LinksSelfSchema, LinksPaginationSchema]) })),
     ]),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBookings = os
   .route({
@@ -40,7 +40,7 @@ export const postBookings = os
   })
   .input(BookingSchema)
   .output(v.intersect([BookingSchema, v.partial(v.object({ links: LinksSelfSchema }))]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getBookingsBookingId = os
   .route({
@@ -62,7 +62,7 @@ export const getBookingsBookingId = os
     }),
   )
   .output(v.intersect([BookingSchema, v.partial(v.object({ links: LinksSelfSchema }))]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const deleteBookingsBookingId = os
   .route({
@@ -84,7 +84,7 @@ export const deleteBookingsBookingId = os
       ),
     }),
   )
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const postBookingsBookingIdPayment = os
   .route({
@@ -250,4 +250,4 @@ export const postBookingsBookingIdPayment = os
     }),
   )
   .output(v.intersect([BookingPaymentSchema, v.partial(v.object({ links: LinksBookingSchema }))]))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

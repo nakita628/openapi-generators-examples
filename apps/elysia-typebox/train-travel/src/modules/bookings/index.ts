@@ -18,7 +18,7 @@ export const bookings = new Elysia()
     LinksSelf: LinksSelfSchema,
     WrapperCollection: WrapperCollectionSchema,
   })
-  .get('/bookings', () => {}, {
+  .get('/bookings', () => { throw new Error('Not implemented') }, {
     response: {
       200: BookingsModel.getBookingsResponse200,
       400: t.Void(),
@@ -34,7 +34,7 @@ export const bookings = new Elysia()
       operationId: 'get-bookings',
     },
   })
-  .post('/bookings', ({ body }) => {}, {
+  .post('/bookings', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'Booking',
     response: {
       201: BookingsModel.createBookingResponse201,
@@ -54,7 +54,7 @@ export const bookings = new Elysia()
       security: [{ OAuth2: ['write'] }],
     },
   })
-  .get('/bookings/:bookingId', ({ params }) => {}, {
+  .get('/bookings/:bookingId', ({ params }) => { throw new Error('Not implemented') }, {
     params: BookingsModel.getBookingParams,
     response: {
       200: BookingsModel.getBookingResponse200,
@@ -72,7 +72,7 @@ export const bookings = new Elysia()
       operationId: 'get-booking',
     },
   })
-  .delete('/bookings/:bookingId', ({ params }) => {}, {
+  .delete('/bookings/:bookingId', ({ params }) => { throw new Error('Not implemented') }, {
     params: BookingsModel.deleteBookingParams,
     response: {
       204: t.Void(),
@@ -91,7 +91,7 @@ export const bookings = new Elysia()
       security: [{ OAuth2: ['write'] }],
     },
   })
-  .post('/bookings/:bookingId/payment', ({ params, body }) => {}, {
+  .post('/bookings/:bookingId/payment', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: BookingsModel.createBookingPaymentParams,
     body: 'BookingPayment',
     response: {

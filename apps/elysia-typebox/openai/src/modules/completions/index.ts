@@ -26,7 +26,7 @@ export const completions = new Elysia()
     MisalignmentErrorType: MisalignmentErrorTypeSchema,
     MisalignmentSteer: MisalignmentSteerSchema,
   })
-  .post('/completions', ({ body }) => {}, {
+  .post('/completions', ({ body }) => { throw new Error('Not implemented') }, {
     body: 'CreateCompletionRequest',
     response: {
       200: 'CreateCompletionResponse',

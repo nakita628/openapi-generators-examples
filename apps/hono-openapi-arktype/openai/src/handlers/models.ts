@@ -29,7 +29,7 @@ export const modelsHandler = new Hono()
         },
       },
     }),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .get(
     '/models/:model',
@@ -55,7 +55,7 @@ export const modelsHandler = new Hono()
       },
     }),
     validator('param', type({ model: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
   .delete(
     '/models/:model',
@@ -83,5 +83,5 @@ export const modelsHandler = new Hono()
       },
     }),
     validator('param', type({ model: 'string' })),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )

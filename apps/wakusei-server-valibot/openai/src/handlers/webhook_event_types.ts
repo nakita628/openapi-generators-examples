@@ -10,4 +10,4 @@ export const getWebhookEventTypes = os
     successDescription: 'Success',
   })
   .output(WebhookEventTypeListResourceSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

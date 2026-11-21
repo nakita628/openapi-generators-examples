@@ -33,7 +33,7 @@ export const getEpisodesId = os
     }),
   )
   .output(EpisodeObjectSchema)
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })
 
 export const getEpisodes = os
   .route({
@@ -67,4 +67,4 @@ export const getEpisodes = os
     }),
   )
   .output(v.object({ episodes: v.array(EpisodeObjectSchema) }))
-  .handler(async ({ input }) => {})
+  .handler(async ({ input }) => { throw new Error('Not implemented') })

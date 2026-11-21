@@ -46,19 +46,19 @@ export const userHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .post('/user/createWithList', sValidator('json', z.array(UserSchema)), (c) => {})
+  .post('/user/createWithList', sValidator('json', z.array(UserSchema)), (c) => { throw new Error('Not implemented') })
   .get(
     '/user/login',
     sValidator(
       'query',
       z.object({ username: z.string().exactOptional(), password: z.string().exactOptional() }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .get('/user/logout', (c) => {})
-  .get('/user/:username', sValidator('param', z.object({ username: z.string() })), (c) => {})
+  .get('/user/logout', (c) => { throw new Error('Not implemented') })
+  .get('/user/:username', sValidator('param', z.object({ username: z.string() })), (c) => { throw new Error('Not implemented') })
   .put(
     '/user/:username',
     sValidator('param', z.object({ username: z.string() })),
@@ -102,6 +102,6 @@ export const userHandler = new Hono()
           .exactOptional(),
       }),
     ),
-    (c) => {},
+    (c) => { throw new Error('Not implemented') },
   )
-  .delete('/user/:username', sValidator('param', z.object({ username: z.string() })), (c) => {})
+  .delete('/user/:username', sValidator('param', z.object({ username: z.string() })), (c) => { throw new Error('Not implemented') })

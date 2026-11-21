@@ -3,4 +3,4 @@ import { contract } from '../contract'
 
 const os = implement(contract)
 
-export const getSearch = os.getSearch.handler(async ({ input }) => {})
+export const getSearch = os.getSearch.handler(async ({ input }) => { throw new Error('Not implemented') })
