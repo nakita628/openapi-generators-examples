@@ -61,3 +61,11 @@ The type checks can also run as Bazel tests, `bun run test` (`bazel test //...`)
 ## Known issues
 
 Problems found while generating are reported in [nakita628/truth](https://github.com/nakita628/truth/issues).
+
+| Issue | Effect here |
+| --- | --- |
+| [truth#14](https://github.com/nakita628/truth/issues/14) typebox declaration with `not` is emitted as `export const X=// FIXME` | `hono-typebox/openai`, `hono-openapi-typebox/openai` are not generated |
+| [truth#15](https://github.com/nakita628/truth/issues/15) typebox replaces a schema with `not` by `Type.Any()` | constraints lost in TypeBox output |
+| [truth#16](https://github.com/nakita628/truth/issues/16) `{ type: "null" }` in `anyOf` is emitted as a doubled null | redundant output on every target |
+| [truth#17](https://github.com/nakita628/truth/issues/17) effect `importLine` omits `SchemaTransformation` | `openapi-to-trpc-effect` fails to type-check on every spec |
+| [truth#18](https://github.com/nakita628/truth/issues/18) zod applies `not.enum` refine after `.nullable()` | `openapi-to-trpc-zod/openai` fails to type-check |
