@@ -1,3 +1,5 @@
 node_modules/
 bazel-*
 user.bazelrc
+# GitHub Actions workflows are kept out of this repository.
+.github/
