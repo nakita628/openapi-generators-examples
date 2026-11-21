@@ -1,0 +1,17 @@
+{
+  "name": "@apps/wakusei-server-arktype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts wakusei-server-arktype",
+    "typecheck": "bun ../../scripts/typecheck.ts wakusei-server-arktype"
+  },
+  "dependencies": {
+    "@orpc/server": "catalog:",
+    "arktype": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

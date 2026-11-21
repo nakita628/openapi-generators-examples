@@ -1,0 +1,17 @@
+{
+  "name": "@apps/hono-define-handler-effect",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts hono-define-handler-effect",
+    "typecheck": "bun ../../scripts/typecheck.ts hono-define-handler-effect"
+  },
+  "dependencies": {
+    "effect": "catalog:",
+    "hono": "5.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

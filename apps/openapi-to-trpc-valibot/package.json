@@ -1,0 +1,17 @@
+{
+  "name": "@apps/openapi-to-trpc-valibot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts openapi-to-trpc-valibot",
+    "typecheck": "bun ../../scripts/typecheck.ts openapi-to-trpc-valibot"
+  },
+  "dependencies": {
+    "@trpc/server": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

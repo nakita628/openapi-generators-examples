@@ -1,0 +1,63 @@
+import { os } from '@orpc/server'
+import { type } from 'arktype'
+import { CreateUploadRequestSchema, UploadPartSchema, UploadSchema } from '../components'
+
+export const postUploads = os
+  .route({
+    method: 'POST',
+    path: '/uploads',
+    tags: ['Uploads'],
+    summary: 'Create upload',
+    description:
+      'Creates an intermediate [Upload](https://developers.openai.com/api/reference/resources/uploads) object\nthat you can add [Parts](https://developers.openai.com/api/reference/resources/uploads/subresources/parts) to.\nCurrently, an Upload can accept at most 8 GB in total and expires after an\nhour after you create it.\n\nOnce you complete the Upload, we will create a\n[File](https://developers.openai.com/api/reference/resources/files) object that contains all the parts\nyou uploaded. This File is usable in the rest of our platform as a regular\nFile object.\n\nFor certain `purpose` values, the correct `mime_type` must be specified.\nPlease refer to documentation for the\n[supported MIME types for your use case](https://developers.openai.com/api/docs/guides/tools-file-search#supported-files).\n\nFor guidance on the proper filename extensions for each purpose, please\nfollow the documentation on [creating a\nFile](https://developers.openai.com/api/reference/resources/files/methods/create).\n\nReturns the Upload object with status `pending`.\n',
+  })
+  .input(CreateUploadRequestSchema)
+  .output(UploadSchema)
+  .handler(async ({ input }) => {})
+
+export const postUploadsUploadIdCancel = os
+  .route({
+    method: 'POST',
+    path: '/uploads/{upload_id}/cancel',
+    tags: ['Uploads'],
+    summary: 'Cancel upload',
+    description:
+      'Cancels the Upload. No Parts may be added after an Upload is cancelled.\n\nReturns the Upload object with status `cancelled`.\n',
+  })
+  .input(type({ upload_id: type('string') }))
+  .output(UploadSchema)
+  .handler(async ({ input }) => {})
+
+export const postUploadsUploadIdComplete = os
+  .route({
+    method: 'POST',
+    path: '/uploads/{upload_id}/complete',
+    tags: ['Uploads'],
+    summary: 'Complete upload',
+    description:
+      'Completes the [Upload](https://developers.openai.com/api/reference/resources/uploads).\n\nWithin the returned Upload object, there is a nested [File](https://developers.openai.com/api/reference/resources/files) object that is ready to use in the rest of the platform.\n\nYou can specify the order of the Parts by passing in an ordered list of the Part IDs.\n\nThe number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.\nReturns the Upload object with status `completed`, including an additional `file` property containing the created usable File object.\n',
+  })
+  .input(
+    type({
+      upload_id: type('string'),
+      part_ids: type('string[]').describe('The ordered list of Part IDs.\n'),
+      'md5?': type('string').describe(
+        'The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect.\n',
+      ),
+    }),
+  )
+  .output(UploadSchema)
+  .handler(async ({ input }) => {})
+
+export const postUploadsUploadIdParts = os
+  .route({
+    method: 'POST',
+    path: '/uploads/{upload_id}/parts',
+    tags: ['Uploads'],
+    summary: 'Add upload part',
+    description:
+      'Adds a [Part](https://developers.openai.com/api/reference/resources/uploads/subresources/parts) to an [Upload](https://developers.openai.com/api/reference/resources/uploads) object. A Part represents a chunk of bytes from the file you are trying to upload.\n\nEach Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.\n\nIt is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](https://developers.openai.com/api/reference/resources/uploads/methods/complete).\n',
+  })
+  .input(type({ upload_id: type('string') }))
+  .output(UploadPartSchema)
+  .handler(async ({ input }) => {})

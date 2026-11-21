@@ -1,0 +1,159 @@
+import { initTRPC, TRPCError } from '@trpc/server'
+import { type } from 'arktype'
+import { RecommendationsObjectSchema } from '../components'
+
+const t = initTRPC.create()
+
+export const recommendationsRouter = t.router({
+  getRecommendations: t.procedure
+    .input(
+      type({
+        'limit?': type('number.integer >= 1 & number.integer <= 100').describe(
+          'The target size of the list of recommended tracks. For seeds with unusually small pools or when highly restrictive filtering is applied, it may be impossible to generate the requested number of recommended tracks. Debugging information for such cases is available in the response. Default: 20\\. Minimum: 1\\. Maximum: 100.\n',
+        ),
+        'market?': type('string').describe(
+          'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
+        ),
+        'seed_artists?': type('string').describe(
+          'A comma separated list of [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for seed artists.  Up to 5 seed values may be provided in any combination of `seed_artists`, `seed_tracks` and `seed_genres`.<br/> _**Note**: only required if `seed_genres` and `seed_tracks` are not set_.\n',
+        ),
+        'seed_genres?': type('string').describe(
+          'A comma separated list of any genres in the set of [available genre seeds](/documentation/web-api/reference/get-recommendation-genres). Up to 5 seed values may be provided in any combination of `seed_artists`, `seed_tracks` and `seed_genres`.<br/> _**Note**: only required if `seed_artists` and `seed_tracks` are not set_.\n',
+        ),
+        'seed_tracks?': type('string').describe(
+          'A comma separated list of [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for a seed track.  Up to 5 seed values may be provided in any combination of `seed_artists`, `seed_tracks` and `seed_genres`.<br/> _**Note**: only required if `seed_artists` and `seed_genres` are not set_.\n',
+        ),
+        'min_acousticness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_acousticness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_acousticness?': type('number >= 0 & number <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_danceability?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_danceability?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_danceability?': type('number >= 0 & number <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_duration_ms?': type('number.integer').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_duration_ms?': type('number.integer').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_duration_ms?': type('number.integer').describe('Target duration of the track (ms)'),
+        'min_energy?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_energy?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_energy?': type('number >= 0 & number <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_instrumentalness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_instrumentalness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_instrumentalness?': type('number >= 0 & number <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_key?': type('number.integer >= 0 & number.integer <= 11').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_key?': type('number.integer >= 0 & number.integer <= 11').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_key?': type('number.integer >= 0 & number.integer <= 11').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_liveness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_liveness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_liveness?': type('number >= 0 & number <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_loudness?': type('number').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_loudness?': type('number').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_loudness?': type('number').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_mode?': type('number.integer >= 0 & number.integer <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_mode?': type('number.integer >= 0 & number.integer <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_mode?': type('number.integer >= 0 & number.integer <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_popularity?': type('number.integer >= 0 & number.integer <= 100').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_popularity?': type('number.integer >= 0 & number.integer <= 100').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_popularity?': type('number.integer >= 0 & number.integer <= 100').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_speechiness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_speechiness?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_speechiness?': type('number >= 0 & number <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_tempo?': type('number').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_tempo?': type('number').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_tempo?': type('number').describe('Target tempo (BPM)'),
+        'min_time_signature?': type('number.integer <= 11').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_time_signature?': type('number.integer').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_time_signature?': type('number.integer').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+        'min_valence?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
+        ),
+        'max_valence?': type('number >= 0 & number <= 1').describe(
+          'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
+        ),
+        'target_valence?': type('number >= 0 & number <= 1').describe(
+          'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
+        ),
+      }),
+    )
+    .output(RecommendationsObjectSchema)
+    .query(() => {
+      throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+    }),
+  getRecommendationsAvailableGenreSeeds: t.procedure
+    .output(type({ genres: 'string[]' }))
+    .query(() => {
+      throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+    }),
+})

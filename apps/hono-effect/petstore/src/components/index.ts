@@ -1,0 +1,213 @@
+import { Schema, SchemaTransformation } from 'effect'
+
+export const OrderSchema = Schema.Struct({
+  id: Schema.optional(
+    Schema.Union([
+      Schema.BigInt,
+      Schema.Number.check(Schema.isInt()),
+      Schema.String.check(Schema.isPattern(/^-?\d+$/)),
+    ])
+      .pipe(
+        Schema.decodeTo(
+          Schema.BigInt,
+          SchemaTransformation.transform({
+            decode: (input) => BigInt(input),
+            encode: (output) => output,
+          }),
+        ),
+      )
+      .check(
+        Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
+      )
+      .annotate({ jsonSchemaExamples: [10] }),
+  ),
+  petId: Schema.optional(
+    Schema.Union([
+      Schema.BigInt,
+      Schema.Number.check(Schema.isInt()),
+      Schema.String.check(Schema.isPattern(/^-?\d+$/)),
+    ])
+      .pipe(
+        Schema.decodeTo(
+          Schema.BigInt,
+          SchemaTransformation.transform({
+            decode: (input) => BigInt(input),
+            encode: (output) => output,
+          }),
+        ),
+      )
+      .check(
+        Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
+      )
+      .annotate({ jsonSchemaExamples: [198772] }),
+  ),
+  quantity: Schema.optional(
+    Schema.Number.check(Schema.isInt32()).annotate({ jsonSchemaExamples: [7] }),
+  ),
+  shipDate: Schema.optional(
+    Schema.String.check(
+      Schema.isPattern(
+        /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
+      ),
+    ),
+  ),
+  status: Schema.optional(
+    Schema.Literals(['placed', 'approved', 'delivered']).annotate({
+      description: 'Order Status',
+      jsonSchemaExamples: ['approved'],
+    }),
+  ),
+  complete: Schema.optional(Schema.Boolean),
+})
+
+export type Order = Schema.Schema.Type<typeof OrderSchema>
+
+export const CategorySchema = Schema.Struct({
+  id: Schema.optional(
+    Schema.Union([
+      Schema.BigInt,
+      Schema.Number.check(Schema.isInt()),
+      Schema.String.check(Schema.isPattern(/^-?\d+$/)),
+    ])
+      .pipe(
+        Schema.decodeTo(
+          Schema.BigInt,
+          SchemaTransformation.transform({
+            decode: (input) => BigInt(input),
+            encode: (output) => output,
+          }),
+        ),
+      )
+      .check(
+        Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
+      )
+      .annotate({ jsonSchemaExamples: [1] }),
+  ),
+  name: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
+})
+
+export type Category = Schema.Schema.Type<typeof CategorySchema>
+
+export const UserSchema = Schema.Struct({
+  id: Schema.optional(
+    Schema.Union([
+      Schema.BigInt,
+      Schema.Number.check(Schema.isInt()),
+      Schema.String.check(Schema.isPattern(/^-?\d+$/)),
+    ])
+      .pipe(
+        Schema.decodeTo(
+          Schema.BigInt,
+          SchemaTransformation.transform({
+            decode: (input) => BigInt(input),
+            encode: (output) => output,
+          }),
+        ),
+      )
+      .check(
+        Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
+      )
+      .annotate({ jsonSchemaExamples: [10] }),
+  ),
+  username: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
+  firstName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
+  lastName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
+  email: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] })),
+  password: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+  phone: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+  userStatus: Schema.optional(
+    Schema.Number.check(Schema.isInt32()).annotate({
+      description: 'User Status',
+      jsonSchemaExamples: [1],
+    }),
+  ),
+})
+
+export type User = Schema.Schema.Type<typeof UserSchema>
+
+export const TagSchema = Schema.Struct({
+  id: Schema.optional(
+    Schema.Union([
+      Schema.BigInt,
+      Schema.Number.check(Schema.isInt()),
+      Schema.String.check(Schema.isPattern(/^-?\d+$/)),
+    ])
+      .pipe(
+        Schema.decodeTo(
+          Schema.BigInt,
+          SchemaTransformation.transform({
+            decode: (input) => BigInt(input),
+            encode: (output) => output,
+          }),
+        ),
+      )
+      .check(
+        Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
+      ),
+  ),
+  name: Schema.optional(Schema.String),
+})
+
+export type Tag = Schema.Schema.Type<typeof TagSchema>
+
+export const PetSchema = Schema.Struct({
+  id: Schema.optional(
+    Schema.Union([
+      Schema.BigInt,
+      Schema.Number.check(Schema.isInt()),
+      Schema.String.check(Schema.isPattern(/^-?\d+$/)),
+    ])
+      .pipe(
+        Schema.decodeTo(
+          Schema.BigInt,
+          SchemaTransformation.transform({
+            decode: (input) => BigInt(input),
+            encode: (output) => output,
+          }),
+        ),
+      )
+      .check(
+        Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
+      )
+      .annotate({ jsonSchemaExamples: [10] }),
+  ),
+  name: Schema.String.annotate({ jsonSchemaExamples: ['doggie'] }),
+  category: Schema.optional(CategorySchema),
+  photoUrls: Schema.Array(Schema.String),
+  tags: Schema.optional(Schema.Array(TagSchema)),
+  status: Schema.optional(
+    Schema.Literals(['available', 'pending', 'sold']).annotate({
+      description: 'pet status in the store',
+    }),
+  ),
+})
+
+export type Pet = Schema.Schema.Type<typeof PetSchema>
+
+export const ApiResponseSchema = Schema.Struct({
+  code: Schema.optional(Schema.Number.check(Schema.isInt32())),
+  type: Schema.optional(Schema.String),
+  message: Schema.optional(Schema.String),
+})
+
+export type ApiResponse = Schema.Schema.Type<typeof ApiResponseSchema>
+
+export const PetstoreAuthSecurityScheme = {
+  type: 'oauth2',
+  flows: {
+    implicit: {
+      authorizationUrl: 'https://petstore3.swagger.io/oauth/authorize',
+      scopes: { 'write:pets': 'modify pets in your account', 'read:pets': 'read your pets' },
+    },
+  },
+}
+export const ApiKeySecurityScheme = { type: 'apiKey', name: 'api_key', in: 'header' }
+
+export const PetRequestBody = {
+  description: 'Pet object that needs to be added to the store',
+  content: { 'application/json': { schema: PetSchema }, 'application/xml': { schema: PetSchema } },
+}
+export const UserArrayRequestBody = {
+  description: 'List of user object',
+  content: { 'application/json': { schema: Schema.Array(UserSchema) } },
+}

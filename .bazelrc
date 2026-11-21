@@ -1,0 +1,12 @@
+# Bazel settings shared by every developer and CI. Per-machine overrides go in
+# user.bazelrc, which is git-ignored and imported last.
+
+# Only failing tests get their log echoed.
+test --test_output=errors
+
+# A fixed PATH keeps the actions cacheable across machines.
+build --incompatible_strict_action_env
+
+common --lockfile_mode=update
+
+try-import %workspace%/user.bazelrc

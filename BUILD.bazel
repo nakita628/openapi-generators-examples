@@ -1,0 +1,14 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+# The root devDependencies (the generators, bazelisk and TypeScript), linked as
+# //:node_modules/<pkg>. Generation runs through `pnpm generate`; Bazel type-checks the
+# committed output of every app with the root's TypeScript (see //tools:typecheck.bzl).
+npm_link_all_packages(name = "node_modules")
+
+# The compiler options every app's tsconfig.json extends.
+js_library(
+    name = "tsconfig_base",
+    srcs = ["tsconfig.base.json"],
+    visibility = ["//visibility:public"],
+)

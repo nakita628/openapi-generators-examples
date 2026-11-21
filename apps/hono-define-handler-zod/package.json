@@ -1,0 +1,17 @@
+{
+  "name": "@apps/hono-define-handler-zod",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts hono-define-handler-zod",
+    "typecheck": "bun ../../scripts/typecheck.ts hono-define-handler-zod"
+  },
+  "dependencies": {
+    "hono": "5.0.0-rc.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

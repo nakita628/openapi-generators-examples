@@ -1,0 +1,68 @@
+import { os } from '@orpc/server'
+import * as z from 'zod'
+import { EpisodeObjectSchema } from '../components'
+
+export const getEpisodesId = os
+  .route({
+    method: 'GET',
+    path: '/episodes/{id}',
+    tags: ['Episodes'],
+    summary: 'Get Episode\n',
+    description:
+      'Get Spotify catalog information for a single episode identified by its\nunique Spotify ID.\n',
+    successDescription: 'An episode',
+  })
+  .input(
+    z.object({
+      id: z
+        .string()
+        .meta({
+          description:
+            'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the episode.',
+          examples: ['512ojhOuo1ktJprKbVcKyQ'],
+        }),
+      market: z
+        .string()
+        .meta({
+          description:
+            'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
+          examples: ['ES'],
+        })
+        .exactOptional(),
+    }),
+  )
+  .output(EpisodeObjectSchema)
+  .handler(async ({ input }) => {})
+
+export const getEpisodes = os
+  .route({
+    method: 'GET',
+    path: '/episodes',
+    tags: ['Episodes'],
+    summary: 'Get Several Episodes\n',
+    description:
+      'Get Spotify catalog information for several episodes based on their Spotify IDs.\n',
+    deprecated: true,
+    successDescription: 'A set of episodes',
+  })
+  .input(
+    z.object({
+      ids: z
+        .string()
+        .meta({
+          description:
+            'A comma-separated list of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for the episodes. Maximum: 50 IDs.\n',
+          examples: ['77o6BIVlYM3msb4MMIL1jH,0Q86acNRm6V9GYx55SXKwf'],
+        }),
+      market: z
+        .string()
+        .meta({
+          description:
+            'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
+          examples: ['ES'],
+        })
+        .exactOptional(),
+    }),
+  )
+  .output(z.object({ episodes: z.array(EpisodeObjectSchema) }))
+  .handler(async ({ input }) => {})

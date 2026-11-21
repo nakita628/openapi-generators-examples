@@ -1,0 +1,6719 @@
+import { Hono } from 'hono'
+import { describeRoute, resolver, validator } from 'hono-openapi'
+import * as v from 'valibot'
+import {
+  AllowedMentionTypesSchema,
+  BulkLobbyMemberRequestSchema,
+  ChannelSelectDefaultValueSchema,
+  LobbyGuildInviteResponseSchema,
+  LobbyMemberRequestSchema,
+  LobbyMemberResponseSchema,
+  LobbyMessageResponseSchema,
+  LobbyResponseSchema,
+  RichEmbedAudioSchema,
+  RichEmbedAuthorSchema,
+  RichEmbedFooterSchema,
+  RichEmbedProviderSchema,
+  RoleSelectDefaultValueSchema,
+  SDKMessageRequestSchema,
+  SnowflakeTypeSchema,
+  UnfurledMediaRequestSchema,
+  UnfurledMediaRequestWithAttachmentReferenceRequiredSchema,
+  UserSelectDefaultValueSchema,
+  ClientErrorResponseResponse,
+  ClientRatelimitedResponseResponse,
+} from '../components'
+
+export const lobbiesHandler = new Hono()
+  .put(
+    '/lobbies',
+    describeRoute({
+      operationId: 'create_or_join_lobby',
+      responses: {
+        '200': {
+          description: '200 response for create_or_join_lobby',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }, { OAuth2: [] }],
+    }),
+    validator(
+      'json',
+      v.object({
+        idle_timeout_seconds: v.optional(
+          v.nullable(
+            v.pipe(
+              v.number(),
+              v.integer(),
+              v.minValue(-2147483648),
+              v.maxValue(2147483647),
+              v.minValue(5),
+              v.maxValue(604800),
+            ),
+          ),
+        ),
+        lobby_metadata: v.optional(
+          v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
+        ),
+        member_metadata: v.optional(
+          v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
+        ),
+        secret: v.pipe(v.string(), v.maxCodePoints(250)),
+        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        name: v.optional(v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)))),
+      }),
+    ),
+    (c) => {},
+  )
+  .post(
+    '/lobbies',
+    describeRoute({
+      operationId: 'create_lobby',
+      responses: {
+        '201': {
+          description: '201 response for create_lobby',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator(
+      'json',
+      v.partial(
+        v.object({
+          idle_timeout_seconds: v.nullable(
+            v.pipe(
+              v.number(),
+              v.integer(),
+              v.minValue(-2147483648),
+              v.maxValue(2147483647),
+              v.minValue(5),
+              v.maxValue(604800),
+            ),
+          ),
+          members: v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25))),
+          metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
+          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          override_event_webhooks_url: v.nullable(
+            v.pipe(v.string(), v.url(), v.maxCodePoints(512)),
+          ),
+          name: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100))),
+        }),
+      ),
+    ),
+    (c) => {},
+  )
+  .get(
+    '/lobbies/:lobby_id',
+    describeRoute({
+      operationId: 'get_lobby',
+      responses: {
+        '200': {
+          description: '200 response for get_lobby',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    (c) => {},
+  )
+  .delete(
+    '/lobbies/:lobby_id',
+    describeRoute({
+      description:
+        'Deletes the specified lobby if it exists. It is safe to call even if the lobby is already deleted.',
+      operationId: 'delete_lobby',
+      responses: {
+        '204': {
+          description: '204 response for delete_lobby',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    (c) => {},
+  )
+  .patch(
+    '/lobbies/:lobby_id',
+    describeRoute({
+      operationId: 'edit_lobby',
+      responses: {
+        '200': {
+          description: '200 response for edit_lobby',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    validator(
+      'json',
+      v.partial(
+        v.object({
+          idle_timeout_seconds: v.nullable(
+            v.pipe(
+              v.number(),
+              v.integer(),
+              v.minValue(-2147483648),
+              v.maxValue(2147483647),
+              v.minValue(5),
+              v.maxValue(604800),
+            ),
+          ),
+          metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
+          members: v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25))),
+          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          override_event_webhooks_url: v.nullable(
+            v.pipe(v.string(), v.url(), v.maxCodePoints(512)),
+          ),
+          name: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100))),
+        }),
+      ),
+    ),
+    (c) => {},
+  )
+  .patch(
+    '/lobbies/:lobby_id/channel-linking',
+    describeRoute({
+      operationId: 'edit_lobby_channel_link',
+      responses: {
+        '200': {
+          description: '200 response for edit_lobby_channel_link',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }, { OAuth2: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    validator(
+      'json',
+      v.partial(v.object({ channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]) })),
+    ),
+    (c) => {},
+  )
+  .delete(
+    '/lobbies/:lobby_id/members/@me',
+    describeRoute({
+      operationId: 'leave_lobby',
+      responses: {
+        '204': {
+          description: '204 response for leave_lobby',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }, { OAuth2: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    (c) => {},
+  )
+  .post(
+    '/lobbies/:lobby_id/members/@me/invites',
+    describeRoute({
+      operationId: 'create_linked_lobby_guild_invite_for_self',
+      responses: {
+        '200': {
+          description: '200 response for create_linked_lobby_guild_invite_for_self',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyGuildInviteResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }, { OAuth2: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    (c) => {},
+  )
+  .post(
+    '/lobbies/:lobby_id/members/bulk',
+    describeRoute({
+      operationId: 'bulk_update_lobby_members',
+      responses: {
+        '200': {
+          description: '200 response for bulk_update_lobby_members',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: {
+            'application/json': {
+              schema: resolver(v.nullable(v.array(LobbyMemberResponseSchema))),
+            },
+          },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    validator(
+      'json',
+      v.nullable(v.pipe(v.array(BulkLobbyMemberRequestSchema), v.minLength(1), v.maxLength(25))),
+    ),
+    (c) => {},
+  )
+  .put(
+    '/lobbies/:lobby_id/members/:user_id',
+    describeRoute({
+      operationId: 'add_lobby_member',
+      responses: {
+        '200': {
+          description: '200 response for add_lobby_member',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyMemberResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+    validator(
+      'json',
+      v.partial(
+        v.object({
+          metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
+          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          additional_name: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
+        }),
+      ),
+    ),
+    (c) => {},
+  )
+  .delete(
+    '/lobbies/:lobby_id/members/:user_id',
+    describeRoute({
+      operationId: 'delete_lobby_member',
+      responses: {
+        '204': {
+          description: '204 response for delete_lobby_member',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+    (c) => {},
+  )
+  .post(
+    '/lobbies/:lobby_id/members/:user_id/invites',
+    describeRoute({
+      operationId: 'create_linked_lobby_guild_invite_for_user',
+      responses: {
+        '200': {
+          description: '200 response for create_linked_lobby_guild_invite_for_user',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyGuildInviteResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+    (c) => {},
+  )
+  .get(
+    '/lobbies/:lobby_id/messages',
+    describeRoute({
+      operationId: 'get_lobby_messages',
+      responses: {
+        '200': {
+          description: '200 response for get_lobby_messages',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: {
+            'application/json': {
+              schema: resolver(v.nullable(v.array(LobbyMessageResponseSchema))),
+            },
+          },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }, { OAuth2: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    validator(
+      'query',
+      v.partial(
+        v.object({
+          limit: v.pipe(
+            v.string(),
+            v.transform(Number),
+            v.number(),
+            v.safeInteger(),
+            v.minValue(1),
+            v.maxValue(200),
+          ),
+        }),
+      ),
+    ),
+    (c) => {},
+  )
+  .post(
+    '/lobbies/:lobby_id/messages',
+    describeRoute({
+      operationId: 'create_lobby_message',
+      responses: {
+        '201': {
+          description: '201 response for create_lobby_message',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+          content: { 'application/json': { schema: resolver(LobbyMessageResponseSchema) } },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }, { OAuth2: [] }],
+    }),
+    validator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
+    validator('json', SDKMessageRequestSchema),
+    validator(
+      'form',
+      v.partial(
+        v.object({
+          content: v.nullable(v.pipe(v.string(), v.maxCodePoints(4000))),
+          embeds: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.pipe(
+                v.unknown(),
+                v.transform((input) =>
+                  input === undefined || Array.isArray(input) ? input : [input],
+                ),
+                v.array(
+                  v.partial(
+                    v.object({
+                      type: v.nullable(v.pipe(v.string(), v.maxCodePoints(152133))),
+                      url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
+                      title: v.nullable(v.pipe(v.string(), v.maxCodePoints(256))),
+                      color: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.pipe(
+                            v.string(),
+                            v.transform(Number),
+                            v.number(),
+                            v.safeInteger(),
+                            v.minValue(0),
+                            v.maxValue(16777215),
+                          ),
+                        ),
+                      ),
+                      timestamp: v.nullable(
+                        v.pipe(
+                          v.string(),
+                          v.regex(
+                            /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
+                          ),
+                        ),
+                      ),
+                      description: v.nullable(v.pipe(v.string(), v.maxCodePoints(4096))),
+                      author: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            RichEmbedAuthorSchema,
+                          ]),
+                        ),
+                      ),
+                      image: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            v.partial(
+                              v.object({
+                                url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
+                                width: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                    ),
+                                  ),
+                                ),
+                                height: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                    ),
+                                  ),
+                                ),
+                                placeholder: v.nullable(v.pipe(v.string(), v.maxCodePoints(64))),
+                                placeholder_version: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(2147483647),
+                                    ),
+                                  ),
+                                ),
+                                is_animated: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                description: v.nullable(v.pipe(v.string(), v.maxCodePoints(4096))),
+                              }),
+                            ),
+                          ]),
+                        ),
+                      ),
+                      thumbnail: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            v.partial(
+                              v.object({
+                                url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
+                                width: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                    ),
+                                  ),
+                                ),
+                                height: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                    ),
+                                  ),
+                                ),
+                                placeholder: v.nullable(v.pipe(v.string(), v.maxCodePoints(64))),
+                                placeholder_version: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(2147483647),
+                                    ),
+                                  ),
+                                ),
+                                is_animated: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                description: v.nullable(v.pipe(v.string(), v.maxCodePoints(4096))),
+                              }),
+                            ),
+                          ]),
+                        ),
+                      ),
+                      footer: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            RichEmbedFooterSchema,
+                          ]),
+                        ),
+                      ),
+                      fields: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.pipe(
+                            v.unknown(),
+                            v.transform((input) =>
+                              input === undefined || Array.isArray(input) ? input : [input],
+                            ),
+                            v.array(
+                              v.object({
+                                name: v.pipe(v.string(), v.maxCodePoints(256)),
+                                value: v.pipe(v.string(), v.maxCodePoints(1024)),
+                                inline: v.optional(
+                                  v.pipe(
+                                    v.unknown(),
+                                    v.transform((input) => (input === 'null' ? null : input)),
+                                    v.nullable(
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        ),
+                                        v.transform((input) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              }),
+                            ),
+                            v.maxLength(25),
+                          ),
+                        ),
+                      ),
+                      provider: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            RichEmbedProviderSchema,
+                          ]),
+                        ),
+                      ),
+                      video: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            v.partial(
+                              v.object({
+                                url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
+                                width: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                    ),
+                                  ),
+                                ),
+                                height: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                    ),
+                                  ),
+                                ),
+                                placeholder: v.nullable(v.pipe(v.string(), v.maxCodePoints(64))),
+                                placeholder_version: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(2147483647),
+                                    ),
+                                  ),
+                                ),
+                                is_animated: v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                description: v.nullable(v.pipe(v.string(), v.maxCodePoints(4096))),
+                              }),
+                            ),
+                          ]),
+                        ),
+                      ),
+                      audio: v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            RichEmbedAudioSchema,
+                          ]),
+                        ),
+                      ),
+                    }),
+                  ),
+                ),
+                v.maxLength(10),
+              ),
+            ),
+          ),
+          allowed_mentions: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.union([
+                v.pipe(
+                  v.unknown(),
+                  v.transform((input) => (input === 'null' ? null : input)),
+                  v.nullable(v.null()),
+                ),
+                v.partial(
+                  v.object({
+                    parse: v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) =>
+                            input === undefined || Array.isArray(input) ? input : [input],
+                          ),
+                          v.array(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.union([
+                                  v.pipe(
+                                    v.unknown(),
+                                    v.transform((input) => (input === 'null' ? null : input)),
+                                    v.nullable(v.null()),
+                                  ),
+                                  AllowedMentionTypesSchema,
+                                ]),
+                              ),
+                            ),
+                          ),
+                          v.maxLength(1521),
+                          v.check((input) => new Set(input).size === input.length),
+                        ),
+                      ),
+                    ),
+                    users: v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) =>
+                            input === undefined || Array.isArray(input) ? input : [input],
+                          ),
+                          v.array(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.union([
+                                  v.pipe(
+                                    v.unknown(),
+                                    v.transform((input) => (input === 'null' ? null : input)),
+                                    v.nullable(v.null()),
+                                  ),
+                                  SnowflakeTypeSchema,
+                                ]),
+                              ),
+                            ),
+                          ),
+                          v.maxLength(100),
+                          v.check((input) => new Set(input).size === input.length),
+                        ),
+                      ),
+                    ),
+                    roles: v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) =>
+                            input === undefined || Array.isArray(input) ? input : [input],
+                          ),
+                          v.array(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.union([
+                                  v.pipe(
+                                    v.unknown(),
+                                    v.transform((input) => (input === 'null' ? null : input)),
+                                    v.nullable(v.null()),
+                                  ),
+                                  SnowflakeTypeSchema,
+                                ]),
+                              ),
+                            ),
+                          ),
+                          v.maxLength(100),
+                          v.check((input) => new Set(input).size === input.length),
+                        ),
+                      ),
+                    ),
+                    replied_user: v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.pipe(
+                          v.string(),
+                          v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                          v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+                        ),
+                      ),
+                    ),
+                  }),
+                ),
+              ]),
+            ),
+          ),
+          sticker_ids: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.pipe(
+                v.unknown(),
+                v.transform((input) =>
+                  input === undefined || Array.isArray(input) ? input : [input],
+                ),
+                v.array(SnowflakeTypeSchema),
+                v.maxLength(3),
+              ),
+            ),
+          ),
+          components: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.pipe(
+                v.unknown(),
+                v.transform((input) =>
+                  input === undefined || Array.isArray(input) ? input : [input],
+                ),
+                v.array(
+                  v.union([
+                    v.object({
+                      type: v.union([
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.description('Container for other components'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.description('Button object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.description('Select menu for picking from defined text options'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.description('Text input object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.description('Select menu for users'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.description('Select menu for roles'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.description('Select menu for mentionables (users and roles)'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.description('Select menu for channels'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.description('Section component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.description('Text component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.description('Thumbnail component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.description('Media gallery component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.description('File component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.description('Separator component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.description('Container component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.description('Label component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.description('File upload component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.description('Radio group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.description('Checkbox group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.description('Checkbox component'),
+                        ),
+                      ]),
+                      id: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(-2147483648),
+                              v.maxValue(2147483647),
+                              v.minValue(0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      components: v.pipe(
+                        v.unknown(),
+                        v.transform((input) =>
+                          input === undefined || Array.isArray(input) ? input : [input],
+                        ),
+                        v.array(
+                          v.union([
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              custom_id: v.optional(
+                                v.nullable(
+                                  v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
+                                ),
+                              ),
+                              style: v.union([
+                                v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                              ]),
+                              label: v.optional(
+                                v.nullable(v.pipe(v.string(), v.maxCodePoints(80))),
+                              ),
+                              disabled: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              url: v.optional(
+                                v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(512))),
+                              ),
+                              sku_id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.union([
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(v.null()),
+                                      ),
+                                      SnowflakeTypeSchema,
+                                    ]),
+                                  ),
+                                ),
+                              ),
+                              emoji: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.union([
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(v.null()),
+                                      ),
+                                      v.object({
+                                        id: v.optional(
+                                          v.pipe(
+                                            v.unknown(),
+                                            v.transform((input) =>
+                                              input === 'null' ? null : input,
+                                            ),
+                                            v.nullable(
+                                              v.union([
+                                                v.pipe(
+                                                  v.unknown(),
+                                                  v.transform((input) =>
+                                                    input === 'null' ? null : input,
+                                                  ),
+                                                  v.nullable(v.null()),
+                                                ),
+                                                SnowflakeTypeSchema,
+                                              ]),
+                                            ),
+                                          ),
+                                        ),
+                                        name: v.pipe(v.string(), v.maxCodePoints(32)),
+                                      }),
+                                    ]),
+                                  ),
+                                ),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              custom_id: v.pipe(
+                                v.string(),
+                                v.minCodePoints(1),
+                                v.maxCodePoints(100),
+                              ),
+                              placeholder: v.optional(
+                                v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                              ),
+                              min_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              max_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(1),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              disabled: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              required: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              default_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) =>
+                                        input === undefined || Array.isArray(input)
+                                          ? input
+                                          : [input],
+                                      ),
+                                      v.array(ChannelSelectDefaultValueSchema),
+                                      v.maxLength(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              channel_types: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) =>
+                                        input === undefined || Array.isArray(input)
+                                          ? input
+                                          : [input],
+                                      ),
+                                      v.array(
+                                        v.union([
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                            v.description('A direct message between users'),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                            v.description(
+                                              'A direct message between multiple users',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(0)),
+                                            v.description('A text channel within a server'),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                            v.description('A voice channel within a server'),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                            v.description(
+                                              'An organizational category that contains up to 50 channels',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                            v.description(
+                                              'A channel that users can follow and crosspost into their own server (formerly news channels)',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                            v.description(
+                                              'A temporary sub-channel within a GUILD_ANNOUNCEMENT channel',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                            v.description(
+                                              'A temporary sub-channel within a GUILD_TEXT or GUILD_THREADS_ONLY channel type set',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                            v.description(
+                                              'A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                            v.description(
+                                              'A voice channel for hosting events with an audience',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                            v.description(
+                                              'The channel in a hub containing the listed servers',
+                                            ),
+                                          ),
+                                          v.pipe(
+                                            v.pipe(v.string(), v.transform(Number), v.literal(15)),
+                                            v.description('Channel that can only contain threads'),
+                                          ),
+                                        ]),
+                                      ),
+                                      v.check((input) => new Set(input).size === input.length),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              custom_id: v.pipe(
+                                v.string(),
+                                v.minCodePoints(1),
+                                v.maxCodePoints(100),
+                              ),
+                              placeholder: v.optional(
+                                v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                              ),
+                              min_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              max_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(1),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              disabled: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              required: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              default_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) =>
+                                        input === undefined || Array.isArray(input)
+                                          ? input
+                                          : [input],
+                                      ),
+                                      v.array(
+                                        v.union([
+                                          RoleSelectDefaultValueSchema,
+                                          UserSelectDefaultValueSchema,
+                                        ]),
+                                      ),
+                                      v.maxLength(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              custom_id: v.pipe(
+                                v.string(),
+                                v.minCodePoints(1),
+                                v.maxCodePoints(100),
+                              ),
+                              placeholder: v.optional(
+                                v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                              ),
+                              min_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              max_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(1),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              disabled: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              required: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              default_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) =>
+                                        input === undefined || Array.isArray(input)
+                                          ? input
+                                          : [input],
+                                      ),
+                                      v.array(RoleSelectDefaultValueSchema),
+                                      v.maxLength(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              custom_id: v.pipe(
+                                v.string(),
+                                v.minCodePoints(1),
+                                v.maxCodePoints(100),
+                              ),
+                              placeholder: v.optional(
+                                v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                              ),
+                              min_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              max_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(1),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              disabled: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              required: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              options: v.pipe(
+                                v.unknown(),
+                                v.transform((input) =>
+                                  input === undefined || Array.isArray(input) ? input : [input],
+                                ),
+                                v.array(
+                                  v.object({
+                                    label: v.pipe(
+                                      v.string(),
+                                      v.minCodePoints(1),
+                                      v.maxCodePoints(100),
+                                    ),
+                                    value: v.pipe(
+                                      v.string(),
+                                      v.minCodePoints(1),
+                                      v.maxCodePoints(100),
+                                    ),
+                                    description: v.optional(
+                                      v.nullable(v.pipe(v.string(), v.maxCodePoints(100))),
+                                    ),
+                                    default: v.optional(
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            ),
+                                            v.transform((input) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    emoji: v.optional(
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(
+                                          v.union([
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === 'null' ? null : input,
+                                              ),
+                                              v.nullable(v.null()),
+                                            ),
+                                            v.object({
+                                              id: v.optional(
+                                                v.pipe(
+                                                  v.unknown(),
+                                                  v.transform((input) =>
+                                                    input === 'null' ? null : input,
+                                                  ),
+                                                  v.nullable(
+                                                    v.union([
+                                                      v.pipe(
+                                                        v.unknown(),
+                                                        v.transform((input) =>
+                                                          input === 'null' ? null : input,
+                                                        ),
+                                                        v.nullable(v.null()),
+                                                      ),
+                                                      SnowflakeTypeSchema,
+                                                    ]),
+                                                  ),
+                                                ),
+                                              ),
+                                              name: v.pipe(v.string(), v.maxCodePoints(32)),
+                                            }),
+                                          ]),
+                                        ),
+                                      ),
+                                    ),
+                                  }),
+                                ),
+                                v.minLength(1),
+                                v.maxLength(25),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              custom_id: v.pipe(
+                                v.string(),
+                                v.minCodePoints(1),
+                                v.maxCodePoints(100),
+                              ),
+                              placeholder: v.optional(
+                                v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                              ),
+                              min_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(0),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              max_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(1),
+                                      v.maxValue(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              disabled: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              required: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              default_values: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) =>
+                                        input === undefined || Array.isArray(input)
+                                          ? input
+                                          : [input],
+                                      ),
+                                      v.array(UserSelectDefaultValueSchema),
+                                      v.maxLength(25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            }),
+                          ]),
+                        ),
+                        v.minLength(1),
+                        v.maxLength(5),
+                      ),
+                    }),
+                    v.object({
+                      type: v.union([
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.description('Container for other components'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.description('Button object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.description('Select menu for picking from defined text options'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.description('Text input object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.description('Select menu for users'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.description('Select menu for roles'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.description('Select menu for mentionables (users and roles)'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.description('Select menu for channels'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.description('Section component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.description('Text component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.description('Thumbnail component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.description('Media gallery component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.description('File component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.description('Separator component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.description('Container component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.description('Label component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.description('File upload component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.description('Radio group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.description('Checkbox group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.description('Checkbox component'),
+                        ),
+                      ]),
+                      id: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(-2147483648),
+                              v.maxValue(2147483647),
+                              v.minValue(0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      accent_color: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(0),
+                              v.maxValue(16777215),
+                            ),
+                          ),
+                        ),
+                      ),
+                      components: v.pipe(
+                        v.unknown(),
+                        v.transform((input) =>
+                          input === undefined || Array.isArray(input) ? input : [input],
+                        ),
+                        v.array(
+                          v.union([
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              components: v.pipe(
+                                v.unknown(),
+                                v.transform((input) =>
+                                  input === undefined || Array.isArray(input) ? input : [input],
+                                ),
+                                v.array(
+                                  v.union([
+                                    v.object({
+                                      type: v.union([
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.description('Container for other components'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.description('Button object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.description(
+                                            'Select menu for picking from defined text options',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.description('Text input object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.description('Select menu for users'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.description('Select menu for roles'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.description(
+                                            'Select menu for mentionables (users and roles)',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.description('Select menu for channels'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.description('Section component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.description('Text component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.description('Thumbnail component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.description('Media gallery component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.description('File component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.description('Separator component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.description('Container component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.description('Label component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.description('File upload component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.description('Radio group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.description('Checkbox group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.description('Checkbox component'),
+                                        ),
+                                      ]),
+                                      id: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(-2147483648),
+                                              v.maxValue(2147483647),
+                                              v.minValue(0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      custom_id: v.optional(
+                                        v.nullable(
+                                          v.pipe(
+                                            v.string(),
+                                            v.minCodePoints(1),
+                                            v.maxCodePoints(100),
+                                          ),
+                                        ),
+                                      ),
+                                      style: v.union([
+                                        v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                        v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                        v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                        v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                        v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                        v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                      ]),
+                                      label: v.optional(
+                                        v.nullable(v.pipe(v.string(), v.maxCodePoints(80))),
+                                      ),
+                                      disabled: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      url: v.optional(
+                                        v.nullable(
+                                          v.pipe(v.string(), v.url(), v.maxCodePoints(512)),
+                                        ),
+                                      ),
+                                      sku_id: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.union([
+                                              v.pipe(
+                                                v.unknown(),
+                                                v.transform((input) =>
+                                                  input === 'null' ? null : input,
+                                                ),
+                                                v.nullable(v.null()),
+                                              ),
+                                              SnowflakeTypeSchema,
+                                            ]),
+                                          ),
+                                        ),
+                                      ),
+                                      emoji: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.union([
+                                              v.pipe(
+                                                v.unknown(),
+                                                v.transform((input) =>
+                                                  input === 'null' ? null : input,
+                                                ),
+                                                v.nullable(v.null()),
+                                              ),
+                                              v.object({
+                                                id: v.optional(
+                                                  v.pipe(
+                                                    v.unknown(),
+                                                    v.transform((input) =>
+                                                      input === 'null' ? null : input,
+                                                    ),
+                                                    v.nullable(
+                                                      v.union([
+                                                        v.pipe(
+                                                          v.unknown(),
+                                                          v.transform((input) =>
+                                                            input === 'null' ? null : input,
+                                                          ),
+                                                          v.nullable(v.null()),
+                                                        ),
+                                                        SnowflakeTypeSchema,
+                                                      ]),
+                                                    ),
+                                                  ),
+                                                ),
+                                                name: v.pipe(v.string(), v.maxCodePoints(32)),
+                                              }),
+                                            ]),
+                                          ),
+                                        ),
+                                      ),
+                                    }),
+                                    v.object({
+                                      type: v.union([
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.description('Container for other components'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.description('Button object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.description(
+                                            'Select menu for picking from defined text options',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.description('Text input object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.description('Select menu for users'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.description('Select menu for roles'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.description(
+                                            'Select menu for mentionables (users and roles)',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.description('Select menu for channels'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.description('Section component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.description('Text component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.description('Thumbnail component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.description('Media gallery component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.description('File component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.description('Separator component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.description('Container component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.description('Label component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.description('File upload component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.description('Radio group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.description('Checkbox group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.description('Checkbox component'),
+                                        ),
+                                      ]),
+                                      id: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(-2147483648),
+                                              v.maxValue(2147483647),
+                                              v.minValue(0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      custom_id: v.pipe(
+                                        v.string(),
+                                        v.minCodePoints(1),
+                                        v.maxCodePoints(100),
+                                      ),
+                                      placeholder: v.optional(
+                                        v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                                      ),
+                                      min_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(0),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      max_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(1),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      disabled: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      required: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      default_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === undefined || Array.isArray(input)
+                                                  ? input
+                                                  : [input],
+                                              ),
+                                              v.array(ChannelSelectDefaultValueSchema),
+                                              v.maxLength(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      channel_types: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === undefined || Array.isArray(input)
+                                                  ? input
+                                                  : [input],
+                                              ),
+                                              v.array(
+                                                v.union([
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(1),
+                                                    ),
+                                                    v.description('A direct message between users'),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(3),
+                                                    ),
+                                                    v.description(
+                                                      'A direct message between multiple users',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(0),
+                                                    ),
+                                                    v.description('A text channel within a server'),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(2),
+                                                    ),
+                                                    v.description(
+                                                      'A voice channel within a server',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(4),
+                                                    ),
+                                                    v.description(
+                                                      'An organizational category that contains up to 50 channels',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(5),
+                                                    ),
+                                                    v.description(
+                                                      'A channel that users can follow and crosspost into their own server (formerly news channels)',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(10),
+                                                    ),
+                                                    v.description(
+                                                      'A temporary sub-channel within a GUILD_ANNOUNCEMENT channel',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(11),
+                                                    ),
+                                                    v.description(
+                                                      'A temporary sub-channel within a GUILD_TEXT or GUILD_THREADS_ONLY channel type set',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(12),
+                                                    ),
+                                                    v.description(
+                                                      'A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(13),
+                                                    ),
+                                                    v.description(
+                                                      'A voice channel for hosting events with an audience',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(14),
+                                                    ),
+                                                    v.description(
+                                                      'The channel in a hub containing the listed servers',
+                                                    ),
+                                                  ),
+                                                  v.pipe(
+                                                    v.pipe(
+                                                      v.string(),
+                                                      v.transform(Number),
+                                                      v.literal(15),
+                                                    ),
+                                                    v.description(
+                                                      'Channel that can only contain threads',
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              v.check(
+                                                (input) => new Set(input).size === input.length,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    }),
+                                    v.object({
+                                      type: v.union([
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.description('Container for other components'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.description('Button object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.description(
+                                            'Select menu for picking from defined text options',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.description('Text input object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.description('Select menu for users'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.description('Select menu for roles'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.description(
+                                            'Select menu for mentionables (users and roles)',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.description('Select menu for channels'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.description('Section component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.description('Text component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.description('Thumbnail component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.description('Media gallery component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.description('File component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.description('Separator component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.description('Container component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.description('Label component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.description('File upload component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.description('Radio group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.description('Checkbox group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.description('Checkbox component'),
+                                        ),
+                                      ]),
+                                      id: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(-2147483648),
+                                              v.maxValue(2147483647),
+                                              v.minValue(0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      custom_id: v.pipe(
+                                        v.string(),
+                                        v.minCodePoints(1),
+                                        v.maxCodePoints(100),
+                                      ),
+                                      placeholder: v.optional(
+                                        v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                                      ),
+                                      min_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(0),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      max_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(1),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      disabled: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      required: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      default_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === undefined || Array.isArray(input)
+                                                  ? input
+                                                  : [input],
+                                              ),
+                                              v.array(
+                                                v.union([
+                                                  RoleSelectDefaultValueSchema,
+                                                  UserSelectDefaultValueSchema,
+                                                ]),
+                                              ),
+                                              v.maxLength(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    }),
+                                    v.object({
+                                      type: v.union([
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.description('Container for other components'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.description('Button object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.description(
+                                            'Select menu for picking from defined text options',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.description('Text input object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.description('Select menu for users'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.description('Select menu for roles'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.description(
+                                            'Select menu for mentionables (users and roles)',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.description('Select menu for channels'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.description('Section component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.description('Text component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.description('Thumbnail component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.description('Media gallery component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.description('File component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.description('Separator component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.description('Container component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.description('Label component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.description('File upload component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.description('Radio group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.description('Checkbox group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.description('Checkbox component'),
+                                        ),
+                                      ]),
+                                      id: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(-2147483648),
+                                              v.maxValue(2147483647),
+                                              v.minValue(0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      custom_id: v.pipe(
+                                        v.string(),
+                                        v.minCodePoints(1),
+                                        v.maxCodePoints(100),
+                                      ),
+                                      placeholder: v.optional(
+                                        v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                                      ),
+                                      min_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(0),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      max_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(1),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      disabled: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      required: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      default_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === undefined || Array.isArray(input)
+                                                  ? input
+                                                  : [input],
+                                              ),
+                                              v.array(RoleSelectDefaultValueSchema),
+                                              v.maxLength(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    }),
+                                    v.object({
+                                      type: v.union([
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.description('Container for other components'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.description('Button object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.description(
+                                            'Select menu for picking from defined text options',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.description('Text input object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.description('Select menu for users'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.description('Select menu for roles'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.description(
+                                            'Select menu for mentionables (users and roles)',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.description('Select menu for channels'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.description('Section component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.description('Text component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.description('Thumbnail component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.description('Media gallery component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.description('File component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.description('Separator component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.description('Container component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.description('Label component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.description('File upload component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.description('Radio group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.description('Checkbox group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.description('Checkbox component'),
+                                        ),
+                                      ]),
+                                      id: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(-2147483648),
+                                              v.maxValue(2147483647),
+                                              v.minValue(0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      custom_id: v.pipe(
+                                        v.string(),
+                                        v.minCodePoints(1),
+                                        v.maxCodePoints(100),
+                                      ),
+                                      placeholder: v.optional(
+                                        v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                                      ),
+                                      min_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(0),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      max_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(1),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      disabled: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      required: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      options: v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) =>
+                                          input === undefined || Array.isArray(input)
+                                            ? input
+                                            : [input],
+                                        ),
+                                        v.array(
+                                          v.object({
+                                            label: v.pipe(
+                                              v.string(),
+                                              v.minCodePoints(1),
+                                              v.maxCodePoints(100),
+                                            ),
+                                            value: v.pipe(
+                                              v.string(),
+                                              v.minCodePoints(1),
+                                              v.maxCodePoints(100),
+                                            ),
+                                            description: v.optional(
+                                              v.nullable(v.pipe(v.string(), v.maxCodePoints(100))),
+                                            ),
+                                            default: v.optional(
+                                              v.pipe(
+                                                v.unknown(),
+                                                v.transform((input) =>
+                                                  input === 'null' ? null : input,
+                                                ),
+                                                v.nullable(
+                                                  v.pipe(
+                                                    v.string(),
+                                                    v.regex(
+                                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                    ),
+                                                    v.transform((input) =>
+                                                      /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            emoji: v.optional(
+                                              v.pipe(
+                                                v.unknown(),
+                                                v.transform((input) =>
+                                                  input === 'null' ? null : input,
+                                                ),
+                                                v.nullable(
+                                                  v.union([
+                                                    v.pipe(
+                                                      v.unknown(),
+                                                      v.transform((input) =>
+                                                        input === 'null' ? null : input,
+                                                      ),
+                                                      v.nullable(v.null()),
+                                                    ),
+                                                    v.object({
+                                                      id: v.optional(
+                                                        v.pipe(
+                                                          v.unknown(),
+                                                          v.transform((input) =>
+                                                            input === 'null' ? null : input,
+                                                          ),
+                                                          v.nullable(
+                                                            v.union([
+                                                              v.pipe(
+                                                                v.unknown(),
+                                                                v.transform((input) =>
+                                                                  input === 'null' ? null : input,
+                                                                ),
+                                                                v.nullable(v.null()),
+                                                              ),
+                                                              SnowflakeTypeSchema,
+                                                            ]),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      name: v.pipe(v.string(), v.maxCodePoints(32)),
+                                                    }),
+                                                  ]),
+                                                ),
+                                              ),
+                                            ),
+                                          }),
+                                        ),
+                                        v.minLength(1),
+                                        v.maxLength(25),
+                                      ),
+                                    }),
+                                    v.object({
+                                      type: v.union([
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.description('Container for other components'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.description('Button object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.description(
+                                            'Select menu for picking from defined text options',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.description('Text input object'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.description('Select menu for users'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.description('Select menu for roles'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.description(
+                                            'Select menu for mentionables (users and roles)',
+                                          ),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.description('Select menu for channels'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.description('Section component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.description('Text component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.description('Thumbnail component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.description('Media gallery component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.description('File component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.description('Separator component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.description('Container component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.description('Label component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.description('File upload component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.description('Radio group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.description('Checkbox group component'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.description('Checkbox component'),
+                                        ),
+                                      ]),
+                                      id: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(-2147483648),
+                                              v.maxValue(2147483647),
+                                              v.minValue(0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      custom_id: v.pipe(
+                                        v.string(),
+                                        v.minCodePoints(1),
+                                        v.maxCodePoints(100),
+                                      ),
+                                      placeholder: v.optional(
+                                        v.nullable(v.pipe(v.string(), v.maxCodePoints(150))),
+                                      ),
+                                      min_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(0),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      max_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.transform(Number),
+                                              v.number(),
+                                              v.safeInteger(),
+                                              v.minValue(1),
+                                              v.maxValue(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      disabled: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      required: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                              ),
+                                              v.transform((input) =>
+                                                /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      default_values: v.optional(
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === undefined || Array.isArray(input)
+                                                  ? input
+                                                  : [input],
+                                              ),
+                                              v.array(UserSelectDefaultValueSchema),
+                                              v.maxLength(25),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    }),
+                                  ]),
+                                ),
+                                v.minLength(1),
+                                v.maxLength(5),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              spoiler: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              file: UnfurledMediaRequestWithAttachmentReferenceRequiredSchema,
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              items: v.pipe(
+                                v.unknown(),
+                                v.transform((input) =>
+                                  input === undefined || Array.isArray(input) ? input : [input],
+                                ),
+                                v.array(
+                                  v.object({
+                                    description: v.optional(
+                                      v.nullable(
+                                        v.pipe(
+                                          v.string(),
+                                          v.minCodePoints(1),
+                                          v.maxCodePoints(1024),
+                                        ),
+                                      ),
+                                    ),
+                                    spoiler: v.optional(
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            ),
+                                            v.transform((input) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    media: UnfurledMediaRequestSchema,
+                                  }),
+                                ),
+                                v.minLength(1),
+                                v.maxLength(10),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              components: v.pipe(
+                                v.unknown(),
+                                v.transform((input) =>
+                                  input === undefined || Array.isArray(input) ? input : [input],
+                                ),
+                                v.array(
+                                  v.object({
+                                    type: v.union([
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                        v.description('Container for other components'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                        v.description('Button object'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                        v.description(
+                                          'Select menu for picking from defined text options',
+                                        ),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                        v.description('Text input object'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                        v.description('Select menu for users'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                        v.description('Select menu for roles'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                        v.description(
+                                          'Select menu for mentionables (users and roles)',
+                                        ),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                        v.description('Select menu for channels'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                        v.description('Section component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                        v.description('Text component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                        v.description('Thumbnail component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                        v.description('Media gallery component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                        v.description('File component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                        v.description('Separator component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                        v.description('Container component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                        v.description('Label component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                        v.description('File upload component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                        v.description('Radio group component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                        v.description('Checkbox group component'),
+                                      ),
+                                      v.pipe(
+                                        v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                        v.description('Checkbox component'),
+                                      ),
+                                    ]),
+                                    id: v.optional(
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(
+                                          v.pipe(
+                                            v.string(),
+                                            v.transform(Number),
+                                            v.number(),
+                                            v.safeInteger(),
+                                            v.minValue(-2147483648),
+                                            v.maxValue(2147483647),
+                                            v.minValue(0),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    content: v.pipe(
+                                      v.string(),
+                                      v.minCodePoints(1),
+                                      v.maxCodePoints(4000),
+                                    ),
+                                  }),
+                                ),
+                                v.minLength(1),
+                                v.maxLength(3),
+                              ),
+                              accessory: v.union([
+                                v.object({
+                                  type: v.union([
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                      v.description('Container for other components'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                      v.description('Button object'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                      v.description(
+                                        'Select menu for picking from defined text options',
+                                      ),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                      v.description('Text input object'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                      v.description('Select menu for users'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                      v.description('Select menu for roles'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                      v.description(
+                                        'Select menu for mentionables (users and roles)',
+                                      ),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                      v.description('Select menu for channels'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                      v.description('Section component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                      v.description('Text component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                      v.description('Thumbnail component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                      v.description('Media gallery component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                      v.description('File component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                      v.description('Separator component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                      v.description('Container component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                      v.description('Label component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                      v.description('File upload component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                      v.description('Radio group component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                      v.description('Checkbox group component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                      v.description('Checkbox component'),
+                                    ),
+                                  ]),
+                                  id: v.optional(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) => (input === 'null' ? null : input)),
+                                      v.nullable(
+                                        v.pipe(
+                                          v.string(),
+                                          v.transform(Number),
+                                          v.number(),
+                                          v.safeInteger(),
+                                          v.minValue(-2147483648),
+                                          v.maxValue(2147483647),
+                                          v.minValue(0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  custom_id: v.optional(
+                                    v.nullable(
+                                      v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
+                                    ),
+                                  ),
+                                  style: v.union([
+                                    v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                    v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                    v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                    v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                    v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                    v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  ]),
+                                  label: v.optional(
+                                    v.nullable(v.pipe(v.string(), v.maxCodePoints(80))),
+                                  ),
+                                  disabled: v.optional(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) => (input === 'null' ? null : input)),
+                                      v.nullable(
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          ),
+                                          v.transform((input) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  url: v.optional(
+                                    v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(512))),
+                                  ),
+                                  sku_id: v.optional(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) => (input === 'null' ? null : input)),
+                                      v.nullable(
+                                        v.union([
+                                          v.pipe(
+                                            v.unknown(),
+                                            v.transform((input) =>
+                                              input === 'null' ? null : input,
+                                            ),
+                                            v.nullable(v.null()),
+                                          ),
+                                          SnowflakeTypeSchema,
+                                        ]),
+                                      ),
+                                    ),
+                                  ),
+                                  emoji: v.optional(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) => (input === 'null' ? null : input)),
+                                      v.nullable(
+                                        v.union([
+                                          v.pipe(
+                                            v.unknown(),
+                                            v.transform((input) =>
+                                              input === 'null' ? null : input,
+                                            ),
+                                            v.nullable(v.null()),
+                                          ),
+                                          v.object({
+                                            id: v.optional(
+                                              v.pipe(
+                                                v.unknown(),
+                                                v.transform((input) =>
+                                                  input === 'null' ? null : input,
+                                                ),
+                                                v.nullable(
+                                                  v.union([
+                                                    v.pipe(
+                                                      v.unknown(),
+                                                      v.transform((input) =>
+                                                        input === 'null' ? null : input,
+                                                      ),
+                                                      v.nullable(v.null()),
+                                                    ),
+                                                    SnowflakeTypeSchema,
+                                                  ]),
+                                                ),
+                                              ),
+                                            ),
+                                            name: v.pipe(v.string(), v.maxCodePoints(32)),
+                                          }),
+                                        ]),
+                                      ),
+                                    ),
+                                  ),
+                                }),
+                                v.object({
+                                  type: v.union([
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                      v.description('Container for other components'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                      v.description('Button object'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                      v.description(
+                                        'Select menu for picking from defined text options',
+                                      ),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                      v.description('Text input object'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                      v.description('Select menu for users'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                      v.description('Select menu for roles'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                      v.description(
+                                        'Select menu for mentionables (users and roles)',
+                                      ),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                      v.description('Select menu for channels'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                      v.description('Section component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                      v.description('Text component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                      v.description('Thumbnail component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                      v.description('Media gallery component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                      v.description('File component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                      v.description('Separator component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                      v.description('Container component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                      v.description('Label component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                      v.description('File upload component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                      v.description('Radio group component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                      v.description('Checkbox group component'),
+                                    ),
+                                    v.pipe(
+                                      v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                      v.description('Checkbox component'),
+                                    ),
+                                  ]),
+                                  id: v.optional(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) => (input === 'null' ? null : input)),
+                                      v.nullable(
+                                        v.pipe(
+                                          v.string(),
+                                          v.transform(Number),
+                                          v.number(),
+                                          v.safeInteger(),
+                                          v.minValue(-2147483648),
+                                          v.maxValue(2147483647),
+                                          v.minValue(0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  description: v.optional(
+                                    v.nullable(
+                                      v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(1024)),
+                                    ),
+                                  ),
+                                  spoiler: v.optional(
+                                    v.pipe(
+                                      v.unknown(),
+                                      v.transform((input) => (input === 'null' ? null : input)),
+                                      v.nullable(
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          ),
+                                          v.transform((input) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  media: UnfurledMediaRequestSchema,
+                                }),
+                              ]),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              spacing: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.union([
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(v.null()),
+                                      ),
+                                      v.union([
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.description('Small spacing'),
+                                        ),
+                                        v.pipe(
+                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.description('Large spacing'),
+                                        ),
+                                      ]),
+                                    ]),
+                                  ),
+                                ),
+                              ),
+                              divider: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      ),
+                                      v.transform((input) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            }),
+                            v.object({
+                              type: v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Container for other components'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Button object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.description(
+                                    'Select menu for picking from defined text options',
+                                  ),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.description('Text input object'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.description('Select menu for users'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.description('Select menu for roles'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.description('Select menu for mentionables (users and roles)'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.description('Select menu for channels'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.description('Section component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.description('Text component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.description('Thumbnail component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.description('Media gallery component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.description('File component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.description('Separator component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.description('Container component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.description('Label component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.description('File upload component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.description('Radio group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.description('Checkbox group component'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.description('Checkbox component'),
+                                ),
+                              ]),
+                              id: v.optional(
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(
+                                    v.pipe(
+                                      v.string(),
+                                      v.transform(Number),
+                                      v.number(),
+                                      v.safeInteger(),
+                                      v.minValue(-2147483648),
+                                      v.maxValue(2147483647),
+                                      v.minValue(0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              content: v.pipe(
+                                v.string(),
+                                v.minCodePoints(1),
+                                v.maxCodePoints(4000),
+                              ),
+                            }),
+                          ]),
+                        ),
+                        v.minLength(1),
+                        v.maxLength(40),
+                      ),
+                      spoiler: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                              v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    }),
+                    v.object({
+                      type: v.union([
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.description('Container for other components'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.description('Button object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.description('Select menu for picking from defined text options'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.description('Text input object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.description('Select menu for users'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.description('Select menu for roles'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.description('Select menu for mentionables (users and roles)'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.description('Select menu for channels'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.description('Section component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.description('Text component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.description('Thumbnail component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.description('Media gallery component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.description('File component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.description('Separator component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.description('Container component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.description('Label component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.description('File upload component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.description('Radio group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.description('Checkbox group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.description('Checkbox component'),
+                        ),
+                      ]),
+                      id: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(-2147483648),
+                              v.maxValue(2147483647),
+                              v.minValue(0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      spoiler: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                              v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+                            ),
+                          ),
+                        ),
+                      ),
+                      file: UnfurledMediaRequestWithAttachmentReferenceRequiredSchema,
+                    }),
+                    v.object({
+                      type: v.union([
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.description('Container for other components'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.description('Button object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.description('Select menu for picking from defined text options'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.description('Text input object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.description('Select menu for users'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.description('Select menu for roles'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.description('Select menu for mentionables (users and roles)'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.description('Select menu for channels'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.description('Section component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.description('Text component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.description('Thumbnail component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.description('Media gallery component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.description('File component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.description('Separator component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.description('Container component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.description('Label component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.description('File upload component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.description('Radio group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.description('Checkbox group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.description('Checkbox component'),
+                        ),
+                      ]),
+                      id: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(-2147483648),
+                              v.maxValue(2147483647),
+                              v.minValue(0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      items: v.pipe(
+                        v.unknown(),
+                        v.transform((input) =>
+                          input === undefined || Array.isArray(input) ? input : [input],
+                        ),
+                        v.array(
+                          v.object({
+                            description: v.optional(
+                              v.nullable(
+                                v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(1024)),
+                              ),
+                            ),
+                            spoiler: v.optional(
+                              v.pipe(
+                                v.unknown(),
+                                v.transform((input) => (input === 'null' ? null : input)),
+                                v.nullable(
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    ),
+                                    v.transform((input) =>
+                                      /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            media: UnfurledMediaRequestSchema,
+                          }),
+                        ),
+                        v.minLength(1),
+                        v.maxLength(10),
+                      ),
+                    }),
+                    v.object({
+                      type: v.union([
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.description('Container for other components'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.description('Button object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.description('Select menu for picking from defined text options'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.description('Text input object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.description('Select menu for users'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.description('Select menu for roles'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.description('Select menu for mentionables (users and roles)'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.description('Select menu for channels'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.description('Section component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.description('Text component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.description('Thumbnail component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.description('Media gallery component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.description('File component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.description('Separator component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.description('Container component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.description('Label component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.description('File upload component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.description('Radio group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.description('Checkbox group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.description('Checkbox component'),
+                        ),
+                      ]),
+                      id: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(-2147483648),
+                              v.maxValue(2147483647),
+                              v.minValue(0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      components: v.pipe(
+                        v.unknown(),
+                        v.transform((input) =>
+                          input === undefined || Array.isArray(input) ? input : [input],
+                        ),
+                        v.array(
+                          v.object({
+                            type: v.union([
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                v.description('Container for other components'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                v.description('Button object'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                v.description('Select menu for picking from defined text options'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                v.description('Text input object'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                v.description('Select menu for users'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                v.description('Select menu for roles'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                v.description('Select menu for mentionables (users and roles)'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                v.description('Select menu for channels'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                v.description('Section component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                v.description('Text component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                v.description('Thumbnail component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                v.description('Media gallery component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                v.description('File component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                v.description('Separator component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                v.description('Container component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                v.description('Label component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                v.description('File upload component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                v.description('Radio group component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                v.description('Checkbox group component'),
+                              ),
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                v.description('Checkbox component'),
+                              ),
+                            ]),
+                            id: v.optional(
+                              v.pipe(
+                                v.unknown(),
+                                v.transform((input) => (input === 'null' ? null : input)),
+                                v.nullable(
+                                  v.pipe(
+                                    v.string(),
+                                    v.transform(Number),
+                                    v.number(),
+                                    v.safeInteger(),
+                                    v.minValue(-2147483648),
+                                    v.maxValue(2147483647),
+                                    v.minValue(0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            content: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(4000)),
+                          }),
+                        ),
+                        v.minLength(1),
+                        v.maxLength(3),
+                      ),
+                      accessory: v.union([
+                        v.object({
+                          type: v.union([
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                              v.description('Container for other components'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                              v.description('Button object'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                              v.description('Select menu for picking from defined text options'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                              v.description('Text input object'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                              v.description('Select menu for users'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                              v.description('Select menu for roles'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                              v.description('Select menu for mentionables (users and roles)'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                              v.description('Select menu for channels'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                              v.description('Section component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                              v.description('Text component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                              v.description('Thumbnail component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                              v.description('Media gallery component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                              v.description('File component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                              v.description('Separator component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                              v.description('Container component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                              v.description('Label component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                              v.description('File upload component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                              v.description('Radio group component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                              v.description('Checkbox group component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                              v.description('Checkbox component'),
+                            ),
+                          ]),
+                          id: v.optional(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.pipe(
+                                  v.string(),
+                                  v.transform(Number),
+                                  v.number(),
+                                  v.safeInteger(),
+                                  v.minValue(-2147483648),
+                                  v.maxValue(2147483647),
+                                  v.minValue(0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          custom_id: v.optional(
+                            v.nullable(
+                              v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
+                            ),
+                          ),
+                          style: v.union([
+                            v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                            v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                            v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                            v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                            v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                            v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          ]),
+                          label: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(80)))),
+                          disabled: v.optional(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  ),
+                                  v.transform((input) =>
+                                    /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          url: v.optional(
+                            v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(512))),
+                          ),
+                          sku_id: v.optional(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.union([
+                                  v.pipe(
+                                    v.unknown(),
+                                    v.transform((input) => (input === 'null' ? null : input)),
+                                    v.nullable(v.null()),
+                                  ),
+                                  SnowflakeTypeSchema,
+                                ]),
+                              ),
+                            ),
+                          ),
+                          emoji: v.optional(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.union([
+                                  v.pipe(
+                                    v.unknown(),
+                                    v.transform((input) => (input === 'null' ? null : input)),
+                                    v.nullable(v.null()),
+                                  ),
+                                  v.object({
+                                    id: v.optional(
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(
+                                          v.union([
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === 'null' ? null : input,
+                                              ),
+                                              v.nullable(v.null()),
+                                            ),
+                                            SnowflakeTypeSchema,
+                                          ]),
+                                        ),
+                                      ),
+                                    ),
+                                    name: v.pipe(v.string(), v.maxCodePoints(32)),
+                                  }),
+                                ]),
+                              ),
+                            ),
+                          ),
+                        }),
+                        v.object({
+                          type: v.union([
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                              v.description('Container for other components'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                              v.description('Button object'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                              v.description('Select menu for picking from defined text options'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                              v.description('Text input object'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                              v.description('Select menu for users'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                              v.description('Select menu for roles'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                              v.description('Select menu for mentionables (users and roles)'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                              v.description('Select menu for channels'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                              v.description('Section component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                              v.description('Text component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                              v.description('Thumbnail component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                              v.description('Media gallery component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                              v.description('File component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                              v.description('Separator component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                              v.description('Container component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                              v.description('Label component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                              v.description('File upload component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                              v.description('Radio group component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                              v.description('Checkbox group component'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                              v.description('Checkbox component'),
+                            ),
+                          ]),
+                          id: v.optional(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.pipe(
+                                  v.string(),
+                                  v.transform(Number),
+                                  v.number(),
+                                  v.safeInteger(),
+                                  v.minValue(-2147483648),
+                                  v.maxValue(2147483647),
+                                  v.minValue(0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          description: v.optional(
+                            v.nullable(
+                              v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(1024)),
+                            ),
+                          ),
+                          spoiler: v.optional(
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  ),
+                                  v.transform((input) =>
+                                    /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          media: UnfurledMediaRequestSchema,
+                        }),
+                      ]),
+                    }),
+                    v.object({
+                      type: v.union([
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.description('Container for other components'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.description('Button object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.description('Select menu for picking from defined text options'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.description('Text input object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.description('Select menu for users'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.description('Select menu for roles'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.description('Select menu for mentionables (users and roles)'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.description('Select menu for channels'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.description('Section component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.description('Text component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.description('Thumbnail component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.description('Media gallery component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.description('File component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.description('Separator component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.description('Container component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.description('Label component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.description('File upload component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.description('Radio group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.description('Checkbox group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.description('Checkbox component'),
+                        ),
+                      ]),
+                      id: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(-2147483648),
+                              v.maxValue(2147483647),
+                              v.minValue(0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      spacing: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.union([
+                              v.pipe(
+                                v.unknown(),
+                                v.transform((input) => (input === 'null' ? null : input)),
+                                v.nullable(v.null()),
+                              ),
+                              v.union([
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.description('Small spacing'),
+                                ),
+                                v.pipe(
+                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.description('Large spacing'),
+                                ),
+                              ]),
+                            ]),
+                          ),
+                        ),
+                      ),
+                      divider: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                              v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    }),
+                    v.object({
+                      type: v.union([
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.description('Container for other components'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.description('Button object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.description('Select menu for picking from defined text options'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.description('Text input object'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.description('Select menu for users'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.description('Select menu for roles'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.description('Select menu for mentionables (users and roles)'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.description('Select menu for channels'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.description('Section component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.description('Text component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.description('Thumbnail component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.description('Media gallery component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.description('File component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.description('Separator component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.description('Container component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.description('Label component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.description('File upload component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.description('Radio group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.description('Checkbox group component'),
+                        ),
+                        v.pipe(
+                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.description('Checkbox component'),
+                        ),
+                      ]),
+                      id: v.optional(
+                        v.pipe(
+                          v.unknown(),
+                          v.transform((input) => (input === 'null' ? null : input)),
+                          v.nullable(
+                            v.pipe(
+                              v.string(),
+                              v.transform(Number),
+                              v.number(),
+                              v.safeInteger(),
+                              v.minValue(-2147483648),
+                              v.maxValue(2147483647),
+                              v.minValue(0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      content: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(4000)),
+                    }),
+                  ]),
+                ),
+                v.maxLength(40),
+              ),
+            ),
+          ),
+          flags: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+          ),
+          attachments: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.pipe(
+                v.unknown(),
+                v.transform((input) =>
+                  input === undefined || Array.isArray(input) ? input : [input],
+                ),
+                v.array(
+                  v.object({
+                    id: SnowflakeTypeSchema,
+                    filename: v.optional(
+                      v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(1024))),
+                    ),
+                    description: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(1024)))),
+                    duration_secs: v.optional(
+                      v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.pipe(
+                            v.string(),
+                            v.transform(Number),
+                            v.number(),
+                            v.finite(),
+                            v.minValue(0),
+                            v.maxValue(2147483647),
+                          ),
+                        ),
+                      ),
+                    ),
+                    waveform: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(400)))),
+                    title: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(1024)))),
+                    is_spoiler: v.optional(
+                      v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                            v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  }),
+                ),
+                v.maxLength(10),
+              ),
+            ),
+          ),
+          poll: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.union([
+                v.pipe(
+                  v.unknown(),
+                  v.transform((input) => (input === 'null' ? null : input)),
+                  v.nullable(v.null()),
+                ),
+                v.object({
+                  question: v.pipe(
+                    v.partial(
+                      v.object({
+                        text: v.pipe(
+                          v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(300))),
+                          v.description('The text of the field'),
+                        ),
+                        emoji: v.pipe(
+                          v.pipe(
+                            v.unknown(),
+                            v.transform((input) => (input === 'null' ? null : input)),
+                            v.nullable(
+                              v.union([
+                                v.pipe(
+                                  v.unknown(),
+                                  v.transform((input) => (input === 'null' ? null : input)),
+                                  v.nullable(v.null()),
+                                ),
+                                v.partial(
+                                  v.object({
+                                    id: v.pipe(
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(
+                                          v.union([
+                                            v.pipe(
+                                              v.unknown(),
+                                              v.transform((input) =>
+                                                input === 'null' ? null : input,
+                                              ),
+                                              v.nullable(v.null()),
+                                            ),
+                                            SnowflakeTypeSchema,
+                                          ]),
+                                        ),
+                                      ),
+                                      v.description('The ID of the custom emoji'),
+                                    ),
+                                    name: v.pipe(
+                                      v.nullable(v.pipe(v.string(), v.maxCodePoints(32))),
+                                      v.description(
+                                        'The name of the emoji, or the unicode emoji character',
+                                      ),
+                                    ),
+                                    animated: v.pipe(
+                                      v.pipe(
+                                        v.unknown(),
+                                        v.transform((input) => (input === 'null' ? null : input)),
+                                        v.nullable(
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            ),
+                                            v.transform((input) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      v.description('Whether the emoji is animated'),
+                                    ),
+                                  }),
+                                ),
+                              ]),
+                            ),
+                          ),
+                          v.description('The emoji of the field'),
+                        ),
+                      }),
+                    ),
+                    v.description('The question of the poll. Only `text` is supported.'),
+                  ),
+                  answers: v.pipe(
+                    v.pipe(
+                      v.unknown(),
+                      v.transform((input) =>
+                        input === undefined || Array.isArray(input) ? input : [input],
+                      ),
+                      v.array(
+                        v.object({
+                          poll_media: v.pipe(
+                            v.partial(
+                              v.object({
+                                text: v.pipe(
+                                  v.nullable(
+                                    v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(300)),
+                                  ),
+                                  v.description('The text of the field'),
+                                ),
+                                emoji: v.pipe(
+                                  v.pipe(
+                                    v.unknown(),
+                                    v.transform((input) => (input === 'null' ? null : input)),
+                                    v.nullable(
+                                      v.union([
+                                        v.pipe(
+                                          v.unknown(),
+                                          v.transform((input) => (input === 'null' ? null : input)),
+                                          v.nullable(v.null()),
+                                        ),
+                                        v.partial(
+                                          v.object({
+                                            id: v.pipe(
+                                              v.pipe(
+                                                v.unknown(),
+                                                v.transform((input) =>
+                                                  input === 'null' ? null : input,
+                                                ),
+                                                v.nullable(
+                                                  v.union([
+                                                    v.pipe(
+                                                      v.unknown(),
+                                                      v.transform((input) =>
+                                                        input === 'null' ? null : input,
+                                                      ),
+                                                      v.nullable(v.null()),
+                                                    ),
+                                                    SnowflakeTypeSchema,
+                                                  ]),
+                                                ),
+                                              ),
+                                              v.description('The ID of the custom emoji'),
+                                            ),
+                                            name: v.pipe(
+                                              v.nullable(v.pipe(v.string(), v.maxCodePoints(32))),
+                                              v.description(
+                                                'The name of the emoji, or the unicode emoji character',
+                                              ),
+                                            ),
+                                            animated: v.pipe(
+                                              v.pipe(
+                                                v.unknown(),
+                                                v.transform((input) =>
+                                                  input === 'null' ? null : input,
+                                                ),
+                                                v.nullable(
+                                                  v.pipe(
+                                                    v.string(),
+                                                    v.regex(
+                                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                    ),
+                                                    v.transform((input) =>
+                                                      /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              v.description('Whether the emoji is animated'),
+                                            ),
+                                          }),
+                                        ),
+                                      ]),
+                                    ),
+                                  ),
+                                  v.description('The emoji of the field'),
+                                ),
+                              }),
+                            ),
+                            v.description('The data of the answer'),
+                          ),
+                        }),
+                      ),
+                      v.minLength(1),
+                      v.maxLength(10),
+                    ),
+                    v.description('Each of the answers available in the poll, up to 10'),
+                  ),
+                  allow_multiselect: v.optional(
+                    v.pipe(
+                      v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                            v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+                          ),
+                        ),
+                      ),
+                      v.description('Whether a user can select multiple answers'),
+                    ),
+                  ),
+                  layout_type: v.optional(
+                    v.pipe(
+                      v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.union([
+                            v.pipe(
+                              v.unknown(),
+                              v.transform((input) => (input === 'null' ? null : input)),
+                              v.nullable(v.null()),
+                            ),
+                            v.union([
+                              v.pipe(
+                                v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                v.description('The, uhm, default layout type.'),
+                              ),
+                            ]),
+                          ]),
+                        ),
+                      ),
+                      v.description('The layout type of the poll. Defaults to... DEFAULT!'),
+                    ),
+                  ),
+                  duration: v.optional(
+                    v.pipe(
+                      v.pipe(
+                        v.unknown(),
+                        v.transform((input) => (input === 'null' ? null : input)),
+                        v.nullable(
+                          v.pipe(
+                            v.string(),
+                            v.transform(Number),
+                            v.number(),
+                            v.safeInteger(),
+                            v.minValue(-2147483648),
+                            v.maxValue(2147483647),
+                            v.minValue(1),
+                            v.maxValue(768),
+                          ),
+                        ),
+                      ),
+                      v.description(
+                        'Number of hours the poll should be open for, up to 32 days. Defaults to 24',
+                      ),
+                    ),
+                  ),
+                }),
+              ]),
+            ),
+          ),
+          shared_client_theme: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.union([
+                v.pipe(
+                  v.unknown(),
+                  v.transform((input) => (input === 'null' ? null : input)),
+                  v.nullable(v.null()),
+                ),
+                v.object({
+                  colors: v.pipe(
+                    v.unknown(),
+                    v.transform((input) =>
+                      input === undefined || Array.isArray(input) ? input : [input],
+                    ),
+                    v.array(v.pipe(v.string(), v.codePoints(6))),
+                    v.minLength(1),
+                    v.maxLength(5),
+                  ),
+                  gradient_angle: v.pipe(
+                    v.string(),
+                    v.transform(Number),
+                    v.number(),
+                    v.safeInteger(),
+                    v.minValue(-2147483648),
+                    v.maxValue(2147483647),
+                    v.minValue(0),
+                    v.maxValue(360),
+                  ),
+                  base_mix: v.pipe(
+                    v.string(),
+                    v.transform(Number),
+                    v.number(),
+                    v.safeInteger(),
+                    v.minValue(-2147483648),
+                    v.maxValue(2147483647),
+                    v.minValue(0),
+                    v.maxValue(100),
+                  ),
+                  base_theme: v.optional(
+                    v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.union([
+                          v.pipe(
+                            v.unknown(),
+                            v.transform((input) => (input === 'null' ? null : input)),
+                            v.nullable(v.null()),
+                          ),
+                          v.union([
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(0)),
+                              v.description('No base theme'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                              v.description('Dark base theme'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                              v.description('Light base theme'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                              v.description('Darker base theme'),
+                            ),
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                              v.description('Midnight base theme'),
+                            ),
+                          ]),
+                        ]),
+                      ),
+                    ),
+                  ),
+                }),
+              ]),
+            ),
+          ),
+          message_reference: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.union([
+                v.pipe(
+                  v.unknown(),
+                  v.transform((input) => (input === 'null' ? null : input)),
+                  v.nullable(v.null()),
+                ),
+                v.object({
+                  guild_id: v.optional(
+                    v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.union([
+                          v.pipe(
+                            v.unknown(),
+                            v.transform((input) => (input === 'null' ? null : input)),
+                            v.nullable(v.null()),
+                          ),
+                          SnowflakeTypeSchema,
+                        ]),
+                      ),
+                    ),
+                  ),
+                  channel_id: v.optional(
+                    v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.union([
+                          v.pipe(
+                            v.unknown(),
+                            v.transform((input) => (input === 'null' ? null : input)),
+                            v.nullable(v.null()),
+                          ),
+                          SnowflakeTypeSchema,
+                        ]),
+                      ),
+                    ),
+                  ),
+                  message_id: SnowflakeTypeSchema,
+                  fail_if_not_exists: v.optional(
+                    v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.pipe(
+                          v.string(),
+                          v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                          v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  type: v.optional(
+                    v.pipe(
+                      v.unknown(),
+                      v.transform((input) => (input === 'null' ? null : input)),
+                      v.nullable(
+                        v.union([
+                          v.pipe(
+                            v.unknown(),
+                            v.transform((input) => (input === 'null' ? null : input)),
+                            v.nullable(v.null()),
+                          ),
+                          v.union([
+                            v.pipe(
+                              v.pipe(v.string(), v.transform(Number), v.literal(0)),
+                              v.description('Reference to a message'),
+                            ),
+                          ]),
+                        ]),
+                      ),
+                    ),
+                  ),
+                }),
+              ]),
+            ),
+          ),
+          nonce: v.union([
+            v.pipe(
+              v.string(),
+              v.regex(/^-?\d+$/),
+              v.transform((input) => BigInt(input)),
+              v.minValue(-9223372036854775808n),
+              v.maxValue(9223372036854775807n),
+              v.minValue(-9223372036854776000n),
+              v.maxValue(9223372036854776000n),
+            ),
+            v.pipe(v.string(), v.maxCodePoints(25)),
+            v.pipe(
+              v.unknown(),
+              v.transform((input) => (input === 'null' ? null : input)),
+              v.nullable(v.null()),
+            ),
+          ]),
+          enforce_nonce: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.pipe(
+                v.string(),
+                v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+              ),
+            ),
+          ),
+          tts: v.pipe(
+            v.unknown(),
+            v.transform((input) => (input === 'null' ? null : input)),
+            v.nullable(
+              v.pipe(
+                v.string(),
+                v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
+              ),
+            ),
+          ),
+        }),
+      ),
+    ),
+    (c) => {},
+  )
+  .put(
+    '/lobbies/:lobby_id/messages/:message_id/moderation-metadata',
+    describeRoute({
+      description: 'Update the external moderation metadata for a lobby message.',
+      operationId: 'update_lobby_message_external_moderation_metadata',
+      responses: {
+        '204': {
+          description: '204 response for update_lobby_message_external_moderation_metadata',
+          headers: {
+            'X-RateLimit-Limit': { $ref: '#/components/headers/X-RateLimit-Limit' },
+            'X-RateLimit-Remaining': { $ref: '#/components/headers/X-RateLimit-Remaining' },
+            'X-RateLimit-Reset': { $ref: '#/components/headers/X-RateLimit-Reset' },
+            'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
+            'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
+          },
+        },
+        '429': ClientRatelimitedResponseResponse,
+        '4XX': ClientErrorResponseResponse,
+      },
+      security: [{ BotToken: [] }],
+    }),
+    validator(
+      'param',
+      v.object({ lobby_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
+    ),
+    validator(
+      'json',
+      v.pipe(
+        v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(2000))),
+        v.description('The moderation metadata attached to the message'),
+      ),
+    ),
+    validator(
+      'form',
+      v.pipe(
+        v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(2000))),
+        v.description('The moderation metadata attached to the message'),
+      ),
+    ),
+    (c) => {},
+  )

@@ -1,0 +1,131 @@
+import { Hono } from 'hono'
+import { sValidator } from '@hono/standard-validator'
+import { type } from 'arktype'
+import {
+  CreateVectorStoreFileBatchRequestSchema,
+  CreateVectorStoreFileRequestSchema,
+  CreateVectorStoreRequestSchema,
+  UpdateVectorStoreFileAttributesRequestSchema,
+  UpdateVectorStoreRequestSchema,
+  VectorStoreSearchRequestSchema,
+} from '../components'
+
+export const vectorStoresHandler = new Hono()
+  .get(
+    '/vector_stores',
+    sValidator(
+      'query',
+      type({
+        'limit?': type('string').pipe((data, ctx) => {
+          const value = Number(data)
+          return Number.isSafeInteger(value) ? value : ctx.error('an integer')
+        }),
+        'order?': "'asc' | 'desc'",
+        'after?': 'string',
+        'before?': 'string',
+      }),
+    ),
+    (c) => {},
+  )
+  .post('/vector_stores', sValidator('json', CreateVectorStoreRequestSchema), (c) => {})
+  .get(
+    '/vector_stores/:vector_store_id',
+    sValidator('param', type({ vector_store_id: 'string' })),
+    (c) => {},
+  )
+  .post(
+    '/vector_stores/:vector_store_id',
+    sValidator('param', type({ vector_store_id: 'string' })),
+    sValidator('json', UpdateVectorStoreRequestSchema),
+    (c) => {},
+  )
+  .delete(
+    '/vector_stores/:vector_store_id',
+    sValidator('param', type({ vector_store_id: 'string' })),
+    (c) => {},
+  )
+  .post(
+    '/vector_stores/:vector_store_id/file_batches',
+    sValidator('param', type({ vector_store_id: 'string' })),
+    sValidator('json', CreateVectorStoreFileBatchRequestSchema),
+    (c) => {},
+  )
+  .get(
+    '/vector_stores/:vector_store_id/file_batches/:batch_id',
+    sValidator('param', type({ vector_store_id: 'string', batch_id: 'string' })),
+    (c) => {},
+  )
+  .post(
+    '/vector_stores/:vector_store_id/file_batches/:batch_id/cancel',
+    sValidator('param', type({ vector_store_id: 'string', batch_id: 'string' })),
+    (c) => {},
+  )
+  .get(
+    '/vector_stores/:vector_store_id/file_batches/:batch_id/files',
+    sValidator('param', type({ vector_store_id: 'string', batch_id: 'string' })),
+    sValidator(
+      'query',
+      type({
+        'limit?': type('string').pipe((data, ctx) => {
+          const value = Number(data)
+          return Number.isSafeInteger(value) ? value : ctx.error('an integer')
+        }),
+        'order?': "'asc' | 'desc'",
+        'after?': 'string',
+        'before?': 'string',
+        'filter?': "'in_progress' | 'completed' | 'failed' | 'cancelled'",
+      }),
+    ),
+    (c) => {},
+  )
+  .get(
+    '/vector_stores/:vector_store_id/files',
+    sValidator('param', type({ vector_store_id: 'string' })),
+    sValidator(
+      'query',
+      type({
+        'limit?': type('string').pipe((data, ctx) => {
+          const value = Number(data)
+          return Number.isSafeInteger(value) ? value : ctx.error('an integer')
+        }),
+        'order?': "'asc' | 'desc'",
+        'after?': 'string',
+        'before?': 'string',
+        'filter?': "'in_progress' | 'completed' | 'failed' | 'cancelled'",
+      }),
+    ),
+    (c) => {},
+  )
+  .post(
+    '/vector_stores/:vector_store_id/files',
+    sValidator('param', type({ vector_store_id: 'string' })),
+    sValidator('json', CreateVectorStoreFileRequestSchema),
+    (c) => {},
+  )
+  .get(
+    '/vector_stores/:vector_store_id/files/:file_id',
+    sValidator('param', type({ vector_store_id: 'string', file_id: 'string' })),
+    (c) => {},
+  )
+  .post(
+    '/vector_stores/:vector_store_id/files/:file_id',
+    sValidator('param', type({ vector_store_id: 'string', file_id: 'string' })),
+    sValidator('json', UpdateVectorStoreFileAttributesRequestSchema),
+    (c) => {},
+  )
+  .delete(
+    '/vector_stores/:vector_store_id/files/:file_id',
+    sValidator('param', type({ vector_store_id: 'string', file_id: 'string' })),
+    (c) => {},
+  )
+  .get(
+    '/vector_stores/:vector_store_id/files/:file_id/content',
+    sValidator('param', type({ vector_store_id: 'string', file_id: 'string' })),
+    (c) => {},
+  )
+  .post(
+    '/vector_stores/:vector_store_id/search',
+    sValidator('param', type({ vector_store_id: 'string' })),
+    sValidator('json', VectorStoreSearchRequestSchema),
+    (c) => {},
+  )

@@ -1,0 +1,17 @@
+{
+  "name": "@apps/hono-define-handler-arktype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts hono-define-handler-arktype",
+    "typecheck": "bun ../../scripts/typecheck.ts hono-define-handler-arktype"
+  },
+  "dependencies": {
+    "arktype": "catalog:",
+    "hono": "5.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,11 @@
+export const PetstoreAuthSecurityScheme = {
+  type: 'oauth2',
+  flows: {
+    implicit: {
+      authorizationUrl: 'https://petstore3.swagger.io/oauth/authorize',
+      scopes: { 'write:pets': 'modify pets in your account', 'read:pets': 'read your pets' },
+    },
+  },
+} as const
+
+export const ApiKeySecurityScheme = { type: 'apiKey', name: 'api_key', in: 'header' } as const

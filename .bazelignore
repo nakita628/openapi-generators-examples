@@ -1,0 +1,28 @@
+# pnpm's node_modules trees are never Bazel inputs: rules_js links its own under bazel-bin.
+# .bazelignore does not expand globs, so every app is listed.
+node_modules
+apps/elysia-typebox/node_modules
+apps/hono-arktype/node_modules
+apps/hono-define-handler-arktype/node_modules
+apps/hono-define-handler-effect/node_modules
+apps/hono-define-handler-valibot/node_modules
+apps/hono-define-handler-zod/node_modules
+apps/hono-effect/node_modules
+apps/hono-openapi-arktype/node_modules
+apps/hono-openapi-effect/node_modules
+apps/hono-openapi-typebox/node_modules
+apps/hono-openapi-valibot/node_modules
+apps/hono-openapi-zod/node_modules
+apps/hono-typebox/node_modules
+apps/hono-valibot/node_modules
+apps/hono-zod/node_modules
+apps/openapi-to-trpc-arktype/node_modules
+apps/openapi-to-trpc-effect/node_modules
+apps/openapi-to-trpc-valibot/node_modules
+apps/openapi-to-trpc-zod/node_modules
+apps/wakusei-contract-arktype/node_modules
+apps/wakusei-contract-valibot/node_modules
+apps/wakusei-contract-zod/node_modules
+apps/wakusei-server-arktype/node_modules
+apps/wakusei-server-valibot/node_modules
+apps/wakusei-server-zod/node_modules

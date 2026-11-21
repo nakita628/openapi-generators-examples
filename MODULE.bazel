@@ -1,0 +1,59 @@
+"""openapi-generators-examples: code generated from OpenAPI by wakusei, openapi-to-trpc,
+takibi-hono and asphodelos, one app per generator × validator.
+
+pnpm-lock.yaml is the single source of truth for dependencies; rules_js turns it into
+Bazel-managed node_modules trees, and every app's type check runs as a Bazel test.
+"""
+
+module(name = "openapi_generators_examples")
+
+bazel_dep(name = "aspect_rules_js", version = "3.5.2")
+bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
+bazel_dep(name = "rules_nodejs", version = "6.7.7")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node", dev_dependency = True)
+node.toolchain(node_version = "24.22.1")
+
+# The same pnpm that package.json#packageManager names, for `bazel run @pnpm -- install`.
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm", dev_dependency = True)
+pnpm.pnpm(name = "pnpm", pnpm_version = "12.15.0")
+use_repo(pnpm, "pnpm")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+npm.npm_translate_lock(
+    name = "npm",
+    data = [
+        "//:package.json",
+        "//:pnpm-workspace.yaml",
+        "//apps/elysia-typebox:package.json",
+        "//apps/hono-arktype:package.json",
+        "//apps/hono-define-handler-arktype:package.json",
+        "//apps/hono-define-handler-effect:package.json",
+        "//apps/hono-define-handler-valibot:package.json",
+        "//apps/hono-define-handler-zod:package.json",
+        "//apps/hono-effect:package.json",
+        "//apps/hono-openapi-arktype:package.json",
+        "//apps/hono-openapi-effect:package.json",
+        "//apps/hono-openapi-typebox:package.json",
+        "//apps/hono-openapi-valibot:package.json",
+        "//apps/hono-openapi-zod:package.json",
+        "//apps/hono-typebox:package.json",
+        "//apps/hono-valibot:package.json",
+        "//apps/hono-zod:package.json",
+        "//apps/openapi-to-trpc-arktype:package.json",
+        "//apps/openapi-to-trpc-effect:package.json",
+        "//apps/openapi-to-trpc-valibot:package.json",
+        "//apps/openapi-to-trpc-zod:package.json",
+        "//apps/wakusei-contract-arktype:package.json",
+        "//apps/wakusei-contract-valibot:package.json",
+        "//apps/wakusei-contract-zod:package.json",
+        "//apps/wakusei-server-arktype:package.json",
+        "//apps/wakusei-server-valibot:package.json",
+        "//apps/wakusei-server-zod:package.json",
+    ],
+    # The type checks need no install scripts (esbuild and friends stay unbuilt).
+    lifecycle_hooks = {"*": []},
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+use_repo(npm, "npm")

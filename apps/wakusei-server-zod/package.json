@@ -1,0 +1,17 @@
+{
+  "name": "@apps/wakusei-server-zod",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts wakusei-server-zod",
+    "typecheck": "bun ../../scripts/typecheck.ts wakusei-server-zod"
+  },
+  "dependencies": {
+    "@orpc/server": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@apps/hono-arktype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts hono-arktype",
+    "typecheck": "bun ../../scripts/typecheck.ts hono-arktype"
+  },
+  "dependencies": {
+    "@hono/standard-validator": "catalog:",
+    "arktype": "catalog:",
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

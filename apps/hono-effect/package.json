@@ -1,0 +1,18 @@
+{
+  "name": "@apps/hono-effect",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun ../../scripts/generate.ts hono-effect",
+    "typecheck": "bun ../../scripts/typecheck.ts hono-effect"
+  },
+  "dependencies": {
+    "@hono/standard-validator": "catalog:",
+    "effect": "catalog:",
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
