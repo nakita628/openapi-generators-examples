@@ -16,3 +16,5 @@ Taken before the README rows. One line per document: `- name | URL | note`.
 ## Rejected
 
 Do not try these again. One line per document: `- name | URL | reason`.
+
+- cloudflare | https://raw.githubusercontent.com/cloudflare/api-schemas/main/openapi.json | 28.3 MB, over the 25 MB limit of scripts/sources.ts (probe exit 5, 2026-11-23)

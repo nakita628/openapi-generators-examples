@@ -141,6 +141,9 @@ bun scripts/sources.ts probe <URL>
 
 PyYAML での確認: `python3 -I -c "import yaml; yaml.safe_load(open('<file>'))"`（ファイルは別のディレクトリに落とす）。
 
+2 MB を超える文書は 1 日 1 件まで。`next 3` の残りも大きい文書なら、`next 10` で先を見て小さい文書で埋める。
+飛ばした大きい文書は Rejected に書かない（`next` はまだ追加していない文書を上から出すので、翌日また先頭に出る）。
+
 ## 3. 文書を追加する
 
 ```bash
