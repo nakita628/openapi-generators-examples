@@ -135,9 +135,11 @@ export const getOrganizationAdminApiKeys = os
         .default('asc')
         .meta({ description: 'Order results by creation time, ascending or descending.' })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(20)
         .meta({ description: 'Maximum number of keys to return.' })
         .exactOptional(),
@@ -219,33 +221,45 @@ export const getOrganizationAuditLogs = os
     z.object({
       effective_at: z
         .object({
-          gt: z.coerce
-            .number()
-            .int()
+          gt: z
+            .preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.number().int(),
+            )
             .meta({
               description:
                 'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
             })
             .exactOptional(),
-          gte: z.coerce
-            .number()
-            .int()
+          gte: z
+            .preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.number().int(),
+            )
             .meta({
               description:
                 'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
             })
             .exactOptional(),
-          lt: z.coerce
-            .number()
-            .int()
+          lt: z
+            .preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.number().int(),
+            )
             .meta({
               description:
                 'Return only events whose `effective_at` (Unix seconds) is less than this value.',
             })
             .exactOptional(),
-          lte: z.coerce
-            .number()
-            .int()
+          lte: z
+            .preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.number().int(),
+            )
             .meta({
               description:
                 'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
@@ -284,7 +298,13 @@ export const getOrganizationAuditLogs = os
         )
         .exactOptional(),
       tenant_only: z.stringbool().default(false).exactOptional(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
     }),
@@ -303,7 +323,13 @@ export const getOrganizationCertificates = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
     }),
@@ -423,8 +449,16 @@ export const getOrganizationCosts = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.literal('1d').default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -450,7 +484,13 @@ export const getOrganizationCosts = os
           z.array(z.enum(['project_id', 'user_id', 'line_item', 'api_key_id', 'api_source'])),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().default(7).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(7)
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -493,7 +533,13 @@ export const getOrganizationGroups = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().min(0).max(1000).default(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .default(100)
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
     }),
@@ -570,7 +616,12 @@ export const getOrganizationGroupsGroupIdRoles = os
   .input(
     z.object({
       group_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).exactOptional(),
     }),
@@ -634,7 +685,13 @@ export const getOrganizationGroupsGroupIdUsers = os
   .input(
     z.object({
       group_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(1000).default(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .default(100)
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
     }),
@@ -697,7 +754,13 @@ export const getOrganizationInvites = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
     }),
   )
@@ -755,7 +818,13 @@ export const getOrganizationProjects = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
       include_archived: z.stringbool().default(false).exactOptional(),
     }),
@@ -803,15 +872,15 @@ export const postOrganizationProjectsProjectId = os
     z.object({
       project_id: z.string(),
       name: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'The updated name of the project, this name appears in reports.' })
         .exactOptional(),
       external_key_id: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'External key ID to associate with the project.' })
         .exactOptional(),
       geography: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({
           description:
             'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
@@ -835,7 +904,13 @@ export const getOrganizationProjectsProjectIdApiKeys = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
       owner_project_access: z.enum(['active', 'inactive', 'any']).exactOptional(),
     }),
@@ -931,7 +1006,13 @@ export const getOrganizationProjectsProjectIdCertificates = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
     }),
@@ -1035,7 +1116,13 @@ export const getOrganizationProjectsProjectIdGroups = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(100).default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(100),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
     }),
@@ -1122,23 +1209,23 @@ export const postOrganizationProjectsProjectIdHostedToolPermissions = os
     z.object({
       project_id: z.string(),
       file_search: z
-        .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+        .union([HostedToolPermissionUpdateSchema, z.null()])
         .meta({ description: 'The file search permission update.' })
         .exactOptional(),
       web_search: z
-        .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+        .union([HostedToolPermissionUpdateSchema, z.null()])
         .meta({ description: 'The web search permission update.' })
         .exactOptional(),
       image_generation: z
-        .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+        .union([HostedToolPermissionUpdateSchema, z.null()])
         .meta({ description: 'The image generation permission update.' })
         .exactOptional(),
       mcp: z
-        .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+        .union([HostedToolPermissionUpdateSchema, z.null()])
         .meta({ description: 'The MCP permission update.' })
         .exactOptional(),
       code_interpreter: z
-        .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+        .union([HostedToolPermissionUpdateSchema, z.null()])
         .meta({ description: 'The code interpreter permission update.' })
         .exactOptional(),
     }),
@@ -1207,7 +1294,13 @@ export const getOrganizationProjectsProjectIdRateLimits = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().default(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(100)
+        .exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
     }),
@@ -1273,7 +1366,13 @@ export const getOrganizationProjectsProjectIdServiceAccounts = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
     }),
   )
@@ -1301,11 +1400,11 @@ export const postOrganizationProjectsProjectIdServiceAccounts = os
             .meta({
               description: 'Create the service account without default roles or an API key.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       expires_in_seconds: z
-        .union([z.int().min(1).max(31536000), z.null().nullable()])
+        .union([z.int().min(1).max(31536000), z.null()])
         .meta({
           description:
             'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
@@ -1378,7 +1477,12 @@ export const getOrganizationProjectsProjectIdSpendAlerts = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(100),
+        )
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
@@ -1478,7 +1582,13 @@ export const getOrganizationProjectsProjectIdUsers = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
     }),
   )
@@ -1499,11 +1609,11 @@ export const postOrganizationProjectsProjectIdUsers = os
     z.object({
       project_id: z.string(),
       user_id: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'The ID of the user.' })
         .exactOptional(),
       email: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'Email of the user to add.' })
         .exactOptional(),
       role: z.string().meta({ description: '`owner` or `member`' }),
@@ -1539,7 +1649,7 @@ export const postOrganizationProjectsProjectIdUsersUserId = os
       project_id: z.string(),
       user_id: z.string(),
       role: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: '`owner` or `member`' })
         .exactOptional(),
     }),
@@ -1572,7 +1682,13 @@ export const getOrganizationRoles = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().min(0).max(1000).default(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .default(1000)
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
     }),
@@ -1619,15 +1735,15 @@ export const postOrganizationRolesRoleId = os
     z.object({
       role_id: z.string(),
       permissions: z
-        .union([z.array(z.string()), z.null().nullable()])
+        .union([z.array(z.string()), z.null()])
         .meta({ description: 'Updated set of permissions for the role.' })
         .exactOptional(),
       description: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'New description for the role.' })
         .exactOptional(),
       role_name: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'New name for the role.' })
         .exactOptional(),
     }),
@@ -1659,7 +1775,12 @@ export const getOrganizationSpendAlerts = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(100),
+        )
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
@@ -1744,8 +1865,16 @@ export const getOrganizationUsageAudioSpeeches = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -1777,7 +1906,12 @@ export const getOrganizationUsageAudioSpeeches = os
           z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -1795,8 +1929,16 @@ export const getOrganizationUsageAudioTranscriptions = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -1828,7 +1970,12 @@ export const getOrganizationUsageAudioTranscriptions = os
           z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -1846,8 +1993,16 @@ export const getOrganizationUsageCodeInterpreterSessions = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -1861,7 +2016,12 @@ export const getOrganizationUsageCodeInterpreterSessions = os
           z.array(z.literal('project_id')),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -1879,8 +2039,16 @@ export const getOrganizationUsageCompletions = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -1923,7 +2091,12 @@ export const getOrganizationUsageCompletions = os
           ),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -1941,8 +2114,16 @@ export const getOrganizationUsageEmbeddings = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -1974,7 +2155,12 @@ export const getOrganizationUsageEmbeddings = os
           z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -1992,8 +2178,16 @@ export const getOrganizationUsageFileSearchCalls = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -2025,7 +2219,12 @@ export const getOrganizationUsageFileSearchCalls = os
           z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'vector_store_id'])),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -2043,8 +2242,16 @@ export const getOrganizationUsageImages = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       sources: z
         .preprocess(
@@ -2088,7 +2295,12 @@ export const getOrganizationUsageImages = os
           z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source'])),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -2106,8 +2318,16 @@ export const getOrganizationUsageModerations = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -2139,7 +2359,12 @@ export const getOrganizationUsageModerations = os
           z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -2157,8 +2382,16 @@ export const getOrganizationUsageVectorStores = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -2172,7 +2405,12 @@ export const getOrganizationUsageVectorStores = os
           z.array(z.literal('project_id')),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -2190,8 +2428,16 @@ export const getOrganizationUsageWebSearchCalls = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
-      end_time: z.coerce.number().int().exactOptional(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
+      end_time: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
       project_ids: z
         .preprocess(
@@ -2231,7 +2477,12 @@ export const getOrganizationUsageWebSearchCalls = os
           ),
         )
         .exactOptional(),
-      limit: z.coerce.number().int().exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       page: z.string().exactOptional(),
     }),
   )
@@ -2249,7 +2500,13 @@ export const getOrganizationUsers = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       after: z.string().exactOptional(),
       emails: z
         .preprocess(
@@ -2288,19 +2545,19 @@ export const postOrganizationUsersUserId = os
     z.object({
       user_id: z.string(),
       role: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: '`owner` or `reader`' })
         .exactOptional(),
       role_id: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'Role ID to assign to the user.' })
         .exactOptional(),
       technical_level: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'Technical level metadata.' })
         .exactOptional(),
       developer_persona: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'Developer persona metadata.' })
         .exactOptional(),
     }),
@@ -2333,7 +2590,12 @@ export const getOrganizationUsersUserIdRoles = os
   .input(
     z.object({
       user_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).exactOptional(),
     }),
@@ -2395,13 +2657,15 @@ export const getOrganizationExternalKeys = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(100),
+        )
+        .exactOptional(),
       order: OrderEnumSchema.exactOptional(),
       after: z
-        .union([
-          z.string(),
-          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
-        ])
+        .union([z.string(), z.preprocess((val) => (val === 'null' ? null : val), z.null())])
         .exactOptional(),
       purpose: ExternalKeyPurposeSchema.exactOptional(),
     }),
@@ -2467,7 +2731,12 @@ export const getOrganizationWorkloadIdentityProviders = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
       order: z
         .union([z.literal('asc').default('asc'), z.literal('desc').default('desc')])
         .exactOptional(),
@@ -2518,7 +2787,7 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
       verification: z
         .xor([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema])
         .exactOptional(),
-      description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+      description: z.union([z.string(), z.null()]).exactOptional(),
       attribute_transformations: z.array(TransformationParamSchema).max(20).exactOptional(),
       enabled: z.boolean().exactOptional(),
     }),
@@ -2549,7 +2818,12 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
   .input(
     z.object({
       workload_identity_provider_id: z.string().min(1),
-      limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
       order: z
         .union([z.literal('asc').default('asc'), z.literal('desc').default('desc')])
         .exactOptional(),
@@ -2620,8 +2894,8 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
       z.object({
         workload_identity_provider_id: z.string().min(1),
         workload_identity_federation_rule_id: z.string().min(1),
-        name: z.union([z.string(), z.null().nullable()]).exactOptional(),
-        description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+        name: z.union([z.string(), z.null()]).exactOptional(),
+        description: z.union([z.string(), z.null()]).exactOptional(),
         attribute_matchers: z
           .record(z.string(), z.xor([z.string(), z.boolean(), z.union([z.int(), z.number()])]))
           .exactOptional(),
@@ -2662,14 +2936,21 @@ export const getOrganizationUsageDecisions = os
   })
   .input(
     z.object({
-      start_time: z.coerce.number().int(),
+      start_time: z.preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      ),
       end_time: z
         .preprocess(
           (val) => (val === 'null' ? null : val),
           z
             .union([
-              z.coerce.number().int(),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              ),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2685,7 +2966,7 @@ export const getOrganizationUsageDecisions = os
                   description:
                     'Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.',
                 }),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2695,8 +2976,12 @@ export const getOrganizationUsageDecisions = os
           (val) => (val === 'null' ? null : val),
           z
             .union([
-              z.coerce.number().int(),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              ),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2709,7 +2994,7 @@ export const getOrganizationUsageDecisions = os
               description:
                 'A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.',
             }),
-          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
         ])
         .exactOptional(),
       project_ids: z
@@ -2725,7 +3010,7 @@ export const getOrganizationUsageDecisions = os
                   ),
                 ])
                 .meta({ description: 'Return only usage for these projects.' }),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2746,7 +3031,7 @@ export const getOrganizationUsageDecisions = os
                   description:
                     'Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch`, `service_tier`, `api_source` or any combination of them. When grouped by `api_source`, results use `agents_api` for attributed Agents API activity and `unlabeled` for all other activity. Without source grouping, `api_source` is null.',
                 }),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2764,7 +3049,7 @@ export const getOrganizationUsageDecisions = os
                   ),
                 ])
                 .meta({ description: 'Return only usage for these users.' }),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2782,7 +3067,7 @@ export const getOrganizationUsageDecisions = os
                   ),
                 ])
                 .meta({ description: 'Return only usage for these API keys.' }),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2800,7 +3085,7 @@ export const getOrganizationUsageDecisions = os
                   ),
                 ])
                 .meta({ description: 'Return only usage for these models.' }),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .nullable(),
         )
@@ -2809,10 +3094,7 @@ export const getOrganizationUsageDecisions = os
         .preprocess(
           (val) => (val === 'null' ? null : val),
           z
-            .union([
-              z.stringbool(),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
-            ])
+            .union([z.stringbool(), z.preprocess((val) => (val === 'null' ? null : val), z.null())])
             .nullable(),
         )
         .exactOptional(),
@@ -2834,17 +3116,22 @@ export const getOrganizationExternalStorage = os
       project_id: z
         .union([
           z.string().meta({ examples: ['proj_123'] }),
-          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
         ])
         .exactOptional(),
       after: z
         .union([
           z.string().meta({ description: 'Return external storage configurations after this ID.' }),
-          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
         ])
         .exactOptional(),
       order: ExternalStorageOrderSchema.exactOptional(),
-      limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
     }),
   )
   .output(ExternalStorageListResourceSchema)
@@ -2977,7 +3264,7 @@ export const postOrganizationProjectsProjectIdSpendLimit = os
             description:
               'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
           }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
     }),
@@ -3058,7 +3345,7 @@ export const postOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApi
             .min(1)
             .max(31536000)
             .meta({ description: 'Number of seconds until the API key expires.' }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
     }),

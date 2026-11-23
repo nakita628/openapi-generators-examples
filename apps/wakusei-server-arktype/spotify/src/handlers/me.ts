@@ -33,14 +33,14 @@ export const getMeAudiobooks = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -138,14 +138,14 @@ export const getMePlaylists = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -259,14 +259,14 @@ export const getMeAlbums = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -358,14 +358,14 @@ export const getMeTracks = os
       ),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -470,14 +470,14 @@ export const getMeEpisodes = os
       ),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -563,14 +563,14 @@ export const getMeShows = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -662,7 +662,7 @@ export const getMeFollowing = os
       ),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
@@ -927,7 +927,7 @@ export const putMePlayerSeek = os
     type({
       position_ms: type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -978,7 +978,7 @@ export const putMePlayerVolume = os
     type({
       volume_percent: type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe('The volume to set. Must be a value from 0 to 100 inclusive.\n'),
@@ -1028,14 +1028,14 @@ export const getMePlayerRecentlyPlayed = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'after?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -1043,7 +1043,7 @@ export const getMePlayerRecentlyPlayed = os
         ),
       'before?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -1105,14 +1105,14 @@ export const getMeTopArtists = os
       ),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -1139,14 +1139,14 @@ export const getMeTopTracks = os
       ),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 50')
         .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n'),
       'offset?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(

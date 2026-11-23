@@ -34,7 +34,7 @@ export const postLobbies = os
       idle_timeout_seconds: z.int32().min(5).max(604800).nullable().exactOptional(),
       members: z.array(LobbyMemberRequestSchema).max(25).nullable().exactOptional(),
       metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-      flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+      flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
       override_event_webhooks_url: z.url().max(512).nullable().exactOptional(),
       name: z.string().min(1).max(100).nullable().exactOptional(),
     }),
@@ -54,7 +54,7 @@ export const putLobbies = os
       lobby_metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
       member_metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
       secret: z.string().max(250),
-      flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+      flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
       name: z.string().min(1).max(100).nullable().exactOptional(),
     }),
   )
@@ -95,7 +95,7 @@ export const patchLobbiesLobbyId = os
       idle_timeout_seconds: z.int32().min(5).max(604800).nullable().exactOptional(),
       metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
       members: z.array(LobbyMemberRequestSchema).max(25).nullable().exactOptional(),
-      flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+      flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
       override_event_webhooks_url: z.url().max(512).nullable().exactOptional(),
       name: z.string().min(1).max(100).nullable().exactOptional(),
     }),
@@ -112,7 +112,7 @@ export const patchLobbiesLobbyIdChannelLinking = os
   .input(
     z.object({
       lobby_id: SnowflakeTypeSchema,
-      channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
     }),
   )
   .output(LobbyResponseSchema)
@@ -159,7 +159,7 @@ export const putLobbiesLobbyIdMembersUserId = os
       lobby_id: SnowflakeTypeSchema,
       user_id: SnowflakeTypeSchema,
       metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-      flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+      flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
       additional_name: z.string().min(1).max(80).nullable().exactOptional(),
     }),
   )
@@ -195,7 +195,12 @@ export const getLobbiesLobbyIdMessages = os
   .input(
     z.object({
       lobby_id: SnowflakeTypeSchema,
-      limit: z.coerce.number().int().min(1).max(200).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(200),
+        )
+        .exactOptional(),
     }),
   )
   .output(z.array(LobbyMessageResponseSchema).nullable())
@@ -213,9 +218,7 @@ export const postLobbiesLobbyIdMessages = os
       lobby_id: SnowflakeTypeSchema,
       content: z.string().max(4000).nullable().exactOptional(),
       embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-      allowed_mentions: z
-        .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-        .exactOptional(),
+      allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
       sticker_ids: z.array(SnowflakeTypeSchema).max(3).nullable().exactOptional(),
       components: z
         .array(
@@ -234,21 +237,17 @@ export const postLobbiesLobbyIdMessages = os
         .exactOptional(),
       flags: z.int().nullable().exactOptional(),
       attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-      poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
-      shared_client_theme: z
-        .xor([z.null().nullable(), CustomClientThemeShareRequestSchema])
-        .exactOptional(),
-      message_reference: z
-        .xor([z.null().nullable(), MessageReferenceRequestSchema])
-        .exactOptional(),
+      poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
+      shared_client_theme: z.xor([z.null(), CustomClientThemeShareRequestSchema]).exactOptional(),
+      message_reference: z.xor([z.null(), MessageReferenceRequestSchema]).exactOptional(),
       nonce: z
         .xor([
           z
             .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
             .transform((val) => BigInt(val))
-            .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+            .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
           z.string().max(25),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       enforce_nonce: z.boolean().nullable().exactOptional(),

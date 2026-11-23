@@ -131,7 +131,7 @@ export const getOrganizationAdminApiKeys = os
       ),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe('Maximum number of keys to return.'),
@@ -199,7 +199,7 @@ export const getOrganizationAuditLogs = os
       'effective_at?': type({
         'gt?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -207,7 +207,7 @@ export const getOrganizationAuditLogs = os
           ),
         'gte?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -215,7 +215,7 @@ export const getOrganizationAuditLogs = os
           ),
         'lt?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -223,7 +223,7 @@ export const getOrganizationAuditLogs = os
           ),
         'lte?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -250,7 +250,7 @@ export const getOrganizationAuditLogs = os
         (data) => /^(?:true|1|yes|on|y|enabled)$/i.test(data),
       ),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -272,7 +272,7 @@ export const getOrganizationCertificates = os
   .input(
     type({
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -389,11 +389,11 @@ export const getOrganizationCosts = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1d'"),
@@ -410,7 +410,7 @@ export const getOrganizationCosts = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'line_item' | 'api_key_id' | 'api_source'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -457,7 +457,7 @@ export const getOrganizationGroups = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),
@@ -542,7 +542,7 @@ export const getOrganizationGroupsGroupIdRoles = os
       group_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),
@@ -611,7 +611,7 @@ export const getOrganizationGroupsGroupIdUsers = os
       group_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),
@@ -678,7 +678,7 @@ export const getOrganizationInvites = os
   .input(
     type({
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -739,7 +739,7 @@ export const getOrganizationProjects = os
   .input(
     type({
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -790,13 +790,13 @@ export const postOrganizationProjectsProjectId = os
   .input(
     type({
       project_id: type('string'),
-      'name?': type('string | null | null').describe(
+      'name?': type('string | null').describe(
         'The updated name of the project, this name appears in reports.',
       ),
-      'external_key_id?': type('string | null | null').describe(
+      'external_key_id?': type('string | null').describe(
         'External key ID to associate with the project.',
       ),
-      'geography?': type('string | null | null').describe(
+      'geography?': type('string | null').describe(
         'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
       ),
     }),
@@ -817,7 +817,7 @@ export const getOrganizationProjectsProjectIdApiKeys = os
     type({
       project_id: type('string'),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -906,7 +906,7 @@ export const getOrganizationProjectsProjectIdCertificates = os
     type({
       project_id: type('string'),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -1001,7 +1001,7 @@ export const getOrganizationProjectsProjectIdGroups = os
       project_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 100'),
@@ -1089,19 +1089,19 @@ export const postOrganizationProjectsProjectIdHostedToolPermissions = os
     type({
       project_id: type('string'),
       'file_search?': type(HostedToolPermissionUpdateSchema)
-        .or('null | null')
+        .or('null')
         .describe('The file search permission update.'),
       'web_search?': type(HostedToolPermissionUpdateSchema)
-        .or('null | null')
+        .or('null')
         .describe('The web search permission update.'),
       'image_generation?': type(HostedToolPermissionUpdateSchema)
-        .or('null | null')
+        .or('null')
         .describe('The image generation permission update.'),
       'mcp?': type(HostedToolPermissionUpdateSchema)
-        .or('null | null')
+        .or('null')
         .describe('The MCP permission update.'),
       'code_interpreter?': type(HostedToolPermissionUpdateSchema)
-        .or('null | null')
+        .or('null')
         .describe('The code interpreter permission update.'),
     }),
   )
@@ -1166,7 +1166,7 @@ export const getOrganizationProjectsProjectIdRateLimits = os
     type({
       project_id: type('string'),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -1223,7 +1223,7 @@ export const getOrganizationProjectsProjectIdServiceAccounts = os
     type({
       project_id: type('string'),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -1248,9 +1248,9 @@ export const postOrganizationProjectsProjectIdServiceAccounts = os
       name: type('string').describe('The name of the service account being created.'),
       'create_service_account_only?': type(
         type('boolean').describe('Create the service account without default roles or an API key.'),
-      ).or('null | null'),
+      ).or('null'),
       'expires_in_seconds?': type(
-        'number.integer >= 1 & number.integer <= 31536000 | null | null',
+        'number.integer >= 1 & number.integer <= 31536000 | null',
       ).describe(
         'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
       ),
@@ -1320,7 +1320,7 @@ export const getOrganizationProjectsProjectIdSpendAlerts = os
       project_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 100'),
@@ -1422,7 +1422,7 @@ export const getOrganizationProjectsProjectIdUsers = os
     type({
       project_id: type('string'),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -1444,8 +1444,8 @@ export const postOrganizationProjectsProjectIdUsers = os
   .input(
     type({
       project_id: type('string'),
-      'user_id?': type('string | null | null').describe('The ID of the user.'),
-      'email?': type('string | null | null').describe('Email of the user to add.'),
+      'user_id?': type('string | null').describe('The ID of the user.'),
+      'email?': type('string | null').describe('Email of the user to add.'),
       role: type('string').describe('`owner` or `member`'),
     }),
   )
@@ -1478,7 +1478,7 @@ export const postOrganizationProjectsProjectIdUsersUserId = os
     type({
       project_id: type('string'),
       user_id: type('string'),
-      'role?': type('string | null | null').describe('`owner` or `member`'),
+      'role?': type('string | null').describe('`owner` or `member`'),
     }),
   )
   .output(ProjectUserSchema)
@@ -1511,7 +1511,7 @@ export const getOrganizationRoles = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),
@@ -1560,11 +1560,9 @@ export const postOrganizationRolesRoleId = os
   .input(
     type({
       role_id: type('string'),
-      'permissions?': type('string[] | null | null').describe(
-        'Updated set of permissions for the role.',
-      ),
-      'description?': type('string | null | null').describe('New description for the role.'),
-      'role_name?': type('string | null | null').describe('New name for the role.'),
+      'permissions?': type('string[] | null').describe('Updated set of permissions for the role.'),
+      'description?': type('string | null').describe('New description for the role.'),
+      'role_name?': type('string | null').describe('New name for the role.'),
     }),
   )
   .output(RoleSchema)
@@ -1596,7 +1594,7 @@ export const getOrganizationSpendAlerts = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 100'),
@@ -1684,11 +1682,11 @@ export const getOrganizationUsageAudioSpeeches = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -1708,7 +1706,7 @@ export const getOrganizationUsageAudioSpeeches = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -1729,11 +1727,11 @@ export const getOrganizationUsageAudioTranscriptions = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -1753,7 +1751,7 @@ export const getOrganizationUsageAudioTranscriptions = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -1774,11 +1772,11 @@ export const getOrganizationUsageCodeInterpreterSessions = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -1789,7 +1787,7 @@ export const getOrganizationUsageCodeInterpreterSessions = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -1810,11 +1808,11 @@ export const getOrganizationUsageCompletions = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -1839,7 +1837,7 @@ export const getOrganizationUsageCompletions = os
           "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'batch' | 'service_tier' | 'api_source'[]",
         ),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -1860,11 +1858,11 @@ export const getOrganizationUsageEmbeddings = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -1884,7 +1882,7 @@ export const getOrganizationUsageEmbeddings = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -1905,11 +1903,11 @@ export const getOrganizationUsageFileSearchCalls = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -1929,7 +1927,7 @@ export const getOrganizationUsageFileSearchCalls = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'api_key_id' | 'vector_store_id'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -1950,11 +1948,11 @@ export const getOrganizationUsageImages = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -1980,7 +1978,7 @@ export const getOrganizationUsageImages = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'size' | 'source'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -2001,11 +1999,11 @@ export const getOrganizationUsageModerations = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -2025,7 +2023,7 @@ export const getOrganizationUsageModerations = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -2046,11 +2044,11 @@ export const getOrganizationUsageVectorStores = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -2061,7 +2059,7 @@ export const getOrganizationUsageVectorStores = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -2082,11 +2080,11 @@ export const getOrganizationUsageWebSearchCalls = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -2109,7 +2107,7 @@ export const getOrganizationUsageWebSearchCalls = os
         .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
         .to("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'context_level' | 'api_source'[]"),
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'page?': type('string'),
@@ -2130,7 +2128,7 @@ export const getOrganizationUsers = os
   .input(
     type({
       'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'after?': type('string'),
@@ -2167,10 +2165,10 @@ export const postOrganizationUsersUserId = os
   .input(
     type({
       user_id: type('string'),
-      'role?': type('string | null | null').describe('`owner` or `reader`'),
-      'role_id?': type('string | null | null').describe('Role ID to assign to the user.'),
-      'technical_level?': type('string | null | null').describe('Technical level metadata.'),
-      'developer_persona?': type('string | null | null').describe('Developer persona metadata.'),
+      'role?': type('string | null').describe('`owner` or `reader`'),
+      'role_id?': type('string | null').describe('Role ID to assign to the user.'),
+      'technical_level?': type('string | null').describe('Technical level metadata.'),
+      'developer_persona?': type('string | null').describe('Developer persona metadata.'),
     }),
   )
   .output(UserSchema)
@@ -2203,7 +2201,7 @@ export const getOrganizationUsersUserIdRoles = os
       user_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),
@@ -2270,7 +2268,7 @@ export const getOrganizationExternalKeys = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 100'),
@@ -2280,7 +2278,7 @@ export const getOrganizationExternalKeys = os
           type('string'),
           type('unknown')
             .pipe((data) => (data === 'null' ? null : data))
-            .to('null | null'),
+            .to('null'),
         ]) {
           const out = branch(data)
           if (!(out instanceof type.errors)) return out
@@ -2353,7 +2351,7 @@ export const getOrganizationWorkloadIdentityProviders = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 100'),
@@ -2421,7 +2419,7 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
       'verification?': type(DiscoveryVerificationParamSchema).or(
         UploadedJwksVerificationParamSchema,
       ),
-      'description?': type('string | null | null'),
+      'description?': type('string | null'),
       'attribute_transformations?': type(type(TransformationParamSchema).array()).and(
         type('unknown[] <= 20'),
       ),
@@ -2464,7 +2462,7 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
       ),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 100'),
@@ -2549,8 +2547,8 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
         workload_identity_federation_rule_id: type('string').narrow(
           (data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'),
         ),
-        'name?': type('string | null | null'),
-        'description?': type('string | null | null'),
+        'name?': type('string | null'),
+        'description?': type('string | null'),
         'attribute_matchers?': type({ '[string]': 'string | boolean | number.integer | number' }),
         'permissions?': type(DefaultPermissionsParamSchema).or(RestrictedPermissionsParamSchema),
         'enabled?': type('boolean'),
@@ -2592,7 +2590,7 @@ export const getOrganizationUsageDecisions = os
   .input(
     type({
       start_time: type('string').pipe((data, ctx) => {
-        const value = Number(data)
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
       }),
       'end_time?': type('unknown').pipe(
@@ -2601,12 +2599,12 @@ export const getOrganizationUsageDecisions = os
           type('unknown').pipe((data, ctx) => {
             for (const branch of [
               type('string').pipe((data, ctx) => {
-                const value = Number(data)
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                 return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               }),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2625,7 +2623,7 @@ export const getOrganizationUsageDecisions = os
               ),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2640,12 +2638,12 @@ export const getOrganizationUsageDecisions = os
           type('unknown').pipe((data, ctx) => {
             for (const branch of [
               type('string').pipe((data, ctx) => {
-                const value = Number(data)
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                 return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               }),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2661,7 +2659,7 @@ export const getOrganizationUsageDecisions = os
           ),
           type('unknown')
             .pipe((data) => (data === 'null' ? null : data))
-            .to('null | null'),
+            .to('null'),
         ]) {
           const out = branch(data)
           if (!(out instanceof type.errors)) return out
@@ -2688,7 +2686,7 @@ export const getOrganizationUsageDecisions = os
                 .describe('Return only usage for these projects.'),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2720,7 +2718,7 @@ export const getOrganizationUsageDecisions = os
                 ),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2749,7 +2747,7 @@ export const getOrganizationUsageDecisions = os
                 .describe('Return only usage for these users.'),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2778,7 +2776,7 @@ export const getOrganizationUsageDecisions = os
                 .describe('Return only usage for these API keys.'),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2807,7 +2805,7 @@ export const getOrganizationUsageDecisions = os
                 .describe('Return only usage for these models.'),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2826,7 +2824,7 @@ export const getOrganizationUsageDecisions = os
               ),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -2855,7 +2853,7 @@ export const getOrganizationExternalStorage = os
           type('string'),
           type('unknown')
             .pipe((data) => (data === 'null' ? null : data))
-            .to('null | null'),
+            .to('null'),
         ]) {
           const out = branch(data)
           if (!(out instanceof type.errors)) return out
@@ -2867,7 +2865,7 @@ export const getOrganizationExternalStorage = os
           type('string').describe('Return external storage configurations after this ID.'),
           type('unknown')
             .pipe((data) => (data === 'null' ? null : data))
-            .to('null | null'),
+            .to('null'),
         ]) {
           const out = branch(data)
           if (!(out instanceof type.errors)) return out
@@ -2877,7 +2875,7 @@ export const getOrganizationExternalStorage = os
       'order?': ExternalStorageOrderSchema,
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 100'),
@@ -3005,7 +3003,7 @@ export const postOrganizationProjectsProjectIdSpendLimit = os
         SpendLimitEmailNotificationChannelParamsSchema.describe(
           'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
         ),
-      ).or('null | null'),
+      ).or('null'),
     }),
   )
   .output(ProjectSpendLimitResourceSchema)
@@ -3078,7 +3076,7 @@ export const postOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApi
         type('number.integer >= 1 & number.integer <= 31536000').describe(
           'Number of seconds until the API key expires.',
         ),
-      ).or('null | null'),
+      ).or('null'),
     }),
   )
   .output(ServiceAccountApiKeyBodySchema)

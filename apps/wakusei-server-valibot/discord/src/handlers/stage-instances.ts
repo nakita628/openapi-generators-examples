@@ -16,8 +16,8 @@ export const postStageInstances = os
     v.object({
       topic: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(120)),
       channel_id: SnowflakeTypeSchema,
-      privacy_level: v.optional(v.union([v.nullable(v.null()), StageInstancesPrivacyLevelsSchema])),
-      guild_scheduled_event_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      privacy_level: v.optional(v.union([v.null(), StageInstancesPrivacyLevelsSchema])),
+      guild_scheduled_event_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       send_start_notification: v.optional(v.nullable(v.boolean())),
     }),
   )

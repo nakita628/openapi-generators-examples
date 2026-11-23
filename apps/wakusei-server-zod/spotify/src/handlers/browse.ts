@@ -28,11 +28,11 @@ export const getBrowseFeaturedPlaylists = os
           examples: ['sv_SE'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -40,9 +40,11 @@ export const getBrowseFeaturedPlaylists = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -76,11 +78,11 @@ export const getBrowseCategories = os
           examples: ['sv_SE'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -88,9 +90,11 @@ export const getBrowseCategories = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -162,11 +166,11 @@ export const getBrowseCategoriesCategoryIdPlaylists = os
             'The [Spotify category ID](/documentation/web-api/concepts/spotify-uris-ids) for the category.\n',
           examples: ['dinner'],
         }),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -174,9 +178,11 @@ export const getBrowseCategoriesCategoryIdPlaylists = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -202,11 +208,11 @@ export const getBrowseNewReleases = os
   })
   .input(
     z.object({
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -214,9 +220,11 @@ export const getBrowseNewReleases = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:

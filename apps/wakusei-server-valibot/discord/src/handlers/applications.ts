@@ -87,13 +87,13 @@ export const patchApplicationsApplicationId = os
       ),
       icon: v.optional(v.nullable(v.string())),
       cover_image: v.optional(v.nullable(v.string())),
-      team_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      team_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       interactions_endpoint_url: v.optional(
         v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
       ),
       explicit_content_filter: v.optional(
-        v.union([v.nullable(v.null()), ApplicationExplicitContentFilterTypesSchema]),
+        v.union([v.null(), ApplicationExplicitContentFilterTypesSchema]),
       ),
       max_participants: v.optional(
         v.nullable(
@@ -106,7 +106,7 @@ export const patchApplicationsApplicationId = os
           ),
         ),
       ),
-      type: v.optional(v.union([v.nullable(v.null()), ApplicationTypesSchema])),
+      type: v.optional(v.union([v.null(), ApplicationTypesSchema])),
       tags: v.optional(
         v.nullable(
           v.pipe(
@@ -119,23 +119,16 @@ export const patchApplicationsApplicationId = os
       custom_install_url: v.optional(
         v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
       ),
-      install_params: v.optional(
-        v.union([v.nullable(v.null()), ApplicationOAuth2InstallParamsSchema]),
-      ),
+      install_params: v.optional(v.union([v.null(), ApplicationOAuth2InstallParamsSchema])),
       role_connections_verification_url: v.optional(
         v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
       ),
       integration_types_config: v.optional(
         v.nullable(
-          v.record(
-            v.string(),
-            v.union([v.nullable(v.null()), ApplicationIntegrationTypeConfigurationSchema]),
-          ),
+          v.record(v.string(), v.union([v.null(), ApplicationIntegrationTypeConfigurationSchema])),
         ),
       ),
-      event_webhooks_status: v.optional(
-        v.union([v.nullable(v.null()), ApplicationEventWebhooksStatusSchema]),
-      ),
+      event_webhooks_status: v.optional(v.union([v.null(), ApplicationEventWebhooksStatusSchema])),
       event_webhooks_url: v.optional(
         v.pipe(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
@@ -268,13 +261,13 @@ export const postApplicationsApplicationIdCommands = os
       ),
       handler: v.optional(
         v.pipe(
-          v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+          v.union([v.null(), ApplicationCommandHandlerSchema]),
           v.description(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),
         ),
       ),
-      type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
+      type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
     }),
   )
   .output(ApplicationCommandResponseSchema)
@@ -378,7 +371,7 @@ export const patchApplicationsApplicationIdCommandsCommandId = os
       ),
       handler: v.optional(
         v.pipe(
-          v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+          v.union([v.null(), ApplicationCommandHandlerSchema]),
           v.description(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),
@@ -477,7 +470,7 @@ export const getApplicationsApplicationIdEntitlements = os
                     v.pipe(
                       v.unknown(),
                       v.transform((input) => (input === 'null' ? null : input)),
-                      v.nullable(v.null()),
+                      v.null(),
                     ),
                     SnowflakeTypeSchema,
                   ]),
@@ -495,7 +488,8 @@ export const getApplicationsApplicationIdEntitlements = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -665,13 +659,13 @@ export const postApplicationsApplicationIdGuildsGuildIdCommands = os
       ),
       handler: v.optional(
         v.pipe(
-          v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+          v.union([v.null(), ApplicationCommandHandlerSchema]),
           v.description(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),
         ),
       ),
-      type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
+      type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
     }),
   )
   .output(ApplicationCommandResponseSchema)
@@ -798,7 +792,7 @@ export const patchApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
       ),
       handler: v.optional(
         v.pipe(
-          v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+          v.union([v.null(), ApplicationCommandHandlerSchema]),
           v.description(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),

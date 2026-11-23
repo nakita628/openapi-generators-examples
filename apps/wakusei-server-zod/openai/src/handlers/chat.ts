@@ -24,7 +24,13 @@ export const getChatCompletions = os
       model: z.string().exactOptional(),
       metadata: MetadataSchema.exactOptional(),
       after: z.string().exactOptional(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
     }),
   )
@@ -102,7 +108,13 @@ export const getChatCompletionsCompletionIdMessages = os
     z.object({
       completion_id: z.string(),
       after: z.string().exactOptional(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
     }),
   )

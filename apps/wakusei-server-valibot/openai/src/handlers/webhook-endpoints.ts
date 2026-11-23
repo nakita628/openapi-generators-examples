@@ -23,7 +23,8 @@ export const getWebhookEndpoints = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -36,7 +37,7 @@ export const getWebhookEndpoints = os
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
       ),

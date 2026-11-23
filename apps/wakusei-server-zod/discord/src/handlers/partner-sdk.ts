@@ -75,7 +75,7 @@ export const postPartnerSdkTokenBot = os
   })
   .input(
     z.object({
-      provisional_user_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      provisional_user_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       external_user_id: z.string().min(1).max(1024),
       preferred_global_name: z.string().min(1).max(32).nullable().exactOptional(),
     }),

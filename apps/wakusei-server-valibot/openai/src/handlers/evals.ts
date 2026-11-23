@@ -27,7 +27,16 @@ export const getEvals = os
     v.object({
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
       order_by: v.optional(v.optional(v.picklist(['created_at', 'updated_at']), 'created_at')),
@@ -115,7 +124,16 @@ export const getEvalsEvalIdRuns = os
       eval_id: v.string(),
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
       status: v.optional(v.picklist(['queued', 'in_progress', 'completed', 'canceled', 'failed'])),
@@ -218,7 +236,16 @@ export const getEvalsEvalIdRunsRunIdOutputItems = os
       run_id: v.string(),
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       status: v.optional(v.picklist(['fail', 'pass'])),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),

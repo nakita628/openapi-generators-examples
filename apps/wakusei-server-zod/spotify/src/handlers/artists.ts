@@ -89,11 +89,11 @@ export const getArtistsIdAlbums = os
           examples: ['ES'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(0)
-        .max(10)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(10),
+        )
         .default(5)
         .meta({
           description:
@@ -101,9 +101,11 @@ export const getArtistsIdAlbums = os
           examples: [5],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:

@@ -131,11 +131,12 @@ export const contract = {
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -143,9 +144,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -235,11 +239,12 @@ export const contract = {
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(10)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(10),
+          )
           .default(5)
           .meta({
             description:
@@ -247,9 +252,12 @@ export const contract = {
             examples: [5],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -401,11 +409,12 @@ export const contract = {
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -413,9 +422,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -576,11 +588,12 @@ export const contract = {
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -588,9 +601,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -613,11 +629,12 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -625,9 +642,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -872,22 +892,24 @@ export const contract = {
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(10)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(10),
+          )
           .default(5)
           .meta({
             description: 'The maximum number of results to return in each item type.\n',
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(1000)
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
           .default(0)
           .meta({
             description:
@@ -1054,11 +1076,12 @@ export const contract = {
             examples: ['items(added_by.id,track(name,href,album(name,href)))'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(100)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
           .default(20)
           .meta({
             description:
@@ -1066,9 +1089,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1107,9 +1133,12 @@ export const contract = {
               'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) of the playlist.\n',
             examples: ['3cEYpjA9oz9GiPac4AsH4n'],
           }),
-        position: z.coerce
-          .number()
-          .int()
+        position: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
@@ -1273,11 +1302,12 @@ export const contract = {
             examples: ['items(added_by.id,track(name,href,album(name,href)))'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1285,9 +1315,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1324,9 +1357,12 @@ export const contract = {
               'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) of the playlist.\n',
             examples: ['3cEYpjA9oz9GiPac4AsH4n'],
           }),
-        position: z.coerce
-          .number()
-          .int()
+        position: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
@@ -1463,11 +1499,12 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1475,9 +1512,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1615,11 +1655,12 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1627,9 +1668,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1735,11 +1779,12 @@ export const contract = {
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1747,9 +1792,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1867,11 +1915,12 @@ export const contract = {
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1879,9 +1928,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1971,11 +2023,12 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1983,9 +2036,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -2112,11 +2168,12 @@ export const contract = {
               "The user's [Spotify user ID](/documentation/web-api/concepts/spotify-uris-ids).\n",
             examples: ['smedjan'],
           }),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -2124,9 +2181,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -2260,11 +2320,12 @@ export const contract = {
             examples: ['sv_SE'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -2272,9 +2333,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -2306,11 +2370,12 @@ export const contract = {
             examples: ['sv_SE'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -2318,9 +2383,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -2388,11 +2456,12 @@ export const contract = {
               'The [Spotify category ID](/documentation/web-api/concepts/spotify-uris-ids) for the category.\n',
             examples: ['dinner'],
           }),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -2400,9 +2469,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -2468,11 +2540,12 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -2480,9 +2553,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -2517,11 +2593,12 @@ export const contract = {
             examples: ['0I2XqVXqHScXjHhk6AYYRe'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -2722,11 +2799,12 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(100)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
           .default(20)
           .meta({
             description:
@@ -2766,362 +2844,511 @@ export const contract = {
             examples: ['0c6xIDDpzE81m2q797ordA'],
           })
           .exactOptional(),
-        min_acousticness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_acousticness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_acousticness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_acousticness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_acousticness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_acousticness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_danceability: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_danceability: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_danceability: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_danceability: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_danceability: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_danceability: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_duration_ms: z.coerce
-          .number()
-          .int()
+        min_duration_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_duration_ms: z.coerce
-          .number()
-          .int()
+        max_duration_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_duration_ms: z.coerce
-          .number()
-          .int()
+        target_duration_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({ description: 'Target duration of the track (ms)' })
           .exactOptional(),
-        min_energy: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_energy: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_energy: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_energy: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_energy: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_energy: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_instrumentalness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_instrumentalness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_instrumentalness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_instrumentalness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_instrumentalness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_instrumentalness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_key: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(11)
+        min_key: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(11),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_key: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(11)
+        max_key: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(11),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_key: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(11)
+        target_key: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(11),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_liveness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_liveness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_liveness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_liveness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_liveness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_liveness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_loudness: z.coerce
-          .number()
+        min_loudness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_loudness: z.coerce
-          .number()
+        max_loudness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_loudness: z.coerce
-          .number()
+        target_loudness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_mode: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(1)
+        min_mode: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_mode: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(1)
+        max_mode: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_mode: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(1)
+        target_mode: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_popularity: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(100)
+        min_popularity: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_popularity: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(100)
+        max_popularity: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_popularity: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(100)
+        target_popularity: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_speechiness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_speechiness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_speechiness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_speechiness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_speechiness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_speechiness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_tempo: z.coerce
-          .number()
+        min_tempo: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_tempo: z.coerce
-          .number()
+        max_tempo: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_tempo: z.coerce.number().meta({ description: 'Target tempo (BPM)' }).exactOptional(),
-        min_time_signature: z.coerce
-          .number()
-          .int()
-          .max(11)
+        target_tempo: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
+          .meta({ description: 'Target tempo (BPM)' })
+          .exactOptional(),
+        min_time_signature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().max(11),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_time_signature: z.coerce
-          .number()
-          .int()
+        max_time_signature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_time_signature: z.coerce
-          .number()
-          .int()
+        target_time_signature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_valence: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_valence: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_valence: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_valence: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_valence: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_valence: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
@@ -3377,9 +3604,12 @@ export const contract = {
     })
     .input(
       z.object({
-        position_ms: z.coerce
-          .number()
-          .int()
+        position_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
@@ -3438,9 +3668,12 @@ export const contract = {
     })
     .input(
       z.object({
-        volume_percent: z.coerce
-          .number()
-          .int()
+        volume_percent: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description: 'The volume to set. Must be a value from 0 to 100 inclusive.\n',
             examples: [50],
@@ -3497,11 +3730,12 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -3509,18 +3743,24 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        after: z.coerce
-          .number()
-          .int()
+        after: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
             examples: [1484811043508],
           })
           .exactOptional(),
-        before: z.coerce
-          .number()
-          .int()
+        before: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
@@ -3607,11 +3847,12 @@ export const contract = {
             examples: ['medium_term'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -3619,9 +3860,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -3652,11 +3896,12 @@ export const contract = {
             examples: ['medium_term'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -3664,9 +3909,12 @@ export const contract = {
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:

@@ -1,5 +1,5 @@
 import { os } from '@orpc/server'
-import { type } from 'arktype'
+import * as z from 'zod'
 import {
   ChunkingStrategyRequestParamSchema,
   ComparisonFilterSchema,
@@ -29,14 +29,17 @@ export const getVectorStores = os
     description: 'Returns a list of vector stores.',
   })
   .input(
-    type({
-      'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
-        return Number.isSafeInteger(value) ? value : ctx.error('an integer')
-      }),
-      'order?': type("'asc' | 'desc'"),
-      'after?': type('string'),
-      'before?': type('string'),
+    z.object({
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
+      order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
+      after: z.string().exactOptional(),
+      before: z.string().exactOptional(),
     }),
   )
   .output(ListVectorStoresResponseSchema)
@@ -62,7 +65,7 @@ export const getVectorStoresVectorStoreId = os
     summary: 'Retrieve vector store',
     description: 'Retrieves a vector store.',
   })
-  .input(type({ vector_store_id: type('string') }))
+  .input(z.object({ vector_store_id: z.string() }))
   .output(VectorStoreObjectSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -75,11 +78,15 @@ export const postVectorStoresVectorStoreId = os
     description: 'Modifies a vector store.',
   })
   .input(
-    type({
-      vector_store_id: type('string'),
-      'name?': type('string | null').describe('The name of the vector store.'),
-      'expires_after?': type(VectorStoreExpirationAfterSchema).or('null'),
-      'metadata?': MetadataSchema,
+    z.object({
+      vector_store_id: z.string(),
+      name: z
+        .string()
+        .nullable()
+        .meta({ description: 'The name of the vector store.' })
+        .exactOptional(),
+      expires_after: VectorStoreExpirationAfterSchema.nullable().exactOptional(),
+      metadata: MetadataSchema.exactOptional(),
     }),
   )
   .output(VectorStoreObjectSchema)
@@ -93,7 +100,7 @@ export const deleteVectorStoresVectorStoreId = os
     summary: 'Delete vector store',
     description: 'Delete a vector store.',
   })
-  .input(type({ vector_store_id: type('string') }))
+  .input(z.object({ vector_store_id: z.string() }))
   .output(DeleteVectorStoreResponseSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -106,20 +113,28 @@ export const postVectorStoresVectorStoreIdFileBatches = os
     description: 'Create a vector store file batch.',
   })
   .input(
-    type({
-      vector_store_id: type('string'),
-      'file_ids?': type('string[]')
-        .and(type('1 <= unknown[] <= 2000'))
-        .describe(
-          'A list of [File](https://developers.openai.com/api/reference/resources/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. If `attributes` or `chunking_strategy` are provided, they will be applied to all files in the batch. The maximum batch size is 2000 files. This endpoint is recommended for multi-file ingestion and helps reduce per-vector-store write request pressure. Mutually exclusive with `files`.',
-        ),
-      'files?': type(type(CreateVectorStoreFileRequestSchema).array())
-        .and(type('1 <= unknown[] <= 2000'))
-        .describe(
-          'A list of objects that each include a `file_id` plus optional `attributes` or `chunking_strategy`. Use this when you need to override metadata for specific files. The global `attributes` or `chunking_strategy` will be ignored and must be specified for each file. The maximum batch size is 2000 files. This endpoint is recommended for multi-file ingestion and helps reduce per-vector-store write request pressure. Mutually exclusive with `file_ids`.',
-        ),
-      'chunking_strategy?': ChunkingStrategyRequestParamSchema,
-      'attributes?': VectorStoreFileAttributesSchema,
+    z.object({
+      vector_store_id: z.string().meta({ examples: ['vs_abc123'] }),
+      file_ids: z
+        .array(z.string())
+        .min(1)
+        .max(2000)
+        .meta({
+          description:
+            'A list of [File](https://developers.openai.com/api/reference/resources/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files. If `attributes` or `chunking_strategy` are provided, they will be applied to all files in the batch. The maximum batch size is 2000 files. This endpoint is recommended for multi-file ingestion and helps reduce per-vector-store write request pressure. Mutually exclusive with `files`.',
+        })
+        .exactOptional(),
+      files: z
+        .array(CreateVectorStoreFileRequestSchema)
+        .min(1)
+        .max(2000)
+        .meta({
+          description:
+            'A list of objects that each include a `file_id` plus optional `attributes` or `chunking_strategy`. Use this when you need to override metadata for specific files. The global `attributes` or `chunking_strategy` will be ignored and must be specified for each file. The maximum batch size is 2000 files. This endpoint is recommended for multi-file ingestion and helps reduce per-vector-store write request pressure. Mutually exclusive with `file_ids`.',
+        })
+        .exactOptional(),
+      chunking_strategy: ChunkingStrategyRequestParamSchema.exactOptional(),
+      attributes: VectorStoreFileAttributesSchema.exactOptional(),
     }),
   )
   .output(VectorStoreFileBatchObjectSchema)
@@ -133,7 +148,12 @@ export const getVectorStoresVectorStoreIdFileBatchesBatchId = os
     summary: 'Retrieve vector store file batch',
     description: 'Retrieves a vector store file batch.',
   })
-  .input(type({ vector_store_id: type('string'), batch_id: type('string') }))
+  .input(
+    z.object({
+      vector_store_id: z.string().meta({ examples: ['vs_abc123'] }),
+      batch_id: z.string().meta({ examples: ['vsfb_abc123'] }),
+    }),
+  )
   .output(VectorStoreFileBatchObjectSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -146,7 +166,7 @@ export const postVectorStoresVectorStoreIdFileBatchesBatchIdCancel = os
     description:
       'Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.',
   })
-  .input(type({ vector_store_id: type('string'), batch_id: type('string') }))
+  .input(z.object({ vector_store_id: z.string(), batch_id: z.string() }))
   .output(VectorStoreFileBatchObjectSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -159,17 +179,20 @@ export const getVectorStoresVectorStoreIdFileBatchesBatchIdFiles = os
     description: 'Returns a list of vector store files in a batch.',
   })
   .input(
-    type({
-      vector_store_id: type('string'),
-      batch_id: type('string'),
-      'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
-        return Number.isSafeInteger(value) ? value : ctx.error('an integer')
-      }),
-      'order?': type("'asc' | 'desc'"),
-      'after?': type('string'),
-      'before?': type('string'),
-      'filter?': type("'in_progress' | 'completed' | 'failed' | 'cancelled'"),
+    z.object({
+      vector_store_id: z.string(),
+      batch_id: z.string(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
+      order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
+      after: z.string().exactOptional(),
+      before: z.string().exactOptional(),
+      filter: z.enum(['in_progress', 'completed', 'failed', 'cancelled']).exactOptional(),
     }),
   )
   .output(ListVectorStoreFilesResponseSchema)
@@ -184,16 +207,19 @@ export const getVectorStoresVectorStoreIdFiles = os
     description: 'Returns a list of vector store files.',
   })
   .input(
-    type({
-      vector_store_id: type('string'),
-      'limit?': type('string').pipe((data, ctx) => {
-        const value = Number(data)
-        return Number.isSafeInteger(value) ? value : ctx.error('an integer')
-      }),
-      'order?': type("'asc' | 'desc'"),
-      'after?': type('string'),
-      'before?': type('string'),
-      'filter?': type("'in_progress' | 'completed' | 'failed' | 'cancelled'"),
+    z.object({
+      vector_store_id: z.string(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
+      order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
+      after: z.string().exactOptional(),
+      before: z.string().exactOptional(),
+      filter: z.enum(['in_progress', 'completed', 'failed', 'cancelled']).exactOptional(),
     }),
   )
   .output(ListVectorStoreFilesResponseSchema)
@@ -209,13 +235,16 @@ export const postVectorStoresVectorStoreIdFiles = os
       'Create a vector store file by attaching a [File](https://developers.openai.com/api/reference/resources/files) to a [vector store](https://developers.openai.com/api/reference/resources/vector_stores).',
   })
   .input(
-    type({
-      vector_store_id: type('string'),
-      file_id: type('string').describe(
-        'A [File](https://developers.openai.com/api/reference/resources/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. For multi-file ingestion, we recommend [`file_batches`](https://developers.openai.com/api/reference/resources/vector_stores/subresources/file_batches/methods/create) to minimize per-vector-store write requests.',
-      ),
-      'chunking_strategy?': ChunkingStrategyRequestParamSchema,
-      'attributes?': VectorStoreFileAttributesSchema,
+    z.object({
+      vector_store_id: z.string().meta({ examples: ['vs_abc123'] }),
+      file_id: z
+        .string()
+        .meta({
+          description:
+            'A [File](https://developers.openai.com/api/reference/resources/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. For multi-file ingestion, we recommend [`file_batches`](https://developers.openai.com/api/reference/resources/vector_stores/subresources/file_batches/methods/create) to minimize per-vector-store write requests.',
+        }),
+      chunking_strategy: ChunkingStrategyRequestParamSchema.exactOptional(),
+      attributes: VectorStoreFileAttributesSchema.exactOptional(),
     }),
   )
   .output(VectorStoreFileObjectSchema)
@@ -229,7 +258,12 @@ export const getVectorStoresVectorStoreIdFilesFileId = os
     summary: 'Retrieve vector store file',
     description: 'Retrieves a vector store file.',
   })
-  .input(type({ vector_store_id: type('string'), file_id: type('string') }))
+  .input(
+    z.object({
+      vector_store_id: z.string().meta({ examples: ['vs_abc123'] }),
+      file_id: z.string().meta({ examples: ['file-abc123'] }),
+    }),
+  )
   .output(VectorStoreFileObjectSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -242,9 +276,9 @@ export const postVectorStoresVectorStoreIdFilesFileId = os
     description: 'Update attributes on a vector store file.',
   })
   .input(
-    type({
-      vector_store_id: type('string'),
-      file_id: type('string'),
+    z.object({
+      vector_store_id: z.string().meta({ examples: ['vs_abc123'] }),
+      file_id: z.string().meta({ examples: ['file-abc123'] }),
       attributes: VectorStoreFileAttributesSchema,
     }),
   )
@@ -260,7 +294,7 @@ export const deleteVectorStoresVectorStoreIdFilesFileId = os
     description:
       'Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](https://developers.openai.com/api/reference/resources/files/methods/delete) endpoint.',
   })
-  .input(type({ vector_store_id: type('string'), file_id: type('string') }))
+  .input(z.object({ vector_store_id: z.string(), file_id: z.string() }))
   .output(DeleteVectorStoreFileResponseSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -272,7 +306,12 @@ export const getVectorStoresVectorStoreIdFilesFileIdContent = os
     summary: 'Retrieve vector store file content',
     description: 'Retrieve the parsed contents of a vector store file.',
   })
-  .input(type({ vector_store_id: type('string'), file_id: type('string') }))
+  .input(
+    z.object({
+      vector_store_id: z.string().meta({ examples: ['vs_abc123'] }),
+      file_id: z.string().meta({ examples: ['file-abc123'] }),
+    }),
+  )
   .output(VectorStoreFileContentResponseSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -286,27 +325,47 @@ export const postVectorStoresVectorStoreIdSearch = os
       'Search a vector store for relevant chunks based on a query and file attributes filter.',
   })
   .input(
-    type({
-      vector_store_id: type('string'),
-      query: type('string')
-        .or(type(type('string').describe('A list of queries to search for.')).array())
-        .describe('A query string for a search'),
-      'rewrite_query?': type('boolean').describe(
-        'Whether to rewrite the natural language query for vector search.',
-      ),
-      'max_num_results?': type('number.integer >= 1 & number.integer <= 50').describe(
-        'The maximum number of results to return. This number should be between 1 and 50 inclusive.',
-      ),
-      'filters?': type(ComparisonFilterSchema)
-        .or(CompoundFilterSchema)
-        .describe('A filter to apply based on file attributes.'),
-      'ranking_options?': type({
-        'ranker?': type("'none' | 'auto' | 'default-2024-11-15'").describe(
-          'Enable re-ranking; set to `none` to disable, which can help reduce latency.',
-        ),
-        'score_threshold?': 'number >= 0 & number <= 1',
-        '+': 'reject',
-      }).describe('Ranking options for search.'),
+    z.object({
+      vector_store_id: z.string().meta({ examples: ['vs_abc123'] }),
+      query: z
+        .xor([
+          z.string(),
+          z.array(z.string().meta({ description: 'A list of queries to search for.' })),
+        ])
+        .meta({ description: 'A query string for a search' }),
+      rewrite_query: z
+        .boolean()
+        .default(false)
+        .meta({ description: 'Whether to rewrite the natural language query for vector search.' })
+        .exactOptional(),
+      max_num_results: z
+        .int()
+        .min(1)
+        .max(50)
+        .default(10)
+        .meta({
+          description:
+            'The maximum number of results to return. This number should be between 1 and 50 inclusive.',
+        })
+        .exactOptional(),
+      filters: z
+        .xor([ComparisonFilterSchema, CompoundFilterSchema])
+        .meta({ description: 'A filter to apply based on file attributes.' })
+        .exactOptional(),
+      ranking_options: z
+        .strictObject({
+          ranker: z
+            .enum(['none', 'auto', 'default-2024-11-15'])
+            .default('auto')
+            .meta({
+              description:
+                'Enable re-ranking; set to `none` to disable, which can help reduce latency.',
+            })
+            .exactOptional(),
+          score_threshold: z.number().min(0).max(1).default(0).exactOptional(),
+        })
+        .meta({ description: 'Ranking options for search.' })
+        .exactOptional(),
     }),
   )
   .output(VectorStoreSearchResultsPageSchema)

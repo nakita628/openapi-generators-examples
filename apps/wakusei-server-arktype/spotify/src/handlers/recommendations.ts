@@ -17,7 +17,7 @@ export const getRecommendations = os
     type({
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 100')
@@ -38,7 +38,9 @@ export const getRecommendations = os
       ),
       'min_acousticness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -47,7 +49,9 @@ export const getRecommendations = os
         ),
       'max_acousticness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -56,7 +60,9 @@ export const getRecommendations = os
         ),
       'target_acousticness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -65,7 +71,9 @@ export const getRecommendations = os
         ),
       'min_danceability?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -74,7 +82,9 @@ export const getRecommendations = os
         ),
       'max_danceability?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -83,7 +93,9 @@ export const getRecommendations = os
         ),
       'target_danceability?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -92,7 +104,7 @@ export const getRecommendations = os
         ),
       'min_duration_ms?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -100,7 +112,7 @@ export const getRecommendations = os
         ),
       'max_duration_ms?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -108,13 +120,15 @@ export const getRecommendations = os
         ),
       'target_duration_ms?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe('Target duration of the track (ms)'),
       'min_energy?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -123,7 +137,9 @@ export const getRecommendations = os
         ),
       'max_energy?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -132,7 +148,9 @@ export const getRecommendations = os
         ),
       'target_energy?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -141,7 +159,9 @@ export const getRecommendations = os
         ),
       'min_instrumentalness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -150,7 +170,9 @@ export const getRecommendations = os
         ),
       'max_instrumentalness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -159,7 +181,9 @@ export const getRecommendations = os
         ),
       'target_instrumentalness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -168,7 +192,7 @@ export const getRecommendations = os
         ),
       'min_key?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 11')
@@ -177,7 +201,7 @@ export const getRecommendations = os
         ),
       'max_key?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 11')
@@ -186,7 +210,7 @@ export const getRecommendations = os
         ),
       'target_key?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 11')
@@ -195,7 +219,9 @@ export const getRecommendations = os
         ),
       'min_liveness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -204,7 +230,9 @@ export const getRecommendations = os
         ),
       'max_liveness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -213,7 +241,9 @@ export const getRecommendations = os
         ),
       'target_liveness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -222,7 +252,9 @@ export const getRecommendations = os
         ),
       'min_loudness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .describe(
@@ -230,7 +262,9 @@ export const getRecommendations = os
         ),
       'max_loudness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .describe(
@@ -238,7 +272,9 @@ export const getRecommendations = os
         ),
       'target_loudness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .describe(
@@ -246,7 +282,7 @@ export const getRecommendations = os
         ),
       'min_mode?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1')
@@ -255,7 +291,7 @@ export const getRecommendations = os
         ),
       'max_mode?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1')
@@ -264,7 +300,7 @@ export const getRecommendations = os
         ),
       'target_mode?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1')
@@ -273,7 +309,7 @@ export const getRecommendations = os
         ),
       'min_popularity?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 100')
@@ -282,7 +318,7 @@ export const getRecommendations = os
         ),
       'max_popularity?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 100')
@@ -291,7 +327,7 @@ export const getRecommendations = os
         ),
       'target_popularity?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 100')
@@ -300,7 +336,9 @@ export const getRecommendations = os
         ),
       'min_speechiness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -309,7 +347,9 @@ export const getRecommendations = os
         ),
       'max_speechiness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -318,7 +358,9 @@ export const getRecommendations = os
         ),
       'target_speechiness?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -327,7 +369,9 @@ export const getRecommendations = os
         ),
       'min_tempo?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .describe(
@@ -335,7 +379,9 @@ export const getRecommendations = os
         ),
       'max_tempo?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .describe(
@@ -343,13 +389,15 @@ export const getRecommendations = os
         ),
       'target_tempo?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .describe('Target tempo (BPM)'),
       'min_time_signature?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer <= 11')
@@ -358,7 +406,7 @@ export const getRecommendations = os
         ),
       'max_time_signature?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -366,7 +414,7 @@ export const getRecommendations = os
         ),
       'target_time_signature?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .describe(
@@ -374,7 +422,9 @@ export const getRecommendations = os
         ),
       'min_valence?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -383,7 +433,9 @@ export const getRecommendations = os
         ),
       'max_valence?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')
@@ -392,7 +444,9 @@ export const getRecommendations = os
         ),
       'target_valence?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+            ? Number(data)
+            : Number.NaN
           return Number.isFinite(value) ? value : ctx.error('a number')
         })
         .to('number >= 0 & number <= 1')

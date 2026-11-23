@@ -24,7 +24,12 @@ export const getProjectsProjectIdGroupsGroupIdRoles = os
     z.object({
       project_id: z.string(),
       group_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).exactOptional(),
     }),
@@ -89,7 +94,13 @@ export const getProjectsProjectIdRoles = os
   .input(
     z.object({
       project_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(1000).default(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .default(1000)
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
     }),
@@ -112,7 +123,7 @@ export const postProjectsProjectIdRoles = os
       role_name: z.string().meta({ description: 'Unique name for the role.' }),
       permissions: z.array(z.string()).meta({ description: 'Permissions to grant to the role.' }),
       description: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'Optional description of the role.' })
         .exactOptional(),
     }),
@@ -147,15 +158,15 @@ export const postProjectsProjectIdRolesRoleId = os
       project_id: z.string(),
       role_id: z.string(),
       permissions: z
-        .union([z.array(z.string()), z.null().nullable()])
+        .union([z.array(z.string()), z.null()])
         .meta({ description: 'Updated set of permissions for the role.' })
         .exactOptional(),
       description: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'New description for the role.' })
         .exactOptional(),
       role_name: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'New name for the role.' })
         .exactOptional(),
     }),
@@ -189,7 +200,12 @@ export const getProjectsProjectIdUsersUserIdRoles = os
     z.object({
       project_id: z.string(),
       user_id: z.string(),
-      limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
+        .exactOptional(),
       after: z.string().exactOptional(),
       order: z.enum(['asc', 'desc']).exactOptional(),
     }),

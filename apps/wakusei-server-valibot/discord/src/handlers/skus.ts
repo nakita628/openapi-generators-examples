@@ -17,7 +17,8 @@ export const getSkusSkuIdSubscriptions = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),

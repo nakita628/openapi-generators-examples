@@ -27,7 +27,8 @@ export const getProjectsProjectIdGroupsGroupIdRoles = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -102,7 +103,8 @@ export const getProjectsProjectIdRoles = os
         v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -133,10 +135,7 @@ export const postProjectsProjectIdRoles = os
       role_name: v.pipe(v.string(), v.description('Unique name for the role.')),
       permissions: v.pipe(v.array(v.string()), v.description('Permissions to grant to the role.')),
       description: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('Optional description of the role.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('Optional description of the role.')),
       ),
     }),
   )
@@ -171,21 +170,15 @@ export const postProjectsProjectIdRolesRoleId = os
       role_id: v.string(),
       permissions: v.optional(
         v.pipe(
-          v.union([v.array(v.string()), v.nullable(v.null())]),
+          v.union([v.array(v.string()), v.null()]),
           v.description('Updated set of permissions for the role.'),
         ),
       ),
       description: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('New description for the role.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('New description for the role.')),
       ),
       role_name: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('New name for the role.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('New name for the role.')),
       ),
     }),
   )
@@ -221,7 +214,8 @@ export const getProjectsProjectIdUsersUserIdRoles = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),

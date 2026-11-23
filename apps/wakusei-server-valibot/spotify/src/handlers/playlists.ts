@@ -151,7 +151,8 @@ export const getPlaylistsPlaylistIdTracks = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -167,7 +168,16 @@ export const getPlaylistsPlaylistIdTracks = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -210,7 +220,13 @@ export const postPlaylistsPlaylistIdTracks = os
       ),
       position: v.optional(
         v.pipe(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           v.description(
             'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
           ),
@@ -381,7 +397,8 @@ export const getPlaylistsPlaylistIdItems = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -397,7 +414,16 @@ export const getPlaylistsPlaylistIdItems = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -438,7 +464,13 @@ export const postPlaylistsPlaylistIdItems = os
       ),
       position: v.optional(
         v.pipe(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           v.description(
             'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
           ),

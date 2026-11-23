@@ -60,7 +60,13 @@ export const getResponsesResponseId = os
         ),
       ),
       starting_after: v.optional(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
       ),
       include_obfuscation: v.optional(
         v.pipe(
@@ -131,7 +137,16 @@ export const getResponsesResponseIdInputItems = os
     v.object({
       response_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.picklist(['asc', 'desc'])),
       after: v.optional(v.string()),
@@ -204,7 +219,13 @@ export const getResponsesResponseIdBetaTrue = os
         ),
       ),
       starting_after: v.optional(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
       ),
       include_obfuscation: v.optional(
         v.pipe(
@@ -289,7 +310,16 @@ export const getResponsesResponseIdInputItemsBetaTrue = os
     v.object({
       response_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.picklist(['asc', 'desc'])),
       after: v.optional(v.string()),

@@ -220,14 +220,14 @@ export const contract = {
           .exactOptional(),
         icon: z.string().nullable().exactOptional(),
         cover_image: z.string().nullable().exactOptional(),
-        team_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        team_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         flags: z.int().nullable().exactOptional(),
         interactions_endpoint_url: z.url().max(2048).nullable().exactOptional(),
         explicit_content_filter: z
-          .xor([z.null().nullable(), ApplicationExplicitContentFilterTypesSchema])
+          .xor([z.null(), ApplicationExplicitContentFilterTypesSchema])
           .exactOptional(),
         max_participants: z.int32().min(-1).nullable().exactOptional(),
-        type: z.xor([z.null().nullable(), ApplicationTypesSchema]).exactOptional(),
+        type: z.xor([z.null(), ApplicationTypesSchema]).exactOptional(),
         tags: z
           .array(z.string().max(20))
           .max(5)
@@ -235,19 +235,14 @@ export const contract = {
           .nullable()
           .exactOptional(),
         custom_install_url: z.url().max(2048).nullable().exactOptional(),
-        install_params: z
-          .xor([z.null().nullable(), ApplicationOAuth2InstallParamsSchema])
-          .exactOptional(),
+        install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
         role_connections_verification_url: z.url().max(2048).nullable().exactOptional(),
         integration_types_config: z
-          .record(
-            z.string(),
-            z.xor([z.null().nullable(), ApplicationIntegrationTypeConfigurationSchema]),
-          )
+          .record(z.string(), z.xor([z.null(), ApplicationIntegrationTypeConfigurationSchema]))
           .nullable()
           .exactOptional(),
         event_webhooks_status: z
-          .xor([z.null().nullable(), ApplicationEventWebhooksStatusSchema])
+          .xor([z.null(), ApplicationEventWebhooksStatusSchema])
           .exactOptional(),
         event_webhooks_url: z
           .url()
@@ -350,13 +345,13 @@ export const contract = {
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           })
           .exactOptional(),
-        type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
+        type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
       }),
     )
     .output(ApplicationCommandResponseSchema),
@@ -443,7 +438,7 @@ export const contract = {
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -526,7 +521,7 @@ export const contract = {
                     (val) => (val === 'null' ? null : val),
                     z
                       .union([
-                        z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                        z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         SnowflakeTypeSchema,
                       ])
                       .nullable(),
@@ -540,7 +535,13 @@ export const contract = {
         guild_id: SnowflakeTypeSchema.exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         exclude_ended: z.stringbool().exactOptional(),
         exclude_deleted: z.stringbool().exactOptional(),
         only_active: z.stringbool().exactOptional(),
@@ -659,13 +660,13 @@ export const contract = {
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           })
           .exactOptional(),
-        type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
+        type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
       }),
     )
     .output(ApplicationCommandResponseSchema),
@@ -773,7 +774,7 @@ export const contract = {
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -898,7 +899,7 @@ export const contract = {
             FriendInviteResponseSchema,
             GroupDMInviteResponseSchema,
             GuildInviteResponseSchema,
-            z.null().nullable(),
+            z.null(),
           ]),
         )
         .nullable(),
@@ -925,7 +926,13 @@ export const contract = {
         around: SnowflakeTypeSchema.exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
       }),
     )
     .output(z.array(MessageResponseSchema).nullable()),
@@ -940,9 +947,7 @@ export const contract = {
         channel_id: SnowflakeTypeSchema,
         content: z.string().max(4000).nullable().exactOptional(),
         embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-        allowed_mentions: z
-          .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-          .exactOptional(),
+        allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
         sticker_ids: z.array(SnowflakeTypeSchema).max(3).nullable().exactOptional(),
         components: z
           .array(
@@ -961,21 +966,17 @@ export const contract = {
           .exactOptional(),
         flags: z.int().nullable().exactOptional(),
         attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-        poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
-        shared_client_theme: z
-          .xor([z.null().nullable(), CustomClientThemeShareRequestSchema])
-          .exactOptional(),
-        message_reference: z
-          .xor([z.null().nullable(), MessageReferenceRequestSchema])
-          .exactOptional(),
+        poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
+        shared_client_theme: z.xor([z.null(), CustomClientThemeShareRequestSchema]).exactOptional(),
+        message_reference: z.xor([z.null(), MessageReferenceRequestSchema]).exactOptional(),
         nonce: z
           .xor([
             z
               .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
               .transform((val) => BigInt(val))
-              .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+              .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
             z.string().max(25),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         enforce_nonce: z.boolean().nullable().exactOptional(),
@@ -1010,7 +1011,13 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         before: z.iso.datetime({ offset: true }).exactOptional(),
-        limit: z.coerce.number().int().min(1).max(50).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
+          .exactOptional(),
       }),
     )
     .output(PinnedMessagesResponseSchema),
@@ -1059,9 +1066,7 @@ export const contract = {
         content: z.string().max(4000).nullable().exactOptional(),
         embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
         flags: z.int().nullable().exactOptional(),
-        allowed_mentions: z
-          .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-          .exactOptional(),
+        allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
         sticker_ids: z.array(SnowflakeTypeSchema).max(1521).nullable().exactOptional(),
         components: z
           .array(
@@ -1110,7 +1115,13 @@ export const contract = {
         message_id: SnowflakeTypeSchema,
         emoji_name: z.string().max(152133),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         type: ReactionTypesSchema.exactOptional(),
       }),
     )
@@ -1184,9 +1195,7 @@ export const contract = {
         channel_id: SnowflakeTypeSchema,
         message_id: SnowflakeTypeSchema,
         name: z.string().min(1).max(100),
-        auto_archive_duration: z
-          .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-          .exactOptional(),
+        auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
         rate_limit_per_user: z.int32().min(0).max(21600).nullable().exactOptional(),
       }),
     )
@@ -1234,7 +1243,7 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         overwrite_id: SnowflakeTypeSchema,
-        type: z.xor([z.null().nullable(), ChannelPermissionOverwritesSchema]).exactOptional(),
+        type: z.xor([z.null(), ChannelPermissionOverwritesSchema]).exactOptional(),
         allow: z.int().nullable().exactOptional(),
         deny: z.int().nullable().exactOptional(),
       }),
@@ -1281,9 +1290,18 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         message_id: SnowflakeTypeSchema,
-        answer_id: z.coerce.number().pipe(z.int32().min(1).max(10)),
+        answer_id: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.int32().min(1).max(10),
+        ),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
       }),
     )
     .output(PollAnswerDetailsResponseSchema),
@@ -1330,7 +1348,7 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         sound_id: SnowflakeTypeSchema,
-        source_guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        source_guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     ),
   getChannelsChannelIdThreadMembers: oc
@@ -1343,7 +1361,13 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         with_member: z.stringbool().exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
     )
@@ -1413,7 +1437,13 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         before: z.iso.datetime({ offset: true }).exactOptional(),
-        limit: z.coerce.number().int().min(2).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(2).max(100),
+          )
+          .exactOptional(),
       }),
     )
     .output(ThreadsResponseSchema),
@@ -1427,7 +1457,13 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         before: z.iso.datetime({ offset: true }).exactOptional(),
-        limit: z.coerce.number().int().min(2).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(2).max(100),
+          )
+          .exactOptional(),
       }),
     )
     .output(ThreadsResponseSchema),
@@ -1441,7 +1477,13 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         name: z.string().max(100).exactOptional(),
-        slop: z.coerce.number().int().min(0).max(100).exactOptional(),
+        slop: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         min_id: SnowflakeTypeSchema.exactOptional(),
         max_id: SnowflakeTypeSchema.exactOptional(),
         tag: z
@@ -1460,8 +1502,20 @@ export const contract = {
         archived: z.stringbool().exactOptional(),
         sort_by: ThreadSortingModeSchema.exactOptional(),
         sort_order: SortingOrderSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(25).exactOptional(),
-        offset: z.coerce.number().int().min(0).max(9975).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(25),
+          )
+          .exactOptional(),
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(9975),
+          )
+          .exactOptional(),
       }),
     )
     .output(ThreadSearchResponseSchema),
@@ -1483,7 +1537,13 @@ export const contract = {
       z.object({
         channel_id: SnowflakeTypeSchema,
         before: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(2).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(2).max(100),
+          )
+          .exactOptional(),
       }),
     )
     .output(ThreadsResponseSchema),
@@ -1577,17 +1637,17 @@ export const contract = {
         description: z.string().min(0).max(300).nullable().exactOptional(),
         region: z.string().nullable().exactOptional(),
         icon: z.string().nullable().exactOptional(),
-        verification_level: z.xor([z.null().nullable(), VerificationLevelsSchema]).exactOptional(),
+        verification_level: z.xor([z.null(), VerificationLevelsSchema]).exactOptional(),
         default_message_notifications: z
-          .xor([z.null().nullable(), UserNotificationSettingsSchema])
+          .xor([z.null(), UserNotificationSettingsSchema])
           .exactOptional(),
         explicit_content_filter: z
-          .xor([z.null().nullable(), GuildExplicitContentFilterTypesSchema])
+          .xor([z.null(), GuildExplicitContentFilterTypesSchema])
           .exactOptional(),
-        preferred_locale: z.xor([z.null().nullable(), AvailableLocalesEnumSchema]).exactOptional(),
-        afk_timeout: z.xor([z.null().nullable(), AfkTimeoutsSchema]).exactOptional(),
-        afk_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-        system_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        preferred_locale: z.xor([z.null(), AvailableLocalesEnumSchema]).exactOptional(),
+        afk_timeout: z.xor([z.null(), AfkTimeoutsSchema]).exactOptional(),
+        afk_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+        system_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         splash: z.string().nullable().exactOptional(),
         banner: z.string().nullable().exactOptional(),
         system_channel_flags: z.int().nullable().exactOptional(),
@@ -1599,11 +1659,9 @@ export const contract = {
           .exactOptional(),
         discovery_splash: z.string().nullable().exactOptional(),
         home_header: z.string().nullable().exactOptional(),
-        rules_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-        safety_alerts_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-        public_updates_channel_id: z
-          .xor([z.null().nullable(), SnowflakeTypeSchema])
-          .exactOptional(),
+        rules_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+        safety_alerts_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+        public_updates_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         premium_progress_bar_enabled: z.boolean().nullable().exactOptional(),
       }),
     )
@@ -1622,7 +1680,13 @@ export const contract = {
         action_type: AuditLogActionTypesSchema.exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
       }),
     )
     .output(GuildAuditLogResponseSchema),
@@ -1642,7 +1706,7 @@ export const contract = {
             MLSpamRuleResponseSchema,
             MentionSpamRuleResponseSchema,
             UserProfileRuleResponseSchema,
-            z.null().nullable(),
+            z.null(),
           ]),
         )
         .nullable(),
@@ -1712,7 +1776,13 @@ export const contract = {
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(1000),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -1795,7 +1865,7 @@ export const contract = {
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        type: z.xor([z.null().nullable(), ChannelTypesSchema]).exactOptional(),
+        type: z.xor([z.null(), ChannelTypesSchema]).exactOptional(),
         name: z.string().min(1).max(100),
         position: z.int32().min(0).nullable().exactOptional(),
         topic: z.string().min(0).max(4096).nullable().exactOptional(),
@@ -1803,28 +1873,26 @@ export const contract = {
         user_limit: z.int32().min(0).nullable().exactOptional(),
         nsfw: z.boolean().nullable().exactOptional(),
         rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-        parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         permission_overwrites: z
           .array(ChannelPermissionOverwriteRequestSchema)
           .max(100)
           .nullable()
           .exactOptional(),
         rtc_region: z.string().nullable().exactOptional(),
-        video_quality_mode: z.xor([z.null().nullable(), VideoQualityModesSchema]).exactOptional(),
+        video_quality_mode: z.xor([z.null(), VideoQualityModesSchema]).exactOptional(),
         default_auto_archive_duration: z
-          .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
+          .xor([z.null(), ThreadAutoArchiveDurationSchema])
           .exactOptional(),
         default_reaction_emoji: z
-          .xor([z.null().nullable(), UpdateDefaultReactionEmojiRequestSchema])
+          .xor([z.null(), UpdateDefaultReactionEmojiRequestSchema])
           .exactOptional(),
         default_thread_rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-        default_sort_order: z.xor([z.null().nullable(), ThreadSortOrderSchema]).exactOptional(),
-        default_forum_layout: z.xor([z.null().nullable(), ForumLayoutSchema]).exactOptional(),
-        default_tag_setting: z
-          .xor([z.null().nullable(), ThreadSearchTagSettingSchema])
-          .exactOptional(),
+        default_sort_order: z.xor([z.null(), ThreadSortOrderSchema]).exactOptional(),
+        default_forum_layout: z.xor([z.null(), ForumLayoutSchema]).exactOptional(),
+        default_tag_setting: z.xor([z.null(), ThreadSearchTagSettingSchema]).exactOptional(),
         available_tags: z
-          .array(z.xor([z.null().nullable(), CreateOrUpdateThreadTagRequestSchema]))
+          .array(z.xor([z.null(), CreateOrUpdateThreadTagRequestSchema]))
           .max(20)
           .nullable()
           .exactOptional(),
@@ -1860,7 +1928,7 @@ export const contract = {
         name: z.string().min(2).max(32),
         image: z.string(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(1521)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
@@ -1896,7 +1964,7 @@ export const contract = {
         emoji_id: SnowflakeTypeSchema,
         name: z.string().min(2).max(32).exactOptional(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(1521)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
@@ -1967,7 +2035,7 @@ export const contract = {
             FriendInviteResponseSchema,
             GroupDMInviteResponseSchema,
             GuildInviteResponseSchema,
-            z.null().nullable(),
+            z.null(),
           ]),
         )
         .nullable(),
@@ -1981,7 +2049,13 @@ export const contract = {
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(1000),
+          )
+          .exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
     )
@@ -2011,7 +2085,13 @@ export const contract = {
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(1000),
+          )
+          .exactOptional(),
         query: z.string().min(1).max(100),
       }),
     )
@@ -2069,14 +2149,14 @@ export const contract = {
         user_id: SnowflakeTypeSchema,
         nick: z.string().max(32).nullable().exactOptional(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(350)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
           .exactOptional(),
         mute: z.boolean().nullable().exactOptional(),
         deaf: z.boolean().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         communication_disabled_until: z.iso.datetime({ offset: true }).nullable().exactOptional(),
         flags: z.int().nullable().exactOptional(),
       }),
@@ -2122,7 +2202,13 @@ export const contract = {
         sort_by: SortingModeSchema.exactOptional(),
         sort_order: SortingOrderSchema.exactOptional(),
         content: z.string().max(1024).exactOptional(),
-        slop: z.coerce.number().int().min(0).max(100).exactOptional(),
+        slop: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         author_id: z
           .preprocess(
             (val) => (val === undefined || Array.isArray(val) ? val : [val]),
@@ -2180,8 +2266,20 @@ export const contract = {
         mention_everyone: z.stringbool().exactOptional(),
         min_id: SnowflakeTypeSchema.exactOptional(),
         max_id: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(25).exactOptional(),
-        offset: z.coerce.number().int().min(0).max(9975).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(25),
+          )
+          .exactOptional(),
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(9975),
+          )
+          .exactOptional(),
         has: z
           .preprocess(
             (val) => (val === undefined || Array.isArray(val) ? val : [val]),
@@ -2283,7 +2381,7 @@ export const contract = {
           .refine((val) => new Set(val).size === val.length)
           .nullable()
           .exactOptional(),
-        mode: z.xor([z.null().nullable(), GuildOnboardingModeSchema]).exactOptional(),
+        mode: z.xor([z.null(), GuildOnboardingModeSchema]).exactOptional(),
       }),
     )
     .output(GuildOnboardingResponseSchema),
@@ -2324,7 +2422,13 @@ export const contract = {
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        days: z.coerce.number().int().min(1).max(30).exactOptional(),
+        days: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(30),
+          )
+          .exactOptional(),
         include_roles: z
           .union([
             z.string(),
@@ -2336,7 +2440,7 @@ export const contract = {
                     (val) => (val === 'null' ? null : val),
                     z
                       .union([
-                        z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                        z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         SnowflakeTypeSchema,
                       ])
                       .nullable(),
@@ -2368,7 +2472,7 @@ export const contract = {
               .array(SnowflakeTypeSchema)
               .max(100)
               .refine((val) => new Set(val).size === val.length),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       }),
@@ -2393,7 +2497,13 @@ export const contract = {
       z.object({
         guild_id: SnowflakeTypeSchema,
         status: GuildJoinRequestApplicationStatusSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -2442,7 +2552,7 @@ export const contract = {
         name: z.string().min(1).max(100).nullable().exactOptional(),
         permissions: z.int().nullable().exactOptional(),
         color: z.int().min(0).max(16777215).nullable().exactOptional(),
-        colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+        colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
         hoist: z.boolean().nullable().exactOptional(),
         mentionable: z.boolean().nullable().exactOptional(),
         icon: z.string().nullable().exactOptional(),
@@ -2495,7 +2605,7 @@ export const contract = {
         name: z.string().min(1).max(100).nullable().exactOptional(),
         permissions: z.int().nullable().exactOptional(),
         color: z.int().min(0).max(16777215).nullable().exactOptional(),
-        colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+        colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
         hoist: z.boolean().nullable().exactOptional(),
         mentionable: z.boolean().nullable().exactOptional(),
         icon: z.string().nullable().exactOptional(),
@@ -2673,7 +2783,13 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         guild_scheduled_event_id: SnowflakeTypeSchema,
         with_member: z.stringbool().exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -2712,7 +2828,13 @@ export const contract = {
         guild_scheduled_event_id: SnowflakeTypeSchema,
         guild_scheduled_event_exception_id: SnowflakeTypeSchema,
         with_member: z.stringbool().exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -2738,7 +2860,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         name: z.string().min(2).max(32),
         volume: z.number().min(0).max(1).nullable().exactOptional(),
-        emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
         sound: z.string(),
       }),
@@ -2772,7 +2894,7 @@ export const contract = {
         sound_id: SnowflakeTypeSchema,
         name: z.string().min(2).max(32).exactOptional(),
         volume: z.number().min(0).max(1).nullable().exactOptional(),
-        emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
       }),
     )
@@ -2915,7 +3037,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         request_to_speak_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
         suppress: z.boolean().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     ),
   getGuildsGuildIdVoiceStatesUserId: oc
@@ -2938,7 +3060,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         user_id: SnowflakeTypeSchema,
         suppress: z.boolean().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     ),
   getGuildsGuildIdWebhooks: oc
@@ -2999,7 +3121,7 @@ export const contract = {
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         enabled: z.boolean().nullable().exactOptional(),
       }),
     )
@@ -3155,7 +3277,7 @@ export const contract = {
         idle_timeout_seconds: z.int32().min(5).max(604800).nullable().exactOptional(),
         members: z.array(LobbyMemberRequestSchema).max(25).nullable().exactOptional(),
         metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         override_event_webhooks_url: z.url().max(512).nullable().exactOptional(),
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
@@ -3173,7 +3295,7 @@ export const contract = {
         lobby_metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
         member_metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
         secret: z.string().max(250),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
     )
@@ -3208,7 +3330,7 @@ export const contract = {
         idle_timeout_seconds: z.int32().min(5).max(604800).nullable().exactOptional(),
         metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
         members: z.array(LobbyMemberRequestSchema).max(25).nullable().exactOptional(),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         override_event_webhooks_url: z.url().max(512).nullable().exactOptional(),
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
@@ -3223,7 +3345,7 @@ export const contract = {
     .input(
       z.object({
         lobby_id: SnowflakeTypeSchema,
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     )
     .output(LobbyResponseSchema),
@@ -3262,7 +3384,7 @@ export const contract = {
         lobby_id: SnowflakeTypeSchema,
         user_id: SnowflakeTypeSchema,
         metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         additional_name: z.string().min(1).max(80).nullable().exactOptional(),
       }),
     )
@@ -3292,7 +3414,13 @@ export const contract = {
     .input(
       z.object({
         lobby_id: SnowflakeTypeSchema,
-        limit: z.coerce.number().int().min(1).max(200).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(200),
+          )
+          .exactOptional(),
       }),
     )
     .output(z.array(LobbyMessageResponseSchema).nullable()),
@@ -3308,9 +3436,7 @@ export const contract = {
         lobby_id: SnowflakeTypeSchema,
         content: z.string().max(4000).nullable().exactOptional(),
         embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-        allowed_mentions: z
-          .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-          .exactOptional(),
+        allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
         sticker_ids: z.array(SnowflakeTypeSchema).max(3).nullable().exactOptional(),
         components: z
           .array(
@@ -3329,21 +3455,17 @@ export const contract = {
           .exactOptional(),
         flags: z.int().nullable().exactOptional(),
         attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-        poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
-        shared_client_theme: z
-          .xor([z.null().nullable(), CustomClientThemeShareRequestSchema])
-          .exactOptional(),
-        message_reference: z
-          .xor([z.null().nullable(), MessageReferenceRequestSchema])
-          .exactOptional(),
+        poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
+        shared_client_theme: z.xor([z.null(), CustomClientThemeShareRequestSchema]).exactOptional(),
+        message_reference: z.xor([z.null(), MessageReferenceRequestSchema]).exactOptional(),
         nonce: z
           .xor([
             z
               .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
               .transform((val) => BigInt(val))
-              .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+              .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
             z.string().max(25),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         enforce_nonce: z.boolean().nullable().exactOptional(),
@@ -3449,7 +3571,7 @@ export const contract = {
     })
     .input(
       z.object({
-        provisional_user_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        provisional_user_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         external_user_id: z.string().min(1).max(1024),
         preferred_global_name: z.string().min(1).max(32).nullable().exactOptional(),
       }),
@@ -3467,7 +3589,13 @@ export const contract = {
         sku_id: SnowflakeTypeSchema,
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         user_id: SnowflakeTypeSchema.exactOptional(),
       }),
     )
@@ -3504,10 +3632,8 @@ export const contract = {
       z.object({
         topic: z.string().min(1).max(120),
         channel_id: SnowflakeTypeSchema,
-        privacy_level: z
-          .xor([z.null().nullable(), StageInstancesPrivacyLevelsSchema])
-          .exactOptional(),
-        guild_scheduled_event_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        privacy_level: z.xor([z.null(), StageInstancesPrivacyLevelsSchema]).exactOptional(),
+        guild_scheduled_event_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         send_start_notification: z.boolean().nullable().exactOptional(),
       }),
     )
@@ -3600,7 +3726,7 @@ export const contract = {
                     (val) => (val === 'null' ? null : val),
                     z
                       .union([
-                        z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                        z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         SnowflakeTypeSchema,
                       ])
                       .nullable(),
@@ -3671,8 +3797,20 @@ export const contract = {
       z.object({
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(200).exactOptional(),
-        shard: z.coerce.number().int().min(0).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(200),
+          )
+          .exactOptional(),
+        shard: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0),
+          )
+          .exactOptional(),
         with_counts: z.stringbool().exactOptional(),
       }),
     )
@@ -3741,7 +3879,7 @@ export const contract = {
         webhook_id: SnowflakeTypeSchema,
         name: z.string().min(1).max(80).exactOptional(),
         avatar: z.string().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     )
     .output(
@@ -3826,23 +3964,23 @@ export const contract = {
         action: z.string().max(152133).nullable().exactOptional(),
         ref: z.string().max(152133).nullable().exactOptional(),
         ref_type: z.string().max(152133).nullable().exactOptional(),
-        comment: z.xor([z.null().nullable(), GithubCommentSchema]).exactOptional(),
-        issue: z.xor([z.null().nullable(), GithubIssueSchema]).exactOptional(),
-        pull_request: z.xor([z.null().nullable(), GithubIssueSchema]).exactOptional(),
-        repository: z.xor([z.null().nullable(), GithubRepositorySchema]).exactOptional(),
-        forkee: z.xor([z.null().nullable(), GithubRepositorySchema]).exactOptional(),
+        comment: z.xor([z.null(), GithubCommentSchema]).exactOptional(),
+        issue: z.xor([z.null(), GithubIssueSchema]).exactOptional(),
+        pull_request: z.xor([z.null(), GithubIssueSchema]).exactOptional(),
+        repository: z.xor([z.null(), GithubRepositorySchema]).exactOptional(),
+        forkee: z.xor([z.null(), GithubRepositorySchema]).exactOptional(),
         sender: GithubUserSchema,
-        member: z.xor([z.null().nullable(), GithubUserSchema]).exactOptional(),
-        release: z.xor([z.null().nullable(), GithubReleaseSchema]).exactOptional(),
-        head_commit: z.xor([z.null().nullable(), GithubCommitSchema]).exactOptional(),
+        member: z.xor([z.null(), GithubUserSchema]).exactOptional(),
+        release: z.xor([z.null(), GithubReleaseSchema]).exactOptional(),
+        head_commit: z.xor([z.null(), GithubCommitSchema]).exactOptional(),
         commits: z.array(GithubCommitSchema).max(1521).nullable().exactOptional(),
         forced: z.boolean().nullable().exactOptional(),
         compare: z.url().max(2048).nullable().exactOptional(),
-        review: z.xor([z.null().nullable(), GithubReviewSchema]).exactOptional(),
-        check_run: z.xor([z.null().nullable(), GithubCheckRunSchema]).exactOptional(),
-        check_suite: z.xor([z.null().nullable(), GithubCheckSuiteSchema]).exactOptional(),
-        discussion: z.xor([z.null().nullable(), GithubDiscussionSchema]).exactOptional(),
-        answer: z.xor([z.null().nullable(), GithubCommentSchema]).exactOptional(),
+        review: z.xor([z.null(), GithubReviewSchema]).exactOptional(),
+        check_run: z.xor([z.null(), GithubCheckRunSchema]).exactOptional(),
+        check_suite: z.xor([z.null(), GithubCheckSuiteSchema]).exactOptional(),
+        discussion: z.xor([z.null(), GithubDiscussionSchema]).exactOptional(),
+        answer: z.xor([z.null(), GithubCommentSchema]).exactOptional(),
       }),
     ),
   getWebhooksWebhookIdWebhookTokenMessagesOriginal: oc
@@ -3887,9 +4025,7 @@ export const contract = {
         with_components: z.stringbool().exactOptional(),
         content: z.string().max(2000).nullable().exactOptional(),
         embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-        allowed_mentions: z
-          .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-          .exactOptional(),
+        allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
         components: z
           .array(
             z.xor([
@@ -3906,7 +4042,7 @@ export const contract = {
           .nullable()
           .exactOptional(),
         attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-        poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
+        poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
         flags: z.int().nullable().exactOptional(),
       }),
     )
@@ -3956,9 +4092,7 @@ export const contract = {
         with_components: z.stringbool().exactOptional(),
         content: z.string().max(2000).nullable().exactOptional(),
         embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-        allowed_mentions: z
-          .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-          .exactOptional(),
+        allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
         components: z
           .array(
             z.xor([
@@ -3975,7 +4109,7 @@ export const contract = {
           .nullable()
           .exactOptional(),
         attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-        poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
+        poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
         flags: z.int().nullable().exactOptional(),
       }),
     )

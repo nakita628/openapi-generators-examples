@@ -1,0 +1,30209 @@
+import {
+  injectQuery,
+  injectMutation,
+  queryOptions,
+  mutationOptions,
+} from '@tanstack/angular-query-experimental'
+import type {
+  CreateQueryOptions,
+  CreateMutationOptions,
+  InjectQueryOptions,
+  InjectMutationOptions,
+} from '@tanstack/angular-query-experimental'
+import type { BetaResponse } from '../components/schemas'
+import { client } from '../lib'
+
+export function getAgentsKey() {
+  return ['agents'] as const
+}
+
+export function getAssistantsKey() {
+  return ['assistants'] as const
+}
+
+export function getAudioKey() {
+  return ['audio'] as const
+}
+
+export function getBatchesKey() {
+  return ['batches'] as const
+}
+
+export function getChatKey() {
+  return ['chat'] as const
+}
+
+export function getChatkitKey() {
+  return ['chatkit'] as const
+}
+
+export function getCompletionsKey() {
+  return ['completions'] as const
+}
+
+export function getContainersKey() {
+  return ['containers'] as const
+}
+
+export function getContentProvenanceChecksKey() {
+  return ['content_provenance_checks'] as const
+}
+
+export function getConversationsKey() {
+  return ['conversations'] as const
+}
+
+export function getDecisionsKey() {
+  return ['decisions'] as const
+}
+
+export function getEmbeddingsKey() {
+  return ['embeddings'] as const
+}
+
+export function getEvalsKey() {
+  return ['evals'] as const
+}
+
+export function getFilesKey() {
+  return ['files'] as const
+}
+
+export function getFineTuningKey() {
+  return ['fine_tuning'] as const
+}
+
+export function getImagesKey() {
+  return ['images'] as const
+}
+
+export function getLiveKey() {
+  return ['live'] as const
+}
+
+export function getModelsKey() {
+  return ['models'] as const
+}
+
+export function getModerationsKey() {
+  return ['moderations'] as const
+}
+
+export function getOrganizationKey() {
+  return ['organization'] as const
+}
+
+export function getProjectsKey() {
+  return ['projects'] as const
+}
+
+export function getRealtimeKey() {
+  return ['realtime'] as const
+}
+
+export function getResponsesKey() {
+  return ['responses'] as const
+}
+
+export function getResponsesBetaTrueKey() {
+  return ['responses?beta=true'] as const
+}
+
+export function getSafetyKey() {
+  return ['safety'] as const
+}
+
+export function getSkillsKey() {
+  return ['skills'] as const
+}
+
+export function getThreadsKey() {
+  return ['threads'] as const
+}
+
+export function getUploadsKey() {
+  return ['uploads'] as const
+}
+
+export function getVaultsKey() {
+  return ['vaults'] as const
+}
+
+export function getVectorStoresKey() {
+  return ['vector_stores'] as const
+}
+
+export function getVideosKey() {
+  return ['videos'] as const
+}
+
+export function getWebhookEndpointsKey() {
+  return ['webhook_endpoints'] as const
+}
+
+export function getWebhookEventTypesKey() {
+  return ['webhook_event_types'] as const
+}
+
+export function getAssistantsQueryKey(options?: Parameters<typeof client.assistants.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['assistants', '/assistants', keyArgs] as const
+}
+
+export function getAssistantsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.assistants.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.assistants.get>>['error'], null>,
+>(options?: Parameters<typeof client.assistants.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.assistants.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAssistantsQueryKey>
+  >({
+    queryKey: getAssistantsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.assistants.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAssistants<
+  TData = Extract<Awaited<ReturnType<typeof client.assistants.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.assistants.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.assistants.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAssistantsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.assistants.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAssistantsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAssistantsMutationKey() {
+  return ['assistants', '/assistants', 'POST'] as const
+}
+
+export function getPostAssistantsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.assistants.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.assistants.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.assistants.post>[0]
+      options?: Parameters<typeof client.assistants.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAssistantsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.assistants.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAssistants<
+  TError = Exclude<Awaited<ReturnType<typeof client.assistants.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.assistants.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.assistants.post>[0]
+          options?: Parameters<typeof client.assistants.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAssistantsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAssistantsAssistantIdQueryKey(params: Parameters<typeof client.assistants>[0]) {
+  return ['assistants', '/assistants/{assistant_id}', params] as const
+}
+
+export function getAssistantsAssistantIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.assistants>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.assistants>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.assistants>[0],
+  options?: Parameters<ReturnType<typeof client.assistants>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.assistants>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAssistantsAssistantIdQueryKey>
+  >({
+    queryKey: getAssistantsAssistantIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .assistants(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAssistantsAssistantId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.assistants>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.assistants>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.assistants>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.assistants>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAssistantsAssistantIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.assistants>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAssistantsAssistantIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAssistantsAssistantIdMutationKey() {
+  return ['assistants', '/assistants/{assistant_id}', 'POST'] as const
+}
+
+export function getPostAssistantsAssistantIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.assistants>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.assistants>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.assistants>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.assistants>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.assistants>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAssistantsAssistantIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.assistants(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAssistantsAssistantId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.assistants>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.assistants>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.assistants>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.assistants>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.assistants>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAssistantsAssistantIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAssistantsAssistantIdMutationKey() {
+  return ['assistants', '/assistants/{assistant_id}', 'DELETE'] as const
+}
+
+export function getDeleteAssistantsAssistantIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.assistants>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.assistants>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.assistants>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.assistants>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.assistants>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAssistantsAssistantIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.assistants(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAssistantsAssistantId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.assistants>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.assistants>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.assistants>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.assistants>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.assistants>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteAssistantsAssistantIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostAudioSpeechMutationKey() {
+  return ['audio', '/audio/speech', 'POST'] as const
+}
+
+export function getPostAudioSpeechMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.speech.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.audio.speech.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.audio.speech.post>[0]
+      options?: Parameters<typeof client.audio.speech.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAudioSpeechMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.speech.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAudioSpeech<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.speech.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.audio.speech.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.audio.speech.post>[0]
+          options?: Parameters<typeof client.audio.speech.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAudioSpeechMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostAudioTranscriptionsMutationKey() {
+  return ['audio', '/audio/transcriptions', 'POST'] as const
+}
+
+export function getPostAudioTranscriptionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.transcriptions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.audio.transcriptions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.audio.transcriptions.post>[0]
+      options?: Parameters<typeof client.audio.transcriptions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAudioTranscriptionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.transcriptions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAudioTranscriptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.transcriptions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.audio.transcriptions.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.audio.transcriptions.post>[0]
+          options?: Parameters<typeof client.audio.transcriptions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAudioTranscriptionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostAudioTranslationsMutationKey() {
+  return ['audio', '/audio/translations', 'POST'] as const
+}
+
+export function getPostAudioTranslationsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.translations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.audio.translations.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.audio.translations.post>[0]
+      options?: Parameters<typeof client.audio.translations.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAudioTranslationsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.translations.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAudioTranslations<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.translations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.audio.translations.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.audio.translations.post>[0]
+          options?: Parameters<typeof client.audio.translations.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAudioTranslationsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAudioVoiceConsentsQueryKey(
+  options?: Parameters<typeof client.audio.voice_consents.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['audio', '/audio/voice_consents', keyArgs] as const
+}
+
+export function getAudioVoiceConsentsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.audio.voice_consents.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.voice_consents.get>>['error'], null>,
+>(options?: Parameters<typeof client.audio.voice_consents.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.audio.voice_consents.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAudioVoiceConsentsQueryKey>
+  >({
+    queryKey: getAudioVoiceConsentsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.audio.voice_consents.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAudioVoiceConsents<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.audio.voice_consents.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.voice_consents.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.audio.voice_consents.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAudioVoiceConsentsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.audio.voice_consents.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAudioVoiceConsentsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAudioVoiceConsentsMutationKey() {
+  return ['audio', '/audio/voice_consents', 'POST'] as const
+}
+
+export function getPostAudioVoiceConsentsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.voice_consents.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.audio.voice_consents.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.audio.voice_consents.post>[0]
+      options?: Parameters<typeof client.audio.voice_consents.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAudioVoiceConsentsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.voice_consents.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAudioVoiceConsents<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.voice_consents.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.audio.voice_consents.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.audio.voice_consents.post>[0]
+          options?: Parameters<typeof client.audio.voice_consents.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAudioVoiceConsentsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAudioVoiceConsentsConsentIdQueryKey(
+  params: Parameters<typeof client.audio.voice_consents>[0],
+) {
+  return ['audio', '/audio/voice_consents/{consent_id}', params] as const
+}
+
+export function getAudioVoiceConsentsConsentIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.audio.voice_consents>[0],
+  options?: Parameters<ReturnType<typeof client.audio.voice_consents>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAudioVoiceConsentsConsentIdQueryKey>
+  >({
+    queryKey: getAudioVoiceConsentsConsentIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.audio
+        .voice_consents(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAudioVoiceConsentsConsentId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.audio.voice_consents>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAudioVoiceConsentsConsentIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.audio.voice_consents>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAudioVoiceConsentsConsentIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAudioVoiceConsentsConsentIdMutationKey() {
+  return ['audio', '/audio/voice_consents/{consent_id}', 'POST'] as const
+}
+
+export function getPostAudioVoiceConsentsConsentIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.audio.voice_consents>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.audio.voice_consents>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.audio.voice_consents>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAudioVoiceConsentsConsentIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.voice_consents(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAudioVoiceConsentsConsentId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.audio.voice_consents>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.audio.voice_consents>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.audio.voice_consents>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAudioVoiceConsentsConsentIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAudioVoiceConsentsConsentIdMutationKey() {
+  return ['audio', '/audio/voice_consents/{consent_id}', 'DELETE'] as const
+}
+
+export function getDeleteAudioVoiceConsentsConsentIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.audio.voice_consents>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.audio.voice_consents>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.audio.voice_consents>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAudioVoiceConsentsConsentIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.voice_consents(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAudioVoiceConsentsConsentId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.audio.voice_consents>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.audio.voice_consents>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.audio.voice_consents>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.audio.voice_consents>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteAudioVoiceConsentsConsentIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostAudioVoicesMutationKey() {
+  return ['audio', '/audio/voices', 'POST'] as const
+}
+
+export function getPostAudioVoicesMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.voices.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.audio.voices.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.audio.voices.post>[0]
+      options?: Parameters<typeof client.audio.voices.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAudioVoicesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.voices.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAudioVoices<
+  TError = Exclude<Awaited<ReturnType<typeof client.audio.voices.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.audio.voices.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.audio.voices.post>[0]
+          options?: Parameters<typeof client.audio.voices.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAudioVoicesMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAudioVoicesVoiceIdMutationKey() {
+  return ['audio', '/audio/voices/{voice_id}', 'DELETE'] as const
+}
+
+export function getDeleteAudioVoicesVoiceIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voices>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.audio.voices>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.audio.voices>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.audio.voices>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.audio.voices>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAudioVoicesVoiceIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.audio.voices(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAudioVoicesVoiceId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.audio.voices>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.audio.voices>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.audio.voices>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.audio.voices>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.audio.voices>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteAudioVoicesVoiceIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getBatchesQueryKey(options?: Parameters<typeof client.batches.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['batches', '/batches', keyArgs] as const
+}
+
+export function getBatchesQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.batches.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.batches.get>>['error'], null>,
+>(options?: Parameters<typeof client.batches.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.batches.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getBatchesQueryKey>
+  >({
+    queryKey: getBatchesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.batches.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectBatches<
+  TData = Extract<Awaited<ReturnType<typeof client.batches.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.batches.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.batches.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getBatchesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.batches.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getBatchesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostBatchesMutationKey() {
+  return ['batches', '/batches', 'POST'] as const
+}
+
+export function getPostBatchesMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.batches.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.batches.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.batches.post>[0]
+      options?: Parameters<typeof client.batches.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostBatchesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.batches.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostBatches<
+  TError = Exclude<Awaited<ReturnType<typeof client.batches.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.batches.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.batches.post>[0]
+          options?: Parameters<typeof client.batches.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostBatchesMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getBatchesBatchIdQueryKey(params: Parameters<typeof client.batches>[0]) {
+  return ['batches', '/batches/{batch_id}', params] as const
+}
+
+export function getBatchesBatchIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.batches>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.batches>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.batches>[0],
+  options?: Parameters<ReturnType<typeof client.batches>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.batches>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getBatchesBatchIdQueryKey>
+  >({
+    queryKey: getBatchesBatchIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .batches(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectBatchesBatchId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.batches>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.batches>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.batches>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.batches>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getBatchesBatchIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.batches>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getBatchesBatchIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostBatchesBatchIdCancelMutationKey() {
+  return ['batches', '/batches/{batch_id}/cancel', 'POST'] as const
+}
+
+export function getPostBatchesBatchIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.batches>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.batches>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.batches>['cancel']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.batches>['cancel']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.batches>['cancel']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostBatchesBatchIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.batches(params).cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostBatchesBatchIdCancel<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.batches>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.batches>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.batches>['cancel']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.batches>['cancel']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.batches>['cancel']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostBatchesBatchIdCancelMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getChatCompletionsQueryKey(
+  options?: Parameters<typeof client.chat.completions.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['chat', '/chat/completions', keyArgs] as const
+}
+
+export function getChatCompletionsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.chat.completions.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.chat.completions.get>>['error'], null>,
+>(options?: Parameters<typeof client.chat.completions.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.chat.completions.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getChatCompletionsQueryKey>
+  >({
+    queryKey: getChatCompletionsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.chat.completions.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectChatCompletions<
+  TData = Extract<Awaited<ReturnType<typeof client.chat.completions.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.chat.completions.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.chat.completions.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getChatCompletionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.chat.completions.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getChatCompletionsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostChatCompletionsMutationKey() {
+  return ['chat', '/chat/completions', 'POST'] as const
+}
+
+export function getPostChatCompletionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.chat.completions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.chat.completions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.chat.completions.post>[0]
+      options?: Parameters<typeof client.chat.completions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostChatCompletionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.chat.completions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostChatCompletions<
+  TError = Exclude<Awaited<ReturnType<typeof client.chat.completions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.chat.completions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.chat.completions.post>[0]
+          options?: Parameters<typeof client.chat.completions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostChatCompletionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getChatCompletionsCompletionIdQueryKey(
+  params: Parameters<typeof client.chat.completions>[0],
+) {
+  return ['chat', '/chat/completions/{completion_id}', params] as const
+}
+
+export function getChatCompletionsCompletionIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.chat.completions>[0],
+  options?: Parameters<ReturnType<typeof client.chat.completions>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chat.completions>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getChatCompletionsCompletionIdQueryKey>
+  >({
+    queryKey: getChatCompletionsCompletionIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.chat
+        .completions(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectChatCompletionsCompletionId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.chat.completions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chat.completions>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getChatCompletionsCompletionIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.chat.completions>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getChatCompletionsCompletionIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostChatCompletionsCompletionIdMutationKey() {
+  return ['chat', '/chat/completions/{completion_id}', 'POST'] as const
+}
+
+export function getPostChatCompletionsCompletionIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.chat.completions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chat.completions>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.chat.completions>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.chat.completions>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostChatCompletionsCompletionIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.chat.completions(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostChatCompletionsCompletionId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.chat.completions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chat.completions>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.chat.completions>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.chat.completions>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostChatCompletionsCompletionIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteChatCompletionsCompletionIdMutationKey() {
+  return ['chat', '/chat/completions/{completion_id}', 'DELETE'] as const
+}
+
+export function getDeleteChatCompletionsCompletionIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.chat.completions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chat.completions>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.chat.completions>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.chat.completions>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteChatCompletionsCompletionIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.chat.completions(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteChatCompletionsCompletionId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.chat.completions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chat.completions>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.chat.completions>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.chat.completions>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteChatCompletionsCompletionIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getChatCompletionsCompletionIdMessagesQueryKey(
+  params: Parameters<typeof client.chat.completions>[0],
+  options?: Parameters<ReturnType<typeof client.chat.completions>['messages']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['chat', '/chat/completions/{completion_id}/messages', params, keyArgs] as const
+}
+
+export function getChatCompletionsCompletionIdMessagesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['messages']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['messages']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.chat.completions>[0],
+  options?: Parameters<ReturnType<typeof client.chat.completions>['messages']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chat.completions>['messages']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getChatCompletionsCompletionIdMessagesQueryKey>
+  >({
+    queryKey: getChatCompletionsCompletionIdMessagesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.chat
+        .completions(params)
+        .messages.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectChatCompletionsCompletionIdMessages<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['messages']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chat.completions>['messages']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.chat.completions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chat.completions>['messages']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getChatCompletionsCompletionIdMessagesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.chat.completions>['messages']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getChatCompletionsCompletionIdMessagesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostCompletionsMutationKey() {
+  return ['completions', '/completions', 'POST'] as const
+}
+
+export function getPostCompletionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.completions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.completions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.completions.post>[0]
+      options?: Parameters<typeof client.completions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostCompletionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.completions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostCompletions<
+  TError = Exclude<Awaited<ReturnType<typeof client.completions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.completions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.completions.post>[0]
+          options?: Parameters<typeof client.completions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostCompletionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getContainersQueryKey(options?: Parameters<typeof client.containers.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['containers', '/containers', keyArgs] as const
+}
+
+export function getContainersQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.containers.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.containers.get>>['error'], null>,
+>(options?: Parameters<typeof client.containers.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.containers.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getContainersQueryKey>
+  >({
+    queryKey: getContainersQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.containers.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectContainers<
+  TData = Extract<Awaited<ReturnType<typeof client.containers.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.containers.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.containers.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getContainersQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.containers.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getContainersQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostContainersMutationKey() {
+  return ['containers', '/containers', 'POST'] as const
+}
+
+export function getPostContainersMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.containers.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.containers.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.containers.post>[0]
+      options?: Parameters<typeof client.containers.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostContainersMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.containers.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostContainers<
+  TError = Exclude<Awaited<ReturnType<typeof client.containers.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.containers.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.containers.post>[0]
+          options?: Parameters<typeof client.containers.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostContainersMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getContainersContainerIdQueryKey(params: Parameters<typeof client.containers>[0]) {
+  return ['containers', '/containers/{container_id}', params] as const
+}
+
+export function getContainersContainerIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.containers>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.containers>[0],
+  options?: Parameters<ReturnType<typeof client.containers>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.containers>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getContainersContainerIdQueryKey>
+  >({
+    queryKey: getContainersContainerIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .containers(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectContainersContainerId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.containers>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.containers>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.containers>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getContainersContainerIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.containers>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getContainersContainerIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteContainersContainerIdMutationKey() {
+  return ['containers', '/containers/{container_id}', 'DELETE'] as const
+}
+
+export function getDeleteContainersContainerIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.containers>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.containers>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.containers>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.containers>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteContainersContainerIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.containers(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteContainersContainerId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.containers>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.containers>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.containers>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.containers>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteContainersContainerIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getContainersContainerIdFilesQueryKey(
+  params: Parameters<typeof client.containers>[0],
+  options?: Parameters<ReturnType<typeof client.containers>['files']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['containers', '/containers/{container_id}/files', params, keyArgs] as const
+}
+
+export function getContainersContainerIdFilesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['files']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['files']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.containers>[0],
+  options?: Parameters<ReturnType<typeof client.containers>['files']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.containers>['files']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getContainersContainerIdFilesQueryKey>
+  >({
+    queryKey: getContainersContainerIdFilesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .containers(params)
+        .files.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectContainersContainerIdFiles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['files']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['files']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.containers>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.containers>['files']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getContainersContainerIdFilesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.containers>['files']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getContainersContainerIdFilesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostContainersContainerIdFilesMutationKey() {
+  return ['containers', '/containers/{container_id}/files', 'POST'] as const
+}
+
+export function getPostContainersContainerIdFilesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['files']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.containers>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.containers>['files']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.containers>['files']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.containers>['files']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostContainersContainerIdFilesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.containers(params).files.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostContainersContainerIdFiles<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.containers>['files']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.containers>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.containers>['files']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.containers>['files']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.containers>['files']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostContainersContainerIdFilesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getContainersContainerIdFilesFileIdQueryKey(
+  params: Parameters<typeof client.containers>[0],
+  params2: Parameters<ReturnType<typeof client.containers>['files']>[0],
+) {
+  return ['containers', '/containers/{container_id}/files/{file_id}', params, params2] as const
+}
+
+export function getContainersContainerIdFilesFileIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.containers>[0],
+  params2: Parameters<ReturnType<typeof client.containers>['files']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.containers>['files']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getContainersContainerIdFilesFileIdQueryKey>
+  >({
+    queryKey: getContainersContainerIdFilesFileIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .containers(params)
+        .files(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectContainersContainerIdFilesFileId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.containers>[0],
+  params2: () => Parameters<ReturnType<typeof client.containers>['files']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getContainersContainerIdFilesFileIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.containers>['files']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getContainersContainerIdFilesFileIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteContainersContainerIdFilesFileIdMutationKey() {
+  return ['containers', '/containers/{container_id}/files/{file_id}', 'DELETE'] as const
+}
+
+export function getDeleteContainersContainerIdFilesFileIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.containers>[0],
+  params2: Parameters<ReturnType<typeof client.containers>['files']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.containers>['files']>['delete']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.containers>['files']>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteContainersContainerIdFilesFileIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.containers(params).files(params2).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteContainersContainerIdFilesFileId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.containers>[0],
+  params2: () => Parameters<ReturnType<typeof client.containers>['files']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<ReturnType<typeof client.containers>['files']>['delete']>[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.containers>['files']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteContainersContainerIdFilesFileIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getContainersContainerIdFilesFileIdContentQueryKey(
+  params: Parameters<typeof client.containers>[0],
+  params2: Parameters<ReturnType<typeof client.containers>['files']>[0],
+) {
+  return [
+    'containers',
+    '/containers/{container_id}/files/{file_id}/content',
+    params,
+    params2,
+  ] as const
+}
+
+export function getContainersContainerIdFilesFileIdContentQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.containers>[0],
+  params2: Parameters<ReturnType<typeof client.containers>['files']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getContainersContainerIdFilesFileIdContentQueryKey>
+  >({
+    queryKey: getContainersContainerIdFilesFileIdContentQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .containers(params)
+        .files(params2)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectContainersContainerIdFilesFileIdContent<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.containers>[0],
+  params2: () => Parameters<ReturnType<typeof client.containers>['files']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getContainersContainerIdFilesFileIdContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.containers>['files']>['content']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getContainersContainerIdFilesFileIdContentQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getConversationsConversationIdItemsQueryKey(
+  params: Parameters<typeof client.conversations>[0],
+  options?: Parameters<ReturnType<typeof client.conversations>['items']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['conversations', '/conversations/{conversation_id}/items', params, keyArgs] as const
+}
+
+export function getConversationsConversationIdItemsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.conversations>[0],
+  options?: Parameters<ReturnType<typeof client.conversations>['items']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getConversationsConversationIdItemsQueryKey>
+  >({
+    queryKey: getConversationsConversationIdItemsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .conversations(params)
+        .items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectConversationsConversationIdItems<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.conversations>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getConversationsConversationIdItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.conversations>['items']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getConversationsConversationIdItemsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostConversationsConversationIdItemsMutationKey() {
+  return ['conversations', '/conversations/{conversation_id}/items', 'POST'] as const
+}
+
+export function getPostConversationsConversationIdItemsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.conversations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.conversations>['items']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.conversations>['items']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostConversationsConversationIdItemsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.conversations(params).items.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostConversationsConversationIdItems<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.conversations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.conversations>['items']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.conversations>['items']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.conversations>['items']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostConversationsConversationIdItemsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getConversationsConversationIdItemsItemIdQueryKey(
+  params: Parameters<typeof client.conversations>[0],
+  params2: Parameters<ReturnType<typeof client.conversations>['items']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'conversations',
+    '/conversations/{conversation_id}/items/{item_id}',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getConversationsConversationIdItemsItemIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.conversations>[0],
+  params2: Parameters<ReturnType<typeof client.conversations>['items']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getConversationsConversationIdItemsItemIdQueryKey>
+  >({
+    queryKey: getConversationsConversationIdItemsItemIdQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .conversations(params)
+        .items(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectConversationsConversationIdItemsItemId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.conversations>[0],
+  params2: () => Parameters<ReturnType<typeof client.conversations>['items']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getConversationsConversationIdItemsItemIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.conversations>['items']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getConversationsConversationIdItemsItemIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteConversationsConversationIdItemsItemIdMutationKey() {
+  return ['conversations', '/conversations/{conversation_id}/items/{item_id}', 'DELETE'] as const
+}
+
+export function getDeleteConversationsConversationIdItemsItemIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.conversations>[0],
+  params2: Parameters<ReturnType<typeof client.conversations>['items']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.conversations>['items']>['delete']>[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.conversations>['items']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteConversationsConversationIdItemsItemIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .conversations(params)
+        .items(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteConversationsConversationIdItemsItemId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.conversations>[0],
+  params2: () => Parameters<ReturnType<typeof client.conversations>['items']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.conversations>['items']>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.conversations>['items']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.conversations>['items']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteConversationsConversationIdItemsItemIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostEmbeddingsMutationKey() {
+  return ['embeddings', '/embeddings', 'POST'] as const
+}
+
+export function getPostEmbeddingsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.embeddings.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.embeddings.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.embeddings.post>[0]
+      options?: Parameters<typeof client.embeddings.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostEmbeddingsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.embeddings.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostEmbeddings<
+  TError = Exclude<Awaited<ReturnType<typeof client.embeddings.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.embeddings.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.embeddings.post>[0]
+          options?: Parameters<typeof client.embeddings.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostEmbeddingsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getEvalsQueryKey(options?: Parameters<typeof client.evals.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['evals', '/evals', keyArgs] as const
+}
+
+export function getEvalsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.evals.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.evals.get>>['error'], null>,
+>(options?: Parameters<typeof client.evals.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.evals.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getEvalsQueryKey>
+  >({
+    queryKey: getEvalsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.evals.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectEvals<
+  TData = Extract<Awaited<ReturnType<typeof client.evals.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.evals.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.evals.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getEvalsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.evals.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getEvalsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostEvalsMutationKey() {
+  return ['evals', '/evals', 'POST'] as const
+}
+
+export function getPostEvalsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.evals.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.evals.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.evals.post>[0]
+      options?: Parameters<typeof client.evals.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostEvalsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.evals.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostEvals<
+  TError = Exclude<Awaited<ReturnType<typeof client.evals.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.evals.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.evals.post>[0]
+          options?: Parameters<typeof client.evals.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostEvalsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getEvalsEvalIdQueryKey(params: Parameters<typeof client.evals>[0]) {
+  return ['evals', '/evals/{eval_id}', params] as const
+}
+
+export function getEvalsEvalIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.evals>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.evals>[0],
+  options?: Parameters<ReturnType<typeof client.evals>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.evals>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getEvalsEvalIdQueryKey>
+  >({
+    queryKey: getEvalsEvalIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .evals(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectEvalsEvalId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.evals>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.evals>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getEvalsEvalIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.evals>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getEvalsEvalIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostEvalsEvalIdMutationKey() {
+  return ['evals', '/evals/{eval_id}', 'POST'] as const
+}
+
+export function getPostEvalsEvalIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.evals>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.evals>[0]) {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.evals>['post']>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.evals>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.evals>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostEvalsEvalIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.evals(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostEvalsEvalId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.evals>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.evals>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.evals>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.evals>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostEvalsEvalIdMutationOptions<TError, TOnMutateResult>(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteEvalsEvalIdMutationKey() {
+  return ['evals', '/evals/{eval_id}', 'DELETE'] as const
+}
+
+export function getDeleteEvalsEvalIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.evals>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.evals>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.evals>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.evals>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.evals>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteEvalsEvalIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.evals(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteEvalsEvalId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.evals>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.evals>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.evals>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.evals>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteEvalsEvalIdMutationOptions<TError, TOnMutateResult>(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getEvalsEvalIdRunsQueryKey(
+  params: Parameters<typeof client.evals>[0],
+  options?: Parameters<ReturnType<typeof client.evals>['runs']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['evals', '/evals/{eval_id}/runs', params, keyArgs] as const
+}
+
+export function getEvalsEvalIdRunsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.evals>[0],
+  options?: Parameters<ReturnType<typeof client.evals>['runs']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getEvalsEvalIdRunsQueryKey>
+  >({
+    queryKey: getEvalsEvalIdRunsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .evals(params)
+        .runs.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectEvalsEvalIdRuns<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getEvalsEvalIdRunsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.evals>['runs']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getEvalsEvalIdRunsQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostEvalsEvalIdRunsMutationKey() {
+  return ['evals', '/evals/{eval_id}/runs', 'POST'] as const
+}
+
+export function getPostEvalsEvalIdRunsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.evals>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.evals>['runs']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.evals>['runs']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostEvalsEvalIdRunsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.evals(params).runs.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostEvalsEvalIdRuns<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.evals>['runs']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.evals>['runs']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.evals>['runs']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostEvalsEvalIdRunsMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getEvalsEvalIdRunsRunIdQueryKey(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+) {
+  return ['evals', '/evals/{eval_id}/runs/{run_id}', params, params2] as const
+}
+
+export function getEvalsEvalIdRunsRunIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getEvalsEvalIdRunsRunIdQueryKey>
+  >({
+    queryKey: getEvalsEvalIdRunsRunIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .evals(params)
+        .runs(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectEvalsEvalIdRunsRunId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  params2: () => Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getEvalsEvalIdRunsRunIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getEvalsEvalIdRunsRunIdQueryOptions<TData, TError>(params(), params2(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteEvalsEvalIdRunsRunIdMutationKey() {
+  return ['evals', '/evals/{eval_id}/runs/{run_id}', 'DELETE'] as const
+}
+
+export function getDeleteEvalsEvalIdRunsRunIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteEvalsEvalIdRunsRunIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.evals(params).runs(params2).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteEvalsEvalIdRunsRunId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  params2: () => Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>[0]
+          options?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteEvalsEvalIdRunsRunIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+      params2(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostEvalsEvalIdRunsRunIdCancelMutationKey() {
+  return ['evals', '/evals/{eval_id}/runs/{run_id}/cancel', 'POST'] as const
+}
+
+export function getPostEvalsEvalIdRunsRunIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostEvalsEvalIdRunsRunIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.evals(params).runs(params2).cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostEvalsEvalIdRunsRunIdCancel<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  params2: () => Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.evals>['runs']>['cancel']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostEvalsEvalIdRunsRunIdCancelMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getEvalsEvalIdRunsRunIdOutputItemsQueryKey(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['evals', '/evals/{eval_id}/runs/{run_id}/output_items', params, params2, keyArgs] as const
+}
+
+export function getEvalsEvalIdRunsRunIdOutputItemsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getEvalsEvalIdRunsRunIdOutputItemsQueryKey>
+  >({
+    queryKey: getEvalsEvalIdRunsRunIdOutputItemsQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .evals(params)
+        .runs(params2)
+        .output_items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectEvalsEvalIdRunsRunIdOutputItems<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  params2: () => Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getEvalsEvalIdRunsRunIdOutputItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getEvalsEvalIdRunsRunIdOutputItemsQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdQueryKey(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>[0],
+) {
+  return [
+    'evals',
+    '/evals/{eval_id}/runs/{run_id}/output_items/{output_item_id}',
+    params,
+    params2,
+    params3,
+  ] as const
+}
+
+export function getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.evals>[0],
+  params2: Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdQueryKey>
+  >({
+    queryKey: getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdQueryKey(params, params2, params3),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .evals(params)
+        .runs(params2)
+        .output_items(params3)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectEvalsEvalIdRunsRunIdOutputItemsOutputItemId<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.evals>[0],
+  params2: () => Parameters<ReturnType<typeof client.evals>['runs']>[0],
+  params3: () => Parameters<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<ReturnType<typeof client.evals>['runs']>['output_items']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        params3(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getFilesQueryKey(options?: Parameters<typeof client.files.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['files', '/files', keyArgs] as const
+}
+
+export function getFilesQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.files.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.files.get>>['error'], null>,
+>(options?: Parameters<typeof client.files.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.files.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFilesQueryKey>
+  >({
+    queryKey: getFilesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.files.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFiles<
+  TData = Extract<Awaited<ReturnType<typeof client.files.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.files.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.files.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFilesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.files.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getFilesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostFilesMutationKey() {
+  return ['files', '/files', 'POST'] as const
+}
+
+export function getPostFilesMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.files.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.files.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.files.post>[0]
+      options?: Parameters<typeof client.files.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFilesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.files.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFiles<
+  TError = Exclude<Awaited<ReturnType<typeof client.files.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.files.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.files.post>[0]
+          options?: Parameters<typeof client.files.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostFilesMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getFilesFileIdQueryKey(params: Parameters<typeof client.files>[0]) {
+  return ['files', '/files/{file_id}', params] as const
+}
+
+export function getFilesFileIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.files>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.files>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.files>[0],
+  options?: Parameters<ReturnType<typeof client.files>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.files>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFilesFileIdQueryKey>
+  >({
+    queryKey: getFilesFileIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .files(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFilesFileId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.files>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.files>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.files>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.files>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFilesFileIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.files>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getFilesFileIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getDeleteFilesFileIdMutationKey() {
+  return ['files', '/files/{file_id}', 'DELETE'] as const
+}
+
+export function getDeleteFilesFileIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.files>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.files>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.files>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.files>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.files>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteFilesFileIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.files(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteFilesFileId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.files>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.files>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.files>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.files>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.files>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteFilesFileIdMutationOptions<TError, TOnMutateResult>(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getFilesFileIdContentQueryKey(params: Parameters<typeof client.files>[0]) {
+  return ['files', '/files/{file_id}/content', params] as const
+}
+
+export function getFilesFileIdContentQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.files>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.files>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.files>[0],
+  options?: Parameters<ReturnType<typeof client.files>['content']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.files>['content']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFilesFileIdContentQueryKey>
+  >({
+    queryKey: getFilesFileIdContentQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .files(params)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFilesFileIdContent<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.files>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.files>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.files>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.files>['content']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFilesFileIdContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.files>['content']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getFilesFileIdContentQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostFineTuningAlphaGradersRunMutationKey() {
+  return ['fine_tuning', '/fine_tuning/alpha/graders/run', 'POST'] as const
+}
+
+export function getPostFineTuningAlphaGradersRunMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.run.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.run.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.fine_tuning.alpha.graders.run.post>[0]
+      options?: Parameters<typeof client.fine_tuning.alpha.graders.run.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFineTuningAlphaGradersRunMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning.alpha.graders.run.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFineTuningAlphaGradersRun<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.run.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.run.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.fine_tuning.alpha.graders.run.post>[0]
+          options?: Parameters<typeof client.fine_tuning.alpha.graders.run.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostFineTuningAlphaGradersRunMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostFineTuningAlphaGradersValidateMutationKey() {
+  return ['fine_tuning', '/fine_tuning/alpha/graders/validate', 'POST'] as const
+}
+
+export function getPostFineTuningAlphaGradersValidateMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.validate.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.validate.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.fine_tuning.alpha.graders.validate.post>[0]
+      options?: Parameters<typeof client.fine_tuning.alpha.graders.validate.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFineTuningAlphaGradersValidateMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning.alpha.graders.validate.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFineTuningAlphaGradersValidate<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.validate.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.fine_tuning.alpha.graders.validate.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.fine_tuning.alpha.graders.validate.post>[0]
+          options?: Parameters<typeof client.fine_tuning.alpha.graders.validate.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostFineTuningAlphaGradersValidateMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getFineTuningCheckpointsFineTunedModelCheckpointPermissionsQueryKey(
+  params: Parameters<typeof client.fine_tuning.checkpoints>[0],
+  options?: Parameters<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'fine_tuning',
+    '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions',
+    params,
+    keyArgs,
+  ] as const
+}
+
+export function getFineTuningCheckpointsFineTunedModelCheckpointPermissionsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.fine_tuning.checkpoints>[0],
+  options?: Parameters<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFineTuningCheckpointsFineTunedModelCheckpointPermissionsQueryKey>
+  >({
+    queryKey: getFineTuningCheckpointsFineTunedModelCheckpointPermissionsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.fine_tuning
+        .checkpoints(params)
+        .permissions.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFineTuningCheckpointsFineTunedModelCheckpointPermissions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.fine_tuning.checkpoints>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFineTuningCheckpointsFineTunedModelCheckpointPermissionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getFineTuningCheckpointsFineTunedModelCheckpointPermissionsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostFineTuningCheckpointsFineTunedModelCheckpointPermissionsMutationKey() {
+  return [
+    'fine_tuning',
+    '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions',
+    'POST',
+  ] as const
+}
+
+export function getPostFineTuningCheckpointsFineTunedModelCheckpointPermissionsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.fine_tuning.checkpoints>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']>[0]
+      options?: Parameters<
+        ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFineTuningCheckpointsFineTunedModelCheckpointPermissionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning
+        .checkpoints(params)
+        .permissions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFineTuningCheckpointsFineTunedModelCheckpointPermissions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.fine_tuning.checkpoints>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.fine_tuning.checkpoints>['permissions']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostFineTuningCheckpointsFineTunedModelCheckpointPermissionsMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermissionIdMutationKey() {
+  return [
+    'fine_tuning',
+    '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions/{permission_id}',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermissionIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.fine_tuning.checkpoints>[0],
+  params2: Parameters<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey:
+      getDeleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermissionIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning
+        .checkpoints(params)
+        .permissions(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermissionId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.fine_tuning.checkpoints>[0],
+  params2: () => Parameters<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.fine_tuning.checkpoints>['permissions']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getDeleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermissionIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getFineTuningJobsQueryKey(
+  options?: Parameters<typeof client.fine_tuning.jobs.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['fine_tuning', '/fine_tuning/jobs', keyArgs] as const
+}
+
+export function getFineTuningJobsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.fine_tuning.jobs.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.fine_tuning.jobs.get>>['error'], null>,
+>(options?: Parameters<typeof client.fine_tuning.jobs.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.fine_tuning.jobs.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFineTuningJobsQueryKey>
+  >({
+    queryKey: getFineTuningJobsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.fine_tuning.jobs.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFineTuningJobs<
+  TData = Extract<Awaited<ReturnType<typeof client.fine_tuning.jobs.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.fine_tuning.jobs.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.fine_tuning.jobs.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFineTuningJobsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.fine_tuning.jobs.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getFineTuningJobsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostFineTuningJobsMutationKey() {
+  return ['fine_tuning', '/fine_tuning/jobs', 'POST'] as const
+}
+
+export function getPostFineTuningJobsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.fine_tuning.jobs.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.fine_tuning.jobs.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.fine_tuning.jobs.post>[0]
+      options?: Parameters<typeof client.fine_tuning.jobs.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFineTuningJobsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning.jobs.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFineTuningJobs<
+  TError = Exclude<Awaited<ReturnType<typeof client.fine_tuning.jobs.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.fine_tuning.jobs.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.fine_tuning.jobs.post>[0]
+          options?: Parameters<typeof client.fine_tuning.jobs.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostFineTuningJobsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getFineTuningJobsFineTuningJobIdQueryKey(
+  params: Parameters<typeof client.fine_tuning.jobs>[0],
+) {
+  return ['fine_tuning', '/fine_tuning/jobs/{fine_tuning_job_id}', params] as const
+}
+
+export function getFineTuningJobsFineTuningJobIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFineTuningJobsFineTuningJobIdQueryKey>
+  >({
+    queryKey: getFineTuningJobsFineTuningJobIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.fine_tuning
+        .jobs(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFineTuningJobsFineTuningJobId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFineTuningJobsFineTuningJobIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getFineTuningJobsFineTuningJobIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostFineTuningJobsFineTuningJobIdCancelMutationKey() {
+  return ['fine_tuning', '/fine_tuning/jobs/{fine_tuning_job_id}/cancel', 'POST'] as const
+}
+
+export function getPostFineTuningJobsFineTuningJobIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.fine_tuning.jobs>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFineTuningJobsFineTuningJobIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning.jobs(params).cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFineTuningJobsFineTuningJobIdCancel<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['cancel']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostFineTuningJobsFineTuningJobIdCancelMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getFineTuningJobsFineTuningJobIdCheckpointsQueryKey(
+  params: Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'fine_tuning',
+    '/fine_tuning/jobs/{fine_tuning_job_id}/checkpoints',
+    params,
+    keyArgs,
+  ] as const
+}
+
+export function getFineTuningJobsFineTuningJobIdCheckpointsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFineTuningJobsFineTuningJobIdCheckpointsQueryKey>
+  >({
+    queryKey: getFineTuningJobsFineTuningJobIdCheckpointsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.fine_tuning
+        .jobs(params)
+        .checkpoints.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFineTuningJobsFineTuningJobIdCheckpoints<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFineTuningJobsFineTuningJobIdCheckpointsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['checkpoints']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getFineTuningJobsFineTuningJobIdCheckpointsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getFineTuningJobsFineTuningJobIdEventsQueryKey(
+  params: Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['fine_tuning', '/fine_tuning/jobs/{fine_tuning_job_id}/events', params, keyArgs] as const
+}
+
+export function getFineTuningJobsFineTuningJobIdEventsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getFineTuningJobsFineTuningJobIdEventsQueryKey>
+  >({
+    queryKey: getFineTuningJobsFineTuningJobIdEventsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.fine_tuning
+        .jobs(params)
+        .events.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectFineTuningJobsFineTuningJobIdEvents<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getFineTuningJobsFineTuningJobIdEventsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['events']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getFineTuningJobsFineTuningJobIdEventsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostFineTuningJobsFineTuningJobIdPauseMutationKey() {
+  return ['fine_tuning', '/fine_tuning/jobs/{fine_tuning_job_id}/pause', 'POST'] as const
+}
+
+export function getPostFineTuningJobsFineTuningJobIdPauseMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.fine_tuning.jobs>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFineTuningJobsFineTuningJobIdPauseMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning.jobs(params).pause.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFineTuningJobsFineTuningJobIdPause<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['pause']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostFineTuningJobsFineTuningJobIdPauseMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostFineTuningJobsFineTuningJobIdResumeMutationKey() {
+  return ['fine_tuning', '/fine_tuning/jobs/{fine_tuning_job_id}/resume', 'POST'] as const
+}
+
+export function getPostFineTuningJobsFineTuningJobIdResumeMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.fine_tuning.jobs>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostFineTuningJobsFineTuningJobIdResumeMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.fine_tuning.jobs(params).resume.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostFineTuningJobsFineTuningJobIdResume<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.fine_tuning.jobs>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.fine_tuning.jobs>['resume']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostFineTuningJobsFineTuningJobIdResumeMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostImagesEditsMutationKey() {
+  return ['images', '/images/edits', 'POST'] as const
+}
+
+export function getPostImagesEditsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.images.edits.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.images.edits.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.images.edits.post>[0]
+      options?: Parameters<typeof client.images.edits.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostImagesEditsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.images.edits.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostImagesEdits<
+  TError = Exclude<Awaited<ReturnType<typeof client.images.edits.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.images.edits.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.images.edits.post>[0]
+          options?: Parameters<typeof client.images.edits.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostImagesEditsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostImagesGenerationsMutationKey() {
+  return ['images', '/images/generations', 'POST'] as const
+}
+
+export function getPostImagesGenerationsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.images.generations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.images.generations.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.images.generations.post>[0]
+      options?: Parameters<typeof client.images.generations.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostImagesGenerationsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.images.generations.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostImagesGenerations<
+  TError = Exclude<Awaited<ReturnType<typeof client.images.generations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.images.generations.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.images.generations.post>[0]
+          options?: Parameters<typeof client.images.generations.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostImagesGenerationsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostImagesVariationsMutationKey() {
+  return ['images', '/images/variations', 'POST'] as const
+}
+
+export function getPostImagesVariationsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.images.variations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.images.variations.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.images.variations.post>[0]
+      options?: Parameters<typeof client.images.variations.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostImagesVariationsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.images.variations.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostImagesVariations<
+  TError = Exclude<Awaited<ReturnType<typeof client.images.variations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.images.variations.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.images.variations.post>[0]
+          options?: Parameters<typeof client.images.variations.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostImagesVariationsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostLiveSessionsMutationKey() {
+  return ['live', '/live/sessions', 'POST'] as const
+}
+
+export function getPostLiveSessionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.live.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.live.sessions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.live.sessions.post>[0]
+      options?: Parameters<typeof client.live.sessions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostLiveSessionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.live.sessions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostLiveSessions<
+  TError = Exclude<Awaited<ReturnType<typeof client.live.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.live.sessions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.live.sessions.post>[0]
+          options?: Parameters<typeof client.live.sessions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostLiveSessionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostLiveSessionsSessionIdAcceptMutationKey() {
+  return ['live', '/live/sessions/{session_id}/accept', 'POST'] as const
+}
+
+export function getPostLiveSessionsSessionIdAcceptMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['accept']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.live.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.live.sessions>['accept']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.live.sessions>['accept']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.live.sessions>['accept']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostLiveSessionsSessionIdAcceptMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.live.sessions(params).accept.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostLiveSessionsSessionIdAccept<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['accept']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.live.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.live.sessions>['accept']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.live.sessions>['accept']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.live.sessions>['accept']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostLiveSessionsSessionIdAcceptMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostLiveSessionsSessionIdForkMutationKey() {
+  return ['live', '/live/sessions/{session_id}/fork', 'POST'] as const
+}
+
+export function getPostLiveSessionsSessionIdForkMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['fork']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.live.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.live.sessions>['fork']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.live.sessions>['fork']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.live.sessions>['fork']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostLiveSessionsSessionIdForkMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.live.sessions(params).fork.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostLiveSessionsSessionIdFork<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['fork']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.live.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.live.sessions>['fork']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.live.sessions>['fork']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.live.sessions>['fork']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostLiveSessionsSessionIdForkMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostLiveSessionsSessionIdHangupMutationKey() {
+  return ['live', '/live/sessions/{session_id}/hangup', 'POST'] as const
+}
+
+export function getPostLiveSessionsSessionIdHangupMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['hangup']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.live.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.live.sessions>['hangup']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.live.sessions>['hangup']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.live.sessions>['hangup']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostLiveSessionsSessionIdHangupMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.live.sessions(params).hangup.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostLiveSessionsSessionIdHangup<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['hangup']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.live.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.live.sessions>['hangup']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.live.sessions>['hangup']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.live.sessions>['hangup']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostLiveSessionsSessionIdHangupMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostLiveSessionsSessionIdReferMutationKey() {
+  return ['live', '/live/sessions/{session_id}/refer', 'POST'] as const
+}
+
+export function getPostLiveSessionsSessionIdReferMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['refer']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.live.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.live.sessions>['refer']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.live.sessions>['refer']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.live.sessions>['refer']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostLiveSessionsSessionIdReferMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.live.sessions(params).refer.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostLiveSessionsSessionIdRefer<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['refer']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.live.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.live.sessions>['refer']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.live.sessions>['refer']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.live.sessions>['refer']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostLiveSessionsSessionIdReferMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostLiveSessionsSessionIdRejectMutationKey() {
+  return ['live', '/live/sessions/{session_id}/reject', 'POST'] as const
+}
+
+export function getPostLiveSessionsSessionIdRejectMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['reject']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.live.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.live.sessions>['reject']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.live.sessions>['reject']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.live.sessions>['reject']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostLiveSessionsSessionIdRejectMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.live.sessions(params).reject.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostLiveSessionsSessionIdReject<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['reject']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.live.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.live.sessions>['reject']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.live.sessions>['reject']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.live.sessions>['reject']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostLiveSessionsSessionIdRejectMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getModelsQueryKey() {
+  return ['models', '/models'] as const
+}
+
+export function getModelsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.models.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.models.get>>['error'], null>,
+>(options?: Parameters<typeof client.models.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.models.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getModelsQueryKey>
+  >({
+    queryKey: getModelsQueryKey(),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.models.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectModels<
+  TData = Extract<Awaited<ReturnType<typeof client.models.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.models.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.models.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getModelsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.models.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getModelsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getModelsModelQueryKey(params: Parameters<typeof client.models>[0]) {
+  return ['models', '/models/{model}', params] as const
+}
+
+export function getModelsModelQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.models>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.models>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.models>[0],
+  options?: Parameters<ReturnType<typeof client.models>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.models>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getModelsModelQueryKey>
+  >({
+    queryKey: getModelsModelQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .models(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectModelsModel<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.models>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.models>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.models>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.models>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getModelsModelQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.models>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getModelsModelQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getDeleteModelsModelMutationKey() {
+  return ['models', '/models/{model}', 'DELETE'] as const
+}
+
+export function getDeleteModelsModelMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.models>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.models>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.models>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.models>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.models>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteModelsModelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.models(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteModelsModel<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.models>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.models>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.models>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.models>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.models>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteModelsModelMutationOptions<TError, TOnMutateResult>(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostModerationsMutationKey() {
+  return ['moderations', '/moderations', 'POST'] as const
+}
+
+export function getPostModerationsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.moderations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.moderations.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.moderations.post>[0]
+      options?: Parameters<typeof client.moderations.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostModerationsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.moderations.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostModerations<
+  TError = Exclude<Awaited<ReturnType<typeof client.moderations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.moderations.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.moderations.post>[0]
+          options?: Parameters<typeof client.moderations.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostModerationsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationAdminApiKeysQueryKey(
+  options?: Parameters<typeof client.organization.admin_api_keys.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/admin_api_keys', keyArgs] as const
+}
+
+export function getOrganizationAdminApiKeysQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.admin_api_keys.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.admin_api_keys.get>>['error'],
+    null
+  >,
+>(options?: Parameters<typeof client.organization.admin_api_keys.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.admin_api_keys.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationAdminApiKeysQueryKey>
+  >({
+    queryKey: getOrganizationAdminApiKeysQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.admin_api_keys.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationAdminApiKeys<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.admin_api_keys.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.admin_api_keys.get>>['error'],
+    null
+  >,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.admin_api_keys.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationAdminApiKeysQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.admin_api_keys.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationAdminApiKeysQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationAdminApiKeysMutationKey() {
+  return ['organization', '/organization/admin_api_keys', 'POST'] as const
+}
+
+export function getPostOrganizationAdminApiKeysMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.admin_api_keys.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.admin_api_keys.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.admin_api_keys.post>[0]
+      options?: Parameters<typeof client.organization.admin_api_keys.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationAdminApiKeysMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.admin_api_keys.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationAdminApiKeys<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.admin_api_keys.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.admin_api_keys.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.admin_api_keys.post>[0]
+          options?: Parameters<typeof client.organization.admin_api_keys.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationAdminApiKeysMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationAdminApiKeysKeyIdQueryKey(
+  params: Parameters<typeof client.organization.admin_api_keys>[0],
+) {
+  return ['organization', '/organization/admin_api_keys/{key_id}', params] as const
+}
+
+export function getOrganizationAdminApiKeysKeyIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.admin_api_keys>[0],
+  options?: Parameters<ReturnType<typeof client.organization.admin_api_keys>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationAdminApiKeysKeyIdQueryKey>
+  >({
+    queryKey: getOrganizationAdminApiKeysKeyIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .admin_api_keys(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationAdminApiKeysKeyId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.admin_api_keys>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationAdminApiKeysKeyIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.admin_api_keys>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationAdminApiKeysKeyIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationAdminApiKeysKeyIdMutationKey() {
+  return ['organization', '/organization/admin_api_keys/{key_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationAdminApiKeysKeyIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.admin_api_keys>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.admin_api_keys>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.admin_api_keys>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationAdminApiKeysKeyIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.admin_api_keys(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationAdminApiKeysKeyId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.admin_api_keys>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.admin_api_keys>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.admin_api_keys>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.admin_api_keys>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationAdminApiKeysKeyIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationAuditLogsQueryKey(
+  options?: Parameters<typeof client.organization.audit_logs.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/audit_logs', keyArgs] as const
+}
+
+export function getOrganizationAuditLogsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.audit_logs.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.audit_logs.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.audit_logs.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.audit_logs.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationAuditLogsQueryKey>
+  >({
+    queryKey: getOrganizationAuditLogsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.audit_logs.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationAuditLogs<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.audit_logs.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.audit_logs.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.audit_logs.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationAuditLogsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.audit_logs.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationAuditLogsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getOrganizationCertificatesQueryKey(
+  options?: Parameters<typeof client.organization.certificates.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/certificates', keyArgs] as const
+}
+
+export function getOrganizationCertificatesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.certificates.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.certificates.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.certificates.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.certificates.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationCertificatesQueryKey>
+  >({
+    queryKey: getOrganizationCertificatesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.certificates.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationCertificates<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.certificates.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.certificates.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.certificates.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationCertificatesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.certificates.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationCertificatesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationCertificatesMutationKey() {
+  return ['organization', '/organization/certificates', 'POST'] as const
+}
+
+export function getPostOrganizationCertificatesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.certificates.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.certificates.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.certificates.post>[0]
+      options?: Parameters<typeof client.organization.certificates.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationCertificatesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.certificates.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationCertificates<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.certificates.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.certificates.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.certificates.post>[0]
+          options?: Parameters<typeof client.organization.certificates.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationCertificatesMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationCertificatesActivateMutationKey() {
+  return ['organization', '/organization/certificates/activate', 'POST'] as const
+}
+
+export function getPostOrganizationCertificatesActivateMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.certificates.activate.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.certificates.activate.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.certificates.activate.post>[0]
+      options?: Parameters<typeof client.organization.certificates.activate.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationCertificatesActivateMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.certificates.activate.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationCertificatesActivate<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.certificates.activate.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.certificates.activate.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.certificates.activate.post>[0]
+          options?: Parameters<typeof client.organization.certificates.activate.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationCertificatesActivateMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationCertificatesDeactivateMutationKey() {
+  return ['organization', '/organization/certificates/deactivate', 'POST'] as const
+}
+
+export function getPostOrganizationCertificatesDeactivateMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.certificates.deactivate.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.certificates.deactivate.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.certificates.deactivate.post>[0]
+      options?: Parameters<typeof client.organization.certificates.deactivate.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationCertificatesDeactivateMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.certificates.deactivate.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationCertificatesDeactivate<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.certificates.deactivate.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.certificates.deactivate.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.certificates.deactivate.post>[0]
+          options?: Parameters<typeof client.organization.certificates.deactivate.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationCertificatesDeactivateMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationCertificatesCertificateIdQueryKey(
+  params: Parameters<typeof client.organization.certificates>[0],
+  options?: Parameters<ReturnType<typeof client.organization.certificates>['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/certificates/{certificate_id}', params, keyArgs] as const
+}
+
+export function getOrganizationCertificatesCertificateIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.certificates>[0],
+  options?: Parameters<ReturnType<typeof client.organization.certificates>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationCertificatesCertificateIdQueryKey>
+  >({
+    queryKey: getOrganizationCertificatesCertificateIdQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .certificates(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationCertificatesCertificateId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.certificates>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationCertificatesCertificateIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.certificates>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationCertificatesCertificateIdQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationCertificatesCertificateIdMutationKey() {
+  return ['organization', '/organization/certificates/{certificate_id}', 'POST'] as const
+}
+
+export function getPostOrganizationCertificatesCertificateIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.certificates>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.certificates>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.certificates>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationCertificatesCertificateIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.certificates(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationCertificatesCertificateId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.certificates>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.certificates>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.certificates>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationCertificatesCertificateIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationCertificatesCertificateIdMutationKey() {
+  return ['organization', '/organization/certificates/{certificate_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationCertificatesCertificateIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.certificates>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.certificates>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.certificates>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationCertificatesCertificateIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.certificates(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationCertificatesCertificateId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.certificates>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.certificates>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.certificates>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.certificates>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationCertificatesCertificateIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationCostsQueryKey(
+  options: Parameters<typeof client.organization.costs.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/costs', keyArgs] as const
+}
+
+export function getOrganizationCostsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.costs.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.costs.get>>['error'], null>,
+>(options: Parameters<typeof client.organization.costs.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.costs.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationCostsQueryKey>
+  >({
+    queryKey: getOrganizationCostsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.costs.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationCosts<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.costs.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.costs.get>>['error'], null>,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.organization.costs.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationCostsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.costs.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return { ...getOrganizationCostsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getOrganizationDataRetentionQueryKey() {
+  return ['organization', '/organization/data_retention'] as const
+}
+
+export function getOrganizationDataRetentionQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.data_retention.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.data_retention.get>>['error'],
+    null
+  >,
+>(options?: Parameters<typeof client.organization.data_retention.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.data_retention.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationDataRetentionQueryKey>
+  >({
+    queryKey: getOrganizationDataRetentionQueryKey(),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.data_retention.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationDataRetention<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.data_retention.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.data_retention.get>>['error'],
+    null
+  >,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.data_retention.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationDataRetentionQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.data_retention.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationDataRetentionQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationDataRetentionMutationKey() {
+  return ['organization', '/organization/data_retention', 'POST'] as const
+}
+
+export function getPostOrganizationDataRetentionMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.data_retention.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.data_retention.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.data_retention.post>[0]
+      options?: Parameters<typeof client.organization.data_retention.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationDataRetentionMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.data_retention.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationDataRetention<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.data_retention.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.data_retention.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.data_retention.post>[0]
+          options?: Parameters<typeof client.organization.data_retention.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationDataRetentionMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationGroupsQueryKey(
+  options?: Parameters<typeof client.organization.groups.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/groups', keyArgs] as const
+}
+
+export function getOrganizationGroupsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.groups.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.groups.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.groups.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.groups.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationGroupsQueryKey>
+  >({
+    queryKey: getOrganizationGroupsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.groups.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationGroups<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.groups.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.groups.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.groups.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationGroupsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.groups.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationGroupsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationGroupsMutationKey() {
+  return ['organization', '/organization/groups', 'POST'] as const
+}
+
+export function getPostOrganizationGroupsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.groups.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.groups.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.groups.post>[0]
+      options?: Parameters<typeof client.organization.groups.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationGroupsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.groups.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationGroups<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.groups.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.groups.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.groups.post>[0]
+          options?: Parameters<typeof client.organization.groups.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationGroupsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationGroupsGroupIdQueryKey(
+  params: Parameters<typeof client.organization.groups>[0],
+) {
+  return ['organization', '/organization/groups/{group_id}', params] as const
+}
+
+export function getOrganizationGroupsGroupIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.groups>[0],
+  options?: Parameters<ReturnType<typeof client.organization.groups>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.groups>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationGroupsGroupIdQueryKey>
+  >({
+    queryKey: getOrganizationGroupsGroupIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .groups(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationGroupsGroupId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.groups>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationGroupsGroupIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.groups>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationGroupsGroupIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationGroupsGroupIdMutationKey() {
+  return ['organization', '/organization/groups/{group_id}', 'POST'] as const
+}
+
+export function getPostOrganizationGroupsGroupIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.groups>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.groups>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.groups>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.groups>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationGroupsGroupIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.groups(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationGroupsGroupId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.groups>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.groups>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.groups>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationGroupsGroupIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationGroupsGroupIdMutationKey() {
+  return ['organization', '/organization/groups/{group_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationGroupsGroupIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.groups>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.groups>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.groups>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.groups>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationGroupsGroupIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.groups(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationGroupsGroupId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.groups>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.groups>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.groups>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationGroupsGroupIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationGroupsGroupIdRolesQueryKey(
+  params: Parameters<typeof client.organization.groups>[0],
+  options?: Parameters<ReturnType<typeof client.organization.groups>['roles']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/groups/{group_id}/roles', params, keyArgs] as const
+}
+
+export function getOrganizationGroupsGroupIdRolesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.groups>[0],
+  options?: Parameters<ReturnType<typeof client.organization.groups>['roles']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationGroupsGroupIdRolesQueryKey>
+  >({
+    queryKey: getOrganizationGroupsGroupIdRolesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .groups(params)
+        .roles.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationGroupsGroupIdRoles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationGroupsGroupIdRolesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.groups>['roles']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationGroupsGroupIdRolesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationGroupsGroupIdRolesMutationKey() {
+  return ['organization', '/organization/groups/{group_id}/roles', 'POST'] as const
+}
+
+export function getPostOrganizationGroupsGroupIdRolesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.groups>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.groups>['roles']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.groups>['roles']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationGroupsGroupIdRolesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.groups(params).roles.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationGroupsGroupIdRoles<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.groups>['roles']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.groups>['roles']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.groups>['roles']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationGroupsGroupIdRolesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationGroupsGroupIdRolesRoleIdQueryKey(
+  params: Parameters<typeof client.organization.groups>[0],
+  params2: Parameters<ReturnType<typeof client.organization.groups>['roles']>[0],
+) {
+  return [
+    'organization',
+    '/organization/groups/{group_id}/roles/{role_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getOrganizationGroupsGroupIdRolesRoleIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.groups>[0],
+  params2: Parameters<ReturnType<typeof client.organization.groups>['roles']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationGroupsGroupIdRolesRoleIdQueryKey>
+  >({
+    queryKey: getOrganizationGroupsGroupIdRolesRoleIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .groups(params)
+        .roles(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationGroupsGroupIdRolesRoleId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.groups>['roles']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationGroupsGroupIdRolesRoleIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.groups>['roles']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationGroupsGroupIdRolesRoleIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationGroupsGroupIdRolesRoleIdMutationKey() {
+  return ['organization', '/organization/groups/{group_id}/roles/{role_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationGroupsGroupIdRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.groups>[0],
+  params2: Parameters<ReturnType<typeof client.organization.groups>['roles']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationGroupsGroupIdRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .groups(params)
+        .roles(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationGroupsGroupIdRolesRoleId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.groups>['roles']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.groups>['roles']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationGroupsGroupIdRolesRoleIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationGroupsGroupIdUsersQueryKey(
+  params: Parameters<typeof client.organization.groups>[0],
+  options?: Parameters<ReturnType<typeof client.organization.groups>['users']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/groups/{group_id}/users', params, keyArgs] as const
+}
+
+export function getOrganizationGroupsGroupIdUsersQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.groups>[0],
+  options?: Parameters<ReturnType<typeof client.organization.groups>['users']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationGroupsGroupIdUsersQueryKey>
+  >({
+    queryKey: getOrganizationGroupsGroupIdUsersQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .groups(params)
+        .users.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationGroupsGroupIdUsers<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationGroupsGroupIdUsersQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.groups>['users']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationGroupsGroupIdUsersQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationGroupsGroupIdUsersMutationKey() {
+  return ['organization', '/organization/groups/{group_id}/users', 'POST'] as const
+}
+
+export function getPostOrganizationGroupsGroupIdUsersMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.groups>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.groups>['users']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.groups>['users']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationGroupsGroupIdUsersMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.groups(params).users.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationGroupsGroupIdUsers<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.groups>['users']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.groups>['users']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.groups>['users']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationGroupsGroupIdUsersMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationGroupsGroupIdUsersUserIdQueryKey(
+  params: Parameters<typeof client.organization.groups>[0],
+  params2: Parameters<ReturnType<typeof client.organization.groups>['users']>[0],
+) {
+  return [
+    'organization',
+    '/organization/groups/{group_id}/users/{user_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getOrganizationGroupsGroupIdUsersUserIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.groups>[0],
+  params2: Parameters<ReturnType<typeof client.organization.groups>['users']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationGroupsGroupIdUsersUserIdQueryKey>
+  >({
+    queryKey: getOrganizationGroupsGroupIdUsersUserIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .groups(params)
+        .users(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationGroupsGroupIdUsersUserId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.groups>['users']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationGroupsGroupIdUsersUserIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.groups>['users']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationGroupsGroupIdUsersUserIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationGroupsGroupIdUsersUserIdMutationKey() {
+  return ['organization', '/organization/groups/{group_id}/users/{user_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationGroupsGroupIdUsersUserIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.groups>[0],
+  params2: Parameters<ReturnType<typeof client.organization.groups>['users']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationGroupsGroupIdUsersUserIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .groups(params)
+        .users(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationGroupsGroupIdUsersUserId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.groups>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.groups>['users']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.groups>['users']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationGroupsGroupIdUsersUserIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationInvitesQueryKey(
+  options?: Parameters<typeof client.organization.invites.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/invites', keyArgs] as const
+}
+
+export function getOrganizationInvitesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.invites.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.invites.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.invites.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.invites.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationInvitesQueryKey>
+  >({
+    queryKey: getOrganizationInvitesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.invites.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationInvites<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.invites.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.invites.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.invites.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationInvitesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.invites.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationInvitesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationInvitesMutationKey() {
+  return ['organization', '/organization/invites', 'POST'] as const
+}
+
+export function getPostOrganizationInvitesMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.invites.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.invites.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.invites.post>[0]
+      options?: Parameters<typeof client.organization.invites.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationInvitesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.invites.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationInvites<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.invites.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.invites.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.invites.post>[0]
+          options?: Parameters<typeof client.organization.invites.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationInvitesMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationInvitesInviteIdQueryKey(
+  params: Parameters<typeof client.organization.invites>[0],
+) {
+  return ['organization', '/organization/invites/{invite_id}', params] as const
+}
+
+export function getOrganizationInvitesInviteIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.invites>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.invites>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.invites>[0],
+  options?: Parameters<ReturnType<typeof client.organization.invites>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.invites>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationInvitesInviteIdQueryKey>
+  >({
+    queryKey: getOrganizationInvitesInviteIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .invites(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationInvitesInviteId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.invites>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.invites>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.invites>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.invites>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationInvitesInviteIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.invites>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationInvitesInviteIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationInvitesInviteIdMutationKey() {
+  return ['organization', '/organization/invites/{invite_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationInvitesInviteIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.invites>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.invites>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.invites>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.invites>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.invites>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationInvitesInviteIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.invites(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationInvitesInviteId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.invites>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.invites>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.invites>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.invites>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.invites>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationInvitesInviteIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsQueryKey(
+  options?: Parameters<typeof client.organization.projects.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/projects', keyArgs] as const
+}
+
+export function getOrganizationProjectsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.projects.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.projects.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.projects.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.projects.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.projects.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjects<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.projects.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.projects.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.projects.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.projects.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationProjectsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsMutationKey() {
+  return ['organization', '/organization/projects', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.projects.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.projects.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.projects.post>[0]
+      options?: Parameters<typeof client.organization.projects.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.projects.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjects<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.projects.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.projects.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.projects.post>[0]
+          options?: Parameters<typeof client.organization.projects.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+) {
+  return ['organization', '/organization/projects/{project_id}', params] as const
+}
+
+export function getOrganizationProjectsProjectIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdMutationKey() {
+  return ['organization', '/organization/projects/{project_id}', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.projects>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.projects>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.projects(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.projects>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.projects>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdApiKeysQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['api_keys']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/projects/{project_id}/api_keys', params, keyArgs] as const
+}
+
+export function getOrganizationProjectsProjectIdApiKeysQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['api_keys']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['api_keys']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdApiKeysQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdApiKeysQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .api_keys.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdApiKeys<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['api_keys']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdApiKeysQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['api_keys']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdApiKeysQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdApiKeysApiKeyIdQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['api_keys']>[0],
+) {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/api_keys/{api_key_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdApiKeysApiKeyIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['api_keys']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdApiKeysApiKeyIdQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdApiKeysApiKeyIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .api_keys(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdApiKeysApiKeyId<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['api_keys']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdApiKeysApiKeyIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdApiKeysApiKeyIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdApiKeysApiKeyIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/api_keys/{api_key_id}',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdApiKeysApiKeyIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['api_keys']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdApiKeysApiKeyIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .api_keys(params2)
+        .post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdApiKeysApiKeyId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['api_keys']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdApiKeysApiKeyIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationProjectsProjectIdApiKeysApiKeyIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/api_keys/{api_key_id}',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteOrganizationProjectsProjectIdApiKeysApiKeyIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['api_keys']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationProjectsProjectIdApiKeysApiKeyIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .api_keys(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationProjectsProjectIdApiKeysApiKeyId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['api_keys']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['api_keys']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationProjectsProjectIdApiKeysApiKeyIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdArchiveMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/archive', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdArchiveMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['archive']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['archive']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.projects>['archive']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.projects>['archive']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdArchiveMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.projects(params).archive.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdArchive<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['archive']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['archive']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.projects>['archive']['post']>[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['archive']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdArchiveMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdCertificatesQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['certificates']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'organization',
+    '/organization/projects/{project_id}/certificates',
+    params,
+    keyArgs,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdCertificatesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['certificates']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['certificates']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['certificates']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['certificates']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdCertificatesQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdCertificatesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .certificates.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdCertificates<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['certificates']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['certificates']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['certificates']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdCertificatesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['certificates']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdCertificatesQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdCertificatesActivateMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/certificates/activate',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdCertificatesActivateMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdCertificatesActivateMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .certificates.activate.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdCertificatesActivate<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['certificates']['activate']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationProjectsProjectIdCertificatesActivateMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdCertificatesDeactivateMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/certificates/deactivate',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdCertificatesDeactivateMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdCertificatesDeactivateMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .certificates.deactivate.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdCertificatesDeactivate<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['certificates']['deactivate']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationProjectsProjectIdCertificatesDeactivateMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdDataRetentionQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+) {
+  return ['organization', '/organization/projects/{project_id}/data_retention', params] as const
+}
+
+export function getOrganizationProjectsProjectIdDataRetentionQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['data_retention']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdDataRetentionQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdDataRetentionQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .data_retention.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdDataRetention<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdDataRetentionQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<typeof client.organization.projects>['data_retention']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdDataRetentionQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdDataRetentionMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/data_retention', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdDataRetentionMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.projects>['data_retention']['post']>[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['data_retention']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdDataRetentionMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .data_retention.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdDataRetention<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['data_retention']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['data_retention']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['data_retention']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdDataRetentionMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdGroupsQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['groups']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/projects/{project_id}/groups', params, keyArgs] as const
+}
+
+export function getOrganizationProjectsProjectIdGroupsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['groups']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdGroupsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdGroupsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .groups.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdGroups<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdGroupsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['groups']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdGroupsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdGroupsMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/groups', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdGroupsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.projects>['groups']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.projects>['groups']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdGroupsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.projects(params).groups.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdGroups<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['groups']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.projects>['groups']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.projects>['groups']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdGroupsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdGroupsGroupIdQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['groups']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'organization',
+    '/organization/projects/{project_id}/groups/{group_id}',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdGroupsGroupIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['groups']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdGroupsGroupIdQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdGroupsGroupIdQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .groups(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdGroupsGroupId<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['groups']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdGroupsGroupIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.projects>['groups']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdGroupsGroupIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationProjectsProjectIdGroupsGroupIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/groups/{group_id}',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteOrganizationProjectsProjectIdGroupsGroupIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['groups']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationProjectsProjectIdGroupsGroupIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .groups(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationProjectsProjectIdGroupsGroupId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['groups']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['groups']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationProjectsProjectIdGroupsGroupIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdHostedToolPermissionsQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+) {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/hosted_tool_permissions',
+    params,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdHostedToolPermissionsQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdHostedToolPermissionsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdHostedToolPermissionsQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .hosted_tool_permissions.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdHostedToolPermissions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdHostedToolPermissionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdHostedToolPermissionsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdHostedToolPermissionsMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/hosted_tool_permissions',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdHostedToolPermissionsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdHostedToolPermissionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .hosted_tool_permissions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdHostedToolPermissions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['hosted_tool_permissions']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationProjectsProjectIdHostedToolPermissionsMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdModelPermissionsQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+) {
+  return ['organization', '/organization/projects/{project_id}/model_permissions', params] as const
+}
+
+export function getOrganizationProjectsProjectIdModelPermissionsQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.projects>['model_permissions']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdModelPermissionsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdModelPermissionsQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .model_permissions.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdModelPermissions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdModelPermissionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<typeof client.organization.projects>['model_permissions']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdModelPermissionsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdModelPermissionsMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/model_permissions', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdModelPermissionsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<typeof client.organization.projects>['model_permissions']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['model_permissions']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdModelPermissionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .model_permissions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdModelPermissions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['model_permissions']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['model_permissions']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdModelPermissionsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationProjectsProjectIdModelPermissionsMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/model_permissions',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteOrganizationProjectsProjectIdModelPermissionsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<typeof client.organization.projects>['model_permissions']['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['model_permissions']['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationProjectsProjectIdModelPermissionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .model_permissions.delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationProjectsProjectIdModelPermissions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['model_permissions']['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['model_permissions']['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<typeof client.organization.projects>['model_permissions']['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['model_permissions']['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationProjectsProjectIdModelPermissionsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdRateLimitsQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['rate_limits']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'organization',
+    '/organization/projects/{project_id}/rate_limits',
+    params,
+    keyArgs,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdRateLimitsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['rate_limits']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdRateLimitsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdRateLimitsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .rate_limits.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdRateLimits<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdRateLimitsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['rate_limits']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdRateLimitsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdRateLimitsRateLimitIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/rate_limits/{rate_limit_id}',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdRateLimitsRateLimitIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['rate_limits']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdRateLimitsRateLimitIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .rate_limits(params2)
+        .post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdRateLimitsRateLimitId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['rate_limits']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['rate_limits']>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationProjectsProjectIdRateLimitsRateLimitIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdServiceAccountsQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.projects>['service_accounts']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'organization',
+    '/organization/projects/{project_id}/service_accounts',
+    params,
+    keyArgs,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdServiceAccountsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.projects>['service_accounts']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdServiceAccountsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdServiceAccountsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_accounts.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdServiceAccounts<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdServiceAccountsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<typeof client.organization.projects>['service_accounts']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdServiceAccountsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdServiceAccountsMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/service_accounts', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdServiceAccountsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<typeof client.organization.projects>['service_accounts']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['service_accounts']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdServiceAccountsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_accounts.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdServiceAccounts<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['service_accounts']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['service_accounts']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdServiceAccountsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdServiceAccountsServiceAccountIdQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+) {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/service_accounts/{service_account_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdServiceAccountsServiceAccountIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdServiceAccountsServiceAccountIdQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdServiceAccountsServiceAccountIdQueryKey(
+      params,
+      params2,
+    ),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_accounts(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdServiceAccountsServiceAccountId<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdServiceAccountsServiceAccountIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdServiceAccountsServiceAccountIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/service_accounts/{service_account_id}',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_accounts(params2)
+        .post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdServiceAccountsServiceAccountId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<typeof client.organization.projects>['service_accounts']
+              >['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/service_accounts/{service_account_id}',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['delete']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_accounts(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationProjectsProjectIdServiceAccountsServiceAccountId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_accounts']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<typeof client.organization.projects>['service_accounts']
+              >['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['service_accounts']
+            >['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['service_accounts']
+            >['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getDeleteOrganizationProjectsProjectIdServiceAccountsServiceAccountIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdSpendAlertsQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'organization',
+    '/organization/projects/{project_id}/spend_alerts',
+    params,
+    keyArgs,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdSpendAlertsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdSpendAlertsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdSpendAlertsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_alerts.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdSpendAlerts<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdSpendAlertsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdSpendAlertsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdSpendAlertsMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/spend_alerts', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdSpendAlertsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']['post']>[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['spend_alerts']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdSpendAlertsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_alerts.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdSpendAlerts<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['spend_alerts']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['spend_alerts']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdSpendAlertsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdSpendAlertsAlertIdQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']>[0],
+) {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/spend_alerts/{alert_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdSpendAlertsAlertIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdSpendAlertsAlertIdQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdSpendAlertsAlertIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_alerts(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdSpendAlertsAlertId<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdSpendAlertsAlertIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdSpendAlertsAlertIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdSpendAlertsAlertIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/spend_alerts/{alert_id}',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdSpendAlertsAlertIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdSpendAlertsAlertIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_alerts(params2)
+        .post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdSpendAlertsAlertId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdSpendAlertsAlertIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationProjectsProjectIdSpendAlertsAlertIdMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/spend_alerts/{alert_id}',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteOrganizationProjectsProjectIdSpendAlertsAlertIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationProjectsProjectIdSpendAlertsAlertIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_alerts(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationProjectsProjectIdSpendAlertsAlertId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['spend_alerts']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_alerts']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getDeleteOrganizationProjectsProjectIdSpendAlertsAlertIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdUsersQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['users']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/projects/{project_id}/users', params, keyArgs] as const
+}
+
+export function getOrganizationProjectsProjectIdUsersQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['users']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdUsersQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdUsersQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .users.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdUsers<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdUsersQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['users']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdUsersQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdUsersMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/users', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdUsersMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.projects>['users']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.projects>['users']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdUsersMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.projects(params).users.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdUsers<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.projects>['users']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.projects>['users']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.projects>['users']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdUsersMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdUsersUserIdQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['users']>[0],
+) {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/users/{user_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdUsersUserIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['users']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdUsersUserIdQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdUsersUserIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .users(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdUsersUserId<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['users']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdUsersUserIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.projects>['users']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdUsersUserIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdUsersUserIdMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/users/{user_id}', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdUsersUserIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['users']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdUsersUserIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .users(params2)
+        .post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdUsersUserId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['users']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['users']>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdUsersUserIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationProjectsProjectIdUsersUserIdMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/users/{user_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationProjectsProjectIdUsersUserIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['users']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationProjectsProjectIdUsersUserIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .users(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationProjectsProjectIdUsersUserId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['users']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.projects>['users']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationProjectsProjectIdUsersUserIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationRolesQueryKey(
+  options?: Parameters<typeof client.organization.roles.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/roles', keyArgs] as const
+}
+
+export function getOrganizationRolesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.roles.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.roles.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.roles.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.roles.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationRolesQueryKey>
+  >({
+    queryKey: getOrganizationRolesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.roles.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationRoles<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.roles.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.roles.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.organization.roles.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationRolesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.roles.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationRolesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationRolesMutationKey() {
+  return ['organization', '/organization/roles', 'POST'] as const
+}
+
+export function getPostOrganizationRolesMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.roles.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.roles.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.roles.post>[0]
+      options?: Parameters<typeof client.organization.roles.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationRolesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.roles.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationRoles<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.roles.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.roles.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.roles.post>[0]
+          options?: Parameters<typeof client.organization.roles.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationRolesMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationRolesRoleIdQueryKey(
+  params: Parameters<typeof client.organization.roles>[0],
+) {
+  return ['organization', '/organization/roles/{role_id}', params] as const
+}
+
+export function getOrganizationRolesRoleIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.roles>[0],
+  options?: Parameters<ReturnType<typeof client.organization.roles>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.roles>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationRolesRoleIdQueryKey>
+  >({
+    queryKey: getOrganizationRolesRoleIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .roles(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationRolesRoleId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.roles>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.roles>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationRolesRoleIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.roles>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationRolesRoleIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationRolesRoleIdMutationKey() {
+  return ['organization', '/organization/roles/{role_id}', 'POST'] as const
+}
+
+export function getPostOrganizationRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.roles>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.roles>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.roles>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.roles>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.roles(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationRolesRoleId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.roles>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.roles>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.roles>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.roles>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationRolesRoleIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationRolesRoleIdMutationKey() {
+  return ['organization', '/organization/roles/{role_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.roles>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.roles>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.roles>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.roles>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.roles(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationRolesRoleId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.roles>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.roles>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.roles>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.roles>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.roles>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationRolesRoleIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationSpendAlertsQueryKey(
+  options?: Parameters<typeof client.organization.spend_alerts.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/spend_alerts', keyArgs] as const
+}
+
+export function getOrganizationSpendAlertsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.spend_alerts.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.spend_alerts.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.spend_alerts.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.spend_alerts.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationSpendAlertsQueryKey>
+  >({
+    queryKey: getOrganizationSpendAlertsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.spend_alerts.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationSpendAlerts<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.spend_alerts.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.spend_alerts.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.spend_alerts.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationSpendAlertsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.spend_alerts.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationSpendAlertsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationSpendAlertsMutationKey() {
+  return ['organization', '/organization/spend_alerts', 'POST'] as const
+}
+
+export function getPostOrganizationSpendAlertsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.spend_alerts.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.spend_alerts.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.spend_alerts.post>[0]
+      options?: Parameters<typeof client.organization.spend_alerts.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationSpendAlertsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.spend_alerts.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationSpendAlerts<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.spend_alerts.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.spend_alerts.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.spend_alerts.post>[0]
+          options?: Parameters<typeof client.organization.spend_alerts.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationSpendAlertsMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationSpendAlertsAlertIdQueryKey(
+  params: Parameters<typeof client.organization.spend_alerts>[0],
+) {
+  return ['organization', '/organization/spend_alerts/{alert_id}', params] as const
+}
+
+export function getOrganizationSpendAlertsAlertIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.spend_alerts>[0],
+  options?: Parameters<ReturnType<typeof client.organization.spend_alerts>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationSpendAlertsAlertIdQueryKey>
+  >({
+    queryKey: getOrganizationSpendAlertsAlertIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .spend_alerts(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationSpendAlertsAlertId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.spend_alerts>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationSpendAlertsAlertIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.spend_alerts>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationSpendAlertsAlertIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationSpendAlertsAlertIdMutationKey() {
+  return ['organization', '/organization/spend_alerts/{alert_id}', 'POST'] as const
+}
+
+export function getPostOrganizationSpendAlertsAlertIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.spend_alerts>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.spend_alerts>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.spend_alerts>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationSpendAlertsAlertIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.spend_alerts(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationSpendAlertsAlertId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.spend_alerts>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.spend_alerts>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.spend_alerts>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationSpendAlertsAlertIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationSpendAlertsAlertIdMutationKey() {
+  return ['organization', '/organization/spend_alerts/{alert_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationSpendAlertsAlertIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.spend_alerts>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.spend_alerts>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.spend_alerts>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationSpendAlertsAlertIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.spend_alerts(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationSpendAlertsAlertId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.spend_alerts>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.spend_alerts>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.spend_alerts>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.spend_alerts>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationSpendAlertsAlertIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageAudioSpeechesQueryKey(
+  options: Parameters<typeof client.organization.usage.audio_speeches.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/audio_speeches', keyArgs] as const
+}
+
+export function getOrganizationUsageAudioSpeechesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.audio_speeches.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.audio_speeches.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.audio_speeches.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.audio_speeches.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageAudioSpeechesQueryKey>
+  >({
+    queryKey: getOrganizationUsageAudioSpeechesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.audio_speeches.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageAudioSpeeches<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.audio_speeches.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.audio_speeches.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.audio_speeches.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageAudioSpeechesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.audio_speeches.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageAudioSpeechesQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageAudioTranscriptionsQueryKey(
+  options: Parameters<typeof client.organization.usage.audio_transcriptions.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/audio_transcriptions', keyArgs] as const
+}
+
+export function getOrganizationUsageAudioTranscriptionsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.audio_transcriptions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.audio_transcriptions.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.audio_transcriptions.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.audio_transcriptions.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageAudioTranscriptionsQueryKey>
+  >({
+    queryKey: getOrganizationUsageAudioTranscriptionsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.audio_transcriptions.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageAudioTranscriptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.audio_transcriptions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.audio_transcriptions.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.audio_transcriptions.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageAudioTranscriptionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.audio_transcriptions.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageAudioTranscriptionsQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageCodeInterpreterSessionsQueryKey(
+  options: Parameters<typeof client.organization.usage.code_interpreter_sessions.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/code_interpreter_sessions', keyArgs] as const
+}
+
+export function getOrganizationUsageCodeInterpreterSessionsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.code_interpreter_sessions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.code_interpreter_sessions.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.code_interpreter_sessions.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.code_interpreter_sessions.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageCodeInterpreterSessionsQueryKey>
+  >({
+    queryKey: getOrganizationUsageCodeInterpreterSessionsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.code_interpreter_sessions.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageCodeInterpreterSessions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.code_interpreter_sessions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.code_interpreter_sessions.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.code_interpreter_sessions.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageCodeInterpreterSessionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.code_interpreter_sessions.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageCodeInterpreterSessionsQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageCompletionsQueryKey(
+  options: Parameters<typeof client.organization.usage.completions.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/completions', keyArgs] as const
+}
+
+export function getOrganizationUsageCompletionsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.completions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.completions.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.completions.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.completions.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageCompletionsQueryKey>
+  >({
+    queryKey: getOrganizationUsageCompletionsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.completions.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageCompletions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.completions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.completions.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.completions.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageCompletionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.completions.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageCompletionsQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageEmbeddingsQueryKey(
+  options: Parameters<typeof client.organization.usage.embeddings.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/embeddings', keyArgs] as const
+}
+
+export function getOrganizationUsageEmbeddingsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.embeddings.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.embeddings.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.embeddings.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.embeddings.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageEmbeddingsQueryKey>
+  >({
+    queryKey: getOrganizationUsageEmbeddingsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.embeddings.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageEmbeddings<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.embeddings.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.embeddings.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.embeddings.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageEmbeddingsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.embeddings.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return { ...getOrganizationUsageEmbeddingsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageFileSearchCallsQueryKey(
+  options: Parameters<typeof client.organization.usage.file_search_calls.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/file_search_calls', keyArgs] as const
+}
+
+export function getOrganizationUsageFileSearchCallsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.file_search_calls.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.file_search_calls.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.file_search_calls.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.file_search_calls.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageFileSearchCallsQueryKey>
+  >({
+    queryKey: getOrganizationUsageFileSearchCallsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.file_search_calls.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageFileSearchCalls<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.file_search_calls.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.file_search_calls.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.file_search_calls.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageFileSearchCallsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.file_search_calls.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageFileSearchCallsQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageImagesQueryKey(
+  options: Parameters<typeof client.organization.usage.images.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/images', keyArgs] as const
+}
+
+export function getOrganizationUsageImagesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.images.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.usage.images.get>>['error'], null>,
+>(options: Parameters<typeof client.organization.usage.images.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.images.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageImagesQueryKey>
+  >({
+    queryKey: getOrganizationUsageImagesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.images.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageImages<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.images.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.usage.images.get>>['error'], null>,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.images.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageImagesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.images.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return { ...getOrganizationUsageImagesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageModerationsQueryKey(
+  options: Parameters<typeof client.organization.usage.moderations.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/moderations', keyArgs] as const
+}
+
+export function getOrganizationUsageModerationsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.moderations.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.moderations.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.moderations.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.moderations.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageModerationsQueryKey>
+  >({
+    queryKey: getOrganizationUsageModerationsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.moderations.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageModerations<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.moderations.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.moderations.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.moderations.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageModerationsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.moderations.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageModerationsQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageVectorStoresQueryKey(
+  options: Parameters<typeof client.organization.usage.vector_stores.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/vector_stores', keyArgs] as const
+}
+
+export function getOrganizationUsageVectorStoresQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.vector_stores.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.vector_stores.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.vector_stores.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.vector_stores.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageVectorStoresQueryKey>
+  >({
+    queryKey: getOrganizationUsageVectorStoresQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.vector_stores.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageVectorStores<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.vector_stores.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.vector_stores.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.vector_stores.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageVectorStoresQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.vector_stores.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageVectorStoresQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageWebSearchCallsQueryKey(
+  options: Parameters<typeof client.organization.usage.web_search_calls.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/web_search_calls', keyArgs] as const
+}
+
+export function getOrganizationUsageWebSearchCallsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.web_search_calls.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.web_search_calls.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.web_search_calls.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.web_search_calls.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageWebSearchCallsQueryKey>
+  >({
+    queryKey: getOrganizationUsageWebSearchCallsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.web_search_calls.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageWebSearchCalls<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.web_search_calls.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.web_search_calls.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.web_search_calls.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageWebSearchCallsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.web_search_calls.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return {
+      ...getOrganizationUsageWebSearchCallsQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsersQueryKey(
+  options?: Parameters<typeof client.organization.users.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/users', keyArgs] as const
+}
+
+export function getOrganizationUsersQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.users.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.users.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.users.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.organization.users.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsersQueryKey>
+  >({
+    queryKey: getOrganizationUsersQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.users.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsers<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.users.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.users.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.organization.users.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsersQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.users.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationUsersQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getOrganizationUsersUserIdQueryKey(
+  params: Parameters<typeof client.organization.users>[0],
+) {
+  return ['organization', '/organization/users/{user_id}', params] as const
+}
+
+export function getOrganizationUsersUserIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.users>[0],
+  options?: Parameters<ReturnType<typeof client.organization.users>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.users>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsersUserIdQueryKey>
+  >({
+    queryKey: getOrganizationUsersUserIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .users(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsersUserId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.users>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.users>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsersUserIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.users>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationUsersUserIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationUsersUserIdMutationKey() {
+  return ['organization', '/organization/users/{user_id}', 'POST'] as const
+}
+
+export function getPostOrganizationUsersUserIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.users>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.users>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.users>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.users>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationUsersUserIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.users(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationUsersUserId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.users>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.users>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.users>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.users>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationUsersUserIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationUsersUserIdMutationKey() {
+  return ['organization', '/organization/users/{user_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationUsersUserIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.users>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.users>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.users>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.users>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationUsersUserIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.users(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationUsersUserId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.users>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.users>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.users>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.users>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationUsersUserIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsersUserIdRolesQueryKey(
+  params: Parameters<typeof client.organization.users>[0],
+  options?: Parameters<ReturnType<typeof client.organization.users>['roles']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/users/{user_id}/roles', params, keyArgs] as const
+}
+
+export function getOrganizationUsersUserIdRolesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.users>[0],
+  options?: Parameters<ReturnType<typeof client.organization.users>['roles']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsersUserIdRolesQueryKey>
+  >({
+    queryKey: getOrganizationUsersUserIdRolesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .users(params)
+        .roles.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsersUserIdRoles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.users>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsersUserIdRolesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.users>['roles']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationUsersUserIdRolesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationUsersUserIdRolesMutationKey() {
+  return ['organization', '/organization/users/{user_id}/roles', 'POST'] as const
+}
+
+export function getPostOrganizationUsersUserIdRolesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.users>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.users>['roles']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.users>['roles']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationUsersUserIdRolesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.users(params).roles.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationUsersUserIdRoles<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.users>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.users>['roles']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.organization.users>['roles']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.users>['roles']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationUsersUserIdRolesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsersUserIdRolesRoleIdQueryKey(
+  params: Parameters<typeof client.organization.users>[0],
+  params2: Parameters<ReturnType<typeof client.organization.users>['roles']>[0],
+) {
+  return ['organization', '/organization/users/{user_id}/roles/{role_id}', params, params2] as const
+}
+
+export function getOrganizationUsersUserIdRolesRoleIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.users>[0],
+  params2: Parameters<ReturnType<typeof client.organization.users>['roles']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsersUserIdRolesRoleIdQueryKey>
+  >({
+    queryKey: getOrganizationUsersUserIdRolesRoleIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .users(params)
+        .roles(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsersUserIdRolesRoleId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.users>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.users>['roles']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsersUserIdRolesRoleIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.organization.users>['roles']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationUsersUserIdRolesRoleIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationUsersUserIdRolesRoleIdMutationKey() {
+  return ['organization', '/organization/users/{user_id}/roles/{role_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationUsersUserIdRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.users>[0],
+  params2: Parameters<ReturnType<typeof client.organization.users>['roles']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationUsersUserIdRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .users(params)
+        .roles(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationUsersUserIdRolesRoleId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.users>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.users>['roles']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.organization.users>['roles']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationUsersUserIdRolesRoleIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getProjectsProjectIdGroupsGroupIdRolesQueryKey(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'projects',
+    '/projects/{project_id}/groups/{group_id}/roles',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getProjectsProjectIdGroupsGroupIdRolesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getProjectsProjectIdGroupsGroupIdRolesQueryKey>
+  >({
+    queryKey: getProjectsProjectIdGroupsGroupIdRolesQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .projects(params)
+        .groups(params2)
+        .roles.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectProjectsProjectIdGroupsGroupIdRoles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getProjectsProjectIdGroupsGroupIdRolesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getProjectsProjectIdGroupsGroupIdRolesQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostProjectsProjectIdGroupsGroupIdRolesMutationKey() {
+  return ['projects', '/projects/{project_id}/groups/{group_id}/roles', 'POST'] as const
+}
+
+export function getPostProjectsProjectIdGroupsGroupIdRolesMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['groups']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']>[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostProjectsProjectIdGroupsGroupIdRolesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .projects(params)
+        .groups(params2)
+        .roles.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostProjectsProjectIdGroupsGroupIdRoles<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.projects>['groups']>['roles']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostProjectsProjectIdGroupsGroupIdRolesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getProjectsProjectIdGroupsGroupIdRolesRoleIdQueryKey(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>[0],
+) {
+  return [
+    'projects',
+    '/projects/{project_id}/groups/{group_id}/roles/{role_id}',
+    params,
+    params2,
+    params3,
+  ] as const
+}
+
+export function getProjectsProjectIdGroupsGroupIdRolesRoleIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getProjectsProjectIdGroupsGroupIdRolesRoleIdQueryKey>
+  >({
+    queryKey: getProjectsProjectIdGroupsGroupIdRolesRoleIdQueryKey(params, params2, params3),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .projects(params)
+        .groups(params2)
+        .roles(params3)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectProjectsProjectIdGroupsGroupIdRolesRoleId<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  params3: () => Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getProjectsProjectIdGroupsGroupIdRolesRoleIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getProjectsProjectIdGroupsGroupIdRolesRoleIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        params3(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteProjectsProjectIdGroupsGroupIdRolesRoleIdMutationKey() {
+  return ['projects', '/projects/{project_id}/groups/{group_id}/roles/{role_id}', 'DELETE'] as const
+}
+
+export function getDeleteProjectsProjectIdGroupsGroupIdRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['delete']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteProjectsProjectIdGroupsGroupIdRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .projects(params)
+        .groups(params2)
+        .roles(params3)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteProjectsProjectIdGroupsGroupIdRolesRoleId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['groups']>[0],
+  params3: () => Parameters<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<ReturnType<typeof client.projects>['groups']>['roles']
+              >['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['groups']>['roles']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteProjectsProjectIdGroupsGroupIdRolesRoleIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2(), params3())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getProjectsProjectIdRolesQueryKey(
+  params: Parameters<typeof client.projects>[0],
+  options?: Parameters<ReturnType<typeof client.projects>['roles']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['projects', '/projects/{project_id}/roles', params, keyArgs] as const
+}
+
+export function getProjectsProjectIdRolesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.projects>[0],
+  options?: Parameters<ReturnType<typeof client.projects>['roles']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getProjectsProjectIdRolesQueryKey>
+  >({
+    queryKey: getProjectsProjectIdRolesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .projects(params)
+        .roles.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectProjectsProjectIdRoles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getProjectsProjectIdRolesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.projects>['roles']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getProjectsProjectIdRolesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostProjectsProjectIdRolesMutationKey() {
+  return ['projects', '/projects/{project_id}/roles', 'POST'] as const
+}
+
+export function getPostProjectsProjectIdRolesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.projects>['roles']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.projects>['roles']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostProjectsProjectIdRolesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.projects(params).roles.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostProjectsProjectIdRoles<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.projects>['roles']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.projects>['roles']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.projects>['roles']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostProjectsProjectIdRolesMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getProjectsProjectIdRolesRoleIdQueryKey(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['roles']>[0],
+) {
+  return ['projects', '/projects/{project_id}/roles/{role_id}', params, params2] as const
+}
+
+export function getProjectsProjectIdRolesRoleIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['roles']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getProjectsProjectIdRolesRoleIdQueryKey>
+  >({
+    queryKey: getProjectsProjectIdRolesRoleIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .projects(params)
+        .roles(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectProjectsProjectIdRolesRoleId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['roles']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getProjectsProjectIdRolesRoleIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getProjectsProjectIdRolesRoleIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostProjectsProjectIdRolesRoleIdMutationKey() {
+  return ['projects', '/projects/{project_id}/roles/{role_id}', 'POST'] as const
+}
+
+export function getPostProjectsProjectIdRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['roles']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostProjectsProjectIdRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.projects(params).roles(params2).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostProjectsProjectIdRolesRoleId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['roles']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>[0]
+          options?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostProjectsProjectIdRolesRoleIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteProjectsProjectIdRolesRoleIdMutationKey() {
+  return ['projects', '/projects/{project_id}/roles/{role_id}', 'DELETE'] as const
+}
+
+export function getDeleteProjectsProjectIdRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['roles']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteProjectsProjectIdRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.projects(params).roles(params2).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteProjectsProjectIdRolesRoleId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['roles']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>[0]
+          options?: Parameters<ReturnType<ReturnType<typeof client.projects>['roles']>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteProjectsProjectIdRolesRoleIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getProjectsProjectIdUsersUserIdRolesQueryKey(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['users']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'projects',
+    '/projects/{project_id}/users/{user_id}/roles',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getProjectsProjectIdUsersUserIdRolesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['users']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getProjectsProjectIdUsersUserIdRolesQueryKey>
+  >({
+    queryKey: getProjectsProjectIdUsersUserIdRolesQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .projects(params)
+        .users(params2)
+        .roles.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectProjectsProjectIdUsersUserIdRoles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['users']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getProjectsProjectIdUsersUserIdRolesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getProjectsProjectIdUsersUserIdRolesQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostProjectsProjectIdUsersUserIdRolesMutationKey() {
+  return ['projects', '/projects/{project_id}/users/{user_id}/roles', 'POST'] as const
+}
+
+export function getPostProjectsProjectIdUsersUserIdRolesMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['users']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']>[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostProjectsProjectIdUsersUserIdRolesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.projects(params).users(params2).roles.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostProjectsProjectIdUsersUserIdRoles<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['users']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.projects>['users']>['roles']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostProjectsProjectIdUsersUserIdRolesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getProjectsProjectIdUsersUserIdRolesRoleIdQueryKey(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['users']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>[0],
+) {
+  return [
+    'projects',
+    '/projects/{project_id}/users/{user_id}/roles/{role_id}',
+    params,
+    params2,
+    params3,
+  ] as const
+}
+
+export function getProjectsProjectIdUsersUserIdRolesRoleIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['users']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getProjectsProjectIdUsersUserIdRolesRoleIdQueryKey>
+  >({
+    queryKey: getProjectsProjectIdUsersUserIdRolesRoleIdQueryKey(params, params2, params3),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .projects(params)
+        .users(params2)
+        .roles(params3)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectProjectsProjectIdUsersUserIdRolesRoleId<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['users']>[0],
+  params3: () => Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getProjectsProjectIdUsersUserIdRolesRoleIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getProjectsProjectIdUsersUserIdRolesRoleIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        params3(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteProjectsProjectIdUsersUserIdRolesRoleIdMutationKey() {
+  return ['projects', '/projects/{project_id}/users/{user_id}/roles/{role_id}', 'DELETE'] as const
+}
+
+export function getDeleteProjectsProjectIdUsersUserIdRolesRoleIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.projects>[0],
+  params2: Parameters<ReturnType<typeof client.projects>['users']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteProjectsProjectIdUsersUserIdRolesRoleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .projects(params)
+        .users(params2)
+        .roles(params3)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteProjectsProjectIdUsersUserIdRolesRoleId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.projects>['users']>[0],
+  params3: () => Parameters<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<ReturnType<typeof client.projects>['users']>['roles']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteProjectsProjectIdUsersUserIdRolesRoleIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2(), params3())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeCallsMutationKey() {
+  return ['realtime', '/realtime/calls', 'POST'] as const
+}
+
+export function getPostRealtimeCallsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.realtime.calls.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.realtime.calls.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.realtime.calls.post>[0]
+      options?: Parameters<typeof client.realtime.calls.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeCallsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.calls.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeCalls<
+  TError = Exclude<Awaited<ReturnType<typeof client.realtime.calls.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.realtime.calls.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.realtime.calls.post>[0]
+          options?: Parameters<typeof client.realtime.calls.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeCallsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeCallsCallIdAcceptMutationKey() {
+  return ['realtime', '/realtime/calls/{call_id}/accept', 'POST'] as const
+}
+
+export function getPostRealtimeCallsCallIdAcceptMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['accept']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.realtime.calls>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['accept']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.realtime.calls>['accept']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.realtime.calls>['accept']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeCallsCallIdAcceptMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.calls(params).accept.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeCallsCallIdAccept<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['accept']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.realtime.calls>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['accept']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.realtime.calls>['accept']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.realtime.calls>['accept']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeCallsCallIdAcceptMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeCallsCallIdHangupMutationKey() {
+  return ['realtime', '/realtime/calls/{call_id}/hangup', 'POST'] as const
+}
+
+export function getPostRealtimeCallsCallIdHangupMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['hangup']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.realtime.calls>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['hangup']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.realtime.calls>['hangup']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.realtime.calls>['hangup']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeCallsCallIdHangupMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.calls(params).hangup.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeCallsCallIdHangup<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['hangup']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.realtime.calls>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['hangup']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.realtime.calls>['hangup']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.realtime.calls>['hangup']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeCallsCallIdHangupMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeCallsCallIdReferMutationKey() {
+  return ['realtime', '/realtime/calls/{call_id}/refer', 'POST'] as const
+}
+
+export function getPostRealtimeCallsCallIdReferMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['refer']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.realtime.calls>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['refer']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.realtime.calls>['refer']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.realtime.calls>['refer']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeCallsCallIdReferMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.calls(params).refer.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeCallsCallIdRefer<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['refer']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.realtime.calls>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['refer']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.realtime.calls>['refer']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.realtime.calls>['refer']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeCallsCallIdReferMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeCallsCallIdRejectMutationKey() {
+  return ['realtime', '/realtime/calls/{call_id}/reject', 'POST'] as const
+}
+
+export function getPostRealtimeCallsCallIdRejectMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['reject']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.realtime.calls>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['reject']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.realtime.calls>['reject']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.realtime.calls>['reject']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeCallsCallIdRejectMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.calls(params).reject.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeCallsCallIdReject<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['reject']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.realtime.calls>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.realtime.calls>['reject']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.realtime.calls>['reject']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.realtime.calls>['reject']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeCallsCallIdRejectMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeClientSecretsMutationKey() {
+  return ['realtime', '/realtime/client_secrets', 'POST'] as const
+}
+
+export function getPostRealtimeClientSecretsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.realtime.client_secrets.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.realtime.client_secrets.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.realtime.client_secrets.post>[0]
+      options?: Parameters<typeof client.realtime.client_secrets.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeClientSecretsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.client_secrets.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeClientSecrets<
+  TError = Exclude<Awaited<ReturnType<typeof client.realtime.client_secrets.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.realtime.client_secrets.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.realtime.client_secrets.post>[0]
+          options?: Parameters<typeof client.realtime.client_secrets.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeClientSecretsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeSessionsMutationKey() {
+  return ['realtime', '/realtime/sessions', 'POST'] as const
+}
+
+export function getPostRealtimeSessionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.realtime.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.realtime.sessions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.realtime.sessions.post>[0]
+      options?: Parameters<typeof client.realtime.sessions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeSessionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.sessions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeSessions<
+  TError = Exclude<Awaited<ReturnType<typeof client.realtime.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.realtime.sessions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.realtime.sessions.post>[0]
+          options?: Parameters<typeof client.realtime.sessions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeSessionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeTranscriptionSessionsMutationKey() {
+  return ['realtime', '/realtime/transcription_sessions', 'POST'] as const
+}
+
+export function getPostRealtimeTranscriptionSessionsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.realtime.transcription_sessions.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.realtime.transcription_sessions.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.realtime.transcription_sessions.post>[0]
+      options?: Parameters<typeof client.realtime.transcription_sessions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeTranscriptionSessionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.transcription_sessions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeTranscriptionSessions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.realtime.transcription_sessions.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.realtime.transcription_sessions.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.realtime.transcription_sessions.post>[0]
+          options?: Parameters<typeof client.realtime.transcription_sessions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeTranscriptionSessionsMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostRealtimeTranslationsClientSecretsMutationKey() {
+  return ['realtime', '/realtime/translations/client_secrets', 'POST'] as const
+}
+
+export function getPostRealtimeTranslationsClientSecretsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.realtime.translations.client_secrets.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.realtime.translations.client_secrets.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.realtime.translations.client_secrets.post>[0]
+      options?: Parameters<typeof client.realtime.translations.client_secrets.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostRealtimeTranslationsClientSecretsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.realtime.translations.client_secrets.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostRealtimeTranslationsClientSecrets<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.realtime.translations.client_secrets.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.realtime.translations.client_secrets.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.realtime.translations.client_secrets.post>[0]
+          options?: Parameters<typeof client.realtime.translations.client_secrets.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostRealtimeTranslationsClientSecretsMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostResponsesMutationKey() {
+  return ['responses', '/responses', 'POST'] as const
+}
+
+export function getPostResponsesMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.responses.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.responses.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.responses.post>[0]
+      options?: Parameters<typeof client.responses.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponses<
+  TError = Exclude<Awaited<ReturnType<typeof client.responses.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.responses.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.responses.post>[0]
+          options?: Parameters<typeof client.responses.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getResponsesResponseIdQueryKey(
+  params: Parameters<typeof client.responses>[0],
+  options?: Parameters<ReturnType<typeof client.responses>['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['responses', '/responses/{response_id}', params, keyArgs] as const
+}
+
+export function getResponsesResponseIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.responses>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.responses>[0],
+  options?: Parameters<ReturnType<typeof client.responses>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.responses>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getResponsesResponseIdQueryKey>
+  >({
+    queryKey: getResponsesResponseIdQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .responses(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectResponsesResponseId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.responses>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.responses>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.responses>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getResponsesResponseIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.responses>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getResponsesResponseIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteResponsesResponseIdMutationKey() {
+  return ['responses', '/responses/{response_id}', 'DELETE'] as const
+}
+
+export function getDeleteResponsesResponseIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.responses>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.responses>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.responses>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.responses>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteResponsesResponseIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteResponsesResponseId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.responses>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.responses>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.responses>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.responses>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteResponsesResponseIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostResponsesResponseIdCancelMutationKey() {
+  return ['responses', '/responses/{response_id}/cancel', 'POST'] as const
+}
+
+export function getPostResponsesResponseIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.responses>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.responses>['cancel']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.responses>['cancel']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.responses>['cancel']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesResponseIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses(params).cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponsesResponseIdCancel<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.responses>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.responses>['cancel']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.responses>['cancel']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.responses>['cancel']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesResponseIdCancelMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getResponsesResponseIdInputItemsQueryKey(
+  params: Parameters<typeof client.responses>[0],
+  options?: Parameters<ReturnType<typeof client.responses>['input_items']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['responses', '/responses/{response_id}/input_items', params, keyArgs] as const
+}
+
+export function getResponsesResponseIdInputItemsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['input_items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['input_items']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.responses>[0],
+  options?: Parameters<ReturnType<typeof client.responses>['input_items']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.responses>['input_items']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getResponsesResponseIdInputItemsQueryKey>
+  >({
+    queryKey: getResponsesResponseIdInputItemsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .responses(params)
+        .input_items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectResponsesResponseIdInputItems<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['input_items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['input_items']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.responses>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.responses>['input_items']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getResponsesResponseIdInputItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.responses>['input_items']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getResponsesResponseIdInputItemsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsMutationKey() {
+  return ['threads', '/threads', 'POST'] as const
+}
+
+export function getPostThreadsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.threads.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.threads.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.threads.post>[0]
+      options?: Parameters<typeof client.threads.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreads<
+  TError = Exclude<Awaited<ReturnType<typeof client.threads.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.threads.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.threads.post>[0]
+          options?: Parameters<typeof client.threads.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsRunsMutationKey() {
+  return ['threads', '/threads/runs', 'POST'] as const
+}
+
+export function getPostThreadsRunsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.threads.runs.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.threads.runs.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.threads.runs.post>[0]
+      options?: Parameters<typeof client.threads.runs.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsRunsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads.runs.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsRuns<
+  TError = Exclude<Awaited<ReturnType<typeof client.threads.runs.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.threads.runs.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.threads.runs.post>[0]
+          options?: Parameters<typeof client.threads.runs.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsRunsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getThreadsThreadIdQueryKey(params: Parameters<typeof client.threads>[0]) {
+  return ['threads', '/threads/{thread_id}', params] as const
+}
+
+export function getThreadsThreadIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.threads>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.threads>[0],
+  options?: Parameters<ReturnType<typeof client.threads>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.threads>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getThreadsThreadIdQueryKey>
+  >({
+    queryKey: getThreadsThreadIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .threads(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectThreadsThreadId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.threads>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.threads>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getThreadsThreadIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.threads>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getThreadsThreadIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostThreadsThreadIdMutationKey() {
+  return ['threads', '/threads/{thread_id}', 'POST'] as const
+}
+
+export function getPostThreadsThreadIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.threads>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.threads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.threads>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.threads>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.threads>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsThreadIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsThreadId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.threads>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.threads>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.threads>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.threads>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsThreadIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteThreadsThreadIdMutationKey() {
+  return ['threads', '/threads/{thread_id}', 'DELETE'] as const
+}
+
+export function getDeleteThreadsThreadIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.threads>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.threads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.threads>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.threads>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.threads>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteThreadsThreadIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteThreadsThreadId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.threads>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.threads>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.threads>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.threads>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteThreadsThreadIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getThreadsThreadIdMessagesQueryKey(
+  params: Parameters<typeof client.threads>[0],
+  options?: Parameters<ReturnType<typeof client.threads>['messages']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['threads', '/threads/{thread_id}/messages', params, keyArgs] as const
+}
+
+export function getThreadsThreadIdMessagesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.threads>[0],
+  options?: Parameters<ReturnType<typeof client.threads>['messages']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getThreadsThreadIdMessagesQueryKey>
+  >({
+    queryKey: getThreadsThreadIdMessagesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .threads(params)
+        .messages.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectThreadsThreadIdMessages<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getThreadsThreadIdMessagesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.threads>['messages']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getThreadsThreadIdMessagesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsThreadIdMessagesMutationKey() {
+  return ['threads', '/threads/{thread_id}/messages', 'POST'] as const
+}
+
+export function getPostThreadsThreadIdMessagesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.threads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.threads>['messages']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.threads>['messages']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsThreadIdMessagesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).messages.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsThreadIdMessages<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.threads>['messages']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.threads>['messages']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.threads>['messages']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsThreadIdMessagesMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getThreadsThreadIdMessagesMessageIdQueryKey(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['messages']>[0],
+) {
+  return ['threads', '/threads/{thread_id}/messages/{message_id}', params, params2] as const
+}
+
+export function getThreadsThreadIdMessagesMessageIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['messages']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getThreadsThreadIdMessagesMessageIdQueryKey>
+  >({
+    queryKey: getThreadsThreadIdMessagesMessageIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .threads(params)
+        .messages(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectThreadsThreadIdMessagesMessageId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['messages']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getThreadsThreadIdMessagesMessageIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getThreadsThreadIdMessagesMessageIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsThreadIdMessagesMessageIdMutationKey() {
+  return ['threads', '/threads/{thread_id}/messages/{message_id}', 'POST'] as const
+}
+
+export function getPostThreadsThreadIdMessagesMessageIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['messages']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsThreadIdMessagesMessageIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).messages(params2).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsThreadIdMessagesMessageId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['messages']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>[0]
+          options?: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsThreadIdMessagesMessageIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteThreadsThreadIdMessagesMessageIdMutationKey() {
+  return ['threads', '/threads/{thread_id}/messages/{message_id}', 'DELETE'] as const
+}
+
+export function getDeleteThreadsThreadIdMessagesMessageIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['messages']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['delete']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteThreadsThreadIdMessagesMessageIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).messages(params2).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteThreadsThreadIdMessagesMessageId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['messages']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['messages']>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<ReturnType<typeof client.threads>['messages']>['delete']>[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.threads>['messages']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteThreadsThreadIdMessagesMessageIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getThreadsThreadIdRunsQueryKey(
+  params: Parameters<typeof client.threads>[0],
+  options?: Parameters<ReturnType<typeof client.threads>['runs']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['threads', '/threads/{thread_id}/runs', params, keyArgs] as const
+}
+
+export function getThreadsThreadIdRunsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.threads>[0],
+  options?: Parameters<ReturnType<typeof client.threads>['runs']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getThreadsThreadIdRunsQueryKey>
+  >({
+    queryKey: getThreadsThreadIdRunsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .threads(params)
+        .runs.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectThreadsThreadIdRuns<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getThreadsThreadIdRunsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.threads>['runs']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getThreadsThreadIdRunsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsThreadIdRunsMutationKey() {
+  return ['threads', '/threads/{thread_id}/runs', 'POST'] as const
+}
+
+export function getPostThreadsThreadIdRunsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.threads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.threads>['runs']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.threads>['runs']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsThreadIdRunsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).runs.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsThreadIdRuns<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.threads>['runs']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.threads>['runs']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.threads>['runs']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsThreadIdRunsMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getThreadsThreadIdRunsRunIdQueryKey(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+) {
+  return ['threads', '/threads/{thread_id}/runs/{run_id}', params, params2] as const
+}
+
+export function getThreadsThreadIdRunsRunIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getThreadsThreadIdRunsRunIdQueryKey>
+  >({
+    queryKey: getThreadsThreadIdRunsRunIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .threads(params)
+        .runs(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectThreadsThreadIdRunsRunId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getThreadsThreadIdRunsRunIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getThreadsThreadIdRunsRunIdQueryOptions<TData, TError>(params(), params2(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsThreadIdRunsRunIdMutationKey() {
+  return ['threads', '/threads/{thread_id}/runs/{run_id}', 'POST'] as const
+}
+
+export function getPostThreadsThreadIdRunsRunIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsThreadIdRunsRunIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).runs(params2).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsThreadIdRunsRunId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>[0]
+          options?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsThreadIdRunsRunIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsThreadIdRunsRunIdCancelMutationKey() {
+  return ['threads', '/threads/{thread_id}/runs/{run_id}/cancel', 'POST'] as const
+}
+
+export function getPostThreadsThreadIdRunsRunIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']>[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsThreadIdRunsRunIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.threads(params).runs(params2).cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsThreadIdRunsRunIdCancel<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.threads>['runs']>['cancel']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsThreadIdRunsRunIdCancelMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getThreadsThreadIdRunsRunIdStepsQueryKey(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['threads', '/threads/{thread_id}/runs/{run_id}/steps', params, params2, keyArgs] as const
+}
+
+export function getThreadsThreadIdRunsRunIdStepsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getThreadsThreadIdRunsRunIdStepsQueryKey>
+  >({
+    queryKey: getThreadsThreadIdRunsRunIdStepsQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .threads(params)
+        .runs(params2)
+        .steps.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectThreadsThreadIdRunsRunIdSteps<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getThreadsThreadIdRunsRunIdStepsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getThreadsThreadIdRunsRunIdStepsQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getThreadsThreadIdRunsRunIdStepsStepIdQueryKey(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'threads',
+    '/threads/{thread_id}/runs/{run_id}/steps/{step_id}',
+    params,
+    params2,
+    params3,
+    keyArgs,
+  ] as const
+}
+
+export function getThreadsThreadIdRunsRunIdStepsStepIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  params3: Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getThreadsThreadIdRunsRunIdStepsStepIdQueryKey>
+  >({
+    queryKey: getThreadsThreadIdRunsRunIdStepsStepIdQueryKey(params, params2, params3, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .threads(params)
+        .runs(params2)
+        .steps(params3)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectThreadsThreadIdRunsRunIdStepsStepId<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  params3: () => Parameters<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getThreadsThreadIdRunsRunIdStepsStepIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<ReturnType<typeof client.threads>['runs']>['steps']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getThreadsThreadIdRunsRunIdStepsStepIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        params3(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostThreadsThreadIdRunsRunIdSubmitToolOutputsMutationKey() {
+  return ['threads', '/threads/{thread_id}/runs/{run_id}/submit_tool_outputs', 'POST'] as const
+}
+
+export function getPostThreadsThreadIdRunsRunIdSubmitToolOutputsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.threads>[0],
+  params2: Parameters<ReturnType<typeof client.threads>['runs']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostThreadsThreadIdRunsRunIdSubmitToolOutputsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .threads(params)
+        .runs(params2)
+        .submit_tool_outputs.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostThreadsThreadIdRunsRunIdSubmitToolOutputs<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.threads>[0],
+  params2: () => Parameters<ReturnType<typeof client.threads>['runs']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.threads>['runs']>['submit_tool_outputs']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostThreadsThreadIdRunsRunIdSubmitToolOutputsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostUploadsMutationKey() {
+  return ['uploads', '/uploads', 'POST'] as const
+}
+
+export function getPostUploadsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.uploads.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.uploads.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.uploads.post>[0]
+      options?: Parameters<typeof client.uploads.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostUploadsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.uploads.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostUploads<
+  TError = Exclude<Awaited<ReturnType<typeof client.uploads.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.uploads.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.uploads.post>[0]
+          options?: Parameters<typeof client.uploads.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostUploadsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostUploadsUploadIdCancelMutationKey() {
+  return ['uploads', '/uploads/{upload_id}/cancel', 'POST'] as const
+}
+
+export function getPostUploadsUploadIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.uploads>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.uploads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.uploads>['cancel']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.uploads>['cancel']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.uploads>['cancel']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostUploadsUploadIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.uploads(params).cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostUploadsUploadIdCancel<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.uploads>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.uploads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.uploads>['cancel']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.uploads>['cancel']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.uploads>['cancel']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostUploadsUploadIdCancelMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostUploadsUploadIdCompleteMutationKey() {
+  return ['uploads', '/uploads/{upload_id}/complete', 'POST'] as const
+}
+
+export function getPostUploadsUploadIdCompleteMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.uploads>['complete']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.uploads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.uploads>['complete']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.uploads>['complete']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.uploads>['complete']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostUploadsUploadIdCompleteMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.uploads(params).complete.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostUploadsUploadIdComplete<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.uploads>['complete']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.uploads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.uploads>['complete']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.uploads>['complete']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.uploads>['complete']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostUploadsUploadIdCompleteMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostUploadsUploadIdPartsMutationKey() {
+  return ['uploads', '/uploads/{upload_id}/parts', 'POST'] as const
+}
+
+export function getPostUploadsUploadIdPartsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.uploads>['parts']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.uploads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.uploads>['parts']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.uploads>['parts']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.uploads>['parts']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostUploadsUploadIdPartsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.uploads(params).parts.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostUploadsUploadIdParts<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.uploads>['parts']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.uploads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.uploads>['parts']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.uploads>['parts']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.uploads>['parts']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostUploadsUploadIdPartsMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVectorStoresQueryKey(options?: Parameters<typeof client.vector_stores.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['vector_stores', '/vector_stores', keyArgs] as const
+}
+
+export function getVectorStoresQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.vector_stores.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.vector_stores.get>>['error'], null>,
+>(options?: Parameters<typeof client.vector_stores.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.vector_stores.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVectorStoresQueryKey>
+  >({
+    queryKey: getVectorStoresQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.vector_stores.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVectorStores<
+  TData = Extract<Awaited<ReturnType<typeof client.vector_stores.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.vector_stores.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.vector_stores.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVectorStoresQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.vector_stores.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getVectorStoresQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostVectorStoresMutationKey() {
+  return ['vector_stores', '/vector_stores', 'POST'] as const
+}
+
+export function getPostVectorStoresMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.vector_stores.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.vector_stores.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.vector_stores.post>[0]
+      options?: Parameters<typeof client.vector_stores.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVectorStoresMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vector_stores.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVectorStores<
+  TError = Exclude<Awaited<ReturnType<typeof client.vector_stores.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.vector_stores.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.vector_stores.post>[0]
+          options?: Parameters<typeof client.vector_stores.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVectorStoresMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVectorStoresVectorStoreIdQueryKey(
+  params: Parameters<typeof client.vector_stores>[0],
+) {
+  return ['vector_stores', '/vector_stores/{vector_store_id}', params] as const
+}
+
+export function getVectorStoresVectorStoreIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  options?: Parameters<ReturnType<typeof client.vector_stores>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vector_stores>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVectorStoresVectorStoreIdQueryKey>
+  >({
+    queryKey: getVectorStoresVectorStoreIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVectorStoresVectorStoreId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vector_stores>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVectorStoresVectorStoreIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.vector_stores>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVectorStoresVectorStoreIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVectorStoresVectorStoreIdMutationKey() {
+  return ['vector_stores', '/vector_stores/{vector_store_id}', 'POST'] as const
+}
+
+export function getPostVectorStoresVectorStoreIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vector_stores>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vector_stores>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.vector_stores>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.vector_stores>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVectorStoresVectorStoreIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vector_stores(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVectorStoresVectorStoreId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vector_stores>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.vector_stores>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.vector_stores>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVectorStoresVectorStoreIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteVectorStoresVectorStoreIdMutationKey() {
+  return ['vector_stores', '/vector_stores/{vector_store_id}', 'DELETE'] as const
+}
+
+export function getDeleteVectorStoresVectorStoreIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vector_stores>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vector_stores>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.vector_stores>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.vector_stores>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteVectorStoresVectorStoreIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vector_stores(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteVectorStoresVectorStoreId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vector_stores>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.vector_stores>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.vector_stores>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteVectorStoresVectorStoreIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostVectorStoresVectorStoreIdFileBatchesMutationKey() {
+  return ['vector_stores', '/vector_stores/{vector_store_id}/file_batches', 'POST'] as const
+}
+
+export function getPostVectorStoresVectorStoreIdFileBatchesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vector_stores>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.vector_stores>['file_batches']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.vector_stores>['file_batches']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVectorStoresVectorStoreIdFileBatchesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vector_stores(params).file_batches.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVectorStoresVectorStoreIdFileBatches<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.vector_stores>['file_batches']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.vector_stores>['file_batches']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVectorStoresVectorStoreIdFileBatchesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVectorStoresVectorStoreIdFileBatchesBatchIdQueryKey(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+) {
+  return [
+    'vector_stores',
+    '/vector_stores/{vector_store_id}/file_batches/{batch_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getVectorStoresVectorStoreIdFileBatchesBatchIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVectorStoresVectorStoreIdFileBatchesBatchIdQueryKey>
+  >({
+    queryKey: getVectorStoresVectorStoreIdFileBatchesBatchIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .file_batches(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVectorStoresVectorStoreIdFileBatchesBatchId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  params2: () => Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVectorStoresVectorStoreIdFileBatchesBatchIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVectorStoresVectorStoreIdFileBatchesBatchIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVectorStoresVectorStoreIdFileBatchesBatchIdCancelMutationKey() {
+  return [
+    'vector_stores',
+    '/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel',
+    'POST',
+  ] as const
+}
+
+export function getPostVectorStoresVectorStoreIdFileBatchesBatchIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVectorStoresVectorStoreIdFileBatchesBatchIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .file_batches(params2)
+        .cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVectorStoresVectorStoreIdFileBatchesBatchIdCancel<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  params2: () => Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['cancel']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostVectorStoresVectorStoreIdFileBatchesBatchIdCancelMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVectorStoresVectorStoreIdFileBatchesBatchIdFilesQueryKey(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'vector_stores',
+    '/vector_stores/{vector_store_id}/file_batches/{batch_id}/files',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getVectorStoresVectorStoreIdFileBatchesBatchIdFilesQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVectorStoresVectorStoreIdFileBatchesBatchIdFilesQueryKey>
+  >({
+    queryKey: getVectorStoresVectorStoreIdFileBatchesBatchIdFilesQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .file_batches(params2)
+        .files.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVectorStoresVectorStoreIdFileBatchesBatchIdFiles<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  params2: () => Parameters<ReturnType<typeof client.vector_stores>['file_batches']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVectorStoresVectorStoreIdFileBatchesBatchIdFilesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.vector_stores>['file_batches']>['files']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVectorStoresVectorStoreIdFileBatchesBatchIdFilesQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getVectorStoresVectorStoreIdFilesQueryKey(
+  params: Parameters<typeof client.vector_stores>[0],
+  options?: Parameters<ReturnType<typeof client.vector_stores>['files']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['vector_stores', '/vector_stores/{vector_store_id}/files', params, keyArgs] as const
+}
+
+export function getVectorStoresVectorStoreIdFilesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  options?: Parameters<ReturnType<typeof client.vector_stores>['files']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVectorStoresVectorStoreIdFilesQueryKey>
+  >({
+    queryKey: getVectorStoresVectorStoreIdFilesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .files.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVectorStoresVectorStoreIdFiles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVectorStoresVectorStoreIdFilesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.vector_stores>['files']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVectorStoresVectorStoreIdFilesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVectorStoresVectorStoreIdFilesMutationKey() {
+  return ['vector_stores', '/vector_stores/{vector_store_id}/files', 'POST'] as const
+}
+
+export function getPostVectorStoresVectorStoreIdFilesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vector_stores>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.vector_stores>['files']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.vector_stores>['files']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVectorStoresVectorStoreIdFilesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vector_stores(params).files.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVectorStoresVectorStoreIdFiles<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vector_stores>['files']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.vector_stores>['files']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.vector_stores>['files']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVectorStoresVectorStoreIdFilesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVectorStoresVectorStoreIdFilesFileIdQueryKey(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+) {
+  return [
+    'vector_stores',
+    '/vector_stores/{vector_store_id}/files/{file_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getVectorStoresVectorStoreIdFilesFileIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVectorStoresVectorStoreIdFilesFileIdQueryKey>
+  >({
+    queryKey: getVectorStoresVectorStoreIdFilesFileIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .files(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVectorStoresVectorStoreIdFilesFileId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  params2: () => Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVectorStoresVectorStoreIdFilesFileIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.vector_stores>['files']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVectorStoresVectorStoreIdFilesFileIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVectorStoresVectorStoreIdFilesFileIdMutationKey() {
+  return ['vector_stores', '/vector_stores/{vector_store_id}/files/{file_id}', 'POST'] as const
+}
+
+export function getPostVectorStoresVectorStoreIdFilesFileIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVectorStoresVectorStoreIdFilesFileIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vector_stores(params).files(params2).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVectorStoresVectorStoreIdFilesFileId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  params2: () => Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']>[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.vector_stores>['files']>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVectorStoresVectorStoreIdFilesFileIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteVectorStoresVectorStoreIdFilesFileIdMutationKey() {
+  return ['vector_stores', '/vector_stores/{vector_store_id}/files/{file_id}', 'DELETE'] as const
+}
+
+export function getDeleteVectorStoresVectorStoreIdFilesFileIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']>[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteVectorStoresVectorStoreIdFilesFileIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .files(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteVectorStoresVectorStoreIdFilesFileId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  params2: () => Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.vector_stores>['files']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteVectorStoresVectorStoreIdFilesFileIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVectorStoresVectorStoreIdFilesFileIdContentQueryKey(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+) {
+  return [
+    'vector_stores',
+    '/vector_stores/{vector_store_id}/files/{file_id}/content',
+    params,
+    params2,
+  ] as const
+}
+
+export function getVectorStoresVectorStoreIdFilesFileIdContentQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vector_stores>[0],
+  params2: Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVectorStoresVectorStoreIdFilesFileIdContentQueryKey>
+  >({
+    queryKey: getVectorStoresVectorStoreIdFilesFileIdContentQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vector_stores(params)
+        .files(params2)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVectorStoresVectorStoreIdFilesFileIdContent<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  params2: () => Parameters<ReturnType<typeof client.vector_stores>['files']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVectorStoresVectorStoreIdFilesFileIdContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.vector_stores>['files']>['content']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVectorStoresVectorStoreIdFilesFileIdContentQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVectorStoresVectorStoreIdSearchMutationKey() {
+  return ['vector_stores', '/vector_stores/{vector_store_id}/search', 'POST'] as const
+}
+
+export function getPostVectorStoresVectorStoreIdSearchMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['search']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vector_stores>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vector_stores>['search']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.vector_stores>['search']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.vector_stores>['search']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVectorStoresVectorStoreIdSearchMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vector_stores(params).search.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVectorStoresVectorStoreIdSearch<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vector_stores>['search']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vector_stores>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vector_stores>['search']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.vector_stores>['search']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.vector_stores>['search']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVectorStoresVectorStoreIdSearchMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostConversationsMutationKey() {
+  return ['conversations', '/conversations', 'POST'] as const
+}
+
+export function getPostConversationsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.conversations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.conversations.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.conversations.post>[0]
+      options?: Parameters<typeof client.conversations.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostConversationsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.conversations.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostConversations<
+  TError = Exclude<Awaited<ReturnType<typeof client.conversations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.conversations.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.conversations.post>[0]
+          options?: Parameters<typeof client.conversations.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostConversationsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getConversationsConversationIdQueryKey(
+  params: Parameters<typeof client.conversations>[0],
+) {
+  return ['conversations', '/conversations/{conversation_id}', params] as const
+}
+
+export function getConversationsConversationIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.conversations>[0],
+  options?: Parameters<ReturnType<typeof client.conversations>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.conversations>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getConversationsConversationIdQueryKey>
+  >({
+    queryKey: getConversationsConversationIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .conversations(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectConversationsConversationId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.conversations>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.conversations>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getConversationsConversationIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.conversations>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getConversationsConversationIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostConversationsConversationIdMutationKey() {
+  return ['conversations', '/conversations/{conversation_id}', 'POST'] as const
+}
+
+export function getPostConversationsConversationIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.conversations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.conversations>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.conversations>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.conversations>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostConversationsConversationIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.conversations(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostConversationsConversationId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.conversations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.conversations>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.conversations>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.conversations>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostConversationsConversationIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteConversationsConversationIdMutationKey() {
+  return ['conversations', '/conversations/{conversation_id}', 'DELETE'] as const
+}
+
+export function getDeleteConversationsConversationIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.conversations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.conversations>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.conversations>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.conversations>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteConversationsConversationIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.conversations(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteConversationsConversationId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.conversations>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.conversations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.conversations>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.conversations>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.conversations>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteConversationsConversationIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getSafetyCasesIdQueryKey(params: Parameters<typeof client.safety.cases>[0]) {
+  return ['safety', '/safety/cases/{id}', params] as const
+}
+
+export function getSafetyCasesIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.safety.cases>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.safety.cases>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.safety.cases>[0],
+  options?: Parameters<ReturnType<typeof client.safety.cases>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.safety.cases>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSafetyCasesIdQueryKey>
+  >({
+    queryKey: getSafetyCasesIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.safety
+        .cases(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSafetyCasesId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.safety.cases>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.safety.cases>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.safety.cases>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.safety.cases>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSafetyCasesIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.safety.cases>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getSafetyCasesIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getSafetyAlertsIdQueryKey(params: Parameters<typeof client.safety.alerts>[0]) {
+  return ['safety', '/safety/alerts/{id}', params] as const
+}
+
+export function getSafetyAlertsIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.safety.alerts>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.safety.alerts>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.safety.alerts>[0],
+  options?: Parameters<ReturnType<typeof client.safety.alerts>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.safety.alerts>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSafetyAlertsIdQueryKey>
+  >({
+    queryKey: getSafetyAlertsIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.safety
+        .alerts(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSafetyAlertsId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.safety.alerts>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.safety.alerts>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.safety.alerts>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.safety.alerts>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSafetyAlertsIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.safety.alerts>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getSafetyAlertsIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getOrganizationExternalKeysQueryKey(
+  options?: Parameters<typeof client.organization.external_keys.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/external_keys', keyArgs] as const
+}
+
+export function getOrganizationExternalKeysQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.external_keys.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_keys.get>>['error'],
+    null
+  >,
+>(options?: Parameters<typeof client.organization.external_keys.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.external_keys.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationExternalKeysQueryKey>
+  >({
+    queryKey: getOrganizationExternalKeysQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.external_keys.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationExternalKeys<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.external_keys.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_keys.get>>['error'],
+    null
+  >,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.external_keys.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationExternalKeysQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.external_keys.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationExternalKeysQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationExternalKeysMutationKey() {
+  return ['organization', '/organization/external_keys', 'POST'] as const
+}
+
+export function getPostOrganizationExternalKeysMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_keys.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.external_keys.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.external_keys.post>[0]
+      options?: Parameters<typeof client.organization.external_keys.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationExternalKeysMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.external_keys.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationExternalKeys<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_keys.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.external_keys.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.external_keys.post>[0]
+          options?: Parameters<typeof client.organization.external_keys.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationExternalKeysMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationExternalKeysExternalKeyIdQueryKey(
+  params: Parameters<typeof client.organization.external_keys>[0],
+) {
+  return ['organization', '/organization/external_keys/{external_key_id}', params] as const
+}
+
+export function getOrganizationExternalKeysExternalKeyIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.external_keys>[0],
+  options?: Parameters<ReturnType<typeof client.organization.external_keys>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationExternalKeysExternalKeyIdQueryKey>
+  >({
+    queryKey: getOrganizationExternalKeysExternalKeyIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .external_keys(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationExternalKeysExternalKeyId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.external_keys>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationExternalKeysExternalKeyIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.external_keys>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationExternalKeysExternalKeyIdQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationExternalKeysExternalKeyIdMutationKey() {
+  return ['organization', '/organization/external_keys/{external_key_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationExternalKeysExternalKeyIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.external_keys>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.external_keys>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.external_keys>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationExternalKeysExternalKeyIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.external_keys(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationExternalKeysExternalKeyId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.external_keys>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.external_keys>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.external_keys>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationExternalKeysExternalKeyIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationExternalKeysExternalKeyIdValidateMutationKey() {
+  return ['organization', '/organization/external_keys/{external_key_id}/validate', 'POST'] as const
+}
+
+export function getPostOrganizationExternalKeysExternalKeyIdValidateMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.external_keys>['validate']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.external_keys>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.external_keys>['validate']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.external_keys>['validate']['post']>[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.external_keys>['validate']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationExternalKeysExternalKeyIdValidateMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .external_keys(params)
+        .validate.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationExternalKeysExternalKeyIdValidate<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.external_keys>['validate']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.external_keys>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.external_keys>['validate']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<typeof client.organization.external_keys>['validate']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.external_keys>['validate']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationExternalKeysExternalKeyIdValidateMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getLiveSessionsSessionIdContentQueryKey(
+  params: Parameters<typeof client.live.sessions>[0],
+) {
+  return ['live', '/live/sessions/{session_id}/content', params] as const
+}
+
+export function getLiveSessionsSessionIdContentQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.live.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.live.sessions>['content']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.live.sessions>['content']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getLiveSessionsSessionIdContentQueryKey>
+  >({
+    queryKey: getLiveSessionsSessionIdContentQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.live
+        .sessions(params)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectLiveSessionsSessionIdContent<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.live.sessions>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.live.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.live.sessions>['content']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getLiveSessionsSessionIdContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.live.sessions>['content']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getLiveSessionsSessionIdContentQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationWorkloadIdentityProvidersQueryKey(
+  options?: Parameters<typeof client.organization.workload_identity_providers.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/workload_identity_providers', keyArgs] as const
+}
+
+export function getOrganizationWorkloadIdentityProvidersQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.workload_identity_providers.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.workload_identity_providers.get>>['error'],
+    null
+  >,
+>(options?: Parameters<typeof client.organization.workload_identity_providers.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.workload_identity_providers.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationWorkloadIdentityProvidersQueryKey>
+  >({
+    queryKey: getOrganizationWorkloadIdentityProvidersQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.workload_identity_providers.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationWorkloadIdentityProviders<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.workload_identity_providers.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.workload_identity_providers.get>>['error'],
+    null
+  >,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.workload_identity_providers.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationWorkloadIdentityProvidersQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.workload_identity_providers.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationWorkloadIdentityProvidersQueryOptions<TData, TError>(clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersMutationKey() {
+  return ['organization', '/organization/workload_identity_providers', 'POST'] as const
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.workload_identity_providers.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.workload_identity_providers.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.workload_identity_providers.post>[0]
+      options?: Parameters<typeof client.organization.workload_identity_providers.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationWorkloadIdentityProvidersMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.workload_identity_providers.post(
+        body,
+        options,
+      )
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationWorkloadIdentityProviders<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.workload_identity_providers.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.workload_identity_providers.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.workload_identity_providers.post>[0]
+          options?: Parameters<typeof client.organization.workload_identity_providers.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationWorkloadIdentityProvidersMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdQueryKey(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+) {
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}',
+    params,
+  ] as const
+}
+
+export function getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdQueryKey>
+  >({
+    queryKey: getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<
+          typeof getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdQueryKey
+        >
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<typeof client.organization.workload_identity_providers>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdQueryOptions<
+        TData,
+        TError
+      >(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationKey() {
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.workload_identity_providers>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<typeof client.organization.workload_identity_providers>['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.workload_identity_providers>['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey:
+      getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.workload_identity_providers>['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.workload_identity_providers>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationKey() {
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.workload_identity_providers>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<typeof client.organization.workload_identity_providers>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.workload_identity_providers>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey:
+      getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.workload_identity_providers>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<typeof client.organization.workload_identity_providers>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.workload_identity_providers>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesQueryKey(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}/federation_rules',
+    params,
+    keyArgs,
+  ] as const
+}
+
+export function getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            typeof client.organization.workload_identity_providers
+          >['federation_rules']['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<
+      typeof getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesQueryKey
+    >
+  >({
+    queryKey:
+      getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesQueryKey(
+        params,
+        options,
+      ),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .federation_rules.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRules<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                typeof client.organization.workload_identity_providers
+              >['federation_rules']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<
+          typeof getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesQueryKey
+        >
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesQueryOptions<
+        TData,
+        TError
+      >(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesMutationKey() {
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}/federation_rules',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.workload_identity_providers>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            typeof client.organization.workload_identity_providers
+          >['federation_rules']['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey:
+      getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .federation_rules.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRules<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          typeof client.organization.workload_identity_providers
+        >['federation_rules']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                typeof client.organization.workload_identity_providers
+              >['federation_rules']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<
+              typeof client.organization.workload_identity_providers
+            >['federation_rules']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<
+              typeof client.organization.workload_identity_providers
+            >['federation_rules']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdQueryKey(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+  params2: Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+  >[0],
+) {
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}/federation_rules/{workload_identity_federation_rule_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+  params2: Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+  >[0],
+  options?: Parameters<
+    ReturnType<
+      ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+    >['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+          >['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<
+      typeof getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdQueryKey
+    >
+  >({
+    queryKey:
+      getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdQueryKey(
+        params,
+        params2,
+      ),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .federation_rules(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleId<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  params2: () => Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+  >[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<
+                  typeof client.organization.workload_identity_providers
+                >['federation_rules']
+              >['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<
+          typeof getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdQueryKey
+        >
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<
+        ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+      >['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdQueryOptions<
+        TData,
+        TError
+      >(params(), params2(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationKey() {
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}/federation_rules/{workload_identity_federation_rule_id}',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+  params2: Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+  >[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+          >['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey:
+      getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .federation_rules(params2)
+        .post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  params2: () => Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+  >[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<
+                  typeof client.organization.workload_identity_providers
+                >['federation_rules']
+              >['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+            >['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+            >['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationKey() {
+  return [
+    'organization',
+    '/organization/workload_identity_providers/{workload_identity_provider_id}/federation_rules/{workload_identity_federation_rule_id}',
+    'DELETE',
+  ] as const
+}
+
+export function getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.workload_identity_providers>[0],
+  params2: Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+  >[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+          >['delete']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey:
+      getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .workload_identity_providers(params)
+        .federation_rules(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+        >['delete']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.workload_identity_providers>[0],
+  params2: () => Parameters<
+    ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+  >[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<
+                  typeof client.organization.workload_identity_providers
+                >['federation_rules']
+              >['delete']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+            >['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.workload_identity_providers>['federation_rules']
+            >['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getDeleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdFederationRulesWorkloadIdentityFederationRuleIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationUsageDecisionsQueryKey(
+  options: Parameters<typeof client.organization.usage.decisions.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/usage/decisions', keyArgs] as const
+}
+
+export function getOrganizationUsageDecisionsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.decisions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.decisions.get>>['error'],
+    null
+  >,
+>(options: Parameters<typeof client.organization.usage.decisions.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.usage.decisions.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationUsageDecisionsQueryKey>
+  >({
+    queryKey: getOrganizationUsageDecisionsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.usage.decisions.get({
+        ...options,
+        fetch: { ...options.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationUsageDecisions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.usage.decisions.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.usage.decisions.get>>['error'],
+    null
+  >,
+>(
+  options: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.usage.decisions.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationUsageDecisionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options: Parameters<typeof client.organization.usage.decisions.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options()
+    return { ...getOrganizationUsageDecisionsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getOrganizationExternalStorageQueryKey(
+  options?: Parameters<typeof client.organization.external_storage.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['organization', '/organization/external_storage', keyArgs] as const
+}
+
+export function getOrganizationExternalStorageQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.external_storage.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_storage.get>>['error'],
+    null
+  >,
+>(options?: Parameters<typeof client.organization.external_storage.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.external_storage.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationExternalStorageQueryKey>
+  >({
+    queryKey: getOrganizationExternalStorageQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.external_storage.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationExternalStorage<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.external_storage.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_storage.get>>['error'],
+    null
+  >,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.external_storage.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationExternalStorageQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.external_storage.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationExternalStorageQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationExternalStorageMutationKey() {
+  return ['organization', '/organization/external_storage', 'POST'] as const
+}
+
+export function getPostOrganizationExternalStorageMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_storage.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.external_storage.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.external_storage.post>[0]
+      options?: Parameters<typeof client.organization.external_storage.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationExternalStorageMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.external_storage.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationExternalStorage<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.external_storage.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.external_storage.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.external_storage.post>[0]
+          options?: Parameters<typeof client.organization.external_storage.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationExternalStorageMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationExternalStorageExternalStorageIdQueryKey(
+  params: Parameters<typeof client.organization.external_storage>[0],
+) {
+  return ['organization', '/organization/external_storage/{external_storage_id}', params] as const
+}
+
+export function getOrganizationExternalStorageExternalStorageIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.external_storage>[0],
+  options?: Parameters<ReturnType<typeof client.organization.external_storage>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationExternalStorageExternalStorageIdQueryKey>
+  >({
+    queryKey: getOrganizationExternalStorageExternalStorageIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .external_storage(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationExternalStorageExternalStorageId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.external_storage>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationExternalStorageExternalStorageIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.external_storage>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationExternalStorageExternalStorageIdQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationExternalStorageExternalStorageIdMutationKey() {
+  return ['organization', '/organization/external_storage/{external_storage_id}', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationExternalStorageExternalStorageIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.external_storage>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.external_storage>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.organization.external_storage>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationExternalStorageExternalStorageIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .external_storage(params)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationExternalStorageExternalStorageId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.external_storage>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.organization.external_storage>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.organization.external_storage>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.organization.external_storage>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationExternalStorageExternalStorageIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationExternalStorageExternalStorageIdValidateMutationKey() {
+  return [
+    'organization',
+    '/organization/external_storage/{external_storage_id}/validate',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationExternalStorageExternalStorageIdValidateMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.external_storage>['validate']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.external_storage>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.external_storage>['validate']['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<typeof client.organization.external_storage>['validate']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.external_storage>['validate']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationExternalStorageExternalStorageIdValidateMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .external_storage(params)
+        .validate.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationExternalStorageExternalStorageIdValidate<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.external_storage>['validate']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.external_storage>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.external_storage>['validate']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<typeof client.organization.external_storage>['validate']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.external_storage>['validate']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationExternalStorageExternalStorageIdValidateMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationSpendLimitQueryKey() {
+  return ['organization', '/organization/spend_limit'] as const
+}
+
+export function getOrganizationSpendLimitQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.spend_limit.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.spend_limit.get>>['error'], null>,
+>(options?: Parameters<typeof client.organization.spend_limit.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.spend_limit.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationSpendLimitQueryKey>
+  >({
+    queryKey: getOrganizationSpendLimitQueryKey(),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization.spend_limit.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationSpendLimit<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.organization.spend_limit.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.spend_limit.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.spend_limit.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationSpendLimitQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.organization.spend_limit.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getOrganizationSpendLimitQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostOrganizationSpendLimitMutationKey() {
+  return ['organization', '/organization/spend_limit', 'POST'] as const
+}
+
+export function getPostOrganizationSpendLimitMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.spend_limit.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.spend_limit.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.organization.spend_limit.post>[0]
+      options?: Parameters<typeof client.organization.spend_limit.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationSpendLimitMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.spend_limit.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationSpendLimit<
+  TError = Exclude<Awaited<ReturnType<typeof client.organization.spend_limit.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.spend_limit.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.organization.spend_limit.post>[0]
+          options?: Parameters<typeof client.organization.spend_limit.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationSpendLimitMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationSpendLimitMutationKey() {
+  return ['organization', '/organization/spend_limit', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationSpendLimitMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.spend_limit.delete>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.organization.spend_limit.delete>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<typeof client.organization.spend_limit.delete>[0]
+      options?: Parameters<typeof client.organization.spend_limit.delete>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationSpendLimitMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization.spend_limit.delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationSpendLimit<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.organization.spend_limit.delete>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.organization.spend_limit.delete>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<typeof client.organization.spend_limit.delete>[0]
+          options?: Parameters<typeof client.organization.spend_limit.delete>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationSpendLimitMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdSpendLimitQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+) {
+  return ['organization', '/organization/projects/{project_id}/spend_limit', params] as const
+}
+
+export function getOrganizationProjectsProjectIdSpendLimitQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<ReturnType<typeof client.organization.projects>['spend_limit']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdSpendLimitQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdSpendLimitQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_limit.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdSpendLimit<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdSpendLimitQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.organization.projects>['spend_limit']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdSpendLimitQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdSpendLimitMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/spend_limit', 'POST'] as const
+}
+
+export function getPostOrganizationProjectsProjectIdSpendLimitMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.organization.projects>['spend_limit']['post']>[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['spend_limit']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdSpendLimitMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_limit.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdSpendLimit<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['post']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['spend_limit']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['spend_limit']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdSpendLimitMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteOrganizationProjectsProjectIdSpendLimitMutationKey() {
+  return ['organization', '/organization/projects/{project_id}/spend_limit', 'DELETE'] as const
+}
+
+export function getDeleteOrganizationProjectsProjectIdSpendLimitMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.organization.projects>['spend_limit']['delete']>[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['spend_limit']['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteOrganizationProjectsProjectIdSpendLimitMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .spend_limit.delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteOrganizationProjectsProjectIdSpendLimit<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<typeof client.organization.projects>['spend_limit']['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<typeof client.organization.projects>['spend_limit']['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['spend_limit']['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteOrganizationProjectsProjectIdSpendLimitMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getOrganizationProjectsProjectIdServiceTierSettingsQueryKey(
+  params: Parameters<typeof client.organization.projects>[0],
+) {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/service_tier_settings',
+    params,
+  ] as const
+}
+
+export function getOrganizationProjectsProjectIdServiceTierSettingsQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  options?: Parameters<
+    ReturnType<typeof client.organization.projects>['service_tier_settings']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getOrganizationProjectsProjectIdServiceTierSettingsQueryKey>
+  >({
+    queryKey: getOrganizationProjectsProjectIdServiceTierSettingsQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_tier_settings.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectOrganizationProjectsProjectIdServiceTierSettings<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['service_tier_settings']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getOrganizationProjectsProjectIdServiceTierSettingsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<typeof client.organization.projects>['service_tier_settings']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getOrganizationProjectsProjectIdServiceTierSettingsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdServiceTierSettingsMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/service_tier_settings',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdServiceTierSettingsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.organization.projects>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['post']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<typeof client.organization.projects>['service_tier_settings']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<typeof client.organization.projects>['service_tier_settings']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostOrganizationProjectsProjectIdServiceTierSettingsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_tier_settings.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdServiceTierSettings<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.organization.projects>['service_tier_settings']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['service_tier_settings']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<typeof client.organization.projects>['service_tier_settings']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<typeof client.organization.projects>['service_tier_settings']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostOrganizationProjectsProjectIdServiceTierSettingsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApiKeysMutationKey() {
+  return [
+    'organization',
+    '/organization/projects/{project_id}/service_accounts/{service_account_id}/api_keys',
+    'POST',
+  ] as const
+}
+
+export function getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApiKeysMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['service_accounts']
+        >['api_keys']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.organization.projects>[0],
+  params2: Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            ReturnType<typeof client.organization.projects>['service_accounts']
+          >['api_keys']['post']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['service_accounts']
+        >['api_keys']['post']
+      >[0]
+      options?: Parameters<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['service_accounts']
+        >['api_keys']['post']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey:
+      getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApiKeysMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.organization
+        .projects(params)
+        .service_accounts(params2)
+        .api_keys.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApiKeys<
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<typeof client.organization.projects>['service_accounts']
+        >['api_keys']['post']
+      >
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.organization.projects>[0],
+  params2: () => Parameters<ReturnType<typeof client.organization.projects>['service_accounts']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<typeof client.organization.projects>['service_accounts']
+              >['api_keys']['post']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['service_accounts']
+            >['api_keys']['post']
+          >[0]
+          options?: Parameters<
+            ReturnType<
+              ReturnType<typeof client.organization.projects>['service_accounts']
+            >['api_keys']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getPostOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApiKeysMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostContentProvenanceChecksMutationKey() {
+  return ['content_provenance_checks', '/content_provenance_checks', 'POST'] as const
+}
+
+export function getPostContentProvenanceChecksMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.content_provenance_checks.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.content_provenance_checks.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.content_provenance_checks.post>[0]
+      options?: Parameters<typeof client.content_provenance_checks.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostContentProvenanceChecksMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.content_provenance_checks.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostContentProvenanceChecks<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.content_provenance_checks.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.content_provenance_checks.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.content_provenance_checks.post>[0]
+          options?: Parameters<typeof client.content_provenance_checks.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostContentProvenanceChecksMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVideosQueryKey(options?: Parameters<typeof client.videos.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['videos', '/videos', keyArgs] as const
+}
+
+export function getVideosQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.videos.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.get>>['error'], null>,
+>(options?: Parameters<typeof client.videos.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.videos.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVideosQueryKey>
+  >({
+    queryKey: getVideosQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.videos.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVideos<
+  TData = Extract<Awaited<ReturnType<typeof client.videos.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.videos.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVideosQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.videos.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getVideosQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostVideosMutationKey() {
+  return ['videos', '/videos', 'POST'] as const
+}
+
+export function getPostVideosMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.videos.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.videos.post>[0]
+      options?: Parameters<typeof client.videos.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVideosMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.videos.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVideos<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.videos.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.videos.post>[0]
+          options?: Parameters<typeof client.videos.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVideosMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostVideosCharactersMutationKey() {
+  return ['videos', '/videos/characters', 'POST'] as const
+}
+
+export function getPostVideosCharactersMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.characters.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.videos.characters.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.videos.characters.post>[0]
+      options?: Parameters<typeof client.videos.characters.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVideosCharactersMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.videos.characters.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVideosCharacters<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.characters.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.videos.characters.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.videos.characters.post>[0]
+          options?: Parameters<typeof client.videos.characters.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVideosCharactersMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVideosCharactersCharacterIdQueryKey(
+  params: Parameters<typeof client.videos.characters>[0],
+) {
+  return ['videos', '/videos/characters/{character_id}', params] as const
+}
+
+export function getVideosCharactersCharacterIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.videos.characters>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.videos.characters>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.videos.characters>[0],
+  options?: Parameters<ReturnType<typeof client.videos.characters>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.videos.characters>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVideosCharactersCharacterIdQueryKey>
+  >({
+    queryKey: getVideosCharactersCharacterIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.videos
+        .characters(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVideosCharactersCharacterId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.videos.characters>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.videos.characters>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.videos.characters>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.videos.characters>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVideosCharactersCharacterIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.videos.characters>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVideosCharactersCharacterIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVideosEditsMutationKey() {
+  return ['videos', '/videos/edits', 'POST'] as const
+}
+
+export function getPostVideosEditsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.edits.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.videos.edits.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.videos.edits.post>[0]
+      options?: Parameters<typeof client.videos.edits.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVideosEditsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.videos.edits.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVideosEdits<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.edits.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.videos.edits.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.videos.edits.post>[0]
+          options?: Parameters<typeof client.videos.edits.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVideosEditsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostVideosExtensionsMutationKey() {
+  return ['videos', '/videos/extensions', 'POST'] as const
+}
+
+export function getPostVideosExtensionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.extensions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.videos.extensions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.videos.extensions.post>[0]
+      options?: Parameters<typeof client.videos.extensions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVideosExtensionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.videos.extensions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVideosExtensions<
+  TError = Exclude<Awaited<ReturnType<typeof client.videos.extensions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.videos.extensions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.videos.extensions.post>[0]
+          options?: Parameters<typeof client.videos.extensions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVideosExtensionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVideosVideoIdQueryKey(params: Parameters<typeof client.videos>[0]) {
+  return ['videos', '/videos/{video_id}', params] as const
+}
+
+export function getVideosVideoIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.videos>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.videos>[0],
+  options?: Parameters<ReturnType<typeof client.videos>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.videos>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVideosVideoIdQueryKey>
+  >({
+    queryKey: getVideosVideoIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .videos(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVideosVideoId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.videos>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.videos>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.videos>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVideosVideoIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.videos>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getVideosVideoIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getDeleteVideosVideoIdMutationKey() {
+  return ['videos', '/videos/{video_id}', 'DELETE'] as const
+}
+
+export function getDeleteVideosVideoIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.videos>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.videos>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.videos>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.videos>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.videos>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteVideosVideoIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.videos(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteVideosVideoId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.videos>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.videos>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.videos>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.videos>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.videos>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteVideosVideoIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVideosVideoIdContentQueryKey(
+  params: Parameters<typeof client.videos>[0],
+  options?: Parameters<ReturnType<typeof client.videos>['content']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['videos', '/videos/{video_id}/content', params, keyArgs] as const
+}
+
+export function getVideosVideoIdContentQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.videos>[0],
+  options?: Parameters<ReturnType<typeof client.videos>['content']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.videos>['content']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVideosVideoIdContentQueryKey>
+  >({
+    queryKey: getVideosVideoIdContentQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .videos(params)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVideosVideoIdContent<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.videos>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.videos>['content']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVideosVideoIdContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.videos>['content']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVideosVideoIdContentQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVideosVideoIdRemixMutationKey() {
+  return ['videos', '/videos/{video_id}/remix', 'POST'] as const
+}
+
+export function getPostVideosVideoIdRemixMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['remix']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.videos>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.videos>['remix']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.videos>['remix']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.videos>['remix']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVideosVideoIdRemixMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.videos(params).remix.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVideosVideoIdRemix<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.videos>['remix']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.videos>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.videos>['remix']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.videos>['remix']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.videos>['remix']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVideosVideoIdRemixMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostResponsesInputTokensMutationKey() {
+  return ['responses', '/responses/input_tokens', 'POST'] as const
+}
+
+export function getPostResponsesInputTokensMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.responses.input_tokens.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.responses.input_tokens.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.responses.input_tokens.post>[0]
+      options?: Parameters<typeof client.responses.input_tokens.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesInputTokensMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses.input_tokens.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponsesInputTokens<
+  TError = Exclude<Awaited<ReturnType<typeof client.responses.input_tokens.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.responses.input_tokens.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.responses.input_tokens.post>[0]
+          options?: Parameters<typeof client.responses.input_tokens.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesInputTokensMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostResponsesCompactMutationKey() {
+  return ['responses', '/responses/compact', 'POST'] as const
+}
+
+export function getPostResponsesCompactMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.responses.compact.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.responses.compact.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.responses.compact.post>[0]
+      options?: Parameters<typeof client.responses.compact.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesCompactMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses.compact.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponsesCompact<
+  TError = Exclude<Awaited<ReturnType<typeof client.responses.compact.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.responses.compact.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.responses.compact.post>[0]
+          options?: Parameters<typeof client.responses.compact.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesCompactMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getSkillsQueryKey(options?: Parameters<typeof client.skills.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['skills', '/skills', keyArgs] as const
+}
+
+export function getSkillsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.skills.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.skills.get>>['error'], null>,
+>(options?: Parameters<typeof client.skills.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.skills.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSkillsQueryKey>
+  >({
+    queryKey: getSkillsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.skills.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSkills<
+  TData = Extract<Awaited<ReturnType<typeof client.skills.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.skills.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.skills.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSkillsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.skills.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getSkillsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostSkillsMutationKey() {
+  return ['skills', '/skills', 'POST'] as const
+}
+
+export function getPostSkillsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.skills.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.skills.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.skills.post>[0]
+      options?: Parameters<typeof client.skills.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostSkillsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.skills.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostSkills<
+  TError = Exclude<Awaited<ReturnType<typeof client.skills.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.skills.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.skills.post>[0]
+          options?: Parameters<typeof client.skills.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostSkillsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getSkillsSkillIdQueryKey(params: Parameters<typeof client.skills>[0]) {
+  return ['skills', '/skills/{skill_id}', params] as const
+}
+
+export function getSkillsSkillIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.skills>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.skills>[0],
+  options?: Parameters<ReturnType<typeof client.skills>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.skills>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSkillsSkillIdQueryKey>
+  >({
+    queryKey: getSkillsSkillIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .skills(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSkillsSkillId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.skills>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.skills>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSkillsSkillIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.skills>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getSkillsSkillIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostSkillsSkillIdMutationKey() {
+  return ['skills', '/skills/{skill_id}', 'POST'] as const
+}
+
+export function getPostSkillsSkillIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.skills>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.skills>[0]) {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.skills>['post']>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.skills>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.skills>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostSkillsSkillIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.skills(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostSkillsSkillId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.skills>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.skills>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.skills>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.skills>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostSkillsSkillIdMutationOptions<TError, TOnMutateResult>(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteSkillsSkillIdMutationKey() {
+  return ['skills', '/skills/{skill_id}', 'DELETE'] as const
+}
+
+export function getDeleteSkillsSkillIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.skills>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.skills>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.skills>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.skills>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.skills>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteSkillsSkillIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.skills(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteSkillsSkillId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.skills>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.skills>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.skills>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.skills>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteSkillsSkillIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getSkillsSkillIdContentQueryKey(params: Parameters<typeof client.skills>[0]) {
+  return ['skills', '/skills/{skill_id}/content', params] as const
+}
+
+export function getSkillsSkillIdContentQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.skills>[0],
+  options?: Parameters<ReturnType<typeof client.skills>['content']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.skills>['content']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSkillsSkillIdContentQueryKey>
+  >({
+    queryKey: getSkillsSkillIdContentQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .skills(params)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSkillsSkillIdContent<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['content']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.skills>['content']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSkillsSkillIdContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.skills>['content']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getSkillsSkillIdContentQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getSkillsSkillIdVersionsQueryKey(
+  params: Parameters<typeof client.skills>[0],
+  options?: Parameters<ReturnType<typeof client.skills>['versions']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['skills', '/skills/{skill_id}/versions', params, keyArgs] as const
+}
+
+export function getSkillsSkillIdVersionsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.skills>[0],
+  options?: Parameters<ReturnType<typeof client.skills>['versions']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSkillsSkillIdVersionsQueryKey>
+  >({
+    queryKey: getSkillsSkillIdVersionsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .skills(params)
+        .versions.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSkillsSkillIdVersions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSkillsSkillIdVersionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.skills>['versions']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getSkillsSkillIdVersionsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostSkillsSkillIdVersionsMutationKey() {
+  return ['skills', '/skills/{skill_id}/versions', 'POST'] as const
+}
+
+export function getPostSkillsSkillIdVersionsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.skills>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.skills>['versions']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.skills>['versions']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostSkillsSkillIdVersionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.skills(params).versions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostSkillsSkillIdVersions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.skills>['versions']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.skills>['versions']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.skills>['versions']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostSkillsSkillIdVersionsMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getSkillsSkillIdVersionsVersionQueryKey(
+  params: Parameters<typeof client.skills>[0],
+  params2: Parameters<ReturnType<typeof client.skills>['versions']>[0],
+) {
+  return ['skills', '/skills/{skill_id}/versions/{version}', params, params2] as const
+}
+
+export function getSkillsSkillIdVersionsVersionQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.skills>[0],
+  params2: Parameters<ReturnType<typeof client.skills>['versions']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSkillsSkillIdVersionsVersionQueryKey>
+  >({
+    queryKey: getSkillsSkillIdVersionsVersionQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .skills(params)
+        .versions(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSkillsSkillIdVersionsVersion<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  params2: () => Parameters<ReturnType<typeof client.skills>['versions']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSkillsSkillIdVersionsVersionQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.skills>['versions']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getSkillsSkillIdVersionsVersionQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteSkillsSkillIdVersionsVersionMutationKey() {
+  return ['skills', '/skills/{skill_id}/versions/{version}', 'DELETE'] as const
+}
+
+export function getDeleteSkillsSkillIdVersionsVersionMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.skills>[0],
+  params2: Parameters<ReturnType<typeof client.skills>['versions']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.skills>['versions']>['delete']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.skills>['versions']>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteSkillsSkillIdVersionsVersionMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.skills(params).versions(params2).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteSkillsSkillIdVersionsVersion<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  params2: () => Parameters<ReturnType<typeof client.skills>['versions']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<ReturnType<typeof client.skills>['versions']>['delete']>[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.skills>['versions']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteSkillsSkillIdVersionsVersionMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getSkillsSkillIdVersionsVersionContentQueryKey(
+  params: Parameters<typeof client.skills>[0],
+  params2: Parameters<ReturnType<typeof client.skills>['versions']>[0],
+) {
+  return ['skills', '/skills/{skill_id}/versions/{version}/content', params, params2] as const
+}
+
+export function getSkillsSkillIdVersionsVersionContentQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.skills>[0],
+  params2: Parameters<ReturnType<typeof client.skills>['versions']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getSkillsSkillIdVersionsVersionContentQueryKey>
+  >({
+    queryKey: getSkillsSkillIdVersionsVersionContentQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .skills(params)
+        .versions(params2)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectSkillsSkillIdVersionsVersionContent<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.skills>[0],
+  params2: () => Parameters<ReturnType<typeof client.skills>['versions']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getSkillsSkillIdVersionsVersionContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.skills>['versions']>['content']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getSkillsSkillIdVersionsVersionContentQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostChatkitSessionsSessionIdCancelMutationKey() {
+  return ['chatkit', '/chatkit/sessions/{session_id}/cancel', 'POST'] as const
+}
+
+export function getPostChatkitSessionsSessionIdCancelMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.chatkit.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostChatkitSessionsSessionIdCancelMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.chatkit.sessions(params).cancel.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostChatkitSessionsSessionIdCancel<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.chatkit.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.chatkit.sessions>['cancel']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostChatkitSessionsSessionIdCancelMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostChatkitSessionsMutationKey() {
+  return ['chatkit', '/chatkit/sessions', 'POST'] as const
+}
+
+export function getPostChatkitSessionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.chatkit.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.chatkit.sessions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.chatkit.sessions.post>[0]
+      options?: Parameters<typeof client.chatkit.sessions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostChatkitSessionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.chatkit.sessions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostChatkitSessions<
+  TError = Exclude<Awaited<ReturnType<typeof client.chatkit.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.chatkit.sessions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.chatkit.sessions.post>[0]
+          options?: Parameters<typeof client.chatkit.sessions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostChatkitSessionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getChatkitThreadsThreadIdItemsQueryKey(
+  params: Parameters<typeof client.chatkit.threads>[0],
+  options?: Parameters<ReturnType<typeof client.chatkit.threads>['items']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['chatkit', '/chatkit/threads/{thread_id}/items', params, keyArgs] as const
+}
+
+export function getChatkitThreadsThreadIdItemsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['items']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.chatkit.threads>[0],
+  options?: Parameters<ReturnType<typeof client.chatkit.threads>['items']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['items']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getChatkitThreadsThreadIdItemsQueryKey>
+  >({
+    queryKey: getChatkitThreadsThreadIdItemsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.chatkit
+        .threads(params)
+        .items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectChatkitThreadsThreadIdItems<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['items']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.chatkit.threads>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['items']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getChatkitThreadsThreadIdItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.chatkit.threads>['items']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getChatkitThreadsThreadIdItemsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getChatkitThreadsThreadIdQueryKey(
+  params: Parameters<typeof client.chatkit.threads>[0],
+) {
+  return ['chatkit', '/chatkit/threads/{thread_id}', params] as const
+}
+
+export function getChatkitThreadsThreadIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.chatkit.threads>[0],
+  options?: Parameters<ReturnType<typeof client.chatkit.threads>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getChatkitThreadsThreadIdQueryKey>
+  >({
+    queryKey: getChatkitThreadsThreadIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.chatkit
+        .threads(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectChatkitThreadsThreadId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.chatkit.threads>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getChatkitThreadsThreadIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.chatkit.threads>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getChatkitThreadsThreadIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteChatkitThreadsThreadIdMutationKey() {
+  return ['chatkit', '/chatkit/threads/{thread_id}', 'DELETE'] as const
+}
+
+export function getDeleteChatkitThreadsThreadIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.chatkit.threads>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.chatkit.threads>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.chatkit.threads>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteChatkitThreadsThreadIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.chatkit.threads(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteChatkitThreadsThreadId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.chatkit.threads>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.chatkit.threads>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.chatkit.threads>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.chatkit.threads>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteChatkitThreadsThreadIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getChatkitThreadsQueryKey(
+  options?: Parameters<typeof client.chatkit.threads.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['chatkit', '/chatkit/threads', keyArgs] as const
+}
+
+export function getChatkitThreadsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.chatkit.threads.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.chatkit.threads.get>>['error'], null>,
+>(options?: Parameters<typeof client.chatkit.threads.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.chatkit.threads.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getChatkitThreadsQueryKey>
+  >({
+    queryKey: getChatkitThreadsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.chatkit.threads.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectChatkitThreads<
+  TData = Extract<Awaited<ReturnType<typeof client.chatkit.threads.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.chatkit.threads.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.chatkit.threads.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getChatkitThreadsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.chatkit.threads.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getChatkitThreadsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostDecisionsMutationKey() {
+  return ['decisions', '/decisions', 'POST'] as const
+}
+
+export function getPostDecisionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.decisions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.decisions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.decisions.post>[0]
+      options?: Parameters<typeof client.decisions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostDecisionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.decisions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostDecisions<
+  TError = Exclude<Awaited<ReturnType<typeof client.decisions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.decisions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.decisions.post>[0]
+          options?: Parameters<typeof client.decisions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostDecisionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsAutomationsQueryKey(
+  options?: Parameters<typeof client.agents.automations.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/automations', keyArgs] as const
+}
+
+export function getAgentsAutomationsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.agents.automations.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.automations.get>>['error'], null>,
+>(options?: Parameters<typeof client.agents.automations.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.automations.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsAutomationsQueryKey>
+  >({
+    queryKey: getAgentsAutomationsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents.automations.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsAutomations<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.agents.automations.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.automations.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.agents.automations.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsAutomationsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.agents.automations.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAgentsAutomationsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAgentsAutomationsMutationKey() {
+  return ['agents', '/agents/automations', 'POST'] as const
+}
+
+export function getPostAgentsAutomationsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.automations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.automations.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.agents.automations.post>[0]
+      options?: Parameters<typeof client.agents.automations.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsAutomationsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.automations.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsAutomations<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.automations.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.agents.automations.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.agents.automations.post>[0]
+          options?: Parameters<typeof client.agents.automations.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsAutomationsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsAutomationsAutomationIdQueryKey(
+  params: Parameters<typeof client.agents.automations>[0],
+) {
+  return ['agents', '/agents/automations/{automation_id}', params] as const
+}
+
+export function getAgentsAutomationsAutomationIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.automations>[0],
+  options?: Parameters<ReturnType<typeof client.agents.automations>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.automations>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsAutomationsAutomationIdQueryKey>
+  >({
+    queryKey: getAgentsAutomationsAutomationIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .automations(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsAutomationsAutomationId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.automations>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsAutomationsAutomationIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.automations>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsAutomationsAutomationIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsAutomationsAutomationIdMutationKey() {
+  return ['agents', '/agents/automations/{automation_id}', 'POST'] as const
+}
+
+export function getPostAgentsAutomationsAutomationIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.automations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.automations>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.agents.automations>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.automations>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsAutomationsAutomationIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.automations(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsAutomationsAutomationId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.automations>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.agents.automations>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.automations>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsAutomationsAutomationIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAgentsAutomationsAutomationIdMutationKey() {
+  return ['agents', '/agents/automations/{automation_id}', 'DELETE'] as const
+}
+
+export function getDeleteAgentsAutomationsAutomationIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.automations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.automations>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.agents.automations>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.automations>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAgentsAutomationsAutomationIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.automations(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAgentsAutomationsAutomationId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.automations>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.agents.automations>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.automations>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteAgentsAutomationsAutomationIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsAutomationsAutomationIdPauseMutationKey() {
+  return ['agents', '/agents/automations/{automation_id}/pause', 'POST'] as const
+}
+
+export function getPostAgentsAutomationsAutomationIdPauseMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['pause']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.automations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.automations>['pause']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.agents.automations>['pause']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.automations>['pause']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsAutomationsAutomationIdPauseMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.automations(params).pause.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsAutomationsAutomationIdPause<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['pause']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.automations>['pause']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.agents.automations>['pause']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.automations>['pause']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsAutomationsAutomationIdPauseMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsAutomationsAutomationIdResumeMutationKey() {
+  return ['agents', '/agents/automations/{automation_id}/resume', 'POST'] as const
+}
+
+export function getPostAgentsAutomationsAutomationIdResumeMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['resume']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.automations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.automations>['resume']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.agents.automations>['resume']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.automations>['resume']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsAutomationsAutomationIdResumeMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.automations(params).resume.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsAutomationsAutomationIdResume<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['resume']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.automations>['resume']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.agents.automations>['resume']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.automations>['resume']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsAutomationsAutomationIdResumeMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsAutomationsAutomationIdInvocationsQueryKey(
+  params: Parameters<typeof client.agents.automations>[0],
+  options?: Parameters<ReturnType<typeof client.agents.automations>['invocations']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/automations/{automation_id}/invocations', params, keyArgs] as const
+}
+
+export function getAgentsAutomationsAutomationIdInvocationsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['invocations']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.agents.automations>['invocations']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.automations>[0],
+  options?: Parameters<ReturnType<typeof client.agents.automations>['invocations']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.automations>['invocations']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsAutomationsAutomationIdInvocationsQueryKey>
+  >({
+    queryKey: getAgentsAutomationsAutomationIdInvocationsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .automations(params)
+        .invocations.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsAutomationsAutomationIdInvocations<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.automations>['invocations']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.agents.automations>['invocations']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.automations>['invocations']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsAutomationsAutomationIdInvocationsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.automations>['invocations']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsAutomationsAutomationIdInvocationsQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsAutomationsAutomationIdInvocationsMutationKey() {
+  return ['agents', '/agents/automations/{automation_id}/invocations', 'POST'] as const
+}
+
+export function getPostAgentsAutomationsAutomationIdInvocationsMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.agents.automations>['invocations']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.automations>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.automations>['invocations']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.agents.automations>['invocations']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.automations>['invocations']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsAutomationsAutomationIdInvocationsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents
+        .automations(params)
+        .invocations.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsAutomationsAutomationIdInvocations<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.agents.automations>['invocations']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.automations>['invocations']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.agents.automations>['invocations']['post']>[0]
+          options?: Parameters<
+            ReturnType<typeof client.agents.automations>['invocations']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsAutomationsAutomationIdInvocationsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsAutomationsAutomationIdInvocationsInvocationIdQueryKey(
+  params: Parameters<typeof client.agents.automations>[0],
+  params2: Parameters<ReturnType<typeof client.agents.automations>['invocations']>[0],
+) {
+  return [
+    'agents',
+    '/agents/automations/{automation_id}/invocations/{invocation_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getAgentsAutomationsAutomationIdInvocationsInvocationIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.automations>[0],
+  params2: Parameters<ReturnType<typeof client.agents.automations>['invocations']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsAutomationsAutomationIdInvocationsInvocationIdQueryKey>
+  >({
+    queryKey: getAgentsAutomationsAutomationIdInvocationsInvocationIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .automations(params)
+        .invocations(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsAutomationsAutomationIdInvocationsInvocationId<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.automations>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.automations>['invocations']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsAutomationsAutomationIdInvocationsInvocationIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.agents.automations>['invocations']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsAutomationsAutomationIdInvocationsInvocationIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsEnvironmentsQueryKey(
+  options?: Parameters<typeof client.agents.environments.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/environments', keyArgs] as const
+}
+
+export function getAgentsEnvironmentsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.agents.environments.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.environments.get>>['error'], null>,
+>(options?: Parameters<typeof client.agents.environments.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.environments.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsEnvironmentsQueryKey>
+  >({
+    queryKey: getAgentsEnvironmentsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents.environments.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsEnvironments<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.agents.environments.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.environments.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.agents.environments.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsEnvironmentsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.agents.environments.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAgentsEnvironmentsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAgentsEnvironmentsMutationKey() {
+  return ['agents', '/agents/environments', 'POST'] as const
+}
+
+export function getPostAgentsEnvironmentsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.environments.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.environments.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.agents.environments.post>[0]
+      options?: Parameters<typeof client.agents.environments.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsEnvironmentsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.environments.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsEnvironments<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.environments.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.agents.environments.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.agents.environments.post>[0]
+          options?: Parameters<typeof client.agents.environments.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsEnvironmentsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsEnvironmentsEnvironmentIdQueryKey(
+  params: Parameters<typeof client.agents.environments>[0],
+) {
+  return ['agents', '/agents/environments/{environment_id}', params] as const
+}
+
+export function getAgentsEnvironmentsEnvironmentIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.environments>[0],
+  options?: Parameters<ReturnType<typeof client.agents.environments>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.environments>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsEnvironmentsEnvironmentIdQueryKey>
+  >({
+    queryKey: getAgentsEnvironmentsEnvironmentIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .environments(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsEnvironmentsEnvironmentId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.environments>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.environments>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsEnvironmentsEnvironmentIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.environments>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsEnvironmentsEnvironmentIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsEnvironmentsEnvironmentIdFilesQueryKey(
+  params: Parameters<typeof client.agents.environments>[0],
+  options?: Parameters<ReturnType<typeof client.agents.environments>['files']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/environments/{environment_id}/files', params, keyArgs] as const
+}
+
+export function getAgentsEnvironmentsEnvironmentIdFilesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.environments>[0],
+  options?: Parameters<ReturnType<typeof client.agents.environments>['files']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsEnvironmentsEnvironmentIdFilesQueryKey>
+  >({
+    queryKey: getAgentsEnvironmentsEnvironmentIdFilesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .environments(params)
+        .files.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsEnvironmentsEnvironmentIdFiles<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.environments>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsEnvironmentsEnvironmentIdFilesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.environments>['files']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsEnvironmentsEnvironmentIdFilesQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsEnvironmentsEnvironmentIdFilesMutationKey() {
+  return ['agents', '/agents/environments/{environment_id}/files', 'POST'] as const
+}
+
+export function getPostAgentsEnvironmentsEnvironmentIdFilesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.environments>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.agents.environments>['files']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.environments>['files']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsEnvironmentsEnvironmentIdFilesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.environments(params).files.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsEnvironmentsEnvironmentIdFiles<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.environments>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.environments>['files']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.agents.environments>['files']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.environments>['files']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsEnvironmentsEnvironmentIdFilesMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdSubagentsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['subagents']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/sessions/{session_id}/subagents', params, keyArgs] as const
+}
+
+export function getAgentsSessionsSessionIdSubagentsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['subagents']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdSubagentsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdSubagentsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .subagents.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdSubagents<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdSubagentsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.sessions>['subagents']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdSubagentsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+) {
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/subagents/{subagent_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdSubagentsSubagentIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .subagents(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdSubagentsSubagentId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdSubagentsSubagentIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdItemsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/subagents/{subagent_id}/items',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdItemsQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdItemsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdSubagentsSubagentIdItemsQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .subagents(params2)
+        .items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdSubagentsSubagentIdItems<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['items']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdSubagentsSubagentIdItemsQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdTurnsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/subagents/{subagent_id}/turns',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdTurnsQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdTurnsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdSubagentsSubagentIdTurnsQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .subagents(params2)
+        .turns.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdSubagentsSubagentIdTurns<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdTurnsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdSubagentsSubagentIdTurnsQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  params3: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+  >[0],
+) {
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/subagents/{subagent_id}/turns/{turn_id}',
+    params,
+    params2,
+    params3,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  params3: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+  >[0],
+  options?: Parameters<
+    ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+          >['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdQueryKey(
+      params,
+      params2,
+      params3,
+    ),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .subagents(params2)
+        .turns(params3)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnId<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  params3: () => Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+  >[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+              >['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        params3(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItemsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  params3: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+  >[0],
+  options?: Parameters<
+    ReturnType<
+      ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+    >['items']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/subagents/{subagent_id}/turns/{turn_id}/items',
+    params,
+    params2,
+    params3,
+    keyArgs,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItemsQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['items']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['items']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  params3: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+  >[0],
+  options?: Parameters<
+    ReturnType<
+      ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+    >['items']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<
+            ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+          >['items']['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItemsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItemsQueryKey(
+      params,
+      params2,
+      params3,
+      options,
+    ),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .subagents(params2)
+        .turns(params3)
+        .items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItems<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['items']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+        >['items']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['subagents']>[0],
+  params3: () => Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+  >[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<
+                ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+              >['items']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.agents.sessions>['subagents']>['turns']
+      >['items']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdSubagentsSubagentIdTurnsTurnIdItemsQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        params3(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsQueryKey(options?: Parameters<typeof client.agents.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents', keyArgs] as const
+}
+
+export function getAgentsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.agents.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.get>>['error'], null>,
+>(options?: Parameters<typeof client.agents.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsQueryKey>
+  >({
+    queryKey: getAgentsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgents<
+  TData = Extract<Awaited<ReturnType<typeof client.agents.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.agents.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.agents.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAgentsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAgentsMutationKey() {
+  return ['agents', '/agents', 'POST'] as const
+}
+
+export function getPostAgentsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.agents.post>[0]
+      options?: Parameters<typeof client.agents.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgents<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.agents.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.agents.post>[0]
+          options?: Parameters<typeof client.agents.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsAgentIdQueryKey(params: Parameters<typeof client.agents>[0]) {
+  return ['agents', '/agents/{agent_id}', params] as const
+}
+
+export function getAgentsAgentIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.agents>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.agents>[0],
+  options?: Parameters<ReturnType<typeof client.agents>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.agents>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsAgentIdQueryKey>
+  >({
+    queryKey: getAgentsAgentIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .agents(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsAgentId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.agents>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.agents>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsAgentIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAgentsAgentIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAgentsAgentIdMutationKey() {
+  return ['agents', '/agents/{agent_id}', 'POST'] as const
+}
+
+export function getPostAgentsAgentIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.agents>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents>[0]) {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.agents>['post']>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.agents>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsAgentIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsAgentId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.agents>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.agents>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsAgentIdMutationOptions<TError, TOnMutateResult>(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAgentsAgentIdMutationKey() {
+  return ['agents', '/agents/{agent_id}', 'DELETE'] as const
+}
+
+export function getDeleteAgentsAgentIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.agents>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.agents>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.agents>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAgentsAgentIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAgentsAgentId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.agents>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.agents>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.agents>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteAgentsAgentIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsEnvironmentsTemplatesQueryKey(
+  options?: Parameters<typeof client.agents.environments.templates.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/environments/templates', keyArgs] as const
+}
+
+export function getAgentsEnvironmentsTemplatesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.agents.environments.templates.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.agents.environments.templates.get>>['error'],
+    null
+  >,
+>(options?: Parameters<typeof client.agents.environments.templates.get>[0]) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.agents.environments.templates.get>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsEnvironmentsTemplatesQueryKey>
+  >({
+    queryKey: getAgentsEnvironmentsTemplatesQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents.environments.templates.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsEnvironmentsTemplates<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.agents.environments.templates.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.agents.environments.templates.get>>['error'],
+    null
+  >,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.agents.environments.templates.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsEnvironmentsTemplatesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.agents.environments.templates.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAgentsEnvironmentsTemplatesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAgentsEnvironmentsTemplatesMutationKey() {
+  return ['agents', '/agents/environments/templates', 'POST'] as const
+}
+
+export function getPostAgentsEnvironmentsTemplatesMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.agents.environments.templates.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<typeof client.agents.environments.templates.post>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<typeof client.agents.environments.templates.post>[0]
+      options?: Parameters<typeof client.agents.environments.templates.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsEnvironmentsTemplatesMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.environments.templates.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsEnvironmentsTemplates<
+  TError = Exclude<
+    Awaited<ReturnType<typeof client.agents.environments.templates.post>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.agents.environments.templates.post>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<typeof client.agents.environments.templates.post>[0]
+          options?: Parameters<typeof client.agents.environments.templates.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsEnvironmentsTemplatesMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsEnvironmentsTemplatesEnvironmentTemplateIdQueryKey(
+  params: Parameters<typeof client.agents.environments.templates>[0],
+) {
+  return ['agents', '/agents/environments/templates/{environment_template_id}', params] as const
+}
+
+export function getAgentsEnvironmentsTemplatesEnvironmentTemplateIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.environments.templates>[0],
+  options?: Parameters<ReturnType<typeof client.agents.environments.templates>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsEnvironmentsTemplatesEnvironmentTemplateIdQueryKey>
+  >({
+    queryKey: getAgentsEnvironmentsTemplatesEnvironmentTemplateIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents.environments
+        .templates(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsEnvironmentsTemplatesEnvironmentTemplateId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.environments.templates>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsEnvironmentsTemplatesEnvironmentTemplateIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.environments.templates>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsEnvironmentsTemplatesEnvironmentTemplateIdQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationKey() {
+  return ['agents', '/agents/environments/templates/{environment_template_id}', 'POST'] as const
+}
+
+export function getPostAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.environments.templates>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.agents.environments.templates>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.environments.templates>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.environments.templates(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsEnvironmentsTemplatesEnvironmentTemplateId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.environments.templates>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.agents.environments.templates>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.environments.templates>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationKey() {
+  return ['agents', '/agents/environments/templates/{environment_template_id}', 'DELETE'] as const
+}
+
+export function getDeleteAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.environments.templates>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.agents.environments.templates>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.environments.templates>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.environments
+        .templates(params)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAgentsEnvironmentsTemplatesEnvironmentTemplateId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.environments.templates>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.environments.templates>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.agents.environments.templates>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.environments.templates>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults =
+      getDeleteAgentsEnvironmentsTemplatesEnvironmentTemplateIdMutationOptions<
+        TError,
+        TOnMutateResult
+      >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsQueryKey(
+  options?: Parameters<typeof client.agents.sessions.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/sessions', keyArgs] as const
+}
+
+export function getAgentsSessionsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.agents.sessions.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.sessions.get>>['error'], null>,
+>(options?: Parameters<typeof client.agents.sessions.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.sessions.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsQueryKey>
+  >({
+    queryKey: getAgentsSessionsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents.sessions.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessions<
+  TData = Extract<Awaited<ReturnType<typeof client.agents.sessions.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.sessions.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.agents.sessions.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.agents.sessions.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getAgentsSessionsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostAgentsSessionsMutationKey() {
+  return ['agents', '/agents/sessions', 'POST'] as const
+}
+
+export function getPostAgentsSessionsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.agents.sessions.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.agents.sessions.post>[0]
+      options?: Parameters<typeof client.agents.sessions.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsSessionsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.sessions.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsSessions<
+  TError = Exclude<Awaited<ReturnType<typeof client.agents.sessions.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.agents.sessions.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.agents.sessions.post>[0]
+          options?: Parameters<typeof client.agents.sessions.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsSessionsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+) {
+  return ['agents', '/agents/sessions/{session_id}', params] as const
+}
+
+export function getAgentsSessionsSessionIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.sessions>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsSessionsSessionIdMutationKey() {
+  return ['agents', '/agents/sessions/{session_id}', 'POST'] as const
+}
+
+export function getPostAgentsSessionsSessionIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.agents.sessions>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.sessions>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsSessionsSessionIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.sessions(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsSessionsSessionId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.agents.sessions>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.sessions>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsSessionsSessionIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAgentsSessionsSessionIdMutationKey() {
+  return ['agents', '/agents/sessions/{session_id}', 'DELETE'] as const
+}
+
+export function getDeleteAgentsSessionsSessionIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.agents.sessions>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.sessions>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAgentsSessionsSessionIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.sessions(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAgentsSessionsSessionId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.agents.sessions>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.sessions>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteAgentsSessionsSessionIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdArtifactsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/sessions/{session_id}/artifacts', params, keyArgs] as const
+}
+
+export function getAgentsSessionsSessionIdArtifactsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdArtifactsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdArtifactsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .artifacts.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdArtifacts<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdArtifactsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdArtifactsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdArtifactsArtifactIdQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+) {
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/artifacts/{artifact_id}',
+    params,
+    params2,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdArtifactsArtifactIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdArtifactsArtifactIdQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdArtifactsArtifactIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .artifacts(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdArtifactsArtifactId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdArtifactsArtifactIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdArtifactsArtifactIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteAgentsSessionsSessionIdArtifactsArtifactIdMutationKey() {
+  return ['agents', '/agents/sessions/{session_id}/artifacts/{artifact_id}', 'DELETE'] as const
+}
+
+export function getDeleteAgentsSessionsSessionIdArtifactsArtifactIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<
+        ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']
+      >[0]
+      options?: Parameters<
+        ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']
+      >[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteAgentsSessionsSessionIdArtifactsArtifactIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .artifacts(params2)
+        .delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteAgentsSessionsSessionIdArtifactsArtifactId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteAgentsSessionsSessionIdArtifactsArtifactIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdArtifactsArtifactIdContentQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+) {
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/artifacts/{artifact_id}/content',
+    params,
+    params2,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdArtifactsArtifactIdContentQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<
+          ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+        >
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdArtifactsArtifactIdContentQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdArtifactsArtifactIdContentQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .artifacts(params2)
+        .content.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdArtifactsArtifactIdContent<
+  TData = Extract<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+      >
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<
+        ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+      >
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['artifacts']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdArtifactsArtifactIdContentQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.agents.sessions>['artifacts']>['content']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdArtifactsArtifactIdContentQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdEventsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['events']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/sessions/{session_id}/events', params, keyArgs] as const
+}
+
+export function getAgentsSessionsSessionIdEventsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['events']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdEventsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdEventsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .events.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdEvents<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdEventsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.sessions>['events']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdEventsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostAgentsSessionsSessionIdEventsMutationKey() {
+  return ['agents', '/agents/sessions/{session_id}/events', 'POST'] as const
+}
+
+export function getPostAgentsSessionsSessionIdEventsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.agents.sessions>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.agents.sessions>['events']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.agents.sessions>['events']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostAgentsSessionsSessionIdEventsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.agents.sessions(params).events.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostAgentsSessionsSessionIdEvents<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['events']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.agents.sessions>['events']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.agents.sessions>['events']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostAgentsSessionsSessionIdEventsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdItemsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['items']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/sessions/{session_id}/items', params, keyArgs] as const
+}
+
+export function getAgentsSessionsSessionIdItemsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['items']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['items']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['items']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdItemsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdItemsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdItems<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['items']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['items']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['items']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.sessions>['items']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdItemsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdTracesQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['traces']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/sessions/{session_id}/traces', params, keyArgs] as const
+}
+
+export function getAgentsSessionsSessionIdTracesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['traces']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['traces']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['traces']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['traces']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdTracesQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdTracesQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .traces.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdTraces<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['traces']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['traces']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['traces']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdTracesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.sessions>['traces']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdTracesQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdTurnsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['turns']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['agents', '/agents/sessions/{session_id}/turns', params, keyArgs] as const
+}
+
+export function getAgentsSessionsSessionIdTurnsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['turns']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['turns']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  options?: Parameters<ReturnType<typeof client.agents.sessions>['turns']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['turns']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdTurnsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdTurnsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .turns.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdTurns<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['turns']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['turns']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.agents.sessions>['turns']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdTurnsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.agents.sessions>['turns']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdTurnsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdTurnsTurnIdQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['turns']>[0],
+) {
+  return ['agents', '/agents/sessions/{session_id}/turns/{turn_id}', params, params2] as const
+}
+
+export function getAgentsSessionsSessionIdTurnsTurnIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['turns']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdTurnsTurnIdQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdTurnsTurnIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .turns(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdTurnsTurnId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['turns']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdTurnsTurnIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdTurnsTurnIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getAgentsSessionsSessionIdTurnsTurnIdItemsQueryKey(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['turns']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']
+  >[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return [
+    'agents',
+    '/agents/sessions/{session_id}/turns/{turn_id}/items',
+    params,
+    params2,
+    keyArgs,
+  ] as const
+}
+
+export function getAgentsSessionsSessionIdTurnsTurnIdItemsQueryOptions<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.agents.sessions>[0],
+  params2: Parameters<ReturnType<typeof client.agents.sessions>['turns']>[0],
+  options?: Parameters<
+    ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']
+  >[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<
+        ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']>
+      >,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getAgentsSessionsSessionIdTurnsTurnIdItemsQueryKey>
+  >({
+    queryKey: getAgentsSessionsSessionIdTurnsTurnIdItemsQueryKey(params, params2, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.agents
+        .sessions(params)
+        .turns(params2)
+        .items.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectAgentsSessionsSessionIdTurnsTurnIdItems<
+  TData = Extract<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']>
+    >,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.agents.sessions>[0],
+  params2: () => Parameters<ReturnType<typeof client.agents.sessions>['turns']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<
+            ReturnType<
+              ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']
+            >
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getAgentsSessionsSessionIdTurnsTurnIdItemsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<
+      ReturnType<ReturnType<typeof client.agents.sessions>['turns']>['items']['get']
+    >[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getAgentsSessionsSessionIdTurnsTurnIdItemsQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getVaultsQueryKey(options?: Parameters<typeof client.vaults.get>[0]) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['vaults', '/vaults', keyArgs] as const
+}
+
+export function getVaultsQueryOptions<
+  TData = Extract<Awaited<ReturnType<typeof client.vaults.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.vaults.get>>['error'], null>,
+>(options?: Parameters<typeof client.vaults.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.vaults.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVaultsQueryKey>
+  >({
+    queryKey: getVaultsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.vaults.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVaults<
+  TData = Extract<Awaited<ReturnType<typeof client.vaults.get>>, { error: null }>['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.vaults.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.vaults.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVaultsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.vaults.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getVaultsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostVaultsMutationKey() {
+  return ['vaults', '/vaults', 'POST'] as const
+}
+
+export function getPostVaultsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.vaults.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.vaults.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.vaults.post>[0]
+      options?: Parameters<typeof client.vaults.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVaultsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vaults.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVaults<
+  TError = Exclude<Awaited<ReturnType<typeof client.vaults.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.vaults.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.vaults.post>[0]
+          options?: Parameters<typeof client.vaults.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVaultsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVaultsVaultIdQueryKey(params: Parameters<typeof client.vaults>[0]) {
+  return ['vaults', '/vaults/{vault_id}', params] as const
+}
+
+export function getVaultsVaultIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.vaults>['get']>>['error'], null>,
+>(
+  params: Parameters<typeof client.vaults>[0],
+  options?: Parameters<ReturnType<typeof client.vaults>['get']>[0],
+) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.vaults>['get']>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVaultsVaultIdQueryKey>
+  >({
+    queryKey: getVaultsVaultIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vaults(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVaultsVaultId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.vaults>['get']>>['error'], null>,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vaults>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVaultsVaultIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.vaults>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getVaultsVaultIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostVaultsVaultIdMutationKey() {
+  return ['vaults', '/vaults/{vault_id}', 'POST'] as const
+}
+
+export function getPostVaultsVaultIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.vaults>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vaults>[0]) {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<ReturnType<typeof client.vaults>['post']>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.vaults>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.vaults>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVaultsVaultIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vaults(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVaultsVaultId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.vaults>['post']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vaults>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.vaults>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.vaults>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVaultsVaultIdMutationOptions<TError, TOnMutateResult>(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteVaultsVaultIdMutationKey() {
+  return ['vaults', '/vaults/{vault_id}', 'DELETE'] as const
+}
+
+export function getDeleteVaultsVaultIdMutationOptions<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.vaults>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vaults>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vaults>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.vaults>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.vaults>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteVaultsVaultIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vaults(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteVaultsVaultId<
+  TError = Exclude<Awaited<ReturnType<ReturnType<typeof client.vaults>['delete']>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vaults>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.vaults>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.vaults>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteVaultsVaultIdMutationOptions<TError, TOnMutateResult>(
+      params(),
+    )
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVaultsVaultIdCredentialsQueryKey(
+  params: Parameters<typeof client.vaults>[0],
+  options?: Parameters<ReturnType<typeof client.vaults>['credentials']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['vaults', '/vaults/{vault_id}/credentials', params, keyArgs] as const
+}
+
+export function getVaultsVaultIdCredentialsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vaults>[0],
+  options?: Parameters<ReturnType<typeof client.vaults>['credentials']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVaultsVaultIdCredentialsQueryKey>
+  >({
+    queryKey: getVaultsVaultIdCredentialsQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vaults(params)
+        .credentials.get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVaultsVaultIdCredentials<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVaultsVaultIdCredentialsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.vaults>['credentials']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVaultsVaultIdCredentialsQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVaultsVaultIdCredentialsMutationKey() {
+  return ['vaults', '/vaults/{vault_id}/credentials', 'POST'] as const
+}
+
+export function getPostVaultsVaultIdCredentialsMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.vaults>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.vaults>['credentials']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.vaults>['credentials']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVaultsVaultIdCredentialsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vaults(params).credentials.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVaultsVaultIdCredentials<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.vaults>['credentials']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.vaults>['credentials']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.vaults>['credentials']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVaultsVaultIdCredentialsMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getVaultsVaultIdCredentialsCredentialIdQueryKey(
+  params: Parameters<typeof client.vaults>[0],
+  params2: Parameters<ReturnType<typeof client.vaults>['credentials']>[0],
+) {
+  return ['vaults', '/vaults/{vault_id}/credentials/{credential_id}', params, params2] as const
+}
+
+export function getVaultsVaultIdCredentialsCredentialIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.vaults>[0],
+  params2: Parameters<ReturnType<typeof client.vaults>['credentials']>[0],
+  options?: Parameters<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getVaultsVaultIdCredentialsCredentialIdQueryKey>
+  >({
+    queryKey: getVaultsVaultIdCredentialsCredentialIdQueryKey(params, params2),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .vaults(params)
+        .credentials(params2)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectVaultsVaultIdCredentialsCredentialId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  params2: () => Parameters<ReturnType<typeof client.vaults>['credentials']>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getVaultsVaultIdCredentialsCredentialIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<ReturnType<typeof client.vaults>['credentials']>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getVaultsVaultIdCredentialsCredentialIdQueryOptions<TData, TError>(
+        params(),
+        params2(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostVaultsVaultIdCredentialsCredentialIdMutationKey() {
+  return ['vaults', '/vaults/{vault_id}/credentials/{credential_id}', 'POST'] as const
+}
+
+export function getPostVaultsVaultIdCredentialsCredentialIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.vaults>[0],
+  params2: Parameters<ReturnType<typeof client.vaults>['credentials']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostVaultsVaultIdCredentialsCredentialIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vaults(params).credentials(params2).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostVaultsVaultIdCredentialsCredentialId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  params2: () => Parameters<ReturnType<typeof client.vaults>['credentials']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']>[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.vaults>['credentials']>['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostVaultsVaultIdCredentialsCredentialIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteVaultsVaultIdCredentialsCredentialIdMutationKey() {
+  return ['vaults', '/vaults/{vault_id}/credentials/{credential_id}', 'DELETE'] as const
+}
+
+export function getDeleteVaultsVaultIdCredentialsCredentialIdMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: Parameters<typeof client.vaults>[0],
+  params2: Parameters<ReturnType<typeof client.vaults>['credentials']>[0],
+) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']>[0]
+      options?: Parameters<ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteVaultsVaultIdCredentialsCredentialIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.vaults(params).credentials(params2).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteVaultsVaultIdCredentialsCredentialId<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.vaults>[0],
+  params2: () => Parameters<ReturnType<typeof client.vaults>['credentials']>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<
+            ReturnType<ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']>
+          >,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<
+            ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']
+          >[0]
+          options?: Parameters<
+            ReturnType<ReturnType<typeof client.vaults>['credentials']>['delete']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteVaultsVaultIdCredentialsCredentialIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params(), params2())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getWebhookEndpointsQueryKey(
+  options?: Parameters<typeof client.webhook_endpoints.get>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['webhook_endpoints', '/webhook_endpoints', keyArgs] as const
+}
+
+export function getWebhookEndpointsQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.webhook_endpoints.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.webhook_endpoints.get>>['error'], null>,
+>(options?: Parameters<typeof client.webhook_endpoints.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.webhook_endpoints.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getWebhookEndpointsQueryKey>
+  >({
+    queryKey: getWebhookEndpointsQueryKey(options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.webhook_endpoints.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectWebhookEndpoints<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.webhook_endpoints.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.webhook_endpoints.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<Awaited<ReturnType<typeof client.webhook_endpoints.get>>, { error: null }>['data'],
+        TError,
+        TData,
+        ReturnType<typeof getWebhookEndpointsQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.webhook_endpoints.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getWebhookEndpointsQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostWebhookEndpointsMutationKey() {
+  return ['webhook_endpoints', '/webhook_endpoints', 'POST'] as const
+}
+
+export function getPostWebhookEndpointsMutationOptions<
+  TError = Exclude<Awaited<ReturnType<typeof client.webhook_endpoints.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<Awaited<ReturnType<typeof client.webhook_endpoints.post>>, { error: null }>['data'],
+    TError,
+    {
+      body: Parameters<typeof client.webhook_endpoints.post>[0]
+      options?: Parameters<typeof client.webhook_endpoints.post>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostWebhookEndpointsMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.webhook_endpoints.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostWebhookEndpoints<
+  TError = Exclude<Awaited<ReturnType<typeof client.webhook_endpoints.post>>['error'], null>,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<Awaited<ReturnType<typeof client.webhook_endpoints.post>>, { error: null }>['data'],
+        TError,
+        {
+          body: Parameters<typeof client.webhook_endpoints.post>[0]
+          options?: Parameters<typeof client.webhook_endpoints.post>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostWebhookEndpointsMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getWebhookEndpointsWebhookEndpointIdQueryKey(
+  params: Parameters<typeof client.webhook_endpoints>[0],
+) {
+  return ['webhook_endpoints', '/webhook_endpoints/{webhook_endpoint_id}', params] as const
+}
+
+export function getWebhookEndpointsWebhookEndpointIdQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['get']>>['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.webhook_endpoints>[0],
+  options?: Parameters<ReturnType<typeof client.webhook_endpoints>['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getWebhookEndpointsWebhookEndpointIdQueryKey>
+  >({
+    queryKey: getWebhookEndpointsWebhookEndpointIdQueryKey(params),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .webhook_endpoints(params)
+        .get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectWebhookEndpointsWebhookEndpointId<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['get']>>['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.webhook_endpoints>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getWebhookEndpointsWebhookEndpointIdQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.webhook_endpoints>['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getWebhookEndpointsWebhookEndpointIdQueryOptions<TData, TError>(params(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostWebhookEndpointsWebhookEndpointIdMutationKey() {
+  return ['webhook_endpoints', '/webhook_endpoints/{webhook_endpoint_id}', 'POST'] as const
+}
+
+export function getPostWebhookEndpointsWebhookEndpointIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.webhook_endpoints>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.webhook_endpoints>['post']>[0]
+      options?: Parameters<ReturnType<typeof client.webhook_endpoints>['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostWebhookEndpointsWebhookEndpointIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.webhook_endpoints(params).post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostWebhookEndpointsWebhookEndpointId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.webhook_endpoints>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.webhook_endpoints>['post']>[0]
+          options?: Parameters<ReturnType<typeof client.webhook_endpoints>['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostWebhookEndpointsWebhookEndpointIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteWebhookEndpointsWebhookEndpointIdMutationKey() {
+  return ['webhook_endpoints', '/webhook_endpoints/{webhook_endpoint_id}', 'DELETE'] as const
+}
+
+export function getDeleteWebhookEndpointsWebhookEndpointIdMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.webhook_endpoints>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['delete']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.webhook_endpoints>['delete']>[0]
+      options?: Parameters<ReturnType<typeof client.webhook_endpoints>['delete']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteWebhookEndpointsWebhookEndpointIdMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.webhook_endpoints(params).delete(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectDeleteWebhookEndpointsWebhookEndpointId<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['delete']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.webhook_endpoints>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['delete']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.webhook_endpoints>['delete']>[0]
+          options?: Parameters<ReturnType<typeof client.webhook_endpoints>['delete']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteWebhookEndpointsWebhookEndpointIdMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostWebhookEndpointsWebhookEndpointIdRotateSecretMutationKey() {
+  return [
+    'webhook_endpoints',
+    '/webhook_endpoints/{webhook_endpoint_id}/rotate_secret',
+    'POST',
+  ] as const
+}
+
+export function getPostWebhookEndpointsWebhookEndpointIdRotateSecretMutationOptions<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.webhook_endpoints>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostWebhookEndpointsWebhookEndpointIdRotateSecretMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client
+        .webhook_endpoints(params)
+        .rotate_secret.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostWebhookEndpointsWebhookEndpointIdRotateSecret<
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']>
+    >['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.webhook_endpoints>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']>[0]
+          options?: Parameters<
+            ReturnType<typeof client.webhook_endpoints>['rotate_secret']['post']
+          >[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostWebhookEndpointsWebhookEndpointIdRotateSecretMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostWebhookEndpointsWebhookEndpointIdTestMutationKey() {
+  return ['webhook_endpoints', '/webhook_endpoints/{webhook_endpoint_id}/test', 'POST'] as const
+}
+
+export function getPostWebhookEndpointsWebhookEndpointIdTestMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['test']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.webhook_endpoints>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['test']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<ReturnType<typeof client.webhook_endpoints>['test']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.webhook_endpoints>['test']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostWebhookEndpointsWebhookEndpointIdTestMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.webhook_endpoints(params).test.post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostWebhookEndpointsWebhookEndpointIdTest<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['test']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.webhook_endpoints>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.webhook_endpoints>['test']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<ReturnType<typeof client.webhook_endpoints>['test']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.webhook_endpoints>['test']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostWebhookEndpointsWebhookEndpointIdTestMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getWebhookEventTypesQueryKey() {
+  return ['webhook_event_types', '/webhook_event_types'] as const
+}
+
+export function getWebhookEventTypesQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.webhook_event_types.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.webhook_event_types.get>>['error'], null>,
+>(options?: Parameters<typeof client.webhook_event_types.get>[0]) {
+  return queryOptions<
+    Extract<Awaited<ReturnType<typeof client.webhook_event_types.get>>, { error: null }>['data'],
+    TError,
+    TData,
+    ReturnType<typeof getWebhookEventTypesQueryKey>
+  >({
+    queryKey: getWebhookEventTypesQueryKey(),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client.webhook_event_types.get({
+        ...options,
+        fetch: { ...options?.fetch, signal },
+      })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectWebhookEventTypes<
+  TData = Extract<
+    Awaited<ReturnType<typeof client.webhook_event_types.get>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<Awaited<ReturnType<typeof client.webhook_event_types.get>>['error'], null>,
+>(
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<typeof client.webhook_event_types.get>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getWebhookEventTypesQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<typeof client.webhook_event_types.get>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return { ...getWebhookEventTypesQueryOptions<TData, TError>(clientOptions), ...query }
+  }, injectOptions)
+}
+
+export function getPostResponsesBetaTrueMutationKey() {
+  return ['responses?beta=true', '/responses?beta=true', 'POST'] as const
+}
+
+export function getPostResponsesBetaTrueMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<(typeof client)['responses?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<(typeof client)['responses?beta=true']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<(typeof client)['responses?beta=true']['post']>[0]
+      options?: Parameters<(typeof client)['responses?beta=true']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesBetaTrueMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client['responses?beta=true'].post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponsesBetaTrue<
+  TError = Exclude<
+    Awaited<ReturnType<(typeof client)['responses?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<(typeof client)['responses?beta=true']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<(typeof client)['responses?beta=true']['post']>[0]
+          options?: Parameters<(typeof client)['responses?beta=true']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesBetaTrueMutationOptions<TError, TOnMutateResult>()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getResponsesResponseIdBetaTrueQueryKey(
+  response_id: string,
+  options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
+) {
+  const { headers: _a, ...keyArgs } = options ?? {}
+  return ['responses', '/responses/{response_id}?beta=true', response_id, keyArgs] as const
+}
+
+export function getResponsesResponseIdBetaTrueQueryOptions<TData = BetaResponse, TError = unknown>(
+  response_id: string,
+  options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
+) {
+  return queryOptions<
+    BetaResponse,
+    TError,
+    TData,
+    ReturnType<typeof getResponsesResponseIdBetaTrueQueryKey>
+  >({
+    queryKey: getResponsesResponseIdBetaTrueQueryKey(response_id, options),
+    queryFn: async ({ signal }) => {
+      const search = new URLSearchParams()
+      for (const [k, v] of Object.entries(options?.query ?? {})) {
+        if (v === undefined) continue
+        if (Array.isArray(v)) {
+          for (const x of v) {
+            search.append(k, String(x))
+          }
+        } else {
+          search.set(k, String(v))
+        }
+      }
+      const res = await fetch(
+        `/responses/${encodeURIComponent(response_id)}?beta=true${search.size ? `?${search}` : ''}`,
+        { headers: options?.headers, signal },
+      )
+      if (!res.ok) throw await res.json()
+      return JSON.parse(await res.text())
+    },
+  })
+}
+
+export function injectResponsesResponseIdBetaTrue<TData = BetaResponse, TError = unknown>(
+  response_id: () => string,
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        BetaResponse,
+        TError,
+        TData,
+        ReturnType<typeof getResponsesResponseIdBetaTrueQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: { headers?: Record<string, string>; query?: Record<string, unknown> }
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getResponsesResponseIdBetaTrueQueryOptions<TData, TError>(response_id(), clientOptions),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getDeleteResponsesResponseIdBetaTrueMutationKey() {
+  return ['responses', '/responses/{response_id}?beta=true', 'DELETE'] as const
+}
+
+export function getDeleteResponsesResponseIdBetaTrueMutationOptions<
+  TError = unknown,
+  TOnMutateResult = unknown,
+>(response_id: string) {
+  return mutationOptions<
+    unknown,
+    TError,
+    { body?: unknown; options?: { headers?: Record<string, string> } },
+    TOnMutateResult
+  >({
+    mutationKey: getDeleteResponsesResponseIdBetaTrueMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const res = await fetch(`/responses/${encodeURIComponent(response_id)}?beta=true`, {
+        method: 'DELETE',
+        headers: { 'content-type': 'application/json', ...options?.headers },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      })
+      if (!res.ok) throw await res.json()
+      return JSON.parse(await res.text())
+    },
+  })
+}
+
+export function injectDeleteResponsesResponseIdBetaTrue<
+  TError = unknown,
+  TOnMutateResult = unknown,
+>(
+  response_id: () => string,
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        unknown,
+        TError,
+        { body?: unknown; options?: { headers?: Record<string, string> } },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getDeleteResponsesResponseIdBetaTrueMutationOptions<
+      TError,
+      TOnMutateResult
+    >(response_id())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostResponsesResponseIdCancelBetaTrueMutationKey() {
+  return ['responses', '/responses/{response_id}/cancel?beta=true', 'POST'] as const
+}
+
+export function getPostResponsesResponseIdCancelBetaTrueMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['cancel?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(params: Parameters<typeof client.responses>[0]) {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.responses>['cancel?beta=true']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body?: Parameters<ReturnType<typeof client.responses>['cancel?beta=true']['post']>[0]
+      options?: Parameters<ReturnType<typeof client.responses>['cancel?beta=true']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesResponseIdCancelBetaTrueMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses(params)['cancel?beta=true'].post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponsesResponseIdCancelBetaTrue<
+  TError = Exclude<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['cancel?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  params: () => Parameters<typeof client.responses>[0],
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.responses>['cancel?beta=true']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body?: Parameters<ReturnType<typeof client.responses>['cancel?beta=true']['post']>[0]
+          options?: Parameters<ReturnType<typeof client.responses>['cancel?beta=true']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesResponseIdCancelBetaTrueMutationOptions<
+      TError,
+      TOnMutateResult
+    >(params())
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getPostResponsesCompactBetaTrueMutationKey() {
+  return ['responses', '/responses/compact?beta=true', 'POST'] as const
+}
+
+export function getPostResponsesCompactBetaTrueMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<(typeof client.responses)['compact?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<(typeof client.responses)['compact?beta=true']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<(typeof client.responses)['compact?beta=true']['post']>[0]
+      options?: Parameters<(typeof client.responses)['compact?beta=true']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesCompactBetaTrueMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses['compact?beta=true'].post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponsesCompactBetaTrue<
+  TError = Exclude<
+    Awaited<ReturnType<(typeof client.responses)['compact?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<(typeof client.responses)['compact?beta=true']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<(typeof client.responses)['compact?beta=true']['post']>[0]
+          options?: Parameters<(typeof client.responses)['compact?beta=true']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesCompactBetaTrueMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}
+
+export function getResponsesResponseIdInputItemsBetaTrueQueryKey(
+  params: Parameters<typeof client.responses>[0],
+  options?: Parameters<ReturnType<typeof client.responses>['input_items?beta=true']['get']>[0],
+) {
+  const { headers: _a, fetch: _b, throwHttpError: _c, ...keyArgs } = options ?? {}
+  return ['responses', '/responses/{response_id}/input_items?beta=true', params, keyArgs] as const
+}
+
+export function getResponsesResponseIdInputItemsBetaTrueQueryOptions<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['input_items?beta=true']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.responses>['input_items?beta=true']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: Parameters<typeof client.responses>[0],
+  options?: Parameters<ReturnType<typeof client.responses>['input_items?beta=true']['get']>[0],
+) {
+  return queryOptions<
+    Extract<
+      Awaited<ReturnType<ReturnType<typeof client.responses>['input_items?beta=true']['get']>>,
+      { error: null }
+    >['data'],
+    TError,
+    TData,
+    ReturnType<typeof getResponsesResponseIdInputItemsBetaTrueQueryKey>
+  >({
+    queryKey: getResponsesResponseIdInputItemsBetaTrueQueryKey(params, options),
+    queryFn: async ({ signal }) => {
+      const { data, error } = await client
+        .responses(params)
+        ['input_items?beta=true'].get({ ...options, fetch: { ...options?.fetch, signal } })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectResponsesResponseIdInputItemsBetaTrue<
+  TData = Extract<
+    Awaited<ReturnType<ReturnType<typeof client.responses>['input_items?beta=true']['get']>>,
+    { error: null }
+  >['data'],
+  TError = Exclude<
+    Awaited<
+      ReturnType<ReturnType<typeof client.responses>['input_items?beta=true']['get']>
+    >['error'],
+    null
+  >,
+>(
+  params: () => Parameters<typeof client.responses>[0],
+  options?: () => {
+    query?: Omit<
+      CreateQueryOptions<
+        Extract<
+          Awaited<ReturnType<ReturnType<typeof client.responses>['input_items?beta=true']['get']>>,
+          { error: null }
+        >['data'],
+        TError,
+        TData,
+        ReturnType<typeof getResponsesResponseIdInputItemsBetaTrueQueryKey>
+      >,
+      'queryKey' | 'queryFn'
+    >
+    options?: Parameters<ReturnType<typeof client.responses>['input_items?beta=true']['get']>[0]
+  },
+  injectOptions?: InjectQueryOptions,
+) {
+  return injectQuery(() => {
+    const { query, options: clientOptions } = options?.() ?? {}
+    return {
+      ...getResponsesResponseIdInputItemsBetaTrueQueryOptions<TData, TError>(
+        params(),
+        clientOptions,
+      ),
+      ...query,
+    }
+  }, injectOptions)
+}
+
+export function getPostResponsesInputTokensBetaTrueMutationKey() {
+  return ['responses', '/responses/input_tokens?beta=true', 'POST'] as const
+}
+
+export function getPostResponsesInputTokensBetaTrueMutationOptions<
+  TError = Exclude<
+    Awaited<ReturnType<(typeof client.responses)['input_tokens?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>() {
+  return mutationOptions<
+    Extract<
+      Awaited<ReturnType<(typeof client.responses)['input_tokens?beta=true']['post']>>,
+      { error: null }
+    >['data'],
+    TError,
+    {
+      body: Parameters<(typeof client.responses)['input_tokens?beta=true']['post']>[0]
+      options?: Parameters<(typeof client.responses)['input_tokens?beta=true']['post']>[1]
+    },
+    TOnMutateResult
+  >({
+    mutationKey: getPostResponsesInputTokensBetaTrueMutationKey(),
+    mutationFn: async ({ body, options }) => {
+      const { data, error } = await client.responses['input_tokens?beta=true'].post(body, options)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+export function injectPostResponsesInputTokensBetaTrue<
+  TError = Exclude<
+    Awaited<ReturnType<(typeof client.responses)['input_tokens?beta=true']['post']>>['error'],
+    null
+  >,
+  TOnMutateResult = unknown,
+>(
+  options?: () => {
+    mutation?: Omit<
+      CreateMutationOptions<
+        Extract<
+          Awaited<ReturnType<(typeof client.responses)['input_tokens?beta=true']['post']>>,
+          { error: null }
+        >['data'],
+        TError,
+        {
+          body: Parameters<(typeof client.responses)['input_tokens?beta=true']['post']>[0]
+          options?: Parameters<(typeof client.responses)['input_tokens?beta=true']['post']>[1]
+        },
+        TOnMutateResult
+      >,
+      'mutationFn'
+    >
+  },
+  injectOptions?: InjectMutationOptions,
+) {
+  return injectMutation(() => {
+    const { mutation } = options?.() ?? {}
+    const mutationDefaults = getPostResponsesInputTokensBetaTrueMutationOptions<
+      TError,
+      TOnMutateResult
+    >()
+    return {
+      ...mutation,
+      ...mutationDefaults,
+      mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
+    }
+  }, injectOptions)
+}

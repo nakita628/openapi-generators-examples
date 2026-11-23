@@ -130,17 +130,17 @@ export const patchGuildsGuildId = os
       ),
       region: v.optional(v.nullable(v.string())),
       icon: v.optional(v.nullable(v.string())),
-      verification_level: v.optional(v.union([v.nullable(v.null()), VerificationLevelsSchema])),
+      verification_level: v.optional(v.union([v.null(), VerificationLevelsSchema])),
       default_message_notifications: v.optional(
-        v.union([v.nullable(v.null()), UserNotificationSettingsSchema]),
+        v.union([v.null(), UserNotificationSettingsSchema]),
       ),
       explicit_content_filter: v.optional(
-        v.union([v.nullable(v.null()), GuildExplicitContentFilterTypesSchema]),
+        v.union([v.null(), GuildExplicitContentFilterTypesSchema]),
       ),
-      preferred_locale: v.optional(v.union([v.nullable(v.null()), AvailableLocalesEnumSchema])),
-      afk_timeout: v.optional(v.union([v.nullable(v.null()), AfkTimeoutsSchema])),
-      afk_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-      system_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      preferred_locale: v.optional(v.union([v.null(), AvailableLocalesEnumSchema])),
+      afk_timeout: v.optional(v.union([v.null(), AfkTimeoutsSchema])),
+      afk_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+      system_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       splash: v.optional(v.nullable(v.string())),
       banner: v.optional(v.nullable(v.string())),
       system_channel_flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
@@ -155,9 +155,9 @@ export const patchGuildsGuildId = os
       ),
       discovery_splash: v.optional(v.nullable(v.string())),
       home_header: v.optional(v.nullable(v.string())),
-      rules_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-      safety_alerts_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-      public_updates_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      rules_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+      safety_alerts_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+      public_updates_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       premium_progress_bar_enabled: v.optional(v.nullable(v.boolean())),
     }),
   )
@@ -181,7 +181,8 @@ export const getGuildsGuildIdAuditLogs = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -209,7 +210,7 @@ export const getGuildsGuildIdAutoModerationRules = os
           MLSpamRuleResponseSchema,
           MentionSpamRuleResponseSchema,
           UserProfileRuleResponseSchema,
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     ),
@@ -292,7 +293,8 @@ export const getGuildsGuildIdBans = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -400,7 +402,7 @@ export const postGuildsGuildIdChannels = os
   .input(
     v.object({
       guild_id: SnowflakeTypeSchema,
-      type: v.optional(v.union([v.nullable(v.null()), ChannelTypesSchema])),
+      type: v.optional(v.union([v.null(), ChannelTypesSchema])),
       name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
       position: v.optional(
         v.nullable(
@@ -440,30 +442,28 @@ export const postGuildsGuildIdChannels = os
       rate_limit_per_user: v.optional(
         v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600))),
       ),
-      parent_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      parent_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       permission_overwrites: v.optional(
         v.nullable(v.pipe(v.array(ChannelPermissionOverwriteRequestSchema), v.maxLength(100))),
       ),
       rtc_region: v.optional(v.nullable(v.string())),
-      video_quality_mode: v.optional(v.union([v.nullable(v.null()), VideoQualityModesSchema])),
+      video_quality_mode: v.optional(v.union([v.null(), VideoQualityModesSchema])),
       default_auto_archive_duration: v.optional(
-        v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
+        v.union([v.null(), ThreadAutoArchiveDurationSchema]),
       ),
       default_reaction_emoji: v.optional(
-        v.union([v.nullable(v.null()), UpdateDefaultReactionEmojiRequestSchema]),
+        v.union([v.null(), UpdateDefaultReactionEmojiRequestSchema]),
       ),
       default_thread_rate_limit_per_user: v.optional(
         v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600))),
       ),
-      default_sort_order: v.optional(v.union([v.nullable(v.null()), ThreadSortOrderSchema])),
-      default_forum_layout: v.optional(v.union([v.nullable(v.null()), ForumLayoutSchema])),
-      default_tag_setting: v.optional(
-        v.union([v.nullable(v.null()), ThreadSearchTagSettingSchema]),
-      ),
+      default_sort_order: v.optional(v.union([v.null(), ThreadSortOrderSchema])),
+      default_forum_layout: v.optional(v.union([v.null(), ForumLayoutSchema])),
+      default_tag_setting: v.optional(v.union([v.null(), ThreadSearchTagSettingSchema])),
       available_tags: v.optional(
         v.nullable(
           v.pipe(
-            v.array(v.union([v.nullable(v.null()), CreateOrUpdateThreadTagRequestSchema])),
+            v.array(v.union([v.null(), CreateOrUpdateThreadTagRequestSchema])),
             v.maxLength(20),
           ),
         ),
@@ -508,7 +508,7 @@ export const postGuildsGuildIdEmojis = os
       roles: v.optional(
         v.nullable(
           v.pipe(
-            v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+            v.array(v.union([v.null(), SnowflakeTypeSchema])),
             v.maxLength(1521),
             v.check((input) => new Set(input).size === input.length),
           ),
@@ -553,7 +553,7 @@ export const patchGuildsGuildIdEmojisEmojiId = os
       roles: v.optional(
         v.nullable(
           v.pipe(
-            v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+            v.array(v.union([v.null(), SnowflakeTypeSchema])),
             v.maxLength(1521),
             v.check((input) => new Set(input).size === input.length),
           ),
@@ -649,7 +649,7 @@ export const getGuildsGuildIdInvites = os
           FriendInviteResponseSchema,
           GroupDMInviteResponseSchema,
           GuildInviteResponseSchema,
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     ),
@@ -668,7 +668,8 @@ export const getGuildsGuildIdMembers = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -711,7 +712,8 @@ export const getGuildsGuildIdMembersSearch = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -788,7 +790,7 @@ export const patchGuildsGuildIdMembersUserId = os
       roles: v.optional(
         v.nullable(
           v.pipe(
-            v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+            v.array(v.union([v.null(), SnowflakeTypeSchema])),
             v.maxLength(350),
             v.check((input) => new Set(input).size === input.length),
           ),
@@ -796,7 +798,7 @@ export const patchGuildsGuildIdMembersUserId = os
       ),
       mute: v.optional(v.nullable(v.boolean())),
       deaf: v.optional(v.nullable(v.boolean())),
-      channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       communication_disabled_until: v.optional(
         v.nullable(
           v.pipe(
@@ -860,7 +862,8 @@ export const getGuildsGuildIdMessagesSearch = os
       slop: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -933,7 +936,8 @@ export const getGuildsGuildIdMessagesSearch = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -943,7 +947,8 @@ export const getGuildsGuildIdMessagesSearch = os
       offset: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -1074,7 +1079,7 @@ export const putGuildsGuildIdOnboarding = os
           ),
         ),
       ),
-      mode: v.optional(v.union([v.nullable(v.null()), GuildOnboardingModeSchema])),
+      mode: v.optional(v.union([v.null(), GuildOnboardingModeSchema])),
     }),
   )
   .output(GuildOnboardingResponseSchema)
@@ -1126,7 +1131,8 @@ export const getGuildsGuildIdPrune = os
       days: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -1148,7 +1154,7 @@ export const getGuildsGuildIdPrune = os
                     v.pipe(
                       v.unknown(),
                       v.transform((input) => (input === 'null' ? null : input)),
-                      v.nullable(v.null()),
+                      v.null(),
                     ),
                     SnowflakeTypeSchema,
                   ]),
@@ -1184,7 +1190,7 @@ export const postGuildsGuildIdPrune = os
             v.maxLength(100),
             v.check((input) => new Set(input).size === input.length),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     }),
@@ -1216,7 +1222,8 @@ export const getGuildsGuildIdRequests = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -1282,7 +1289,7 @@ export const postGuildsGuildIdRoles = os
       color: v.optional(
         v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(16777215))),
       ),
-      colors: v.optional(v.union([v.nullable(v.null()), RoleColorsSchema])),
+      colors: v.optional(v.union([v.null(), RoleColorsSchema])),
       hoist: v.optional(v.nullable(v.boolean())),
       mentionable: v.optional(v.nullable(v.boolean())),
       icon: v.optional(v.nullable(v.string())),
@@ -1352,7 +1359,7 @@ export const patchGuildsGuildIdRolesRoleId = os
       color: v.optional(
         v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(16777215))),
       ),
-      colors: v.optional(v.union([v.nullable(v.null()), RoleColorsSchema])),
+      colors: v.optional(v.union([v.null(), RoleColorsSchema])),
       hoist: v.optional(v.nullable(v.boolean())),
       mentionable: v.optional(v.nullable(v.boolean())),
       icon: v.optional(v.nullable(v.string())),
@@ -1600,7 +1607,8 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsers = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -1661,7 +1669,8 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildScheduledE
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1697,7 +1706,7 @@ export const postGuildsGuildIdSoundboardSounds = os
       guild_id: SnowflakeTypeSchema,
       name: v.pipe(v.string(), v.minCodePoints(2), v.maxCodePoints(32)),
       volume: v.optional(v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))),
-      emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       emoji_name: v.optional(
         v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32))),
       ),
@@ -1739,7 +1748,7 @@ export const patchGuildsGuildIdSoundboardSoundsSoundId = os
       sound_id: SnowflakeTypeSchema,
       name: v.optional(v.pipe(v.string(), v.minCodePoints(2), v.maxCodePoints(32))),
       volume: v.optional(v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))),
-      emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       emoji_name: v.optional(
         v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32))),
       ),
@@ -1925,7 +1934,7 @@ export const patchGuildsGuildIdVoiceStatesMe = os
         ),
       ),
       suppress: v.optional(v.nullable(v.boolean())),
-      channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     }),
   )
   .handler(async ({ input }) => { throw new Error('Not implemented') })
@@ -1952,7 +1961,7 @@ export const patchGuildsGuildIdVoiceStatesUserId = os
       guild_id: SnowflakeTypeSchema,
       user_id: SnowflakeTypeSchema,
       suppress: v.optional(v.nullable(v.boolean())),
-      channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     }),
   )
   .handler(async ({ input }) => { throw new Error('Not implemented') })
@@ -2025,7 +2034,7 @@ export const patchGuildsGuildIdWidget = os
   .input(
     v.object({
       guild_id: SnowflakeTypeSchema,
-      channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       enabled: v.optional(v.nullable(v.boolean())),
     }),
   )

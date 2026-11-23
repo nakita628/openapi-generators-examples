@@ -1,0 +1,436 @@
+{
+  "discord": {
+    "elysia-typebox": {
+      "generator": "asphodelos@0.3.1",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 7,
+        "codes": "TS2305 ×7",
+        "where": "`src/hooks/*`"
+      },
+      "issue": "nakita628/asphodelos#38"
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 1,
+        "codes": "TS2589 ×1",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54"
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 27,
+        "codes": "TS7006 ×18, TS2304 ×9",
+        "where": "`src/components/index.ts`, `src/routes/*`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54"
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    }
+  },
+  "openai": {
+    "elysia-typebox": {
+      "generator": "asphodelos@0.3.1",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 291,
+        "codes": "TS2339 ×268, TS7053 ×16, TS2305 ×7",
+        "where": "`src/hooks/*`"
+      },
+      "issue": "nakita628/asphodelos#39, nakita628/asphodelos#38"
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 8,
+        "codes": "TS2589 ×8",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54, then nakita628/truth#59, nakita628/truth#58"
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 1661,
+        "codes": "TS2304 ×1305, TS7006 ×186, TS2345 ×144, TS2322 ×18, TS2339 ×8",
+        "where": "`src/components/index.ts`, `src/routes/*`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54, then nakita628/truth#60"
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 2,
+        "codes": "TS2322 ×2",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54"
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 2,
+        "codes": "TS2345 ×2",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54"
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 5,
+        "codes": "TS2322 ×4, TS2589 ×1",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth#59, nakita628/truth#58"
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 5,
+        "codes": "TS2322 ×4, TS2589 ×1",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth#59, nakita628/truth#58"
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    }
+  },
+  "petstore": {
+    "elysia-typebox": {
+      "generator": "asphodelos@0.3.1",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 41,
+        "codes": "TS7006 ×26, TS2304 ×14, TS2345 ×1",
+        "where": "`src/routes/*`, `src/components/index.ts`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54"
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    }
+  },
+  "spotify": {
+    "elysia-typebox": {
+      "generator": "asphodelos@0.3.1",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 54,
+        "codes": "TS2304 ×48, TS7006 ×6",
+        "where": "`src/routes/*`, `src/components/index.ts`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54"
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    }
+  },
+  "train-travel": {
+    "elysia-typebox": {
+      "generator": "asphodelos@0.3.1",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 15,
+        "codes": "TS7006 ×8, TS2304 ×6, TS2345 ×1",
+        "where": "`src/routes/*`, `src/components/index.ts`"
+      },
+      "issue": "nakita628/openapi-to-trpc#54"
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.3.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.0",
+      "date": "2026-11-23",
+      "typecheck": {
+        "errors": 0
+      }
+    }
+  }
+}

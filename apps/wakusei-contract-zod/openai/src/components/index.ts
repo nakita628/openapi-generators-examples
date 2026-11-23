@@ -18,7 +18,7 @@ export const AdminApiKeySchema = z
         examples: ['key_abc'],
       }),
     name: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The name of the API key', examples: ['Administration Key'] })
       .exactOptional(),
     redacted_value: z
@@ -37,7 +37,7 @@ export const AdminApiKeySchema = z
           description: 'The Unix timestamp (in seconds) of when the API key expires',
           examples: [1714063533],
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     last_used_at: z
       .union([
@@ -47,7 +47,7 @@ export const AdminApiKeySchema = z
             description: 'The Unix timestamp (in seconds) of when the API key was last used',
             examples: [1711471534],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     owner: z.object({
@@ -114,11 +114,11 @@ export const ApiKeyListSchema = z.object({
   data: z.array(AdminApiKeySchema),
   has_more: z.boolean().meta({ examples: [false] }),
   first_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ examples: ['key_abc'] })
     .exactOptional(),
   last_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ examples: ['key_xyz'] })
     .exactOptional(),
 })
@@ -132,28 +132,24 @@ export const AssignedRoleDetailsSchema = z
     permissions: z.array(z.string()).meta({ description: 'Permissions associated with the role.' }),
     resource_type: z.string().meta({ description: 'Resource type the role applies to.' }),
     predefined_role: z.boolean().meta({ description: 'Whether the role is predefined by OpenAI.' }),
-    description: z
-      .union([z.string(), z.null().nullable()])
-      .meta({ description: 'Description of the role.' }),
-    created_at: z
-      .union([z.int(), z.null().nullable()])
-      .meta({ description: 'When the role was created.' }),
+    description: z.union([z.string(), z.null()]).meta({ description: 'Description of the role.' }),
+    created_at: z.union([z.int(), z.null()]).meta({ description: 'When the role was created.' }),
     updated_at: z
-      .union([z.int(), z.null().nullable()])
+      .union([z.int(), z.null()])
       .meta({ description: 'When the role was last updated.' }),
     created_by: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'Identifier of the actor who created the role.' }),
     created_by_user_obj: z
-      .union([z.any(), z.null().nullable()])
+      .union([z.any(), z.null()])
       .meta({ description: 'User details for the actor that created the role, when available.' }),
     metadata: z
-      .union([z.any(), z.null().nullable()])
+      .union([z.any(), z.null()])
       .meta({ description: 'Arbitrary metadata stored on the role.' }),
     assignment_sources: z
       .union([
         z.array(z.object({ principal_id: z.string(), principal_type: z.string() })),
-        z.null().nullable(),
+        z.null(),
       ])
       .meta({
         description: 'Principals from which the role assignment is inherited, when available.',
@@ -258,7 +254,7 @@ export const FunctionObjectSchema = z.object({
           description:
             'Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](https://developers.openai.com/api/docs/guides/function-calling).',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -279,7 +275,7 @@ export const MetadataSchema = z.union([
       description:
         'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type MetadataSchema = z.infer<typeof MetadataSchema>
@@ -348,7 +344,7 @@ export const ResponseFormatJsonSchemaSchema = z
                 description:
                   'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       })
@@ -397,7 +393,7 @@ export const AssistantObjectSchema = z
         .meta({
           description: 'The name of the assistant. The maximum length is 256 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     description: z.union([
       z
@@ -406,7 +402,7 @@ export const AssistantObjectSchema = z
         .meta({
           description: 'The description of the assistant. The maximum length is 512 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     model: z
       .string()
@@ -422,7 +418,7 @@ export const AssistantObjectSchema = z
           description:
             'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     tools: z
       .array(
@@ -472,7 +468,7 @@ export const AssistantObjectSchema = z
             description:
               "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     metadata: MetadataSchema,
@@ -488,7 +484,7 @@ export const AssistantObjectSchema = z
               'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
             examples: [1],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     top_p: z
@@ -503,12 +499,10 @@ export const AssistantObjectSchema = z
               'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
             examples: [1],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
-    response_format: z
-      .union([AssistantsApiResponseFormatOptionSchema, z.null().nullable()])
-      .exactOptional(),
+    response_format: z.union([AssistantsApiResponseFormatOptionSchema, z.null()]).exactOptional(),
   })
   .meta({
     description: 'Represents an `assistant` that can call the model and use tools.',
@@ -559,7 +553,7 @@ export const ThreadObjectSchema = z
           description:
             "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     metadata: MetadataSchema,
   })
@@ -634,7 +628,7 @@ export const RunCompletionUsageSchema = z.union([
       description:
         'Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type RunCompletionUsageSchema = z.infer<typeof RunCompletionUsageSchema>
@@ -656,7 +650,7 @@ export const TruncationObjectSchema = z
             description:
               'The number of most recent messages from the thread when constructing the context for the run.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -878,10 +872,10 @@ export const RunObjectSchema = z
         description:
           'The maximum number of completion tokens specified to have been used over the course of the run.\n',
       }),
-    truncation_strategy: z.union([TruncationObjectSchema, z.null().nullable()]),
-    tool_choice: z.union([AssistantsApiToolChoiceOptionSchema, z.null().nullable()]),
+    truncation_strategy: z.union([TruncationObjectSchema, z.null()]),
+    tool_choice: z.union([AssistantsApiToolChoiceOptionSchema, z.null()]),
     parallel_tool_calls: ParallelToolCallsSchema,
-    response_format: z.union([AssistantsApiResponseFormatOptionSchema, z.null().nullable()]),
+    response_format: z.union([AssistantsApiResponseFormatOptionSchema, z.null()]),
   })
   .meta({
     description:
@@ -1120,7 +1114,7 @@ export const RunStepDetailsToolCallsFunctionObjectSchema = z.object({
             description:
               'The output of the function. This will be `null` if the outputs have not been [submitted](https://developers.openai.com/api/docs/assistants/migration) yet.',
           }),
-        z.null().nullable(),
+        z.null(),
       ]),
     })
     .meta({ description: 'The definition of the function that was called.' }),
@@ -1169,7 +1163,7 @@ export const RunStepCompletionUsageSchema = z.union([
       description:
         "Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.",
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type RunStepCompletionUsageSchema = z.infer<typeof RunStepCompletionUsageSchema>
@@ -1232,7 +1226,7 @@ export const RunStepObjectSchema = z
           description:
             'The last error associated with this run step. Will be `null` if there are no errors.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     expired_at: z.union([
       z
@@ -1241,7 +1235,7 @@ export const RunStepObjectSchema = z
           description:
             'The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     cancelled_at: z.union([
       z
@@ -1249,19 +1243,19 @@ export const RunStepObjectSchema = z
         .meta({
           description: 'The Unix timestamp (in seconds) for when the run step was cancelled.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     failed_at: z.union([
       z
         .int()
         .meta({ description: 'The Unix timestamp (in seconds) for when the run step failed.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     completed_at: z.union([
       z
         .int()
         .meta({ description: 'The Unix timestamp (in seconds) for when the run step completed.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     metadata: MetadataSchema,
     usage: RunStepCompletionUsageSchema,
@@ -1403,7 +1397,7 @@ export const RunStepDeltaStepDetailsToolCallsFunctionObjectSchema = z.object({
               description:
                 'The output of the function. This will be `null` if the outputs have not been [submitted](https://developers.openai.com/api/docs/assistants/migration) yet.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
     })
@@ -1680,7 +1674,7 @@ export const MessageObjectSchema = z
         .meta({
           description: 'On an incomplete message, details about why the message is incomplete.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     completed_at: z.union([
       z
@@ -1688,7 +1682,7 @@ export const MessageObjectSchema = z
         .meta({
           description: 'The Unix timestamp (in seconds) for when the message was completed.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     incomplete_at: z.union([
       z
@@ -1697,7 +1691,7 @@ export const MessageObjectSchema = z
           description:
             'The Unix timestamp (in seconds) for when the message was marked as incomplete.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     role: z
       .enum(['user', 'assistant'])
@@ -1719,7 +1713,7 @@ export const MessageObjectSchema = z
           description:
             'If applicable, the ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) that authored this message.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     run_id: z.union([
       z
@@ -1728,7 +1722,7 @@ export const MessageObjectSchema = z
           description:
             'The ID of the [run](https://developers.openai.com/api/docs/assistants/migration) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     attachments: z.union([
       z
@@ -1747,7 +1741,7 @@ export const MessageObjectSchema = z
         .meta({
           description: 'A list of files attached to the message, and the tools they were added to.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     metadata: MetadataSchema,
   })
@@ -2018,7 +2012,7 @@ export const MisalignmentErrorDetailsResourceSchema = z.object({
           description:
             'An opaque target for explicitly continuing this review, or null when unavailable.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   error_type: MisalignmentErrorTypeSchema.meta({
@@ -2038,9 +2032,9 @@ export type MisalignmentErrorDetailsResourceSchema = z.infer<
 >
 
 export const ErrorSchema = z.object({
-  code: z.union([z.string(), z.null().nullable()]),
+  code: z.union([z.string(), z.null()]),
   message: z.string(),
-  param: z.union([z.string(), z.null().nullable()]),
+  param: z.union([z.string(), z.null()]),
   type: z.string(),
   misalignment: MisalignmentErrorDetailsResourceSchema.exactOptional(),
 })
@@ -2506,10 +2500,22 @@ export type OciExternalStorageProviderResponseSchema = z.infer<
 >
 
 export const ProviderSchema = z.xor([
-  AwsExternalStorageProviderResponseSchema,
-  AzureExternalStorageProviderResponseSchema,
-  GcpExternalStorageProviderResponseSchema,
-  OciExternalStorageProviderResponseSchema,
+  z.intersection(
+    AwsExternalStorageProviderResponseSchema,
+    z.object({ type: z.literal('AwsExternalStorageProviderResponse') }),
+  ),
+  z.intersection(
+    AzureExternalStorageProviderResponseSchema,
+    z.object({ type: z.literal('AzureExternalStorageProviderResponse') }),
+  ),
+  z.intersection(
+    GcpExternalStorageProviderResponseSchema,
+    z.object({ type: z.literal('GcpExternalStorageProviderResponse') }),
+  ),
+  z.intersection(
+    OciExternalStorageProviderResponseSchema,
+    z.object({ type: z.literal('OciExternalStorageProviderResponse') }),
+  ),
 ])
 
 export type ProviderSchema = z.infer<typeof ProviderSchema>
@@ -2529,7 +2535,7 @@ export const AuditLogSchema = z
           'The project that the action was scoped to. Absent for actions not scoped to projects. Note that any admin actions taken via Admin API keys are associated with the default project.',
       })
       .exactOptional(),
-    actor: z.union([AuditLogActorSchema, z.null().nullable()]).exactOptional(),
+    actor: z.union([AuditLogActorSchema, z.null()]).exactOptional(),
     'api_key.created': z
       .object({
         id: z.string().meta({ description: 'The tracking ID of the API key.' }).exactOptional(),
@@ -3472,7 +3478,7 @@ export const BatchErrorSchema = z.object({
       z
         .string()
         .meta({ description: 'The name of the parameter that caused the error, if applicable.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   line: z
@@ -3482,7 +3488,7 @@ export const BatchErrorSchema = z.object({
         .meta({
           description: 'The line number of the input file where the error occurred, if applicable.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -3660,9 +3666,7 @@ export const CertificateSchema = z
     id: z
       .string()
       .meta({ description: 'The identifier, which can be referenced in API endpoints' }),
-    name: z
-      .union([z.string(), z.null().nullable()])
-      .meta({ description: 'The name of the certificate.' }),
+    name: z.union([z.string(), z.null()]).meta({ description: 'The name of the certificate.' }),
     created_at: z
       .int()
       .meta({
@@ -3818,7 +3822,18 @@ export type ChatCompletionMessageCustomToolCallSchema = z.infer<
 >
 
 export const ChatCompletionMessageToolCallsSchema = z
-  .array(z.xor([ChatCompletionMessageToolCallSchema, ChatCompletionMessageCustomToolCallSchema]))
+  .array(
+    z.xor([
+      z.intersection(
+        ChatCompletionMessageToolCallSchema,
+        z.object({ type: z.literal('ChatCompletionMessageToolCall') }),
+      ),
+      z.intersection(
+        ChatCompletionMessageCustomToolCallSchema,
+        z.object({ type: z.literal('ChatCompletionMessageCustomToolCall') }),
+      ),
+    ]),
+  )
   .meta({ description: 'The tool calls generated by the model, such as function calls.' })
 
 export type ChatCompletionMessageToolCallsSchema = z.infer<
@@ -3827,19 +3842,14 @@ export type ChatCompletionMessageToolCallsSchema = z.infer<
 
 export const ChatCompletionResponseMessageSchema = z
   .object({
-    content: z.union([
-      z.string().meta({ description: 'The contents of the message.' }),
-      z.null().nullable(),
-    ]),
+    content: z.union([z.string().meta({ description: 'The contents of the message.' }), z.null()]),
     refusal: z
       .union([
         z.string().meta({ description: 'The refusal message generated by the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
-    tool_calls: z
-      .union([ChatCompletionMessageToolCallsSchema, z.null().nullable()])
-      .exactOptional(),
+    tool_calls: z.union([ChatCompletionMessageToolCallsSchema, z.null()]).exactOptional(),
     annotations: z
       .array(
         z
@@ -3916,7 +3926,7 @@ export const ChatCompletionResponseMessageSchema = z
             description:
               'If the audio output modality is requested, this object contains data\nabout the audio response from the model. [Learn more](https://developers.openai.com/api/docs/guides/audio).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -3941,7 +3951,7 @@ export const ChatCompletionTokenLogprobSchema = z.object({
         description:
           'A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.',
       }),
-    z.null().nullable(),
+    z.null(),
   ]),
   top_logprobs: z
     .array(
@@ -3960,7 +3970,7 @@ export const ChatCompletionTokenLogprobSchema = z.object({
               description:
                 'A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.',
             }),
-          z.null().nullable(),
+          z.null(),
         ]),
       }),
     )
@@ -3980,7 +3990,7 @@ export const ServiceTierSchema = z.union([
       description:
         "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ServiceTierSchema = z.infer<typeof ServiceTierSchema>
@@ -4133,10 +4143,28 @@ export type ChatCompletionModerationErrorSchema = z.infer<
 export const ChatCompletionModerationSchema = z
   .object({
     input: z
-      .xor([ChatCompletionModerationResultsSchema, ChatCompletionModerationErrorSchema])
+      .xor([
+        z.intersection(
+          ChatCompletionModerationResultsSchema,
+          z.object({ type: z.literal('ChatCompletionModerationResults') }),
+        ),
+        z.intersection(
+          ChatCompletionModerationErrorSchema,
+          z.object({ type: z.literal('ChatCompletionModerationError') }),
+        ),
+      ])
       .meta({ description: 'Moderation for the request input.' }),
     output: z
-      .xor([ChatCompletionModerationResultsSchema, ChatCompletionModerationErrorSchema])
+      .xor([
+        z.intersection(
+          ChatCompletionModerationResultsSchema,
+          z.object({ type: z.literal('ChatCompletionModerationResults') }),
+        ),
+        z.intersection(
+          ChatCompletionModerationErrorSchema,
+          z.object({ type: z.literal('ChatCompletionModerationError') }),
+        ),
+      ])
       .meta({ description: 'Moderation for the generated output.' }),
   })
   .meta({ description: 'Moderation results or errors for the request input and generated output.' })
@@ -4167,7 +4195,7 @@ export const CreateChatCompletionResponseSchema = z
                       description:
                         'A list of message content tokens with log probability information.',
                     }),
-                  z.null().nullable(),
+                  z.null(),
                 ]),
                 refusal: z.union([
                   z
@@ -4176,11 +4204,11 @@ export const CreateChatCompletionResponseSchema = z
                       description:
                         'A list of message refusal tokens with log probability information.',
                     }),
-                  z.null().nullable(),
+                  z.null(),
                 ]),
               })
               .meta({ description: 'Log probability information for the choice.' }),
-            z.null().nullable(),
+            z.null(),
           ]),
         }),
       )
@@ -4214,7 +4242,7 @@ export const CreateChatCompletionResponseSchema = z
           description:
             'Moderation results for the request input and generated output, if moderated\ncompletions were requested.\n',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -4261,39 +4289,39 @@ export const ChatCompletionMessageListSchema = z
         z.object({
           id: z.string(),
           role: z.enum(['user', 'assistant', 'tool', 'system', 'function', 'developer']),
-          content: z.union([z.string(), z.null().nullable()]),
+          content: z.union([z.string(), z.null()]),
           content_parts: z.union([
             z.array(
               z.object({
                 type: z.enum(['text', 'image_url', 'input_audio', 'file']),
-                text: z.union([z.string(), z.null().nullable()]).exactOptional(),
+                text: z.union([z.string(), z.null()]).exactOptional(),
                 image_url: z
                   .union([
                     z.object({
                       url: z.string(),
-                      detail: z.union([z.string(), z.null().nullable()]).exactOptional(),
+                      detail: z.union([z.string(), z.null()]).exactOptional(),
                     }),
-                    z.null().nullable(),
+                    z.null(),
                   ])
                   .exactOptional(),
                 input_audio: z
-                  .union([z.object({ data: z.string(), format: z.string() }), z.null().nullable()])
+                  .union([z.object({ data: z.string(), format: z.string() }), z.null()])
                   .exactOptional(),
                 file: z
                   .union([
                     z.object({
-                      file_data: z.union([z.string(), z.null().nullable()]).exactOptional(),
-                      filename: z.union([z.string(), z.null().nullable()]).exactOptional(),
-                      file_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+                      file_data: z.union([z.string(), z.null()]).exactOptional(),
+                      filename: z.union([z.string(), z.null()]).exactOptional(),
+                      file_id: z.union([z.string(), z.null()]).exactOptional(),
                     }),
-                    z.null().nullable(),
+                    z.null(),
                   ])
                   .exactOptional(),
               }),
             ),
-            z.null().nullable(),
+            z.null(),
           ]),
-          name: z.union([z.string(), z.null().nullable()]).exactOptional(),
+          name: z.union([z.string(), z.null()]).exactOptional(),
         }),
       )
       .meta({ description: 'An array of chat completion message objects.\n' }),
@@ -4345,7 +4373,7 @@ export const ChatCompletionModalitiesSchema = z.union([
       description:
         'Output types that you would like the model to generate for this request.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to [generate audio](https://developers.openai.com/api/docs/guides/audio). To\nrequest that this model generate both text and audio responses, you can\nuse:\n\n`["text", "audio"]`\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ChatCompletionModalitiesSchema = z.infer<typeof ChatCompletionModalitiesSchema>
@@ -4430,8 +4458,14 @@ export type ChatCompletionRequestMessageContentPartRefusalSchema = z.infer<
 >
 
 export const ChatCompletionRequestAssistantMessageContentPartSchema = z.xor([
-  ChatCompletionRequestMessageContentPartTextSchema,
-  ChatCompletionRequestMessageContentPartRefusalSchema,
+  z.intersection(
+    ChatCompletionRequestMessageContentPartTextSchema,
+    z.object({ type: z.literal('ChatCompletionRequestMessageContentPartText') }),
+  ),
+  z.intersection(
+    ChatCompletionRequestMessageContentPartRefusalSchema,
+    z.object({ type: z.literal('ChatCompletionRequestMessageContentPartRefusal') }),
+  ),
 ])
 
 export type ChatCompletionRequestAssistantMessageContentPartSchema = z.infer<
@@ -4457,14 +4491,11 @@ export const ChatCompletionRequestAssistantMessageSchema = z
             description:
               'The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     refusal: z
-      .union([
-        z.string().meta({ description: 'The refusal message by the assistant.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The refusal message by the assistant.' }), z.null()])
       .exactOptional(),
     role: z
       .literal('assistant')
@@ -4490,7 +4521,7 @@ export const ChatCompletionRequestAssistantMessageSchema = z
             description:
               'Data about a previous audio response from the model.\n[Learn more](https://developers.openai.com/api/docs/guides/audio).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     tool_calls: ChatCompletionMessageToolCallsSchema.exactOptional(),
@@ -4511,7 +4542,7 @@ export const ChatCompletionRequestAssistantMessageSchema = z
               'Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.',
             deprecated: true,
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -4562,7 +4593,7 @@ export const ChatCompletionRequestFunctionMessageSchema = z
       .meta({ description: 'The role of the messages author, in this case `function`.' }),
     content: z.union([
       z.string().meta({ description: 'The contents of the function message.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     name: z.string().meta({ description: 'The name of the function to call.' }),
   })
@@ -4777,12 +4808,30 @@ export type ChatCompletionRequestToolMessageSchema = z.infer<
 >
 
 export const ChatCompletionRequestMessageSchema = z.xor([
-  ChatCompletionRequestDeveloperMessageSchema,
-  ChatCompletionRequestSystemMessageSchema,
-  ChatCompletionRequestUserMessageSchema,
-  ChatCompletionRequestAssistantMessageSchema,
-  ChatCompletionRequestToolMessageSchema,
-  ChatCompletionRequestFunctionMessageSchema,
+  z.intersection(
+    ChatCompletionRequestDeveloperMessageSchema,
+    z.object({ role: z.literal('ChatCompletionRequestDeveloperMessage') }),
+  ),
+  z.intersection(
+    ChatCompletionRequestSystemMessageSchema,
+    z.object({ role: z.literal('ChatCompletionRequestSystemMessage') }),
+  ),
+  z.intersection(
+    ChatCompletionRequestUserMessageSchema,
+    z.object({ role: z.literal('ChatCompletionRequestUserMessage') }),
+  ),
+  z.intersection(
+    ChatCompletionRequestAssistantMessageSchema,
+    z.object({ role: z.literal('ChatCompletionRequestAssistantMessage') }),
+  ),
+  z.intersection(
+    ChatCompletionRequestToolMessageSchema,
+    z.object({ role: z.literal('ChatCompletionRequestToolMessage') }),
+  ),
+  z.intersection(
+    ChatCompletionRequestFunctionMessageSchema,
+    z.object({ role: z.literal('ChatCompletionRequestFunctionMessage') }),
+  ),
 ])
 
 export type ChatCompletionRequestMessageSchema = z.infer<typeof ChatCompletionRequestMessageSchema>
@@ -4814,7 +4863,7 @@ export const ChatCompletionStreamOptionsSchema = z.union([
     .meta({
       description: 'Options for streaming response. Only set this when you set `stream: true`.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ChatCompletionStreamOptionsSchema = z.infer<typeof ChatCompletionStreamOptionsSchema>
@@ -4852,10 +4901,7 @@ export const ChatCompletionStreamResponseDeltaSchema = z
       })
       .exactOptional(),
     content: z
-      .union([
-        z.string().meta({ description: 'The contents of the chunk message.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The contents of the chunk message.' }), z.null()])
       .exactOptional(),
     function_call: z
       .object({
@@ -4882,7 +4928,7 @@ export const ChatCompletionStreamResponseDeltaSchema = z
     refusal: z
       .union([
         z.string().meta({ description: 'The refusal message generated by the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -4960,7 +5006,16 @@ export type StaticChunkingStrategyRequestParamSchema = z.infer<
 >
 
 export const ChunkingStrategyRequestParamSchema = z
-  .xor([AutoChunkingStrategyRequestParamSchema, StaticChunkingStrategyRequestParamSchema])
+  .xor([
+    z.intersection(
+      AutoChunkingStrategyRequestParamSchema,
+      z.object({ type: z.literal('AutoChunkingStrategyRequestParam') }),
+    ),
+    z.intersection(
+      StaticChunkingStrategyRequestParamSchema,
+      z.object({ type: z.literal('StaticChunkingStrategyRequestParam') }),
+    ),
+  ])
   .meta({
     description:
       'The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.',
@@ -5059,11 +5114,20 @@ export const AutoCodeInterpreterToolParamSchema = z
         ContainerMemoryLimitSchema.meta({
           description: 'The memory limit for the code interpreter container.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     network_policy: z
-      .xor([ContainerNetworkPolicyDisabledParamSchema, ContainerNetworkPolicyAllowlistParamSchema])
+      .xor([
+        z.intersection(
+          ContainerNetworkPolicyDisabledParamSchema,
+          z.object({ type: z.literal('ContainerNetworkPolicyDisabledParam') }),
+        ),
+        z.intersection(
+          ContainerNetworkPolicyAllowlistParamSchema,
+          z.object({ type: z.literal('ContainerNetworkPolicyAllowlistParam') }),
+        ),
+      ])
       .meta({ description: 'Network access policy for the container.' })
       .exactOptional(),
   })
@@ -5098,7 +5162,7 @@ export const CodeInterpreterToolSchema = z
           .array(CallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -5151,16 +5215,27 @@ export const CodeInterpreterToolCallSchema = z
       .meta({ description: 'The ID of the container used to run the code.\n' }),
     code: z.union([
       z.string().meta({ description: 'The code to run, or null if not available.\n' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     outputs: z.union([
       z
-        .array(z.xor([CodeInterpreterOutputLogsSchema, CodeInterpreterOutputImageSchema]))
+        .array(
+          z.xor([
+            z.intersection(
+              CodeInterpreterOutputLogsSchema,
+              z.object({ type: z.literal('CodeInterpreterOutputLogs') }),
+            ),
+            z.intersection(
+              CodeInterpreterOutputImageSchema,
+              z.object({ type: z.literal('CodeInterpreterOutputImage') }),
+            ),
+          ]),
+        )
         .meta({
           description:
             'The outputs generated by the code interpreter, such as logs or images.\nCan be null if no outputs are available.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'A tool call to run code.\n' })
@@ -5213,7 +5288,15 @@ export const CompoundFilterSchema: z.ZodType<CompoundFilterType> = z
   .strictObject({
     type: z.enum(['and', 'or']).meta({ description: 'Type of operation: `and` or `or`.' }),
     filters: z
-      .array(z.xor([ComparisonFilterSchema, z.lazy(() => CompoundFilterSchema)]))
+      .array(
+        z.xor([
+          z.intersection(ComparisonFilterSchema, z.object({ type: z.literal('ComparisonFilter') })),
+          z.intersection(
+            z.lazy(() => CompoundFilterSchema),
+            z.object({ type: z.literal('CompoundFilter') }),
+          ),
+        ]),
+      )
       .meta({
         description:
           'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
@@ -5245,7 +5328,7 @@ export const ClickParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while clicking.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -5266,7 +5349,7 @@ export const DoubleClickActionSchema = z
     y: z.int().meta({ description: 'The y-coordinate where the double click occurred.' }),
     keys: z.union([
       z.array(z.string()).meta({ description: 'The keys being held while double-clicking.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'A double click action.' })
@@ -5300,7 +5383,7 @@ export const DragParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while dragging the mouse.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -5344,7 +5427,7 @@ export const MoveParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while moving the mouse.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -5382,7 +5465,7 @@ export const ScrollParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while scrolling.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -5420,15 +5503,15 @@ export const WaitParamSchema = z
 export type WaitParamSchema = z.infer<typeof WaitParamSchema>
 
 export const ComputerActionSchema = z.xor([
-  ClickParamSchema,
-  DoubleClickActionSchema,
-  DragParamSchema,
-  KeyPressActionSchema,
-  MoveParamSchema,
-  ScreenshotParamSchema,
-  ScrollParamSchema,
-  TypeParamSchema,
-  WaitParamSchema,
+  z.intersection(ClickParamSchema, z.object({ type: z.literal('ClickParam') })),
+  z.intersection(DoubleClickActionSchema, z.object({ type: z.literal('DoubleClickAction') })),
+  z.intersection(DragParamSchema, z.object({ type: z.literal('DragParam') })),
+  z.intersection(KeyPressActionSchema, z.object({ type: z.literal('KeyPressAction') })),
+  z.intersection(MoveParamSchema, z.object({ type: z.literal('MoveParam') })),
+  z.intersection(ScreenshotParamSchema, z.object({ type: z.literal('ScreenshotParam') })),
+  z.intersection(ScrollParamSchema, z.object({ type: z.literal('ScrollParam') })),
+  z.intersection(TypeParamSchema, z.object({ type: z.literal('TypeParam') })),
+  z.intersection(WaitParamSchema, z.object({ type: z.literal('WaitParam') })),
 ])
 
 export type ComputerActionSchema = z.infer<typeof ComputerActionSchema>
@@ -5465,15 +5548,12 @@ export const ComputerCallSafetyCheckParamSchema = z
   .object({
     id: z.string().meta({ description: 'The ID of the pending safety check.' }),
     code: z
-      .union([
-        z.string().meta({ description: 'The type of the pending safety check.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The type of the pending safety check.' }), z.null()])
       .exactOptional(),
     message: z
       .union([
         z.string().meta({ description: 'Details about the pending safety check.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -5551,16 +5631,18 @@ export type ComputerCallOutputStatusSchema = z.infer<typeof ComputerCallOutputSt
 
 export const ComputerToolCallOutputResourceSchema = z.intersection(
   ComputerToolCallOutputSchema,
-  z.object({
-    status: ComputerCallOutputStatusSchema.meta({
-      description:
-        'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
-    }),
-    created_by: z
-      .string()
-      .meta({ description: 'The identifier of the actor that created the item.\n' })
-      .exactOptional(),
-  }),
+  z
+    .looseObject({
+      status: ComputerCallOutputStatusSchema.meta({
+        description:
+          'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
+      }),
+      created_by: z
+        .string()
+        .meta({ description: 'The identifier of the actor that created the item.\n' })
+        .exactOptional(),
+    })
+    .refine((val) => ['id'].every((key) => key in val)),
 )
 
 export type ComputerToolCallOutputResourceSchema = z.infer<
@@ -5700,13 +5782,13 @@ export const InputImageContentSchema = z
             description:
               'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_id: z
       .union([
         z.string().meta({ description: 'The ID of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     detail: ImageDetailSchema.meta({
@@ -5735,7 +5817,7 @@ export const InputFileContentSchema = z
     file_id: z
       .union([
         z.string().meta({ description: 'The ID of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     filename: z
@@ -5761,9 +5843,9 @@ export const InputFileContentSchema = z
 export type InputFileContentSchema = z.infer<typeof InputFileContentSchema>
 
 export const InputContentSchema = z.xor([
-  InputTextContentSchema,
-  InputImageContentSchema,
-  InputFileContentSchema,
+  z.intersection(InputTextContentSchema, z.object({ type: z.literal('InputTextContent') })),
+  z.intersection(InputImageContentSchema, z.object({ type: z.literal('InputImageContent') })),
+  z.intersection(InputFileContentSchema, z.object({ type: z.literal('InputFileContent') })),
 ])
 
 export type InputContentSchema = z.infer<typeof InputContentSchema>
@@ -5847,10 +5929,13 @@ export type FilePathSchema = z.infer<typeof FilePathSchema>
 
 export const AnnotationSchema = z
   .xor([
-    FileCitationBodySchema,
-    UrlCitationBodySchema,
-    ContainerFileCitationBodySchema,
-    FilePathSchema,
+    z.intersection(FileCitationBodySchema, z.object({ type: z.literal('FileCitationBody') })),
+    z.intersection(UrlCitationBodySchema, z.object({ type: z.literal('UrlCitationBody') })),
+    z.intersection(
+      ContainerFileCitationBodySchema,
+      z.object({ type: z.literal('ContainerFileCitationBody') }),
+    ),
+    z.intersection(FilePathSchema, z.object({ type: z.literal('FilePath') })),
   ])
   .meta({ description: 'An annotation that applies to a span of output text.' })
 
@@ -5914,9 +5999,9 @@ export const ReasoningTextContentSchema = z
 export type ReasoningTextContentSchema = z.infer<typeof ReasoningTextContentSchema>
 
 export const OutputContentSchema = z.xor([
-  OutputTextContentSchema,
-  RefusalContentSchema,
-  ReasoningTextContentSchema,
+  z.intersection(OutputTextContentSchema, z.object({ type: z.literal('OutputTextContent') })),
+  z.intersection(RefusalContentSchema, z.object({ type: z.literal('RefusalContent') })),
+  z.intersection(ReasoningTextContentSchema, z.object({ type: z.literal('ReasoningTextContent') })),
 ])
 
 export type OutputContentSchema = z.infer<typeof OutputContentSchema>
@@ -5975,13 +6060,13 @@ export const ComputerScreenshotContentSchema = z
       }),
     image_url: z.union([
       z.url().meta({ description: 'The URL of the screenshot image.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     file_id: z.union([
       z
         .string()
         .meta({ description: 'The identifier of an uploaded file that contains the screenshot.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     detail: ImageDetailSchema.meta({
       description:
@@ -6016,15 +6101,36 @@ export const MessageSchema = z
       .array(
         z
           .xor([
-            InputTextContentSchema,
-            OutputTextContentSchema,
-            TextContentSchema,
-            SummaryTextContentSchema,
-            ReasoningTextContentSchema,
-            RefusalContentSchema,
-            InputImageContentSchema,
-            ComputerScreenshotContentSchema,
-            InputFileContentSchema,
+            z.intersection(
+              InputTextContentSchema,
+              z.object({ type: z.literal('InputTextContent') }),
+            ),
+            z.intersection(
+              OutputTextContentSchema,
+              z.object({ type: z.literal('OutputTextContent') }),
+            ),
+            z.intersection(TextContentSchema, z.object({ type: z.literal('TextContent') })),
+            z.intersection(
+              SummaryTextContentSchema,
+              z.object({ type: z.literal('SummaryTextContent') }),
+            ),
+            z.intersection(
+              ReasoningTextContentSchema,
+              z.object({ type: z.literal('ReasoningTextContent') }),
+            ),
+            z.intersection(RefusalContentSchema, z.object({ type: z.literal('RefusalContent') })),
+            z.intersection(
+              InputImageContentSchema,
+              z.object({ type: z.literal('InputImageContent') }),
+            ),
+            z.intersection(
+              ComputerScreenshotContentSchema,
+              z.object({ type: z.literal('ComputerScreenshotContent') }),
+            ),
+            z.intersection(
+              InputFileContentSchema,
+              z.object({ type: z.literal('InputFileContent') }),
+            ),
           ])
           .meta({ description: 'A content part that makes up an input or output item.' }),
       )
@@ -6035,7 +6141,7 @@ export const MessageSchema = z
           description:
             'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -6057,7 +6163,16 @@ export const ProgramToolCallCallerSchema = z.object({
 export type ProgramToolCallCallerSchema = z.infer<typeof ProgramToolCallCallerSchema>
 
 export const ToolCallCallerSchema = z
-  .xor([DirectToolCallCallerSchema, ProgramToolCallCallerSchema])
+  .xor([
+    z.intersection(
+      DirectToolCallCallerSchema,
+      z.object({ type: z.literal('DirectToolCallCaller') }),
+    ),
+    z.intersection(
+      ProgramToolCallCallerSchema,
+      z.object({ type: z.literal('ProgramToolCallCaller') }),
+    ),
+  ])
   .meta({ description: 'The execution context that produced this tool call.' })
 
 export type ToolCallCallerSchema = z.infer<typeof ToolCallCallerSchema>
@@ -6074,7 +6189,7 @@ export const FunctionToolCallSchema = z
     call_id: z
       .string()
       .meta({ description: 'The unique ID of the function tool call generated by the model.\n' }),
-    caller: z.union([ToolCallCallerSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([ToolCallCallerSchema, z.null()]).exactOptional(),
     namespace: z
       .string()
       .meta({ description: 'The namespace of the function to run.\n' })
@@ -6147,15 +6262,24 @@ export const ProgramToolCallCallerParamSchema = z.object({
 export type ProgramToolCallCallerParamSchema = z.infer<typeof ProgramToolCallCallerParamSchema>
 
 export const ToolCallCallerParamSchema = z
-  .xor([DirectToolCallCallerParamSchema, ProgramToolCallCallerParamSchema])
+  .xor([
+    z.intersection(
+      DirectToolCallCallerParamSchema,
+      z.object({ type: z.literal('DirectToolCallCallerParam') }),
+    ),
+    z.intersection(
+      ProgramToolCallCallerParamSchema,
+      z.object({ type: z.literal('ProgramToolCallCallerParam') }),
+    ),
+  ])
   .meta({ description: 'The execution context that produced this tool call.' })
 
 export type ToolCallCallerParamSchema = z.infer<typeof ToolCallCallerParamSchema>
 
 export const FunctionAndCustomToolCallOutputSchema = z.xor([
-  InputTextContentSchema,
-  InputImageContentSchema,
-  InputFileContentSchema,
+  z.intersection(InputTextContentSchema, z.object({ type: z.literal('InputTextContent') })),
+  z.intersection(InputImageContentSchema, z.object({ type: z.literal('InputImageContent') })),
+  z.intersection(InputFileContentSchema, z.object({ type: z.literal('InputFileContent') })),
 ])
 
 export type FunctionAndCustomToolCallOutputSchema = z.infer<
@@ -6188,7 +6312,7 @@ export const FunctionToolCallOutputSchema = z
       .string()
       .meta({ description: 'The namespace of the tool that produced the output.\n' })
       .exactOptional(),
-    caller: z.union([ToolCallCallerParamSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([ToolCallCallerParamSchema, z.null()]).exactOptional(),
     output: z
       .xor([
         z.string().meta({ description: 'A string of the output of the function call.\n' }),
@@ -6242,7 +6366,7 @@ export const VectorStoreFileAttributesSchema = z.union([
       description:
         'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard. Keys are strings\nwith a maximum length of 64 characters. Values are strings with a maximum\nlength of 512 characters, booleans, or numbers.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type VectorStoreFileAttributesSchema = z.infer<typeof VectorStoreFileAttributesSchema>
@@ -6284,7 +6408,7 @@ export const FileSearchToolCallSchema = z
             }),
           )
           .meta({ description: 'The results of the file search tool call.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -6336,7 +6460,7 @@ export const WebSearchActionOpenPageSchema = z
   .object({
     type: z.literal('open_page').meta({ description: 'The action type.\n' }),
     url: z
-      .union([z.url(), z.null().nullable()])
+      .union([z.url(), z.null()])
       .meta({ description: 'The URL opened by the model.\n' })
       .exactOptional(),
   })
@@ -6348,7 +6472,7 @@ export const WebSearchActionFindSchema = z
   .object({
     type: z.literal('find_in_page').meta({ description: 'The action type.\n' }),
     url: z
-      .union([z.url(), z.null().nullable()])
+      .union([z.url(), z.null()])
       .meta({ description: 'The URL of the page searched for the pattern, when available.\n' })
       .exactOptional(),
     pattern: z
@@ -6371,7 +6495,20 @@ export const WebSearchToolCallSchema = z
       description: 'The status of the web search tool call.\n',
     }),
     action: z
-      .xor([WebSearchActionSearchSchema, WebSearchActionOpenPageSchema, WebSearchActionFindSchema])
+      .xor([
+        z.intersection(
+          WebSearchActionSearchSchema,
+          z.object({ type: z.literal('WebSearchActionSearch') }),
+        ),
+        z.intersection(
+          WebSearchActionOpenPageSchema,
+          z.object({ type: z.literal('WebSearchActionOpenPage') }),
+        ),
+        z.intersection(
+          WebSearchActionFindSchema,
+          z.object({ type: z.literal('WebSearchActionFind') }),
+        ),
+      ])
       .meta({
         description:
           'An object describing the specific action taken in this web search call.\nIncludes details on how the model used the web (search, open_page, find_in_page).\n',
@@ -6401,13 +6538,10 @@ export type ImageGenToolCallModerationDetailsSchema = z.infer<
 >
 
 export const ImageGenToolCallErrorSchema = z.object({
-  code: z.union([z.string().meta({ description: 'The error code.' }), z.null().nullable()]),
+  code: z.union([z.string().meta({ description: 'The error code.' }), z.null()]),
   type: z.string().meta({ description: 'The error type.' }),
   message: z.string().meta({ description: 'A description of the error.' }),
-  param: z.union([
-    z.string().meta({ description: 'The related request parameter.' }),
-    z.null().nullable(),
-  ]),
+  param: z.union([z.string().meta({ description: 'The related request parameter.' }), z.null()]),
   moderation_details: ImageGenToolCallModerationDetailsSchema.meta({
     description: 'Public details for a `moderation_blocked` error, when available.',
   }).exactOptional(),
@@ -6450,7 +6584,7 @@ export const ImageGenToolCallSchema = z
       .meta({ description: 'The status of the image generation call.' }),
     result: z.union([
       z.string().meta({ description: 'The generated image encoded in base64.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     error: ImageGenToolCallErrorSchema.meta({
       description: 'Details of a moderation failure, when available.',
@@ -6462,7 +6596,7 @@ export const ImageGenToolCallSchema = z
           .meta({
             description: 'The image dimensions as a `WIDTHxHEIGHT` string, for example `1536x864`.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     quality: z
@@ -6473,25 +6607,25 @@ export const ImageGenToolCallSchema = z
             description:
               'The quality of the image generated by the image generation tool call. One of `low`, `medium`, `high`, `xhigh`, `max`, or `auto`.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     action: z
       .union([
         ImageGenActionEnumSchema.meta({ description: 'The action used for image generation.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     background: z
       .union([
         ImageBackgroundSchema.meta({ description: 'The background setting used for generation.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output_format: z
       .union([
         ImageOutputFormatSchema.meta({ description: 'The output format used for generation.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     svg_usage: SvgUsageSchema.exactOptional(),
@@ -6500,7 +6634,7 @@ export const ImageGenToolCallSchema = z
         z
           .string()
           .meta({ description: 'The prompt that was used after any model prompt rewriting.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -6522,7 +6656,7 @@ export const ToolSearchCallSchema = z.object({
     z
       .string()
       .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   execution: ToolSearchExecutionTypeSchema.meta({
     description: 'Whether tool search was executed by the server or by the client.',
@@ -6555,14 +6689,14 @@ export const FunctionToolSchema = z
             description:
               'A description of the function. Used by the model to determine whether or not to call the function.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     parameters: z.union([
       z
         .record(z.string(), z.any())
         .meta({ description: 'A JSON schema object describing the parameters of the function.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     output_schema: z
       .union([
@@ -6572,7 +6706,7 @@ export const FunctionToolSchema = z
             description:
               'A JSON schema object describing the JSON value encoded in string outputs for this function.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     strict: z.union([
@@ -6581,7 +6715,7 @@ export const FunctionToolSchema = z
         .meta({
           description: 'Whether strict parameter validation is enforced for this function tool.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     defer_loading: z
       .boolean()
@@ -6592,7 +6726,7 @@ export const FunctionToolSchema = z
         z
           .array(CallableToolAllowedCallerSchema)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -6661,7 +6795,7 @@ export const FileSearchToolSchema = z
       description: 'Ranking options for search.',
     }).exactOptional(),
     filters: z
-      .union([FiltersSchema.meta({ description: 'A filter to apply.' }), z.null().nullable()])
+      .union([FiltersSchema.meta({ description: 'A filter to apply.' }), z.null()])
       .exactOptional(),
   })
   .meta({
@@ -6724,7 +6858,7 @@ export const WebSearchApproximateLocationSchema = z.union([
               description:
                 'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       region: z
@@ -6734,7 +6868,7 @@ export const WebSearchApproximateLocationSchema = z.union([
             .meta({
               description: 'Free text input for the region of the user, e.g. `California`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       city: z
@@ -6744,7 +6878,7 @@ export const WebSearchApproximateLocationSchema = z.union([
             .meta({
               description: 'Free text input for the city of the user, e.g. `San Francisco`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       timezone: z
@@ -6755,12 +6889,12 @@ export const WebSearchApproximateLocationSchema = z.union([
               description:
                 'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
     })
     .meta({ description: 'The approximate location of the user.\n' }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type WebSearchApproximateLocationSchema = z.infer<typeof WebSearchApproximateLocationSchema>
@@ -6795,12 +6929,12 @@ export const WebSearchToolSchema = z
                     description:
                       'Allowed domains for the search. If not provided, all domains are allowed.\nSubdomains of the provided domains are allowed as well.\n\nExample: `["pubmed.ncbi.nlm.nih.gov"]`\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
           })
           .meta({ description: 'Filters for the search.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_location: WebSearchApproximateLocationSchema.meta({
@@ -6900,7 +7034,7 @@ export const MCPToolSchema = z
             description:
               'Optional HTTP headers to send to the MCP server. Use for authentication\nor other purposes.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     allowed_tools: z
@@ -6911,7 +7045,7 @@ export const MCPToolSchema = z
             MCPToolFilterSchema,
           ])
           .meta({ description: 'List of allowed tool names or a filter object.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     allowed_callers: z
@@ -6920,7 +7054,7 @@ export const MCPToolSchema = z
           .array(CallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     require_approval: z
@@ -6945,7 +7079,7 @@ export const MCPToolSchema = z
           ])
           .default('always')
           .meta({ description: "Specify which of the MCP server's tools require approval." }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     defer_loading: z
@@ -7007,7 +7141,7 @@ export const SvgParamSchema = z.object({
         description:
           "Reasoning effort for SVG authoring. When omitted, uses the author model's default in both Images and Responses.",
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -7127,7 +7261,7 @@ export const ImageGenToolSchema = z
           'Set the background of the generated image. One of `transparent`, `opaque`,\nor `auto`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including\ntheir `2026-09-08` snapshots, support `opaque` and `transparent`\nbackgrounds. Transparent backgrounds are available for supported GPT Image\nmodels. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in\npreview. When using `transparent`, set the output format to `png` or `webp`.\nDefault: `auto`.\n',
       })
       .exactOptional(),
-    input_fidelity: z.union([InputFidelitySchema, z.null().nullable()]).exactOptional(),
+    input_fidelity: z.union([InputFidelitySchema, z.null()]).exactOptional(),
     input_image_mask: z
       .strictObject({
         image_url: z.string().meta({ description: 'Base64-encoded mask image.\n' }).exactOptional(),
@@ -7228,15 +7362,32 @@ export const ContainerAutoParamSchema = z.object({
   memory_limit: z
     .union([
       ContainerMemoryLimitSchema.meta({ description: 'The memory limit for the container.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   network_policy: z
-    .xor([ContainerNetworkPolicyDisabledParamSchema, ContainerNetworkPolicyAllowlistParamSchema])
+    .xor([
+      z.intersection(
+        ContainerNetworkPolicyDisabledParamSchema,
+        z.object({ type: z.literal('ContainerNetworkPolicyDisabledParam') }),
+      ),
+      z.intersection(
+        ContainerNetworkPolicyAllowlistParamSchema,
+        z.object({ type: z.literal('ContainerNetworkPolicyAllowlistParam') }),
+      ),
+    ])
     .meta({ description: 'Network access policy for the container.' })
     .exactOptional(),
   skills: z
-    .array(z.xor([SkillReferenceParamSchema, InlineSkillParamSchema]))
+    .array(
+      z.xor([
+        z.intersection(
+          SkillReferenceParamSchema,
+          z.object({ type: z.literal('SkillReferenceParam') }),
+        ),
+        z.intersection(InlineSkillParamSchema, z.object({ type: z.literal('InlineSkillParam') })),
+      ]),
+    )
     .max(200)
     .meta({
       description:
@@ -7290,11 +7441,20 @@ export const FunctionShellToolParamSchema = z
     environment: z
       .union([
         z.xor([
-          ContainerAutoParamSchema,
-          LocalEnvironmentParamSchema,
-          ContainerReferenceParamSchema,
+          z.intersection(
+            ContainerAutoParamSchema,
+            z.object({ type: z.literal('ContainerAutoParam') }),
+          ),
+          z.intersection(
+            LocalEnvironmentParamSchema,
+            z.object({ type: z.literal('LocalEnvironmentParam') }),
+          ),
+          z.intersection(
+            ContainerReferenceParamSchema,
+            z.object({ type: z.literal('ContainerReferenceParam') }),
+          ),
         ]),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     allowed_callers: z
@@ -7303,7 +7463,7 @@ export const FunctionShellToolParamSchema = z
           .array(CallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -7364,7 +7524,16 @@ export const CustomToolParamSchema = z
       })
       .exactOptional(),
     format: z
-      .xor([CustomTextFormatParamSchema, CustomGrammarFormatParamSchema])
+      .xor([
+        z.intersection(
+          CustomTextFormatParamSchema,
+          z.object({ type: z.literal('CustomTextFormatParam') }),
+        ),
+        z.intersection(
+          CustomGrammarFormatParamSchema,
+          z.object({ type: z.literal('CustomGrammarFormatParam') }),
+        ),
+      ])
       .meta({ description: 'The input format for the custom tool. Default is unconstrained text.' })
       .exactOptional(),
     defer_loading: z
@@ -7377,7 +7546,7 @@ export const CustomToolParamSchema = z
           .array(CallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -7398,8 +7567,8 @@ export const FunctionToolParamSchema = z.object({
     .regex(/^[a-zA-Z0-9_-]+$/)
     .min(1)
     .max(128),
-  description: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  parameters: z.union([EmptyModelParamSchema, z.null().nullable()]).exactOptional(),
+  description: z.union([z.string(), z.null()]).exactOptional(),
+  parameters: z.union([EmptyModelParamSchema, z.null()]).exactOptional(),
   strict: z
     .union([
       z
@@ -7408,7 +7577,7 @@ export const FunctionToolParamSchema = z.object({
           description:
             'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z.literal('function').default('function'),
@@ -7427,7 +7596,7 @@ export const FunctionToolParamSchema = z.object({
           description:
             'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   defer_loading: z
@@ -7442,7 +7611,7 @@ export const FunctionToolParamSchema = z.object({
         .array(CallableToolAllowedCallerSchema)
         .min(1)
         .meta({ description: 'The tool invocation context(s).' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -7465,7 +7634,13 @@ export const NamespaceToolParamSchema = z
     tools: z
       .array(
         z
-          .xor([FunctionToolParamSchema, CustomToolParamSchema])
+          .xor([
+            z.intersection(
+              FunctionToolParamSchema,
+              z.object({ type: z.literal('FunctionToolParam') }),
+            ),
+            z.intersection(CustomToolParamSchema, z.object({ type: z.literal('CustomToolParam') })),
+          ])
           .meta({ description: 'A function or custom tool that belongs to a namespace.' }),
       )
       .min(1)
@@ -7491,7 +7666,7 @@ export const ToolSearchToolParamSchema = z
           .meta({
             description: 'Description shown to the model for a client-executed tool search tool.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     parameters: z
@@ -7499,7 +7674,7 @@ export const ToolSearchToolParamSchema = z
         EmptyModelParamSchema.meta({
           description: 'Parameter schema for a client-executed tool search tool.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -7520,7 +7695,7 @@ export const ApproximateLocationSchema = z.object({
           description:
             'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   region: z
@@ -7528,7 +7703,7 @@ export const ApproximateLocationSchema = z.object({
       z
         .string()
         .meta({ description: 'Free text input for the region of the user, e.g. `California`.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   city: z
@@ -7536,7 +7711,7 @@ export const ApproximateLocationSchema = z.object({
       z
         .string()
         .meta({ description: 'Free text input for the city of the user, e.g. `San Francisco`.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   timezone: z
@@ -7547,7 +7722,7 @@ export const ApproximateLocationSchema = z.object({
           description:
             'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -7577,7 +7752,7 @@ export const WebSearchPreviewToolSchema = z
           description:
             'The approximate location of the user. If omitted or null, defaults to the United States. To avoid this fallback, pass `{"type": "approximate"}` without location fields. To localize results, provide the relevant location fields.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     search_context_size: SearchContextSizeSchema.meta({
@@ -7605,7 +7780,7 @@ export const ApplyPatchToolParamSchema = z
           .array(CallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -7617,22 +7792,34 @@ export type ApplyPatchToolParamSchema = z.infer<typeof ApplyPatchToolParamSchema
 
 export const ToolSchema = z
   .xor([
-    FunctionToolSchema,
-    FileSearchToolSchema,
-    ComputerToolSchema,
-    ComputerUsePreviewToolSchema,
-    WebSearchToolSchema,
-    MCPToolSchema,
-    CodeInterpreterToolSchema,
-    ProgrammaticToolCallingParamSchema,
-    ImageGenToolSchema,
-    LocalShellToolParamSchema,
-    FunctionShellToolParamSchema,
-    CustomToolParamSchema,
-    NamespaceToolParamSchema,
-    ToolSearchToolParamSchema,
-    WebSearchPreviewToolSchema,
-    ApplyPatchToolParamSchema,
+    z.intersection(FunctionToolSchema, z.object({ type: z.literal('FunctionTool') })),
+    z.intersection(FileSearchToolSchema, z.object({ type: z.literal('FileSearchTool') })),
+    z.intersection(ComputerToolSchema, z.object({ type: z.literal('ComputerTool') })),
+    z.intersection(
+      ComputerUsePreviewToolSchema,
+      z.object({ type: z.literal('ComputerUsePreviewTool') }),
+    ),
+    z.intersection(WebSearchToolSchema, z.object({ type: z.literal('WebSearchTool') })),
+    z.intersection(MCPToolSchema, z.object({ type: z.literal('MCPTool') })),
+    z.intersection(CodeInterpreterToolSchema, z.object({ type: z.literal('CodeInterpreterTool') })),
+    z.intersection(
+      ProgrammaticToolCallingParamSchema,
+      z.object({ type: z.literal('ProgrammaticToolCallingParam') }),
+    ),
+    z.intersection(ImageGenToolSchema, z.object({ type: z.literal('ImageGenTool') })),
+    z.intersection(LocalShellToolParamSchema, z.object({ type: z.literal('LocalShellToolParam') })),
+    z.intersection(
+      FunctionShellToolParamSchema,
+      z.object({ type: z.literal('FunctionShellToolParam') }),
+    ),
+    z.intersection(CustomToolParamSchema, z.object({ type: z.literal('CustomToolParam') })),
+    z.intersection(NamespaceToolParamSchema, z.object({ type: z.literal('NamespaceToolParam') })),
+    z.intersection(ToolSearchToolParamSchema, z.object({ type: z.literal('ToolSearchToolParam') })),
+    z.intersection(
+      WebSearchPreviewToolSchema,
+      z.object({ type: z.literal('WebSearchPreviewTool') }),
+    ),
+    z.intersection(ApplyPatchToolParamSchema, z.object({ type: z.literal('ApplyPatchToolParam') })),
   ])
   .meta({ description: 'A tool that can be used to generate a response.\n' })
 
@@ -7648,7 +7835,7 @@ export const ToolSearchOutputSchema = z.object({
     z
       .string()
       .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   execution: ToolSearchExecutionTypeSchema.meta({
     description: 'Whether tool search was executed by the server or by the client.',
@@ -7689,7 +7876,7 @@ export const ReasoningEffortSchema = z.union([
       description:
         'Constrains effort on reasoning for reasoning models. Currently supported\nvalues are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.\nReducing reasoning effort can result in faster responses and fewer tokens\nused on reasoning in a response. Not all reasoning models support every\nvalue. See the\n[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning)\nfor model-specific support.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ReasoningEffortSchema = z.infer<typeof ReasoningEffortSchema>
@@ -7722,7 +7909,7 @@ export const TextResponseFormatJsonSchemaSchema = z
             description:
               'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -7757,7 +7944,16 @@ export const ResponseConfigurationUpdateSchema = z
     text: z
       .object({
         format: z
-          .xor([ResponseFormatTextSchema, TextResponseFormatJsonSchemaSchema])
+          .xor([
+            z.intersection(
+              ResponseFormatTextSchema,
+              z.object({ type: z.literal('ResponseFormatText') }),
+            ),
+            z.intersection(
+              TextResponseFormatJsonSchemaSchema,
+              z.object({ type: z.literal('TextResponseFormatJsonSchema') }),
+            ),
+          ])
           .meta({
             description: 'Use a JSON schema for structured output or text to return to plain text.',
           }),
@@ -7786,7 +7982,7 @@ export const ReasoningItemSchema = z
             description:
               'The encrypted content of the reasoning item. This is populated by default\nfor reasoning items returned by `POST /v1/responses` and WebSocket\n`response.create` requests.\n\nWhen streaming, use the completed reasoning item and its\n`encrypted_content` from the `response.output_item.done` event in\nsubsequent requests. The `encrypted_content` in\n`response.output_item.added` may be incomplete. This is especially\nimportant when `store` is `false` or when using Zero Data Retention.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     summary: z
@@ -7879,23 +8075,20 @@ export const LocalShellExecActionSchema = z
     timeout_ms: z
       .union([
         z.int().meta({ description: 'Optional timeout in milliseconds for the command.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     working_directory: z
       .union([
         z.string().meta({ description: 'Optional working directory to run the command in.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     env: z
       .record(z.string(), z.string())
       .meta({ description: 'Environment variables to set for the command.' }),
     user: z
-      .union([
-        z.string().meta({ description: 'Optional user to run the command as.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'Optional user to run the command as.' }), z.null()])
       .exactOptional(),
   })
   .meta({ description: 'Execute a shell command on the server.' })
@@ -7923,7 +8116,7 @@ export const LocalShellToolCallSchema = z
 export type LocalShellToolCallSchema = z.infer<typeof LocalShellToolCallSchema>
 
 export const LocalShellToolCallOutputSchema = z
-  .object({
+  .looseObject({
     type: z
       .literal('local_shell_call_output')
       .meta({
@@ -7946,10 +8139,11 @@ export const LocalShellToolCallOutputSchema = z
             description:
               'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
+  .refine((val) => ['call_id'].every((key) => key in val))
   .meta({ description: 'The output of a local shell tool call.\n' })
 
 export type LocalShellToolCallOutputSchema = z.infer<typeof LocalShellToolCallOutputSchema>
@@ -7959,7 +8153,7 @@ export const FunctionShellActionSchema = z
     commands: z.array(z.string().meta({ description: 'A list of commands to run.' })),
     timeout_ms: z.union([
       z.int().meta({ description: 'Optional timeout in milliseconds for the commands.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     max_output_length: z.union([
       z
@@ -7967,7 +8161,7 @@ export const FunctionShellActionSchema = z
         .meta({
           description: 'Optional maximum number of characters to return from each command.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Execute a shell command.' })
@@ -8021,7 +8215,7 @@ export const FunctionShellCallSchema = z
         ToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     action: FunctionShellActionSchema.meta({
@@ -8032,8 +8226,17 @@ export const FunctionShellCallSchema = z
         'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
     }),
     environment: z.union([
-      z.xor([LocalEnvironmentResourceSchema, ContainerReferenceResourceSchema]),
-      z.null().nullable(),
+      z.xor([
+        z.intersection(
+          LocalEnvironmentResourceSchema,
+          z.object({ type: z.literal('LocalEnvironmentResource') }),
+        ),
+        z.intersection(
+          ContainerReferenceResourceSchema,
+          z.object({ type: z.literal('ContainerReferenceResource') }),
+        ),
+      ]),
+      z.null(),
     ]),
     created_by: z
       .string()
@@ -8088,7 +8291,16 @@ export const FunctionShellCallOutputContentSchema = z
     stdout: z.string().meta({ description: 'The standard output that was captured.' }),
     stderr: z.string().meta({ description: 'The standard error output that was captured.' }),
     outcome: z
-      .xor([FunctionShellCallOutputTimeoutOutcomeSchema, FunctionShellCallOutputExitOutcomeSchema])
+      .xor([
+        z.intersection(
+          FunctionShellCallOutputTimeoutOutcomeSchema,
+          z.object({ type: z.literal('FunctionShellCallOutputTimeoutOutcome') }),
+        ),
+        z.intersection(
+          FunctionShellCallOutputExitOutcomeSchema,
+          z.object({ type: z.literal('FunctionShellCallOutputExitOutcome') }),
+        ),
+      ])
       .meta({
         description:
           'Represents either an exit outcome (with an exit code) or a timeout outcome for a shell call output chunk.',
@@ -8124,7 +8336,7 @@ export const FunctionShellCallOutputSchema = z
         ToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: FunctionShellCallOutputStatusEnumSchema.meta({
@@ -8141,7 +8353,7 @@ export const FunctionShellCallOutputSchema = z
           description:
             'The maximum length of the shell command output. This is generated by the model and should be passed back with the raw output.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     created_by: z
       .string()
@@ -8220,7 +8432,7 @@ export const ApplyPatchToolCallSchema = z
         ToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: ApplyPatchCallStatusSchema.meta({
@@ -8228,9 +8440,18 @@ export const ApplyPatchToolCallSchema = z
     }),
     operation: z
       .xor([
-        ApplyPatchCreateFileOperationSchema,
-        ApplyPatchDeleteFileOperationSchema,
-        ApplyPatchUpdateFileOperationSchema,
+        z.intersection(
+          ApplyPatchCreateFileOperationSchema,
+          z.object({ type: z.literal('ApplyPatchCreateFileOperation') }),
+        ),
+        z.intersection(
+          ApplyPatchDeleteFileOperationSchema,
+          z.object({ type: z.literal('ApplyPatchDeleteFileOperation') }),
+        ),
+        z.intersection(
+          ApplyPatchUpdateFileOperationSchema,
+          z.object({ type: z.literal('ApplyPatchUpdateFileOperation') }),
+        ),
       ])
       .meta({
         description:
@@ -8271,7 +8492,7 @@ export const ApplyPatchToolCallOutputSchema = z
         ToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: ApplyPatchCallOutputStatusSchema.meta({
@@ -8283,7 +8504,7 @@ export const ApplyPatchToolCallOutputSchema = z
         z
           .string()
           .meta({ description: 'Optional textual output returned by the apply patch tool.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     created_by: z
@@ -8299,10 +8520,7 @@ export const MCPListToolsToolSchema = z
   .object({
     name: z.string().meta({ description: 'The name of the tool.\n' }),
     description: z
-      .union([
-        z.string().meta({ description: 'The description of the tool.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The description of the tool.\n' }), z.null()])
       .exactOptional(),
     input_schema: z
       .object({})
@@ -8310,7 +8528,7 @@ export const MCPListToolsToolSchema = z
     annotations: z
       .union([
         z.object({}).meta({ description: 'Additional annotations about the tool.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -8331,7 +8549,7 @@ export const MCPListToolsSchema = z
     error: z
       .union([
         z.string().meta({ description: 'Error message if the server could not list tools.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -8356,7 +8574,7 @@ export const MCPApprovalRequestSchema = z
 export type MCPApprovalRequestSchema = z.infer<typeof MCPApprovalRequestSchema>
 
 export const MCPApprovalResponseResourceSchema = z
-  .object({
+  .looseObject({
     type: z
       .literal('mcp_approval_response')
       .meta({ description: 'The type of the item. Always `mcp_approval_response`.\n' }),
@@ -8366,12 +8584,10 @@ export const MCPApprovalResponseResourceSchema = z
       .meta({ description: 'The ID of the approval request being answered.\n' }),
     approve: z.boolean().meta({ description: 'Whether the request was approved.\n' }),
     reason: z
-      .union([
-        z.string().meta({ description: 'Optional reason for the decision.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'Optional reason for the decision.\n' }), z.null()])
       .exactOptional(),
   })
+  .refine((val) => ['request_id'].every((key) => key in val))
   .meta({ description: 'A response to an MCP approval request.\n' })
 
 export type MCPApprovalResponseResourceSchema = z.infer<typeof MCPApprovalResponseResourceSchema>
@@ -8400,9 +8616,12 @@ export const HTTPErrorSchema = z.object({
 export type HTTPErrorSchema = z.infer<typeof HTTPErrorSchema>
 
 export const MCPToolCallErrorSchema = z.xor([
-  MCPProtocolErrorSchema,
-  MCPToolExecutionErrorSchema,
-  HTTPErrorSchema,
+  z.intersection(MCPProtocolErrorSchema, z.object({ type: z.literal('MCPProtocolError') })),
+  z.intersection(
+    MCPToolExecutionErrorSchema,
+    z.object({ type: z.literal('MCPToolExecutionError') }),
+  ),
+  z.intersection(HTTPErrorSchema, z.object({ type: z.literal('HTTPError') })),
 ])
 
 export type MCPToolCallErrorSchema = z.infer<typeof MCPToolCallErrorSchema>
@@ -8429,13 +8648,10 @@ export const MCPToolCallSchema = z
       .string()
       .meta({ description: 'A JSON string of the arguments passed to the tool.\n' }),
     output: z
-      .union([
-        z.string().meta({ description: 'The output from the tool call.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The output from the tool call.\n' }), z.null()])
       .exactOptional(),
     error: z
-      .union([MCPToolCallErrorSchema, z.null().nullable()])
+      .union([MCPToolCallErrorSchema, z.null()])
       .meta({ description: 'The error from the tool call, if any.' })
       .exactOptional(),
     status: MCPToolCallStatusSchema.meta({
@@ -8450,7 +8666,7 @@ export const MCPToolCallSchema = z
             description:
               'Unique identifier for the MCP tool call approval request.\nInclude this value in a subsequent `mcp_approval_response` input to approve or reject the corresponding tool call.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -8472,7 +8688,7 @@ export const CustomToolCallSchema = z
       .meta({
         description: 'An identifier used to map this custom tool call to a tool call output.\n',
       }),
-    caller: z.union([ToolCallCallerSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([ToolCallCallerSchema, z.null()]).exactOptional(),
     namespace: z
       .string()
       .meta({ description: 'The namespace of the custom tool being called.\n' })
@@ -8509,7 +8725,7 @@ export const CustomToolCallOutputSchema = z
         description:
           'The call ID, used to map this custom tool call output to a custom tool call.\n',
       }),
-    caller: z.union([ToolCallCallerParamSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([ToolCallCallerParamSchema, z.null()]).exactOptional(),
     output: z
       .xor([
         z.string().meta({ description: 'A string of the output of the custom tool call.\n' }),
@@ -8530,35 +8746,65 @@ export type CustomToolCallOutputSchema = z.infer<typeof CustomToolCallOutputSche
 
 export const ConversationItemSchema = z
   .xor([
-    MessageSchema,
-    FunctionToolCallResourceSchema,
-    FunctionToolCallOutputResourceSchema,
-    FileSearchToolCallSchema,
-    WebSearchToolCallSchema,
-    ImageGenToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerToolCallOutputResourceSchema,
-    ToolSearchCallSchema,
-    ToolSearchOutputSchema,
-    AdditionalToolsSchema,
-    ResponseConfigurationUpdateSchema,
-    ReasoningItemSchema,
-    ProgramSchema,
-    ProgramOutputSchema,
-    CompactionBodySchema,
-    CodeInterpreterToolCallSchema,
-    LocalShellToolCallSchema,
-    LocalShellToolCallOutputSchema,
-    FunctionShellCallSchema,
-    FunctionShellCallOutputSchema,
-    ApplyPatchToolCallSchema,
-    ApplyPatchToolCallOutputSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseResourceSchema,
-    MCPToolCallSchema,
-    CustomToolCallSchema,
-    CustomToolCallOutputSchema,
+    z.intersection(MessageSchema, z.object({ type: z.literal('Message') })),
+    z.intersection(
+      FunctionToolCallResourceSchema,
+      z.object({ type: z.literal('FunctionToolCallResource') }),
+    ),
+    z.intersection(
+      FunctionToolCallOutputResourceSchema,
+      z.object({ type: z.literal('FunctionToolCallOutputResource') }),
+    ),
+    z.intersection(FileSearchToolCallSchema, z.object({ type: z.literal('FileSearchToolCall') })),
+    z.intersection(WebSearchToolCallSchema, z.object({ type: z.literal('WebSearchToolCall') })),
+    z.intersection(ImageGenToolCallSchema, z.object({ type: z.literal('ImageGenToolCall') })),
+    z.intersection(ComputerToolCallSchema, z.object({ type: z.literal('ComputerToolCall') })),
+    z.intersection(
+      ComputerToolCallOutputResourceSchema,
+      z.object({ type: z.literal('ComputerToolCallOutputResource') }),
+    ),
+    z.intersection(ToolSearchCallSchema, z.object({ type: z.literal('ToolSearchCall') })),
+    z.intersection(ToolSearchOutputSchema, z.object({ type: z.literal('ToolSearchOutput') })),
+    z.intersection(AdditionalToolsSchema, z.object({ type: z.literal('AdditionalTools') })),
+    z.intersection(
+      ResponseConfigurationUpdateSchema,
+      z.object({ type: z.literal('ResponseConfigurationUpdate') }),
+    ),
+    z.intersection(ReasoningItemSchema, z.object({ type: z.literal('ReasoningItem') })),
+    z.intersection(ProgramSchema, z.object({ type: z.literal('Program') })),
+    z.intersection(ProgramOutputSchema, z.object({ type: z.literal('ProgramOutput') })),
+    z.intersection(CompactionBodySchema, z.object({ type: z.literal('CompactionBody') })),
+    z.intersection(
+      CodeInterpreterToolCallSchema,
+      z.object({ type: z.literal('CodeInterpreterToolCall') }),
+    ),
+    z.intersection(LocalShellToolCallSchema, z.object({ type: z.literal('LocalShellToolCall') })),
+    z.intersection(
+      LocalShellToolCallOutputSchema,
+      z.object({ type: z.literal('LocalShellToolCallOutput') }),
+    ),
+    z.intersection(FunctionShellCallSchema, z.object({ type: z.literal('FunctionShellCall') })),
+    z.intersection(
+      FunctionShellCallOutputSchema,
+      z.object({ type: z.literal('FunctionShellCallOutput') }),
+    ),
+    z.intersection(ApplyPatchToolCallSchema, z.object({ type: z.literal('ApplyPatchToolCall') })),
+    z.intersection(
+      ApplyPatchToolCallOutputSchema,
+      z.object({ type: z.literal('ApplyPatchToolCallOutput') }),
+    ),
+    z.intersection(MCPListToolsSchema, z.object({ type: z.literal('MCPListTools') })),
+    z.intersection(MCPApprovalRequestSchema, z.object({ type: z.literal('MCPApprovalRequest') })),
+    z.intersection(
+      MCPApprovalResponseResourceSchema,
+      z.object({ type: z.literal('MCPApprovalResponseResource') }),
+    ),
+    z.intersection(MCPToolCallSchema, z.object({ type: z.literal('MCPToolCall') })),
+    z.intersection(CustomToolCallSchema, z.object({ type: z.literal('CustomToolCall') })),
+    z.intersection(
+      CustomToolCallOutputSchema,
+      z.object({ type: z.literal('CustomToolCallOutput') }),
+    ),
   ])
   .meta({
     description:
@@ -8604,7 +8850,7 @@ export type ConversationParamSchema = z.infer<typeof ConversationParamSchema>
 export const CostsResultSchema = z
   .object({
     api_source: z
-      .union([z.enum(['agents_api', 'unlabeled']), z.null().nullable()])
+      .union([z.enum(['agents_api', 'unlabeled']), z.null()])
       .meta({
         description:
           'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
@@ -8629,7 +8875,7 @@ export const CostsResultSchema = z
             description:
               'When `group_by=line_item`, this field provides the line item of the grouped costs result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     project_id: z
@@ -8640,7 +8886,7 @@ export const CostsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped costs result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -8651,7 +8897,7 @@ export const CostsResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped costs result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -8662,7 +8908,7 @@ export const CostsResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API Key ID of the grouped costs result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     quantity: z
@@ -8673,7 +8919,7 @@ export const CostsResultSchema = z
             description:
               'When `group_by=line_item`, this field provides the quantity of the grouped costs result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     quantity_unit: z
@@ -8689,7 +8935,7 @@ export const CostsResultSchema = z
           'images',
           'characters',
         ]),
-        z.null().nullable(),
+        z.null(),
       ])
       .meta({
         description:
@@ -8717,7 +8963,7 @@ export const CreateAssistantRequestSchema = z.strictObject({
         .meta({
           description: 'The name of the assistant. The maximum length is 256 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   description: z
@@ -8728,7 +8974,7 @@ export const CreateAssistantRequestSchema = z.strictObject({
         .meta({
           description: 'The description of the assistant. The maximum length is 512 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   instructions: z
@@ -8740,7 +8986,7 @@ export const CreateAssistantRequestSchema = z.strictObject({
           description:
             'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   reasoning_effort: ReasoningEffortSchema.exactOptional(),
@@ -8782,7 +9028,7 @@ export const CreateAssistantRequestSchema = z.strictObject({
           description:
             "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   metadata: MetadataSchema.exactOptional(),
@@ -8798,7 +9044,7 @@ export const CreateAssistantRequestSchema = z.strictObject({
             'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   top_p: z
@@ -8813,12 +9059,10 @@ export const CreateAssistantRequestSchema = z.strictObject({
             'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
-  response_format: z
-    .union([AssistantsApiResponseFormatOptionSchema, z.null().nullable()])
-    .exactOptional(),
+  response_format: z.union([AssistantsApiResponseFormatOptionSchema, z.null()]).exactOptional(),
 })
 
 export type CreateAssistantRequestSchema = z.infer<typeof CreateAssistantRequestSchema>
@@ -8869,7 +9113,7 @@ export const ModelResponsePropertiesSchema = z.object({
           description:
             'An integer between 0 and 20 specifying the maximum number of most likely\ntokens to return at each token position, each with an associated log\nprobability. In some cases, the number of returned tokens may be fewer than\nrequested.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   temperature: z
@@ -8884,7 +9128,7 @@ export const ModelResponsePropertiesSchema = z.object({
             'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\nWe generally recommend altering this or `top_p` but not both.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   top_p: z
@@ -8899,7 +9143,7 @@ export const ModelResponsePropertiesSchema = z.object({
             'An alternative to sampling with temperature, called nucleus sampling,\nwhere the model considers the results of the tokens with top_p probability\nmass. So 0.1 means only the tokens comprising the top 10% probability mass\nare considered.\n\nWe generally recommend altering this or `temperature` but not both.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   user: z
@@ -8922,7 +9166,7 @@ export const ModelResponsePropertiesSchema = z.object({
             "A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.\nThe IDs should be a string that uniquely identifies each user, with a maximum length of 128 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).\n",
           examples: ['safety-identifier-1234'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   prompt_cache_key: z
@@ -8934,7 +9178,7 @@ export const ModelResponsePropertiesSchema = z.object({
             'Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching).\n',
           examples: ['prompt-cache-key-1234'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   prompt_cache_retention: z
@@ -8945,7 +9189,7 @@ export const ModelResponsePropertiesSchema = z.object({
           description:
             "Deprecated. Use `prompt_cache_options.ttl` instead.\n\nThe retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching#prompt-cache-retention).\nThis field expresses a maximum retention policy, while\n`prompt_cache_options.ttl` expresses a minimum cache lifetime. The two\nfields are independent and do not interact.\nFor `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.\n\nFor older models that support both `in_memory` and `24h`, the default depends on your organization's data retention policy:\n  - Organizations without ZDR enabled default to `24h`.\n  - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is not specified.\n",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .meta({ deprecated: true })
     .exactOptional(),
@@ -9107,7 +9351,7 @@ export const ResponseModalitiesSchema = z.union([
       description:
         'Output types that you would like the model to generate.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to\n[generate audio](https://developers.openai.com/api/docs/guides/audio). To request that this model generate\nboth text and audio responses, you can use:\n\n`["text", "audio"]`\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ResponseModalitiesSchema = z.infer<typeof ResponseModalitiesSchema>
@@ -9120,7 +9364,7 @@ export const VerbositySchema = z.union([
       description:
         "Constrains the verbosity of the model's response. Lower values will result in\nmore concise responses, while higher values will result in more verbose responses.\nCurrently supported values are `low`, `medium`, and `high`. The default is\n`medium`.\n",
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type VerbositySchema = z.infer<typeof VerbositySchema>
@@ -9219,7 +9463,7 @@ export const ModerationPolicyParamSchema = z
         ModerationConfigParamSchema.meta({
           description: 'The moderation policy for the response input.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output: z
@@ -9227,7 +9471,7 @@ export const ModerationPolicyParamSchema = z
         ModerationConfigParamSchema.meta({
           description: 'The moderation policy for the response output.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -9248,7 +9492,7 @@ export const ModerationParamSchema = z
         ModerationPolicyParamSchema.meta({
           description: 'The policy to apply to moderated response input and output.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -9268,8 +9512,9 @@ export const StopConfigurationSchema = z
       .array(z.string().meta({ examples: ['["\\n"]'] }))
       .min(1)
       .max(4),
-    z.null().nullable(),
+    z.null(),
   ])
+  .default(null)
   .meta({
     description:
       'Not supported with reasoning models `o3` and `o4-mini`.\n\nUp to 4 sequences where the API will stop generating further tokens. The\nreturned text will not contain the stop sequence.\n',
@@ -9448,9 +9693,18 @@ export const CreateChatCompletionRequestSchema = z.intersection(
       .exactOptional(),
     response_format: z
       .xor([
-        ResponseFormatTextSchema,
-        ResponseFormatJsonSchemaSchema,
-        ResponseFormatJsonObjectSchema,
+        z.intersection(
+          ResponseFormatTextSchema,
+          z.object({ type: z.literal('ResponseFormatText') }),
+        ),
+        z.intersection(
+          ResponseFormatJsonSchemaSchema,
+          z.object({ type: z.literal('ResponseFormatJsonSchema') }),
+        ),
+        z.intersection(
+          ResponseFormatJsonObjectSchema,
+          z.object({ type: z.literal('ResponseFormatJsonObject') }),
+        ),
       ])
       .meta({
         description:
@@ -9491,7 +9745,7 @@ export const CreateChatCompletionRequestSchema = z.intersection(
           description:
             'Configuration for running moderation on the request input and generated output.\n',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     stream: z
@@ -9544,7 +9798,7 @@ export const CreateChatCompletionRequestSchema = z.intersection(
       })
       .exactOptional(),
     prediction: z
-      .union([PredictionContentSchema, z.null().nullable()])
+      .union([PredictionContentSchema, z.null()])
       .meta({
         description:
           'Configuration for a [Predicted Output](https://developers.openai.com/api/docs/guides/predicted-outputs),\nwhich can greatly improve response times when large parts of the model\nresponse are known ahead of time. This is most common when you are\nregenerating a file with only minor changes to most of the content.\n',
@@ -9553,7 +9807,7 @@ export const CreateChatCompletionRequestSchema = z.intersection(
     seed: z
       .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
       .transform((val) => BigInt(val))
-      .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n))
+      .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n))
       .nullable()
       .meta({
         description:
@@ -9632,14 +9886,7 @@ export const CreateChatCompletionStreamResponseSchema = z
             .meta({ description: 'Log probability information for the choice.' })
             .exactOptional(),
           finish_reason: z
-            .union([
-              z.literal('stop'),
-              z.literal('length'),
-              z.literal('tool_calls'),
-              z.literal('content_filter'),
-              z.literal('function_call'),
-              z.literal(null),
-            ])
+            .enum(['stop', 'length', 'tool_calls', 'content_filter', 'function_call'])
             .nullable()
             .meta({
               description:
@@ -9680,7 +9927,7 @@ export const CreateChatCompletionStreamResponseSchema = z
       .literal('chat.completion.chunk')
       .meta({ description: 'The object type, which is always `chat.completion.chunk`.' }),
     usage: z
-      .union([CompletionUsageSchema, z.null().nullable()])
+      .union([CompletionUsageSchema, z.null()])
       .meta({
         description:
           'An optional field that will only be present when you set\n`stream_options: {"include_usage": true}` in your request. When present, it\ncontains a null value **except for the last chunk** which contains the\ntoken usage statistics for the entire request.\n\n**NOTE:** If the stream is interrupted or cancelled, you may not\nreceive the final usage chunk which contains the total token usage for\nthe request.\n',
@@ -9692,7 +9939,7 @@ export const CreateChatCompletionStreamResponseSchema = z
           description:
             'Moderation results for the request input and generated output. Present\non the moderation chunk when moderated completions are requested.\n',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -9752,7 +9999,7 @@ export const CreateCompletionRequestSchema = z.object({
         .array(z.array(z.int()).min(1))
         .min(1)
         .meta({ examples: ['[[1212, 318, 257, 1332, 13]]'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .default('<|endoftext|>')
     .meta({
@@ -9915,7 +10162,7 @@ export const CreateCompletionResponseSchema = z
       .array(
         z.object({
           finish_reason: z
-            .union([z.enum(['stop', 'length', 'content_filter']), z.null().nullable()])
+            .union([z.enum(['stop', 'length', 'content_filter']), z.null()])
             .meta({
               description:
                 'The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\nor `content_filter` if content was omitted due to a flag from our content filters. The value is null while a streamed completion is unfinished.\n',
@@ -9928,7 +10175,7 @@ export const CreateCompletionResponseSchema = z
               tokens: z.array(z.string()).exactOptional(),
               top_logprobs: z.array(z.record(z.string(), z.number())).exactOptional(),
             }),
-            z.null().nullable(),
+            z.null(),
           ]),
           text: z.string(),
         }),
@@ -9978,7 +10225,15 @@ export const CreateContainerBodySchema = z.object({
     .meta({ description: "Container expiration time in seconds relative to the 'anchor' time." })
     .exactOptional(),
   skills: z
-    .array(z.xor([SkillReferenceParamSchema, InlineSkillParamSchema]))
+    .array(
+      z.xor([
+        z.intersection(
+          SkillReferenceParamSchema,
+          z.object({ type: z.literal('SkillReferenceParam') }),
+        ),
+        z.intersection(InlineSkillParamSchema, z.object({ type: z.literal('InlineSkillParam') })),
+      ]),
+    )
     .meta({ description: 'An optional list of skills referenced by id or inline data.' })
     .exactOptional(),
   memory_limit: z
@@ -9986,7 +10241,16 @@ export const CreateContainerBodySchema = z.object({
     .meta({ description: 'Optional memory limit for the container. Defaults to "1g".' })
     .exactOptional(),
   network_policy: z
-    .xor([ContainerNetworkPolicyDisabledParamSchema, ContainerNetworkPolicyAllowlistParamSchema])
+    .xor([
+      z.intersection(
+        ContainerNetworkPolicyDisabledParamSchema,
+        z.object({ type: z.literal('ContainerNetworkPolicyDisabledParam') }),
+      ),
+      z.intersection(
+        ContainerNetworkPolicyAllowlistParamSchema,
+        z.object({ type: z.literal('ContainerNetworkPolicyAllowlistParam') }),
+      ),
+    ])
     .meta({ description: 'Network access policy for the container.' })
     .exactOptional(),
 })
@@ -10155,7 +10419,7 @@ export const EasyInputMessageSchema = z
         description:
           'Text, image, or audio input to the model, used to generate a response.\nCan also contain previous assistant responses.\n',
       }),
-    phase: z.union([MessagePhaseSchema, z.null().nullable()]).exactOptional(),
+    phase: z.union([MessagePhaseSchema, z.null()]).exactOptional(),
     type: z
       .literal('message')
       .meta({ description: 'The type of the message input. Always `message`.\n' })
@@ -10311,7 +10575,7 @@ export const EvalStoredCompletionsSourceSchema = z
           .meta({
             description: "An optional model to filter by (e.g., 'gpt-4.1-mini-2025-04-14').",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     created_after: z
@@ -10321,7 +10585,7 @@ export const EvalStoredCompletionsSourceSchema = z
           .meta({
             description: 'An optional Unix timestamp to filter items created after this time.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     created_before: z
@@ -10331,13 +10595,13 @@ export const EvalStoredCompletionsSourceSchema = z
           .meta({
             description: 'An optional Unix timestamp to filter items created before this time.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     limit: z
       .union([
         z.int().meta({ description: 'An optional maximum number of items to return.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -10703,7 +10967,7 @@ export const GraderScoreModelSchema = z
               .meta({
                 description: 'A seed value to initialize the randomness, during sampling.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         top_p: z
@@ -10716,7 +10980,7 @@ export const GraderScoreModelSchema = z
                   'An alternative to temperature for nucleus sampling; 1.0 includes all tokens.\n',
                 examples: [1],
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         temperature: z
@@ -10724,7 +10988,7 @@ export const GraderScoreModelSchema = z
             z
               .number()
               .meta({ description: 'A higher temperature increases randomness in the outputs.\n' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         max_completions_tokens: z
@@ -10736,7 +11000,7 @@ export const GraderScoreModelSchema = z
                 description:
                   'The maximum number of tokens the grader model may generate in its response.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         reasoning_effort: ReasoningEffortSchema.exactOptional(),
@@ -10808,9 +11072,15 @@ export type CreateEvalRequestSchema = z.infer<typeof CreateEvalRequestSchema>
 
 export const TextResponseFormatConfigurationSchema = z
   .xor([
-    ResponseFormatTextSchema,
-    TextResponseFormatJsonSchemaSchema,
-    ResponseFormatJsonObjectSchema,
+    z.intersection(ResponseFormatTextSchema, z.object({ type: z.literal('ResponseFormatText') })),
+    z.intersection(
+      TextResponseFormatJsonSchemaSchema,
+      z.object({ type: z.literal('TextResponseFormatJsonSchema') }),
+    ),
+    z.intersection(
+      ResponseFormatJsonObjectSchema,
+      z.object({ type: z.literal('ResponseFormatJsonObject') }),
+    ),
   ])
   .meta({
     description:
@@ -10834,7 +11104,7 @@ export const EvalResponsesSourceSchema = z
             description:
               'Metadata filter for the responses. This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -10845,7 +11115,7 @@ export const EvalResponsesSourceSchema = z
             description:
               'The name of the model to find responses for. This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     instructions_search: z
@@ -10856,7 +11126,7 @@ export const EvalResponsesSourceSchema = z
             description:
               "Optional string to search the 'instructions' field. This is a query parameter used to select responses.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     created_after: z
@@ -10868,7 +11138,7 @@ export const EvalResponsesSourceSchema = z
             description:
               'Only include items created after this timestamp (inclusive). This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     created_before: z
@@ -10880,7 +11150,7 @@ export const EvalResponsesSourceSchema = z
             description:
               'Only include items created before this timestamp (inclusive). This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     reasoning_effort: z
@@ -10889,7 +11159,7 @@ export const EvalResponsesSourceSchema = z
           description:
             'Optional reasoning effort parameter. This is a query parameter used to select responses.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     temperature: z
@@ -10900,7 +11170,7 @@ export const EvalResponsesSourceSchema = z
             description:
               'Sampling temperature. This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     top_p: z
@@ -10911,7 +11181,7 @@ export const EvalResponsesSourceSchema = z
             description:
               'Nucleus sampling parameter. This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     users: z
@@ -10922,7 +11192,7 @@ export const EvalResponsesSourceSchema = z
             description:
               'List of user identifiers. This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     tools: z
@@ -10932,7 +11202,7 @@ export const EvalResponsesSourceSchema = z
           .meta({
             description: 'List of tool names. This is a query parameter used to select responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -11235,11 +11505,14 @@ export const GraderMultiSchema = z
     graders: z.record(
       z.string(),
       z.xor([
-        GraderStringCheckSchema,
-        GraderTextSimilaritySchema,
-        GraderPythonSchema,
-        GraderScoreModelSchema,
-        GraderLabelModelSchema,
+        z.intersection(GraderStringCheckSchema, z.object({ type: z.literal('string_check') })),
+        z.intersection(
+          GraderTextSimilaritySchema,
+          z.object({ type: z.literal('text_similarity') }),
+        ),
+        z.intersection(GraderPythonSchema, z.object({ type: z.literal('python') })),
+        z.intersection(GraderScoreModelSchema, z.object({ type: z.literal('score_model') })),
+        z.intersection(GraderLabelModelSchema, z.object({ type: z.literal('label_model') })),
       ]),
     ),
     calculate_output: z
@@ -11525,7 +11798,7 @@ export const FrameDurationMsSchema = z
 export type FrameDurationMsSchema = z.infer<typeof FrameDurationMsSchema>
 
 export const ComplexitySchema = z
-  .union([z.literal('low'), z.literal('medium'), z.literal('high'), z.literal(null)])
+  .enum(['low', 'medium', 'high'])
   .nullable()
   .meta({
     description:
@@ -11558,7 +11831,7 @@ export const PartialImagesSchema = z.union([
         'The number of partial images to generate. This parameter is used for\nstreaming responses that return partial images. Value must be between 0 and 3.\nWhen set to 0, the response will be a single image sent in one streaming event.\n\nNote that the final image may be sent before the full number of partial images\nare generated if the full image is generated more quickly.\n',
       examples: [1],
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type PartialImagesSchema = z.infer<typeof PartialImagesSchema>
@@ -11592,7 +11865,7 @@ export const CreateImageEditRequestSchema = z.object({
       "A transparent PNG overlaid on the first image to guide the edit. Must match that image's dimensions after orientation and contain transparent pixels. Supports GPT Image 2.5. Cannot be combined with mask.",
   }).exactOptional(),
   background: z
-    .union([z.enum(['transparent', 'opaque', 'auto']), z.null().nullable()])
+    .union([z.enum(['transparent', 'opaque', 'auto']), z.null()])
     .default('auto')
     .meta({
       description:
@@ -11639,7 +11912,7 @@ export const CreateImageEditRequestSchema = z.object({
     .union([
       z.string(),
       z.enum(['1024x1024', '1536x1024', '1024x1536', 'auto', '256x256', '512x512']),
-      z.null().nullable(),
+      z.null(),
     ])
     .default('auto')
     .meta({
@@ -11649,7 +11922,7 @@ export const CreateImageEditRequestSchema = z.object({
     })
     .exactOptional(),
   response_format: z
-    .union([z.literal('url'), z.literal('b64_json'), z.literal(null)])
+    .enum(['url', 'b64_json'])
     .nullable()
     .meta({
       description:
@@ -11658,7 +11931,7 @@ export const CreateImageEditRequestSchema = z.object({
     })
     .exactOptional(),
   output_format: z
-    .union([ImagesApiOutputFormatSchema, z.null().nullable()])
+    .union([ImagesApiOutputFormatSchema, z.null()])
     .default('png')
     .meta({
       description:
@@ -11667,7 +11940,7 @@ export const CreateImageEditRequestSchema = z.object({
     })
     .exactOptional(),
   svg: z
-    .union([SvgParamSchema, z.null().nullable()])
+    .union([SvgParamSchema, z.null()])
     .meta({
       description:
         'Selects the author model and reasoning effort for `output_format=svg`. Supply `svg.model` when SVG model selection is enabled. Otherwise, omit this object. SVG output requires `n=1` and cannot use streaming, partial images, or output compression. Use multipart fields such as `svg[model]`.',
@@ -11702,7 +11975,7 @@ export const CreateImageEditRequestSchema = z.object({
       deprecated: true,
     })
     .exactOptional(),
-  input_fidelity: z.union([InputFidelitySchema, z.null().nullable()]).exactOptional(),
+  input_fidelity: z.union([InputFidelitySchema, z.null()]).exactOptional(),
   stream: z
     .boolean()
     .nullable()
@@ -11715,10 +11988,7 @@ export const CreateImageEditRequestSchema = z.object({
     .exactOptional(),
   partial_images: PartialImagesSchema.exactOptional(),
   quality: z
-    .union([
-      z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'standard']),
-      z.null().nullable(),
-    ])
+    .union([z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'standard']), z.null()])
     .default('auto')
     .meta({
       description:
@@ -11741,7 +12011,7 @@ export const SvgSchema = z
     reasoning: z
       .object({
         effort: z
-          .union([ReasoningEffortEnumSchema, z.null().nullable()])
+          .union([ReasoningEffortEnumSchema, z.null()])
           .meta({
             description:
               "Controls how much effort the SVG author spends on reasoning. Uses the author model's default when omitted or null.",
@@ -11812,10 +12082,7 @@ export const CreateImageRequestSchema = z.object({
     })
     .exactOptional(),
   quality: z
-    .union([
-      z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'standard', 'hd']),
-      z.null().nullable(),
-    ])
+    .union([z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'standard', 'hd']), z.null()])
     .default('auto')
     .meta({
       description:
@@ -11824,7 +12091,7 @@ export const CreateImageRequestSchema = z.object({
     })
     .exactOptional(),
   response_format: z
-    .union([z.literal('url'), z.literal('b64_json'), z.literal(null)])
+    .enum(['url', 'b64_json'])
     .nullable()
     .meta({
       description:
@@ -11833,7 +12100,7 @@ export const CreateImageRequestSchema = z.object({
     })
     .exactOptional(),
   output_format: z
-    .union([ImagesApiOutputFormatSchema, z.null().nullable()])
+    .union([ImagesApiOutputFormatSchema, z.null()])
     .default('png')
     .meta({
       description:
@@ -11875,7 +12142,7 @@ export const CreateImageRequestSchema = z.object({
         '1792x1024',
         '1024x1792',
       ]),
-      z.null().nullable(),
+      z.null(),
     ])
     .default('auto')
     .meta({
@@ -11885,7 +12152,7 @@ export const CreateImageRequestSchema = z.object({
     })
     .exactOptional(),
   moderation: z
-    .union([z.enum(['low', 'auto']), z.null().nullable()])
+    .union([z.enum(['low', 'auto']), z.null()])
     .default('auto')
     .meta({
       description:
@@ -11894,7 +12161,7 @@ export const CreateImageRequestSchema = z.object({
     })
     .exactOptional(),
   background: z
-    .union([z.enum(['transparent', 'opaque', 'auto']), z.null().nullable()])
+    .union([z.enum(['transparent', 'opaque', 'auto']), z.null()])
     .default('auto')
     .meta({
       description:
@@ -11903,7 +12170,7 @@ export const CreateImageRequestSchema = z.object({
     })
     .exactOptional(),
   style: z
-    .union([z.literal('vivid'), z.literal('natural'), z.literal(null)])
+    .enum(['vivid', 'natural'])
     .nullable()
     .meta({
       description:
@@ -11944,7 +12211,7 @@ export const CreateImageVariationRequestSchema = z
           'The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square.',
       }),
     model: z
-      .union([z.string(), z.literal('dall-e-2'), z.null().nullable()])
+      .union([z.string(), z.literal('dall-e-2'), z.null()])
       .default('dall-e-2')
       .meta({
         description:
@@ -11964,7 +12231,7 @@ export const CreateImageVariationRequestSchema = z
       })
       .exactOptional(),
     response_format: z
-      .union([z.literal('url'), z.literal('b64_json'), z.literal(null)])
+      .enum(['url', 'b64_json'])
       .nullable()
       .default('url')
       .meta({
@@ -11974,7 +12241,7 @@ export const CreateImageVariationRequestSchema = z
       })
       .exactOptional(),
     size: z
-      .union([z.literal('256x256'), z.literal('512x512'), z.literal('1024x1024'), z.literal(null)])
+      .enum(['256x256', '512x512', '1024x1024'])
       .nullable()
       .default('1024x1024')
       .meta({
@@ -12052,7 +12319,7 @@ export const CreateMessageRequestSchema = z.strictObject({
           description:
             'A list of files attached to the message, and the tools they should be added to.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   metadata: MetadataSchema.exactOptional(),
@@ -12183,7 +12450,7 @@ export const CreateModerationResponseSchema = z
                     description:
                       'Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.',
                   }),
-                z.null().nullable(),
+                z.null(),
               ]),
               'illicit/violent': z.union([
                 z
@@ -12192,7 +12459,7 @@ export const CreateModerationResponseSchema = z
                     description:
                       'Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon.',
                   }),
-                z.null().nullable(),
+                z.null(),
               ]),
               'self-harm': z
                 .boolean()
@@ -12477,7 +12744,7 @@ export const ToolChoiceMCPSchema = z
     name: z
       .union([
         z.string().meta({ description: 'The name of the tool to call on the server.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -12563,7 +12830,7 @@ export const ResponsePromptVariablesSchema = z.union([
       description:
         'Optional map of values to substitute in for variables in your\nprompt. The substitution values can either be strings, or other\nResponse input types like images or files.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ResponsePromptVariablesSchema = z.infer<typeof ResponsePromptVariablesSchema>
@@ -12575,7 +12842,7 @@ export const PromptSchema = z.union([
       version: z
         .union([
           z.string().meta({ description: 'Optional version of the prompt template.' }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       variables: ResponsePromptVariablesSchema.exactOptional(),
@@ -12584,7 +12851,7 @@ export const PromptSchema = z.union([
       description:
         'Reference to a prompt template and its variables.\n[Learn more](https://developers.openai.com/api/docs/guides/text?api-mode=responses#version-prompts-in-code).\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type PromptSchema = z.infer<typeof PromptSchema>
@@ -12598,7 +12865,7 @@ export const ResponsePropertiesSchema = z.object({
           description:
             'The unique ID of the previous response to the model. Use this to\ncreate multi-turn conversations. Learn more about\n[conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   model: ModelIdsResponsesSchema.meta({
@@ -12614,7 +12881,7 @@ export const ResponsePropertiesSchema = z.object({
           description:
             'Whether to run the model response in the background.\n[Learn more](https://developers.openai.com/api/docs/guides/background).\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   max_tool_calls: z
@@ -12625,7 +12892,7 @@ export const ResponsePropertiesSchema = z.object({
           description:
             'The maximum number of total calls to built-in tools that can be processed in a response. This maximum number applies across all built-in tool calls, not per individual tool. Any further attempts to call a tool by the model will be ignored.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   text: ResponseTextParamSchema.exactOptional(),
@@ -12695,7 +12962,7 @@ export const ResponsePromptCacheOptionsParamSchema = z
               'The ID of a response to compare when diagnosing prompt cache reuse. Supplying this field requests prompt cache diagnostics when the feature is enabled.',
             examples: ['resp_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -12716,7 +12983,7 @@ export const ServiceTierResponsesSchema = z.union([
       description:
         "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - If set to 'ultrafast', then the request will be processed with the access-controlled Ultrafast Processing service tier. This tier is currently available for `gpt-5.6-sol`; a response served through it will show `service_tier=ultrafast`.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ServiceTierResponsesSchema = z.infer<typeof ServiceTierResponsesSchema>
@@ -12740,7 +13007,7 @@ export const ReasoningSchema = z
             description:
               "A summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n\n`concise` is supported for `computer-use-preview` models and all reasoning models after `gpt-5`.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     context: z
@@ -12751,7 +13018,7 @@ export const ReasoningSchema = z
             description:
               'Controls which reasoning items are rendered back to the model on later turns.\nIf omitted or set to `auto`, the model determines the context mode. The\n`gpt-5.6` model family defaults to `all_turns`; earlier models default to\n`current_turn`.\n\nWhen returned on a response, this is the effective reasoning context mode\nused for the response.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     generate_summary: z
@@ -12763,7 +13030,7 @@ export const ReasoningSchema = z
               "**Deprecated:** use `summary` instead.\n\nA summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n",
             deprecated: true,
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -12801,7 +13068,10 @@ export const InputMessageSchema = z
 
 export type InputMessageSchema = z.infer<typeof InputMessageSchema>
 
-export const OutputMessageContentSchema = z.xor([OutputTextContentSchema, RefusalContentSchema])
+export const OutputMessageContentSchema = z.xor([
+  z.intersection(OutputTextContentSchema, z.object({ type: z.literal('OutputTextContent') })),
+  z.intersection(RefusalContentSchema, z.object({ type: z.literal('RefusalContent') })),
+])
 
 export type OutputMessageContentSchema = z.infer<typeof OutputMessageContentSchema>
 
@@ -12817,7 +13087,7 @@ export const OutputMessageSchema = z
     content: z
       .array(OutputMessageContentSchema)
       .meta({ description: 'The content of the output message.\n' }),
-    phase: z.union([MessagePhaseSchema, z.null().nullable()]).exactOptional(),
+    phase: z.union([MessagePhaseSchema, z.null()]).exactOptional(),
     status: z
       .enum(['in_progress', 'completed', 'incomplete'])
       .meta({
@@ -12840,7 +13110,7 @@ export const ComputerCallOutputItemParamSchema = z
         z
           .string()
           .meta({ description: 'The ID of the computer tool call output.', examples: ['cuo_123'] }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -12863,7 +13133,7 @@ export const ComputerCallOutputItemParamSchema = z
             description:
               'The safety checks reported by the API that have been acknowledged by the developer.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: z
@@ -12872,7 +13142,7 @@ export const ComputerCallOutputItemParamSchema = z
           description:
             'The status of the message input. One of `in_progress`, `completed`, or `incomplete`. Populated when input items are returned via API.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -12887,9 +13157,7 @@ export const InputTextContentParamSchema = z
       .default('input_text')
       .meta({ description: 'The type of the input item. Always `input_text`.' }),
     text: z.string().max(10485760).meta({ description: 'The text input to the model.' }),
-    prompt_cache_breakpoint: z
-      .union([PromptCacheBreakpointParamSchema, z.null().nullable()])
-      .exactOptional(),
+    prompt_cache_breakpoint: z.union([PromptCacheBreakpointParamSchema, z.null()]).exactOptional(),
   })
   .meta({ description: 'A text input to the model.' })
 
@@ -12914,7 +13182,7 @@ export const InputImageContentParamAutoParamSchema = z
             description:
               'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_id: z
@@ -12925,7 +13193,7 @@ export const InputImageContentParamAutoParamSchema = z
             description: 'The ID of the file to be sent to the model.',
             examples: ['file-123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     detail: z
@@ -12934,12 +13202,10 @@ export const InputImageContentParamAutoParamSchema = z
           description:
             'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
-    prompt_cache_breakpoint: z
-      .union([PromptCacheBreakpointParamSchema, z.null().nullable()])
-      .exactOptional(),
+    prompt_cache_breakpoint: z.union([PromptCacheBreakpointParamSchema, z.null()]).exactOptional(),
   })
   .meta({
     description:
@@ -12968,13 +13234,13 @@ export const InputFileContentParamSchema = z
             description: 'The ID of the file to be sent to the model.',
             examples: ['file-123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     filename: z
       .union([
         z.string().meta({ description: 'The name of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_data: z
@@ -12983,22 +13249,20 @@ export const InputFileContentParamSchema = z
           .string()
           .max(73400320)
           .meta({ description: 'The base64-encoded data of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_url: z
       .union([
         z.url().meta({ description: 'The URL of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     detail: FileDetailEnumSchema.meta({
       description:
         'The detail level of the file to be sent to the model. Use `auto` to let the system select the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which may increase input token usage. Use `low` for lower-cost rendering, or `high` to render the file at higher quality. Defaults to `auto`.',
     }).exactOptional(),
-    prompt_cache_breakpoint: z
-      .union([PromptCacheBreakpointParamSchema, z.null().nullable()])
-      .exactOptional(),
+    prompt_cache_breakpoint: z.union([PromptCacheBreakpointParamSchema, z.null()]).exactOptional(),
   })
   .meta({ description: 'A file input to the model.' })
 
@@ -13015,7 +13279,7 @@ export const FunctionCallOutputItemParamSchema = z
               'The unique ID of the function tool call output. Populated when this item is returned via API.',
             examples: ['fc_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -13025,7 +13289,7 @@ export const FunctionCallOutputItemParamSchema = z
           .min(1)
           .max(64)
           .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -13044,9 +13308,18 @@ export const FunctionCallOutputItemParamSchema = z
           .array(
             z
               .xor([
-                InputTextContentParamSchema,
-                InputImageContentParamAutoParamSchema,
-                InputFileContentParamSchema,
+                z.intersection(
+                  InputTextContentParamSchema,
+                  z.object({ type: z.literal('InputTextContentParam') }),
+                ),
+                z.intersection(
+                  InputImageContentParamAutoParamSchema,
+                  z.object({ type: z.literal('InputImageContentParamAutoParam') }),
+                ),
+                z.intersection(
+                  InputFileContentParamSchema,
+                  z.object({ type: z.literal('InputFileContentParam') }),
+                ),
               ])
               .meta({
                 description: 'A piece of message content, such as text, an image, or a file.',
@@ -13065,7 +13338,7 @@ export const FunctionCallOutputItemParamSchema = z
           .min(1)
           .max(128)
           .meta({ description: 'The name of the tool that produced the output.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     namespace: z
@@ -13076,7 +13349,7 @@ export const FunctionCallOutputItemParamSchema = z
           .min(1)
           .max(128)
           .meta({ description: 'The namespace of the tool that produced the output.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     caller: z
@@ -13084,7 +13357,7 @@ export const FunctionCallOutputItemParamSchema = z
         ToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: z
@@ -13093,7 +13366,7 @@ export const FunctionCallOutputItemParamSchema = z
           description:
             'The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -13107,7 +13380,7 @@ export const ToolSearchCallItemParamSchema = z.object({
       z
         .string()
         .meta({ description: 'The unique ID of this tool search call.', examples: ['tsc_123'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   call_id: z
@@ -13117,7 +13390,7 @@ export const ToolSearchCallItemParamSchema = z.object({
         .min(1)
         .max(64)
         .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -13133,7 +13406,7 @@ export const ToolSearchCallItemParamSchema = z.object({
   status: z
     .union([
       FunctionCallItemStatusSchema.meta({ description: 'The status of the tool search call.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -13147,8 +13420,8 @@ export const ToolSearchOutputFunctionToolParamSchema = z.object({
     .min(1)
     .max(128)
     .meta({ description: 'The name of the loaded function tool.' }),
-  description: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  parameters: z.union([EmptyModelParamSchema, z.null().nullable()]).exactOptional(),
+  description: z.union([z.string(), z.null()]).exactOptional(),
+  parameters: z.union([EmptyModelParamSchema, z.null()]).exactOptional(),
   strict: z
     .union([
       z
@@ -13157,7 +13430,7 @@ export const ToolSearchOutputFunctionToolParamSchema = z.object({
           description:
             'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z.literal('function').default('function'),
@@ -13176,7 +13449,7 @@ export const ToolSearchOutputFunctionToolParamSchema = z.object({
           description:
             'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   defer_loading: z
@@ -13191,7 +13464,7 @@ export const ToolSearchOutputFunctionToolParamSchema = z.object({
         .array(CallableToolAllowedCallerSchema)
         .min(1)
         .meta({ description: 'The tool invocation context(s).' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -13216,7 +13489,13 @@ export const ToolSearchOutputNamespaceToolParamSchema = z
     tools: z
       .array(
         z
-          .xor([ToolSearchOutputFunctionToolParamSchema, CustomToolParamSchema])
+          .xor([
+            z.intersection(
+              ToolSearchOutputFunctionToolParamSchema,
+              z.object({ type: z.literal('ToolSearchOutputFunctionToolParam') }),
+            ),
+            z.intersection(CustomToolParamSchema, z.object({ type: z.literal('CustomToolParam') })),
+          ])
           .meta({
             description: 'A function or custom tool loaded into a namespace by tool search.',
           }),
@@ -13232,22 +13511,37 @@ export type ToolSearchOutputNamespaceToolParamSchema = z.infer<
 
 export const ToolSearchOutputToolSchema = z
   .xor([
-    FunctionToolSchema,
-    FileSearchToolSchema,
-    ComputerToolSchema,
-    ComputerUsePreviewToolSchema,
-    WebSearchToolSchema,
-    MCPToolSchema,
-    CodeInterpreterToolSchema,
-    ProgrammaticToolCallingParamSchema,
-    ImageGenToolSchema,
-    LocalShellToolParamSchema,
-    FunctionShellToolParamSchema,
-    CustomToolParamSchema,
-    ToolSearchOutputNamespaceToolParamSchema,
-    ToolSearchToolParamSchema,
-    WebSearchPreviewToolSchema,
-    ApplyPatchToolParamSchema,
+    z.intersection(FunctionToolSchema, z.object({ type: z.literal('FunctionTool') })),
+    z.intersection(FileSearchToolSchema, z.object({ type: z.literal('FileSearchTool') })),
+    z.intersection(ComputerToolSchema, z.object({ type: z.literal('ComputerTool') })),
+    z.intersection(
+      ComputerUsePreviewToolSchema,
+      z.object({ type: z.literal('ComputerUsePreviewTool') }),
+    ),
+    z.intersection(WebSearchToolSchema, z.object({ type: z.literal('WebSearchTool') })),
+    z.intersection(MCPToolSchema, z.object({ type: z.literal('MCPTool') })),
+    z.intersection(CodeInterpreterToolSchema, z.object({ type: z.literal('CodeInterpreterTool') })),
+    z.intersection(
+      ProgrammaticToolCallingParamSchema,
+      z.object({ type: z.literal('ProgrammaticToolCallingParam') }),
+    ),
+    z.intersection(ImageGenToolSchema, z.object({ type: z.literal('ImageGenTool') })),
+    z.intersection(LocalShellToolParamSchema, z.object({ type: z.literal('LocalShellToolParam') })),
+    z.intersection(
+      FunctionShellToolParamSchema,
+      z.object({ type: z.literal('FunctionShellToolParam') }),
+    ),
+    z.intersection(CustomToolParamSchema, z.object({ type: z.literal('CustomToolParam') })),
+    z.intersection(
+      ToolSearchOutputNamespaceToolParamSchema,
+      z.object({ type: z.literal('ToolSearchOutputNamespaceToolParam') }),
+    ),
+    z.intersection(ToolSearchToolParamSchema, z.object({ type: z.literal('ToolSearchToolParam') })),
+    z.intersection(
+      WebSearchPreviewToolSchema,
+      z.object({ type: z.literal('WebSearchPreviewTool') }),
+    ),
+    z.intersection(ApplyPatchToolParamSchema, z.object({ type: z.literal('ApplyPatchToolParam') })),
   ])
   .meta({ description: 'A tool definition returned by a tool search output.\n' })
 
@@ -13259,7 +13553,7 @@ export const ToolSearchOutputItemParamSchema = z.object({
       z
         .string()
         .meta({ description: 'The unique ID of this tool search output.', examples: ['tso_123'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   call_id: z
@@ -13269,7 +13563,7 @@ export const ToolSearchOutputItemParamSchema = z.object({
         .min(1)
         .max(64)
         .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -13285,7 +13579,7 @@ export const ToolSearchOutputItemParamSchema = z.object({
   status: z
     .union([
       FunctionCallItemStatusSchema.meta({ description: 'The status of the tool search output.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -13301,7 +13595,7 @@ export const AdditionalToolsItemParamSchema = z.object({
           description: 'The unique ID of this additional tools item.',
           examples: ['at_123'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -13331,7 +13625,7 @@ export const ResponseConfigurationUpdateItemParamSchema = z
             description: 'The unique ID of the configuration update item.',
             examples: ['cnfu_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -13350,7 +13644,16 @@ export const ResponseConfigurationUpdateItemParamSchema = z
     text: z
       .object({
         format: z
-          .xor([ResponseFormatTextSchema, TextResponseFormatJsonSchemaSchema])
+          .xor([
+            z.intersection(
+              ResponseFormatTextSchema,
+              z.object({ type: z.literal('ResponseFormatText') }),
+            ),
+            z.intersection(
+              TextResponseFormatJsonSchemaSchema,
+              z.object({ type: z.literal('TextResponseFormatJsonSchema') }),
+            ),
+          ])
           .meta({
             description: 'Use a JSON schema for structured output or text to return to plain text.',
           }),
@@ -13372,7 +13675,7 @@ export const CompactionSummaryItemParamSchema = z
     id: z
       .union([
         z.string().meta({ description: 'The ID of the compaction item.', examples: ['cmp_123'] }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -13404,7 +13707,7 @@ export const FunctionShellActionParamSchema = z
             description:
               'Maximum wall-clock time in milliseconds to allow the shell commands to run.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_length: z
@@ -13415,7 +13718,7 @@ export const FunctionShellActionParamSchema = z
             description:
               'Maximum number of UTF-8 characters to capture from combined stdout and stderr output.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -13440,7 +13743,7 @@ export const FunctionShellCallItemParamSchema = z
               'The unique ID of the shell tool call. Populated when this item is returned via API.',
             examples: ['sh_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -13453,7 +13756,7 @@ export const FunctionShellCallItemParamSchema = z
         ToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -13469,15 +13772,24 @@ export const FunctionShellCallItemParamSchema = z
           description:
             'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     environment: z
       .union([
         z
-          .xor([LocalEnvironmentParamSchema, ContainerReferenceParamSchema])
+          .xor([
+            z.intersection(
+              LocalEnvironmentParamSchema,
+              z.object({ type: z.literal('LocalEnvironmentParam') }),
+            ),
+            z.intersection(
+              ContainerReferenceParamSchema,
+              z.object({ type: z.literal('ContainerReferenceParam') }),
+            ),
+          ])
           .meta({ description: 'The environment to execute the shell commands in.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -13514,8 +13826,14 @@ export type FunctionShellCallOutputExitOutcomeParamSchema = z.infer<
 
 export const FunctionShellCallOutputOutcomeParamSchema = z
   .xor([
-    FunctionShellCallOutputTimeoutOutcomeParamSchema,
-    FunctionShellCallOutputExitOutcomeParamSchema,
+    z.intersection(
+      FunctionShellCallOutputTimeoutOutcomeParamSchema,
+      z.object({ type: z.literal('FunctionShellCallOutputTimeoutOutcomeParam') }),
+    ),
+    z.intersection(
+      FunctionShellCallOutputExitOutcomeParamSchema,
+      z.object({ type: z.literal('FunctionShellCallOutputExitOutcomeParam') }),
+    ),
   ])
   .meta({ description: 'The exit or timeout outcome associated with this shell call.' })
 
@@ -13554,7 +13872,7 @@ export const FunctionShellCallOutputItemParamSchema = z
               'The unique ID of the shell tool call output. Populated when this item is returned via API.',
             examples: ['sho_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -13567,7 +13885,7 @@ export const FunctionShellCallOutputItemParamSchema = z
         ToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -13585,7 +13903,7 @@ export const FunctionShellCallOutputItemParamSchema = z
         FunctionShellCallItemStatusSchema.meta({
           description: 'The status of the shell call output.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_length: z
@@ -13596,7 +13914,7 @@ export const FunctionShellCallOutputItemParamSchema = z
             description:
               "The maximum number of UTF-8 characters captured for this shell call's combined output.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -13673,9 +13991,18 @@ export type ApplyPatchUpdateFileOperationParamSchema = z.infer<
 
 export const ApplyPatchOperationParamSchema = z
   .xor([
-    ApplyPatchCreateFileOperationParamSchema,
-    ApplyPatchDeleteFileOperationParamSchema,
-    ApplyPatchUpdateFileOperationParamSchema,
+    z.intersection(
+      ApplyPatchCreateFileOperationParamSchema,
+      z.object({ type: z.literal('ApplyPatchCreateFileOperationParam') }),
+    ),
+    z.intersection(
+      ApplyPatchDeleteFileOperationParamSchema,
+      z.object({ type: z.literal('ApplyPatchDeleteFileOperationParam') }),
+    ),
+    z.intersection(
+      ApplyPatchUpdateFileOperationParamSchema,
+      z.object({ type: z.literal('ApplyPatchUpdateFileOperationParam') }),
+    ),
   ])
   .meta({
     description:
@@ -13699,7 +14026,7 @@ export const ApplyPatchToolCallItemParamSchema = z
               'The unique ID of the apply patch tool call. Populated when this item is returned via API.',
             examples: ['apc_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -13712,7 +14039,7 @@ export const ApplyPatchToolCallItemParamSchema = z
         ToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: ApplyPatchCallStatusParamSchema.meta({
@@ -13753,7 +14080,7 @@ export const ApplyPatchToolCallOutputItemParamSchema = z
               'The unique ID of the apply patch tool call output. Populated when this item is returned via API.',
             examples: ['apco_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -13766,7 +14093,7 @@ export const ApplyPatchToolCallOutputItemParamSchema = z
         ToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: ApplyPatchCallOutputStatusParamSchema.meta({
@@ -13782,7 +14109,7 @@ export const ApplyPatchToolCallOutputItemParamSchema = z
             description:
               'Optional human-readable log text from the apply patch tool (e.g., patch results or errors).',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -13793,14 +14120,14 @@ export type ApplyPatchToolCallOutputItemParamSchema = z.infer<
 >
 
 export const MCPApprovalResponseSchema = z
-  .object({
+  .looseObject({
     type: z
       .literal('mcp_approval_response')
       .meta({ description: 'The type of the item. Always `mcp_approval_response`.\n' }),
     id: z
       .union([
         z.string().meta({ description: 'The unique ID of the approval response\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     approval_request_id: z
@@ -13808,46 +14135,86 @@ export const MCPApprovalResponseSchema = z
       .meta({ description: 'The ID of the approval request being answered.\n' }),
     approve: z.boolean().meta({ description: 'Whether the request was approved.\n' }),
     reason: z
-      .union([
-        z.string().meta({ description: 'Optional reason for the decision.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'Optional reason for the decision.\n' }), z.null()])
       .exactOptional(),
   })
+  .refine((val) => ['request_id'].every((key) => key in val))
   .meta({ description: 'A response to an MCP approval request.\n' })
 
 export type MCPApprovalResponseSchema = z.infer<typeof MCPApprovalResponseSchema>
 
 export const ItemSchema = z
   .xor([
-    InputMessageSchema,
-    OutputMessageSchema,
-    FileSearchToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerCallOutputItemParamSchema,
-    WebSearchToolCallSchema,
-    FunctionToolCallSchema,
-    FunctionCallOutputItemParamSchema,
-    ToolSearchCallItemParamSchema,
-    ToolSearchOutputItemParamSchema,
-    AdditionalToolsItemParamSchema,
-    ResponseConfigurationUpdateItemParamSchema,
-    ReasoningItemSchema,
-    CompactionSummaryItemParamSchema,
-    ImageGenToolCallSchema,
-    CodeInterpreterToolCallSchema,
-    LocalShellToolCallSchema,
-    LocalShellToolCallOutputSchema,
-    FunctionShellCallItemParamSchema,
-    FunctionShellCallOutputItemParamSchema,
-    ApplyPatchToolCallItemParamSchema,
-    ApplyPatchToolCallOutputItemParamSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseSchema,
-    MCPToolCallSchema,
-    CustomToolCallOutputSchema,
-    CustomToolCallSchema,
+    z.intersection(InputMessageSchema, z.object({ type: z.literal('InputMessage') })),
+    z.intersection(OutputMessageSchema, z.object({ type: z.literal('OutputMessage') })),
+    z.intersection(FileSearchToolCallSchema, z.object({ type: z.literal('FileSearchToolCall') })),
+    z.intersection(ComputerToolCallSchema, z.object({ type: z.literal('ComputerToolCall') })),
+    z.intersection(
+      ComputerCallOutputItemParamSchema,
+      z.object({ type: z.literal('ComputerCallOutputItemParam') }),
+    ),
+    z.intersection(WebSearchToolCallSchema, z.object({ type: z.literal('WebSearchToolCall') })),
+    z.intersection(FunctionToolCallSchema, z.object({ type: z.literal('FunctionToolCall') })),
+    z.intersection(
+      FunctionCallOutputItemParamSchema,
+      z.object({ type: z.literal('FunctionCallOutputItemParam') }),
+    ),
+    z.intersection(
+      ToolSearchCallItemParamSchema,
+      z.object({ type: z.literal('ToolSearchCallItemParam') }),
+    ),
+    z.intersection(
+      ToolSearchOutputItemParamSchema,
+      z.object({ type: z.literal('ToolSearchOutputItemParam') }),
+    ),
+    z.intersection(
+      AdditionalToolsItemParamSchema,
+      z.object({ type: z.literal('AdditionalToolsItemParam') }),
+    ),
+    z.intersection(
+      ResponseConfigurationUpdateItemParamSchema,
+      z.object({ type: z.literal('ResponseConfigurationUpdateItemParam') }),
+    ),
+    z.intersection(ReasoningItemSchema, z.object({ type: z.literal('ReasoningItem') })),
+    z.intersection(
+      CompactionSummaryItemParamSchema,
+      z.object({ type: z.literal('CompactionSummaryItemParam') }),
+    ),
+    z.intersection(ImageGenToolCallSchema, z.object({ type: z.literal('ImageGenToolCall') })),
+    z.intersection(
+      CodeInterpreterToolCallSchema,
+      z.object({ type: z.literal('CodeInterpreterToolCall') }),
+    ),
+    z.intersection(LocalShellToolCallSchema, z.object({ type: z.literal('LocalShellToolCall') })),
+    z.intersection(
+      LocalShellToolCallOutputSchema,
+      z.object({ type: z.literal('LocalShellToolCallOutput') }),
+    ),
+    z.intersection(
+      FunctionShellCallItemParamSchema,
+      z.object({ type: z.literal('FunctionShellCallItemParam') }),
+    ),
+    z.intersection(
+      FunctionShellCallOutputItemParamSchema,
+      z.object({ type: z.literal('FunctionShellCallOutputItemParam') }),
+    ),
+    z.intersection(
+      ApplyPatchToolCallItemParamSchema,
+      z.object({ type: z.literal('ApplyPatchToolCallItemParam') }),
+    ),
+    z.intersection(
+      ApplyPatchToolCallOutputItemParamSchema,
+      z.object({ type: z.literal('ApplyPatchToolCallOutputItemParam') }),
+    ),
+    z.intersection(MCPListToolsSchema, z.object({ type: z.literal('MCPListTools') })),
+    z.intersection(MCPApprovalRequestSchema, z.object({ type: z.literal('MCPApprovalRequest') })),
+    z.intersection(MCPApprovalResponseSchema, z.object({ type: z.literal('MCPApprovalResponse') })),
+    z.intersection(MCPToolCallSchema, z.object({ type: z.literal('MCPToolCall') })),
+    z.intersection(
+      CustomToolCallOutputSchema,
+      z.object({ type: z.literal('CustomToolCallOutput') }),
+    ),
+    z.intersection(CustomToolCallSchema, z.object({ type: z.literal('CustomToolCall') })),
   ])
   .meta({ description: 'Content item used to generate a response.\n' })
 
@@ -13863,7 +14230,7 @@ export const CompactionTriggerItemParamSchema = z
             description: 'The unique ID of this compaction trigger.',
             examples: ['msg_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -13883,7 +14250,7 @@ export const ItemReferenceParamSchema = z
           .literal('item_reference')
           .default('item_reference')
           .meta({ description: 'The type of item to reference. Always `item_reference`.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z.string().meta({ description: 'The ID of the item to reference.' }),
@@ -13940,15 +14307,24 @@ export const ProgramOutputItemParamSchema = z.object({
 export type ProgramOutputItemParamSchema = z.infer<typeof ProgramOutputItemParamSchema>
 
 export const InputItemSchema = z.xor([
-  EasyInputMessageSchema,
-  ItemSchema.meta({
-    description:
-      'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
-  }),
-  CompactionTriggerItemParamSchema,
-  ItemReferenceParamSchema,
-  ProgramItemParamSchema,
-  ProgramOutputItemParamSchema,
+  z.intersection(EasyInputMessageSchema, z.object({ type: z.literal('EasyInputMessage') })),
+  z.intersection(
+    ItemSchema.meta({
+      description:
+        'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+    }),
+    z.object({ type: z.literal('Item') }),
+  ),
+  z.intersection(
+    CompactionTriggerItemParamSchema,
+    z.object({ type: z.literal('CompactionTriggerItemParam') }),
+  ),
+  z.intersection(ItemReferenceParamSchema, z.object({ type: z.literal('ItemReferenceParam') })),
+  z.intersection(ProgramItemParamSchema, z.object({ type: z.literal('ProgramItemParam') })),
+  z.intersection(
+    ProgramOutputItemParamSchema,
+    z.object({ type: z.literal('ProgramOutputItemParam') }),
+  ),
 ])
 
 export type InputItemSchema = z.infer<typeof InputItemSchema>
@@ -14031,7 +14407,7 @@ export const ResponseStreamOptionsSchema = z.union([
     .meta({
       description: 'Options for streaming responses. Only set this when you set `stream: true`.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ResponseStreamOptionsSchema = z.infer<typeof ResponseStreamOptionsSchema>
@@ -14050,7 +14426,7 @@ export const ContextManagementParamSchema = z.object({
         .meta({
           description: 'Token threshold at which compaction should be triggered for this entry.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -14073,11 +14449,11 @@ export const CreateResponseSchema = z.intersection(
             description:
               "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .meta({ deprecated: true })
       .exactOptional(),
-    reasoning: z.union([ReasoningSchema, z.null().nullable()]).exactOptional(),
+    reasoning: z.union([ReasoningSchema, z.null()]).exactOptional(),
     input: InputParamSchema.exactOptional(),
     include: z
       .union([
@@ -14087,7 +14463,7 @@ export const CreateResponseSchema = z.intersection(
             description:
               'Specify additional output data to include in the model response. Currently supported values are:\n- `web_search_call.action.sources`: Include the sources of the web search tool call.\n- `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.\n- `computer_call_output.output.image_url`: Include image urls from the computer call output.\n- `file_search_call.results`: Include the search results of the file search tool call.\n- `message.input_image.image_url`: Include image urls from the input message.\n- `message.output_text.logprobs`: Include logprobs with assistant messages.\n- `reasoning.encrypted_content`: Includes an encrypted version of reasoning tokens in reasoning item outputs. This enables reasoning items to be used in multi-turn conversations when using the Responses API statelessly (like when the `store` parameter is set to `false`, or when an organization is enrolled in the zero data retention program).',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     parallel_tool_calls: z
@@ -14096,7 +14472,7 @@ export const CreateResponseSchema = z.intersection(
           .boolean()
           .default(true)
           .meta({ description: 'Whether to allow the model to run tool calls in parallel.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     store: z
@@ -14108,7 +14484,7 @@ export const CreateResponseSchema = z.intersection(
             description:
               'Whether to store the generated model response for later retrieval via\nAPI.\nDefaults to true when omitted.\nIf set to true, response data will be stored for at least 30 days, subject to the [data retention exceptions](https://developers.openai.com/api/docs/guides/your-data#v1responses).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     instructions: z
@@ -14119,7 +14495,7 @@ export const CreateResponseSchema = z.intersection(
             description:
               "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     moderation: z
@@ -14128,7 +14504,7 @@ export const CreateResponseSchema = z.intersection(
           description:
             'Configuration for running moderation on the input and output of this response.\n',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     background_options: BackgroundOptionsParamSchema.meta({
@@ -14144,11 +14520,11 @@ export const CreateResponseSchema = z.intersection(
             description:
               'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](https://developers.openai.com/api/reference/resources/responses/streaming-events)\nfor more information.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     stream_options: ResponseStreamOptionsSchema.exactOptional(),
-    conversation: z.union([ConversationParamSchema, z.null().nullable()]).exactOptional(),
+    conversation: z.union([ConversationParamSchema, z.null()]).exactOptional(),
     context_management: z
       .union([
         z
@@ -14158,7 +14534,7 @@ export const CreateResponseSchema = z.intersection(
             description: 'Context management configuration for this request.\n',
             examples: [[{ type: 'compaction', compact_threshold: 1000 }]],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_tokens: z
@@ -14170,7 +14546,7 @@ export const CreateResponseSchema = z.intersection(
             description:
               'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   }),
@@ -14186,7 +14562,7 @@ export const CreateRunRequestSchema = z.strictObject({
         'The ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) to use to execute this run.',
     }),
   model: z
-    .union([z.string(), AssistantSupportedModelsSchema, z.null().nullable()])
+    .union([z.string(), AssistantSupportedModelsSchema, z.null()])
     .meta({
       description:
         'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
@@ -14411,7 +14787,7 @@ export const SpendAlertNotificationChannelSchema = z
       .array(z.string())
       .meta({ description: 'Email addresses that receive the spend alert notification.' }),
     subject_prefix: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'Optional subject prefix for alert emails.' })
       .exactOptional(),
   })
@@ -14466,7 +14842,7 @@ export const CreateThreadRequestSchema = z
             description:
               "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     metadata: MetadataSchema.exactOptional(),
@@ -14529,7 +14905,7 @@ export const CreateThreadAndRunRequestSchema = z.strictObject({
         'gpt-3.5-turbo-0125',
         'gpt-3.5-turbo-16k-0613',
       ]),
-      z.null().nullable(),
+      z.null(),
     ])
     .meta({
       description:
@@ -14777,7 +15153,7 @@ export const CreateTranscriptionRequestSchema = z.strictObject({
           description:
             'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section of the Speech-to-Text guide](https://developers.openai.com/api/docs/guides/speech-to-text?lang=curl#streaming)\nfor more information.\n\nNote: Streaming is not supported for the `whisper-1` model and will be ignored.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   chunking_strategy: z
@@ -14797,7 +15173,7 @@ export const CreateTranscriptionRequestSchema = z.strictObject({
           description:
             'Controls how the audio is cut into chunks. When set to `"auto"`, the server first normalizes loudness and then uses voice activity detection (VAD) to choose boundaries. `server_vad` object can be provided to tweak VAD detection parameters manually. If unset, the audio is transcribed as a single block. Required when using `gpt-4o-transcribe-diarize` for inputs longer than 30 seconds. ',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   known_speaker_names: z
@@ -14892,7 +15268,16 @@ export const CreateTranscriptionResponseDiarizedJsonSchema = z
         description: 'Segments of the transcript annotated with timestamps and speaker labels.',
       }),
     usage: z
-      .xor([TranscriptTextUsageTokensSchema, TranscriptTextUsageDurationSchema])
+      .xor([
+        z.intersection(
+          TranscriptTextUsageTokensSchema,
+          z.object({ type: z.literal('TranscriptTextUsageTokens') }),
+        ),
+        z.intersection(
+          TranscriptTextUsageDurationSchema,
+          z.object({ type: z.literal('TranscriptTextUsageDuration') }),
+        ),
+      ])
       .meta({ description: 'Token or duration usage statistics for the request.' })
       .exactOptional(),
   })
@@ -15370,8 +15755,11 @@ export const CreateVoicePromptRequestSchema = z
 export type CreateVoicePromptRequestSchema = z.infer<typeof CreateVoicePromptRequestSchema>
 
 export const CreateVoiceRequestSchema = z.xor([
-  CreateVoiceFromConsentRequestSchema,
-  CreateVoicePromptRequestSchema,
+  z.intersection(
+    CreateVoiceFromConsentRequestSchema,
+    z.object({ type: z.literal('audio_sample') }),
+  ),
+  z.intersection(CreateVoicePromptRequestSchema, z.object({ type: z.literal('prompt') })),
 ])
 
 export type CreateVoiceRequestSchema = z.infer<typeof CreateVoiceRequestSchema>
@@ -15556,7 +15944,7 @@ export const EditImageBodyJsonParamSchema = z
           'gpt-image-1-mini',
           'chatgpt-image-latest',
         ]),
-        z.null().nullable(),
+        z.null(),
       ])
       .default('gpt-image-2.6-sunburst')
       .meta({
@@ -15586,12 +15974,12 @@ export const EditImageBodyJsonParamSchema = z
         examples: ['Add a watercolor effect and keep the subject centered'],
       }),
     n: z
-      .union([z.int().min(1).max(10), z.null().nullable()])
+      .union([z.int().min(1).max(10), z.null()])
       .default(1)
       .meta({ description: 'The number of edited images to generate.', examples: [1] })
       .exactOptional(),
     quality: z
-      .union([z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'auto']), z.null().nullable()])
+      .union([z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'auto']), z.null()])
       .default('auto')
       .meta({
         description:
@@ -15600,18 +15988,14 @@ export const EditImageBodyJsonParamSchema = z
       })
       .exactOptional(),
     input_fidelity: z
-      .union([z.enum(['high', 'low']), z.null().nullable()])
+      .union([z.enum(['high', 'low']), z.null()])
       .meta({
         description:
           'Control how much effort the model will exert to match the style and features, especially facial features, of input images. Supports `high` and `low` on `gpt-image-1.5`; `gpt-image-1-mini` supports only `low`. For `gpt-image-2`, omit this parameter. Defaults to `low` on supported models.',
       })
       .exactOptional(),
     size: z
-      .union([
-        z.string(),
-        z.enum(['auto', '1024x1024', '1536x1024', '1024x1536']),
-        z.null().nullable(),
-      ])
+      .union([z.string(), z.enum(['auto', '1024x1024', '1536x1024', '1024x1536']), z.null()])
       .default('auto')
       .meta({
         description:
@@ -15639,7 +16023,7 @@ export const EditImageBodyJsonParamSchema = z
       })
       .exactOptional(),
     output_format: z
-      .union([ImagesApiOutputFormatSchema, z.null().nullable()])
+      .union([ImagesApiOutputFormatSchema, z.null()])
       .default('png')
       .meta({
         description:
@@ -15648,23 +16032,23 @@ export const EditImageBodyJsonParamSchema = z
       })
       .exactOptional(),
     svg: z
-      .union([SvgParamSchema, z.null().nullable()])
+      .union([SvgParamSchema, z.null()])
       .meta({
         description:
           'Selects the author model and reasoning effort for `output_format=svg`. Supply `svg.model` when SVG model selection is enabled. Otherwise, omit this object. SVG output requires `n=1` and cannot use streaming, partial images, or output compression.',
       })
       .exactOptional(),
     output_compression: z
-      .union([z.int().min(0).max(100), z.null().nullable()])
+      .union([z.int().min(0).max(100), z.null()])
       .meta({ description: 'Compression level for `jpeg` or `webp` output.', examples: [100] })
       .exactOptional(),
     moderation: z
-      .union([z.enum(['low', 'auto']), z.null().nullable()])
+      .union([z.enum(['low', 'auto']), z.null()])
       .default('auto')
       .meta({ description: 'Moderation level for GPT image models.', examples: ['auto'] })
       .exactOptional(),
     background: z
-      .union([z.enum(['transparent', 'opaque', 'auto']), z.null().nullable()])
+      .union([z.enum(['transparent', 'opaque', 'auto']), z.null()])
       .default('auto')
       .meta({
         description:
@@ -15673,7 +16057,7 @@ export const EditImageBodyJsonParamSchema = z
       })
       .exactOptional(),
     stream: z
-      .union([z.boolean(), z.null().nullable()])
+      .union([z.boolean(), z.null()])
       .default(false)
       .meta({ description: 'Stream partial image results as events.', examples: [false] })
       .exactOptional(),
@@ -15903,7 +16287,7 @@ export const EvalRunSchema = z
       ])
       .meta({ description: "Information about the run's data source." }),
     metadata: MetadataSchema,
-    error: z.union([EvalApiErrorSchema, z.null().nullable()]),
+    error: z.union([EvalApiErrorSchema, z.null()]),
   })
   .meta({ description: 'A schema representing an evaluation run.\n' })
 
@@ -15940,7 +16324,7 @@ export const EvalRunOutputItemResultSchema = z
     score: z.number().meta({ description: 'The numeric score produced by the grader.' }),
     passed: z.boolean().meta({ description: 'Whether the grader considered the output a pass.' }),
     sample: z
-      .union([z.any(), z.null().nullable()])
+      .union([z.any(), z.null()])
       .meta({ description: 'Optional sample or intermediate data produced by the grader.' })
       .exactOptional(),
   })
@@ -16018,7 +16402,7 @@ export const EvalRunOutputItemSchema = z
               .meta({ description: 'The number of tokens retrieved from cache.' }),
           })
           .meta({ description: 'Token usage details for the sample.' }),
-        error: z.union([EvalApiErrorSchema, z.null().nullable()]),
+        error: z.union([EvalApiErrorSchema, z.null()]),
         temperature: z.number().meta({ description: 'The sampling temperature used.' }),
         max_completion_tokens: z
           .int()
@@ -16119,7 +16503,7 @@ export const FineTuningIntegrationSchema = z.object({
               description:
                 'A display name to set for the run. If not set, we will use the Job ID as the name.\n',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       entity: z
@@ -16130,7 +16514,7 @@ export const FineTuningIntegrationSchema = z.object({
               description:
                 'The entity to use for the run. This allows you to set the team or username of the WandB user that you would\nlike associated with the run. If not set, the default entity for the registered WandB API key is used.\n',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       tags: z
@@ -16173,14 +16557,14 @@ export const FineTuningJobSchema = z
                 description:
                   'The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific.',
               }),
-            z.null().nullable(),
+            z.null(),
           ]),
         })
         .meta({
           description:
             'For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure.',
         }),
-      z.null().nullable(),
+      z.null(),
       z.object({}),
     ]),
     fine_tuned_model: z.union([
@@ -16190,7 +16574,7 @@ export const FineTuningJobSchema = z
           description:
             'The name of the fine-tuned model that is being created. The value will be null if the fine-tuning job is still running.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     finished_at: z.union([
       z
@@ -16199,7 +16583,7 @@ export const FineTuningJobSchema = z
           description:
             'The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     hyperparameters: z
       .object({
@@ -16212,7 +16596,7 @@ export const FineTuningJobSchema = z
                 description:
                   'Number of examples in each batch. A larger batch size means that model parameters\nare updated less frequently, but with lower variance.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         learning_rate_multiplier: z
@@ -16273,7 +16657,7 @@ export const FineTuningJobSchema = z
           description:
             'The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     training_file: z
       .string()
@@ -16288,7 +16672,7 @@ export const FineTuningJobSchema = z
           description:
             'The file ID used for validation. You can retrieve the validation results with the [Files API](https://developers.openai.com/api/reference/resources/files/methods/content).',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     integrations: z
       .union([
@@ -16296,7 +16680,7 @@ export const FineTuningJobSchema = z
           .array(z.xor([FineTuningIntegrationSchema]))
           .max(5)
           .meta({ description: 'A list of integrations to enable for this fine-tuning job.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     seed: z.int().nullable().meta({ description: 'The seed used for the fine-tuning job.' }),
@@ -16308,10 +16692,10 @@ export const FineTuningJobSchema = z
             description:
               'The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
-    method: z.union([FineTuneMethodSchema, z.null().nullable()]).exactOptional(),
+    method: z.union([FineTuneMethodSchema, z.null()]).exactOptional(),
     metadata: MetadataSchema.exactOptional(),
   })
   .refine(
@@ -16451,7 +16835,7 @@ export const GroupListResourceSchema = z
       .boolean()
       .meta({ description: 'Whether additional groups are available when paginating.' }),
     next: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({
         description:
           'Cursor to fetch the next page of results, or `null` if there are no more results.',
@@ -16466,13 +16850,13 @@ export const GroupMemberUserSchema = z
     id: z.string().meta({ description: 'Identifier for the user.' }),
     name: z.string().meta({ description: 'Display name of the user.' }),
     email: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'Email address of the user, or `null` for users without an email.' }),
     picture: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: "URL of the user's profile picture, if available." }),
     is_service_account: z
-      .union([z.boolean(), z.null().nullable()])
+      .union([z.boolean(), z.null()])
       .meta({ description: 'Whether the user is a service account.' }),
     user_type: z.enum(['user', 'tenant_user']).meta({ description: 'The type of user.' }),
   })
@@ -16506,7 +16890,7 @@ export const RoleSchema = z
     id: z.string().meta({ description: 'Identifier for the role.' }),
     name: z.string().meta({ description: 'Unique name for the role.' }),
     description: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'Optional description of the role.' }),
     permissions: z.array(z.string()).meta({ description: 'Permissions granted by the role.' }),
     resource_type: z
@@ -16539,9 +16923,7 @@ export const GroupUserSchema = z
       .string()
       .meta({ description: 'The identifier, which can be referenced in API endpoints' }),
     name: z.string().meta({ description: 'The name of the user.' }),
-    email: z
-      .union([z.string(), z.null().nullable()])
-      .meta({ description: 'The email address of the user.' }),
+    email: z.union([z.string(), z.null()]).meta({ description: 'The email address of the user.' }),
   })
   .meta({ description: 'Represents an individual user returned when inspecting group membership.' })
 
@@ -16900,7 +17282,9 @@ export type ImagesResponseSchema = z.infer<typeof ImagesResponseSchema>
 
 export const InputMessageResourceSchema = z.intersection(
   InputMessageSchema,
-  z.object({ id: z.string().meta({ description: 'The unique ID of the message input.\n' }) }),
+  z
+    .looseObject({ id: z.string().meta({ description: 'The unique ID of the message input.\n' }) })
+    .refine((val) => ['type'].every((key) => key in val)),
 )
 
 export type InputMessageResourceSchema = z.infer<typeof InputMessageResourceSchema>
@@ -16924,11 +17308,11 @@ export const InviteSchema = z
       .int()
       .meta({ description: 'The Unix timestamp (in seconds) of when the invite was sent.' }),
     expires_at: z
-      .union([z.int(), z.null().nullable()])
+      .union([z.int(), z.null()])
       .meta({ description: 'The Unix timestamp (in seconds) of when the invite expires.' })
       .exactOptional(),
     accepted_at: z
-      .union([z.int(), z.null().nullable()])
+      .union([z.int(), z.null()])
       .meta({ description: 'The Unix timestamp (in seconds) of when the invite was accepted.' })
       .exactOptional(),
     projects: z
@@ -16960,11 +17344,11 @@ export const InviteListResponseSchema = z.object({
   object: z.literal('list').meta({ description: 'The object type, which is always `list`' }),
   data: z.array(InviteSchema),
   first_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'The first `invite_id` in the retrieved `list`' })
     .exactOptional(),
   last_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'The last `invite_id` in the retrieved `list`' })
     .exactOptional(),
   has_more: z
@@ -17007,36 +17391,72 @@ export type InviteRequestSchema = z.infer<typeof InviteRequestSchema>
 
 export const ItemResourceSchema = z
   .xor([
-    InputMessageResourceSchema,
-    OutputMessageSchema,
-    FileSearchToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerToolCallOutputResourceSchema,
-    WebSearchToolCallSchema,
-    FunctionToolCallResourceSchema,
-    FunctionToolCallOutputResourceSchema,
-    ToolSearchCallSchema,
-    ToolSearchOutputSchema,
-    AdditionalToolsSchema,
-    ResponseConfigurationUpdateSchema,
-    ReasoningItemSchema,
-    ProgramSchema,
-    ProgramOutputSchema,
-    CompactionBodySchema,
-    ImageGenToolCallSchema,
-    CodeInterpreterToolCallSchema,
-    LocalShellToolCallSchema,
-    LocalShellToolCallOutputSchema,
-    FunctionShellCallSchema,
-    FunctionShellCallOutputSchema,
-    ApplyPatchToolCallSchema,
-    ApplyPatchToolCallOutputSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseResourceSchema,
-    MCPToolCallSchema,
-    CustomToolCallResourceSchema,
-    CustomToolCallOutputResourceSchema,
+    z.intersection(
+      InputMessageResourceSchema,
+      z.object({ type: z.literal('InputMessageResource') }),
+    ),
+    z.intersection(OutputMessageSchema, z.object({ type: z.literal('OutputMessage') })),
+    z.intersection(FileSearchToolCallSchema, z.object({ type: z.literal('FileSearchToolCall') })),
+    z.intersection(ComputerToolCallSchema, z.object({ type: z.literal('ComputerToolCall') })),
+    z.intersection(
+      ComputerToolCallOutputResourceSchema,
+      z.object({ type: z.literal('ComputerToolCallOutputResource') }),
+    ),
+    z.intersection(WebSearchToolCallSchema, z.object({ type: z.literal('WebSearchToolCall') })),
+    z.intersection(
+      FunctionToolCallResourceSchema,
+      z.object({ type: z.literal('FunctionToolCallResource') }),
+    ),
+    z.intersection(
+      FunctionToolCallOutputResourceSchema,
+      z.object({ type: z.literal('FunctionToolCallOutputResource') }),
+    ),
+    z.intersection(ToolSearchCallSchema, z.object({ type: z.literal('ToolSearchCall') })),
+    z.intersection(ToolSearchOutputSchema, z.object({ type: z.literal('ToolSearchOutput') })),
+    z.intersection(AdditionalToolsSchema, z.object({ type: z.literal('AdditionalTools') })),
+    z.intersection(
+      ResponseConfigurationUpdateSchema,
+      z.object({ type: z.literal('ResponseConfigurationUpdate') }),
+    ),
+    z.intersection(ReasoningItemSchema, z.object({ type: z.literal('ReasoningItem') })),
+    z.intersection(ProgramSchema, z.object({ type: z.literal('Program') })),
+    z.intersection(ProgramOutputSchema, z.object({ type: z.literal('ProgramOutput') })),
+    z.intersection(CompactionBodySchema, z.object({ type: z.literal('CompactionBody') })),
+    z.intersection(ImageGenToolCallSchema, z.object({ type: z.literal('ImageGenToolCall') })),
+    z.intersection(
+      CodeInterpreterToolCallSchema,
+      z.object({ type: z.literal('CodeInterpreterToolCall') }),
+    ),
+    z.intersection(LocalShellToolCallSchema, z.object({ type: z.literal('LocalShellToolCall') })),
+    z.intersection(
+      LocalShellToolCallOutputSchema,
+      z.object({ type: z.literal('LocalShellToolCallOutput') }),
+    ),
+    z.intersection(FunctionShellCallSchema, z.object({ type: z.literal('FunctionShellCall') })),
+    z.intersection(
+      FunctionShellCallOutputSchema,
+      z.object({ type: z.literal('FunctionShellCallOutput') }),
+    ),
+    z.intersection(ApplyPatchToolCallSchema, z.object({ type: z.literal('ApplyPatchToolCall') })),
+    z.intersection(
+      ApplyPatchToolCallOutputSchema,
+      z.object({ type: z.literal('ApplyPatchToolCallOutput') }),
+    ),
+    z.intersection(MCPListToolsSchema, z.object({ type: z.literal('MCPListTools') })),
+    z.intersection(MCPApprovalRequestSchema, z.object({ type: z.literal('MCPApprovalRequest') })),
+    z.intersection(
+      MCPApprovalResponseResourceSchema,
+      z.object({ type: z.literal('MCPApprovalResponseResource') }),
+    ),
+    z.intersection(MCPToolCallSchema, z.object({ type: z.literal('MCPToolCall') })),
+    z.intersection(
+      CustomToolCallResourceSchema,
+      z.object({ type: z.literal('CustomToolCallResource') }),
+    ),
+    z.intersection(
+      CustomToolCallOutputResourceSchema,
+      z.object({ type: z.literal('CustomToolCallOutputResource') }),
+    ),
   ])
   .meta({ description: 'Content item used to generate a response.\n' })
 
@@ -17056,11 +17476,11 @@ export const ListAuditLogsResponseSchema = z.object({
   object: z.literal('list'),
   data: z.array(AuditLogSchema),
   first_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ examples: ['audit_log-defb456h8dks'] })
     .exactOptional(),
   last_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ examples: ['audit_log-hnbkd8s93s'] })
     .exactOptional(),
   has_more: z.boolean(),
@@ -17092,9 +17512,7 @@ export const OrganizationCertificateSchema = z
     id: z
       .string()
       .meta({ description: 'The identifier, which can be referenced in API endpoints' }),
-    name: z
-      .union([z.string(), z.null().nullable()])
-      .meta({ description: 'The name of the certificate.' }),
+    name: z.union([z.string(), z.null()]).meta({ description: 'The name of the certificate.' }),
     created_at: z
       .int()
       .meta({
@@ -17126,8 +17544,8 @@ export type OrganizationCertificateSchema = z.infer<typeof OrganizationCertifica
 
 export const ListCertificatesResponseSchema = z.object({
   data: z.array(OrganizationCertificateSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).meta({ examples: ['cert_abc'] }),
-  last_id: z.union([z.string(), z.null().nullable()]).meta({ examples: ['cert_abc'] }),
+  first_id: z.union([z.string(), z.null()]).meta({ examples: ['cert_abc'] }),
+  last_id: z.union([z.string(), z.null()]).meta({ examples: ['cert_abc'] }),
   has_more: z.boolean(),
   object: z.literal('list'),
 })
@@ -17208,8 +17626,8 @@ export type ListFilesResponseSchema = z.infer<typeof ListFilesResponseSchema>
 export const ListFineTuningCheckpointPermissionResponseSchema = z.object({
   data: z.array(FineTuningCheckpointPermissionSchema),
   object: z.literal('list'),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -17220,8 +17638,8 @@ export type ListFineTuningCheckpointPermissionResponseSchema = z.infer<
 export const ListFineTuningJobCheckpointsResponseSchema = z.object({
   data: z.array(FineTuningJobCheckpointSchema),
   object: z.literal('list'),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -17260,7 +17678,7 @@ export const ModelSchema = z
     object: z.literal('model').meta({ description: 'The object type, which is always "model".' }),
     owned_by: z.string().meta({ description: 'The organization that owns the model.' }),
     shutdown_date: z
-      .union([z.iso.date(), z.null().nullable()])
+      .union([z.iso.date(), z.null()])
       .meta({ description: 'The date when the model will shut down, or null if not announced.' })
       .exactOptional(),
   })
@@ -17295,9 +17713,7 @@ export const OrganizationProjectCertificateSchema = z
     id: z
       .string()
       .meta({ description: 'The identifier, which can be referenced in API endpoints' }),
-    name: z
-      .union([z.string(), z.null().nullable()])
-      .meta({ description: 'The name of the certificate.' }),
+    name: z.union([z.string(), z.null()]).meta({ description: 'The name of the certificate.' }),
     created_at: z
       .int()
       .meta({
@@ -17327,8 +17743,8 @@ export type OrganizationProjectCertificateSchema = z.infer<
 
 export const ListProjectCertificatesResponseSchema = z.object({
   data: z.array(OrganizationProjectCertificateSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).meta({ examples: ['cert_abc'] }),
-  last_id: z.union([z.string(), z.null().nullable()]).meta({ examples: ['cert_abc'] }),
+  first_id: z.union([z.string(), z.null()]).meta({ examples: ['cert_abc'] }),
+  last_id: z.union([z.string(), z.null()]).meta({ examples: ['cert_abc'] }),
   has_more: z.boolean(),
   object: z.literal('list'),
 })
@@ -17420,7 +17836,7 @@ export const VectorStoreFileObjectSchema = z
           description:
             'The last error associated with this vector store file. Will be `null` if there are no errors.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     chunking_strategy: z
       .xor([StaticChunkingStrategyResponseParamSchema, OtherChunkingStrategyResponseParamSchema])
@@ -17484,7 +17900,7 @@ export const VectorStoreObjectSchema = z
           .meta({
             description: 'The Unix timestamp (in seconds) for when the vector store will expire.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     last_active_at: z.union([
@@ -17493,7 +17909,7 @@ export const VectorStoreObjectSchema = z
         .meta({
           description: 'The Unix timestamp (in seconds) for when the vector store was last active.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     metadata: MetadataSchema,
   })
@@ -17532,7 +17948,7 @@ export const SafetyIdentifierSchema = z.union([
       description:
         'A stable identifier for your end user, used for safety monitoring and abuse detection.',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type SafetyIdentifierSchema = z.infer<typeof SafetyIdentifierSchema>
@@ -17544,7 +17960,7 @@ export const InstructionsSchema = z.union([
       description:
         'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type InstructionsSchema = z.infer<typeof InstructionsSchema>
@@ -17685,7 +18101,7 @@ export const LiveDelegationReasoningInputParamSchema = z
           description:
             'How much reasoning effort the delegated Responses model should use. Supported values depend on the backend model.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     summary: z
@@ -17694,7 +18110,7 @@ export const LiveDelegationReasoningInputParamSchema = z
           description:
             'The reasoning summary to request from the delegated Responses model, when supported.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -17718,7 +18134,7 @@ export const LiveDelegationTextInputParamSchema = z
           description:
             'The amount of detail in text generated by the Responses backend. This does not configure the Live model’s spoken delivery.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -17745,7 +18161,7 @@ export const LiveFunctionToolInputParamSchema = z
             description:
               'What the function does and when the delegated Responses model should call it.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     parameters: z
@@ -17755,7 +18171,7 @@ export const LiveFunctionToolInputParamSchema = z
           .meta({
             description: 'A JSON Schema object describing the arguments accepted by the function.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     strict: z
@@ -17766,7 +18182,7 @@ export const LiveFunctionToolInputParamSchema = z
             description:
               'Whether the delegated Responses model must follow the function’s parameter schema exactly.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -17848,7 +18264,7 @@ export const LiveSkillReferenceParamSchema = z.object({
           description:
             "Optional skill version. Use a positive integer or 'latest'. Omit for default.",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -17898,36 +18314,53 @@ export const LiveHostedShellContainerAutoParamSchema = z.object({
         .meta({
           description: 'An optional list of uploaded files to make available to your code.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   memory_limit: z
     .union([
       LiveContainerMemoryLimitSchema.meta({ description: 'The memory limit for the container.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   network_policy: z
     .union([
       z
         .xor([
-          LiveContainerNetworkPolicyDisabledParamSchema,
-          LiveHostedShellNetworkPolicyAllowlistParamSchema,
+          z.intersection(
+            LiveContainerNetworkPolicyDisabledParamSchema,
+            z.object({ type: z.literal('LiveContainerNetworkPolicyDisabledParam') }),
+          ),
+          z.intersection(
+            LiveHostedShellNetworkPolicyAllowlistParamSchema,
+            z.object({ type: z.literal('LiveHostedShellNetworkPolicyAllowlistParam') }),
+          ),
         ])
         .meta({ description: 'Network access policy for the container.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   skills: z
     .union([
       z
-        .array(z.xor([LiveSkillReferenceParamSchema, LiveInlineSkillParamSchema]))
+        .array(
+          z.xor([
+            z.intersection(
+              LiveSkillReferenceParamSchema,
+              z.object({ type: z.literal('LiveSkillReferenceParam') }),
+            ),
+            z.intersection(
+              LiveInlineSkillParamSchema,
+              z.object({ type: z.literal('LiveInlineSkillParam') }),
+            ),
+          ]),
+        )
         .max(200)
         .meta({
           description:
             'An optional list of skills referenced by id or inline data. Across all inline skills in this list, decoded ZIP data must total at most 50 MiB and Base64 text must total at most 70,254,592 characters, including line breaks. Skill references do not count toward these limits.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -17965,7 +18398,7 @@ export const LiveLocalEnvironmentParamSchema = z.object({
         .array(LiveLocalSkillParamSchema)
         .max(200)
         .meta({ description: 'An optional list of skills.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -17978,11 +18411,20 @@ export const LiveHostedShellToolInputParamSchema = z
     environment: z
       .union([
         z.xor([
-          LiveHostedShellContainerAutoParamSchema,
-          LiveContainerReferenceParamSchema,
-          LiveLocalEnvironmentParamSchema,
+          z.intersection(
+            LiveHostedShellContainerAutoParamSchema,
+            z.object({ type: z.literal('LiveHostedShellContainerAutoParam') }),
+          ),
+          z.intersection(
+            LiveContainerReferenceParamSchema,
+            z.object({ type: z.literal('LiveContainerReferenceParam') }),
+          ),
+          z.intersection(
+            LiveLocalEnvironmentParamSchema,
+            z.object({ type: z.literal('LiveLocalEnvironmentParam') }),
+          ),
         ]),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -18007,7 +18449,7 @@ export const LiveMCPToolFilterParamSchema = z.object({
   tool_names: z
     .union([
       z.array(z.string()).meta({ description: 'A list of tool names to match against.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   read_only: z
@@ -18015,7 +18457,7 @@ export const LiveMCPToolFilterParamSchema = z.object({
       z
         .boolean()
         .meta({ description: 'Whether to allow only read-only tools for matching entries.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -18028,7 +18470,7 @@ export const LiveMCPRequireApprovalFilterParamSchema = z.object({
       LiveMCPToolFilterParamSchema.meta({
         description: 'A filter that forces approval for matching tools.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   never: z
@@ -18036,7 +18478,7 @@ export const LiveMCPRequireApprovalFilterParamSchema = z.object({
       LiveMCPToolFilterParamSchema.meta({
         description: 'A filter that skips approval for matching tools.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -18066,15 +18508,12 @@ export const LiveMCPToolInputParamSchema = z.object({
     .meta({ description: 'A label used to identify the MCP server.' })
     .exactOptional(),
   server_url: z
-    .union([
-      z.url().meta({ description: 'The URL of the MCP server to connect to.' }),
-      z.null().nullable(),
-    ])
+    .union([z.url().meta({ description: 'The URL of the MCP server to connect to.' }), z.null()])
     .exactOptional(),
   server_description: z
     .union([
       z.string().meta({ description: 'An optional human-readable description of the MCP server.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   authorization: z
@@ -18085,7 +18524,7 @@ export const LiveMCPToolInputParamSchema = z.object({
           description:
             'The authorization token to use when connecting to the MCP server or connector.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .meta({
       description: 'This value is omitted from returned Live session data.',
@@ -18097,7 +18536,7 @@ export const LiveMCPToolInputParamSchema = z.object({
       z
         .record(z.string(), z.string())
         .meta({ description: 'Optional HTTP headers to send when connecting to the MCP server.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .meta({
       description: 'This value is omitted from returned Live session data.',
@@ -18109,7 +18548,7 @@ export const LiveMCPToolInputParamSchema = z.object({
       z
         .xor([z.array(z.string()), LiveMCPToolFilterParamSchema])
         .meta({ description: 'A list of MCP tool names that are allowed for this server.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   require_approval: z
@@ -18124,7 +18563,7 @@ export const LiveMCPToolInputParamSchema = z.object({
         .meta({
           description: 'Controls which MCP tools require explicit user approval before execution.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   connector_id: z
@@ -18136,7 +18575,7 @@ export const LiveMCPToolInputParamSchema = z.object({
             'The ID of a built-in MCP connector. This field is deprecated for models released after September 1, 2026. Use `server_url` to connect to a remote MCP server, or `tunnel_id` to connect to a local MCP server.',
           deprecated: true,
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   tunnel_id: z
@@ -18145,7 +18584,7 @@ export const LiveMCPToolInputParamSchema = z.object({
         .string()
         .regex(/^tunnel_[a-z0-9]{32}$/)
         .meta({ description: 'The Secure MCP Tunnel ID to use instead of a direct server URL.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   allowed_callers: z
@@ -18154,7 +18593,7 @@ export const LiveMCPToolInputParamSchema = z.object({
         .array(LiveCallableToolAllowedCallerSchema)
         .min(1)
         .meta({ description: 'The tool invocation context(s).' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   defer_loading: z
@@ -18164,7 +18603,7 @@ export const LiveMCPToolInputParamSchema = z.object({
         .meta({
           description: 'Whether this MCP tool should be deferred and discovered via tool search.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -18234,7 +18673,7 @@ export const LiveMCPToolChoiceParamSchema = z.object({
           description:
             'The name of the MCP tool to call. If omitted, the server may choose a default.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -18358,18 +18797,54 @@ export const LiveAllowedToolsChoiceParamSchema = z.object({
   tools: z
     .array(
       z.xor([
-        LiveFunctionToolChoiceParamSchema,
-        LiveMCPToolChoiceParamSchema,
-        LiveSpecificFileSearchParamSchema,
-        LiveSpecificWebSearchParamSchema,
-        LiveSpecificWebSearchPreviewParamSchema,
-        LiveSpecificImageGenParamSchema,
-        LiveSpecificComputerParamSchema,
-        LiveSpecificCodeInterpreterParamSchema,
-        LiveSpecificProgrammaticToolCallingParamSchema,
-        LiveSpecificFunctionShellParamSchema,
-        LiveSpecificCustomToolParamSchema,
-        LiveSpecificApplyPatchParamSchema,
+        z.intersection(
+          LiveFunctionToolChoiceParamSchema,
+          z.object({ type: z.literal('LiveFunctionToolChoiceParam') }),
+        ),
+        z.intersection(
+          LiveMCPToolChoiceParamSchema,
+          z.object({ type: z.literal('LiveMCPToolChoiceParam') }),
+        ),
+        z.intersection(
+          LiveSpecificFileSearchParamSchema,
+          z.object({ type: z.literal('LiveSpecificFileSearchParam') }),
+        ),
+        z.intersection(
+          LiveSpecificWebSearchParamSchema,
+          z.object({ type: z.literal('LiveSpecificWebSearchParam') }),
+        ),
+        z.intersection(
+          LiveSpecificWebSearchPreviewParamSchema,
+          z.object({ type: z.literal('LiveSpecificWebSearchPreviewParam') }),
+        ),
+        z.intersection(
+          LiveSpecificImageGenParamSchema,
+          z.object({ type: z.literal('LiveSpecificImageGenParam') }),
+        ),
+        z.intersection(
+          LiveSpecificComputerParamSchema,
+          z.object({ type: z.literal('LiveSpecificComputerParam') }),
+        ),
+        z.intersection(
+          LiveSpecificCodeInterpreterParamSchema,
+          z.object({ type: z.literal('LiveSpecificCodeInterpreterParam') }),
+        ),
+        z.intersection(
+          LiveSpecificProgrammaticToolCallingParamSchema,
+          z.object({ type: z.literal('LiveSpecificProgrammaticToolCallingParam') }),
+        ),
+        z.intersection(
+          LiveSpecificFunctionShellParamSchema,
+          z.object({ type: z.literal('LiveSpecificFunctionShellParam') }),
+        ),
+        z.intersection(
+          LiveSpecificCustomToolParamSchema,
+          z.object({ type: z.literal('LiveSpecificCustomToolParam') }),
+        ),
+        z.intersection(
+          LiveSpecificApplyPatchParamSchema,
+          z.object({ type: z.literal('LiveSpecificApplyPatchParam') }),
+        ),
       ]),
     )
     .min(1)
@@ -18380,7 +18855,7 @@ export const LiveAllowedToolsChoiceParamSchema = z.object({
       LiveToolChoiceValueEnumSchema.meta({
         description: 'How to select a tool from the allowed set.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -18400,7 +18875,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = z
             description:
               'Instructions for the delegated Responses model, separate from Live instructions. See [backend prompting](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt).',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_tokens: z
@@ -18409,7 +18884,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = z
           .int()
           .min(16)
           .meta({ description: 'Maximum number of output tokens for each delegated response.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     service_tier: z
@@ -18417,7 +18892,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = z
         LiveResponsesServiceTierSchema.meta({
           description: 'Service tier for delegated Responses requests.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     reasoning: z
@@ -18425,7 +18900,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = z
         LiveDelegationReasoningInputParamSchema.meta({
           description: 'Reasoning settings passed to each delegated Responses request.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     text: z
@@ -18433,25 +18908,64 @@ export const LiveResponsesDelegationSettingsInputParamSchema = z
         LiveDelegationTextInputParamSchema.meta({
           description: 'Text generation settings passed to each delegated Responses request.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     tools: z
       .array(
         z.xor([
-          LiveFunctionToolInputParamSchema,
-          LiveWebSearchToolInputParamSchema,
-          LiveFileSearchToolInputParamSchema,
-          LiveCodeInterpreterToolInputParamSchema,
-          LiveHostedShellToolInputParamSchema,
-          LiveImageGenerationToolInputParamSchema,
-          LiveMCPToolInputParamSchema,
-          LiveCustomToolInputParamSchema,
-          LiveNamespaceToolInputParamSchema,
-          LiveToolSearchToolInputParamSchema,
-          LiveProgrammaticToolInputParamSchema,
-          LiveComputerToolInputParamSchema,
-          LiveApplyPatchToolInputParamSchema,
+          z.intersection(
+            LiveFunctionToolInputParamSchema,
+            z.object({ type: z.literal('LiveFunctionToolInputParam') }),
+          ),
+          z.intersection(
+            LiveWebSearchToolInputParamSchema,
+            z.object({ type: z.literal('LiveWebSearchToolInputParam') }),
+          ),
+          z.intersection(
+            LiveFileSearchToolInputParamSchema,
+            z.object({ type: z.literal('LiveFileSearchToolInputParam') }),
+          ),
+          z.intersection(
+            LiveCodeInterpreterToolInputParamSchema,
+            z.object({ type: z.literal('LiveCodeInterpreterToolInputParam') }),
+          ),
+          z.intersection(
+            LiveHostedShellToolInputParamSchema,
+            z.object({ type: z.literal('LiveHostedShellToolInputParam') }),
+          ),
+          z.intersection(
+            LiveImageGenerationToolInputParamSchema,
+            z.object({ type: z.literal('LiveImageGenerationToolInputParam') }),
+          ),
+          z.intersection(
+            LiveMCPToolInputParamSchema,
+            z.object({ type: z.literal('LiveMCPToolInputParam') }),
+          ),
+          z.intersection(
+            LiveCustomToolInputParamSchema,
+            z.object({ type: z.literal('LiveCustomToolInputParam') }),
+          ),
+          z.intersection(
+            LiveNamespaceToolInputParamSchema,
+            z.object({ type: z.literal('LiveNamespaceToolInputParam') }),
+          ),
+          z.intersection(
+            LiveToolSearchToolInputParamSchema,
+            z.object({ type: z.literal('LiveToolSearchToolInputParam') }),
+          ),
+          z.intersection(
+            LiveProgrammaticToolInputParamSchema,
+            z.object({ type: z.literal('LiveProgrammaticToolInputParam') }),
+          ),
+          z.intersection(
+            LiveComputerToolInputParamSchema,
+            z.object({ type: z.literal('LiveComputerToolInputParam') }),
+          ),
+          z.intersection(
+            LiveApplyPatchToolInputParamSchema,
+            z.object({ type: z.literal('LiveApplyPatchToolInputParam') }),
+          ),
         ]),
       )
       .meta({
@@ -18463,18 +18977,54 @@ export const LiveResponsesDelegationSettingsInputParamSchema = z
       .xor([
         LiveToolChoiceEnumSchema,
         z.xor([
-          LiveFunctionToolChoiceParamSchema,
-          LiveMCPToolChoiceParamSchema,
-          LiveSpecificFileSearchParamSchema,
-          LiveSpecificWebSearchParamSchema,
-          LiveSpecificWebSearchPreviewParamSchema,
-          LiveSpecificImageGenParamSchema,
-          LiveSpecificComputerParamSchema,
-          LiveSpecificCodeInterpreterParamSchema,
-          LiveSpecificProgrammaticToolCallingParamSchema,
-          LiveSpecificFunctionShellParamSchema,
-          LiveSpecificCustomToolParamSchema,
-          LiveSpecificApplyPatchParamSchema,
+          z.intersection(
+            LiveFunctionToolChoiceParamSchema,
+            z.object({ type: z.literal('LiveFunctionToolChoiceParam') }),
+          ),
+          z.intersection(
+            LiveMCPToolChoiceParamSchema,
+            z.object({ type: z.literal('LiveMCPToolChoiceParam') }),
+          ),
+          z.intersection(
+            LiveSpecificFileSearchParamSchema,
+            z.object({ type: z.literal('LiveSpecificFileSearchParam') }),
+          ),
+          z.intersection(
+            LiveSpecificWebSearchParamSchema,
+            z.object({ type: z.literal('LiveSpecificWebSearchParam') }),
+          ),
+          z.intersection(
+            LiveSpecificWebSearchPreviewParamSchema,
+            z.object({ type: z.literal('LiveSpecificWebSearchPreviewParam') }),
+          ),
+          z.intersection(
+            LiveSpecificImageGenParamSchema,
+            z.object({ type: z.literal('LiveSpecificImageGenParam') }),
+          ),
+          z.intersection(
+            LiveSpecificComputerParamSchema,
+            z.object({ type: z.literal('LiveSpecificComputerParam') }),
+          ),
+          z.intersection(
+            LiveSpecificCodeInterpreterParamSchema,
+            z.object({ type: z.literal('LiveSpecificCodeInterpreterParam') }),
+          ),
+          z.intersection(
+            LiveSpecificProgrammaticToolCallingParamSchema,
+            z.object({ type: z.literal('LiveSpecificProgrammaticToolCallingParam') }),
+          ),
+          z.intersection(
+            LiveSpecificFunctionShellParamSchema,
+            z.object({ type: z.literal('LiveSpecificFunctionShellParam') }),
+          ),
+          z.intersection(
+            LiveSpecificCustomToolParamSchema,
+            z.object({ type: z.literal('LiveSpecificCustomToolParam') }),
+          ),
+          z.intersection(
+            LiveSpecificApplyPatchParamSchema,
+            z.object({ type: z.literal('LiveSpecificApplyPatchParam') }),
+          ),
         ]),
         LiveAllowedToolsChoiceParamSchema,
       ])
@@ -18491,7 +19041,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = z
             description:
               'Whether the delegated Responses model may request multiple tool calls in a single response.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -18557,7 +19107,7 @@ export const LiveDecisionInputImageParamSchema = z.object({
         description:
           'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -18590,9 +19140,18 @@ export const LiveDecisionChoiceQuestionParamSchema = z.object({
     z
       .array(
         z.xor([
-          LiveDecisionInputTextParamSchema,
-          LiveDecisionInputImageParamSchema,
-          LiveDecisionInputJsonParamSchema,
+          z.intersection(
+            LiveDecisionInputTextParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputTextParam') }),
+          ),
+          z.intersection(
+            LiveDecisionInputImageParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputImageParam') }),
+          ),
+          z.intersection(
+            LiveDecisionInputJsonParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputJsonParam') }),
+          ),
         ]),
       )
       .min(1),
@@ -18612,9 +19171,18 @@ export const LiveDecisionPredicateQuestionParamSchema = z.object({
     z
       .array(
         z.xor([
-          LiveDecisionInputTextParamSchema,
-          LiveDecisionInputImageParamSchema,
-          LiveDecisionInputJsonParamSchema,
+          z.intersection(
+            LiveDecisionInputTextParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputTextParam') }),
+          ),
+          z.intersection(
+            LiveDecisionInputImageParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputImageParam') }),
+          ),
+          z.intersection(
+            LiveDecisionInputJsonParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputJsonParam') }),
+          ),
         ]),
       )
       .min(1),
@@ -18640,9 +19208,18 @@ export const LiveDecisionScoreQuestionParamSchema = z.object({
     z
       .array(
         z.xor([
-          LiveDecisionInputTextParamSchema,
-          LiveDecisionInputImageParamSchema,
-          LiveDecisionInputJsonParamSchema,
+          z.intersection(
+            LiveDecisionInputTextParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputTextParam') }),
+          ),
+          z.intersection(
+            LiveDecisionInputImageParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputImageParam') }),
+          ),
+          z.intersection(
+            LiveDecisionInputJsonParamSchema,
+            z.object({ type: z.literal('LiveDecisionInputJsonParam') }),
+          ),
         ]),
       )
       .min(1),
@@ -18655,9 +19232,18 @@ export type LiveDecisionScoreQuestionParamSchema = z.infer<
 >
 
 export const LiveDecisionQuestionSchema = z.xor([
-  LiveDecisionChoiceQuestionParamSchema,
-  LiveDecisionPredicateQuestionParamSchema,
-  LiveDecisionScoreQuestionParamSchema,
+  z.intersection(
+    LiveDecisionChoiceQuestionParamSchema,
+    z.object({ type: z.literal('LiveDecisionChoiceQuestionParam') }),
+  ),
+  z.intersection(
+    LiveDecisionPredicateQuestionParamSchema,
+    z.object({ type: z.literal('LiveDecisionPredicateQuestionParam') }),
+  ),
+  z.intersection(
+    LiveDecisionScoreQuestionParamSchema,
+    z.object({ type: z.literal('LiveDecisionScoreQuestionParam') }),
+  ),
 ])
 
 export type LiveDecisionQuestionSchema = z.infer<typeof LiveDecisionQuestionSchema>
@@ -18694,15 +19280,24 @@ export type LiveDecisionsDelegationParamSchema = z.infer<typeof LiveDecisionsDel
 export const DelegationSchema = z.union([
   z
     .xor([
-      LiveClientDelegationParamSchema,
-      LiveResponsesDelegationParamSchema,
-      LiveDecisionsDelegationParamSchema,
+      z.intersection(
+        LiveClientDelegationParamSchema,
+        z.object({ type: z.literal('LiveClientDelegationParam') }),
+      ),
+      z.intersection(
+        LiveResponsesDelegationParamSchema,
+        z.object({ type: z.literal('LiveResponsesDelegationParam') }),
+      ),
+      z.intersection(
+        LiveDecisionsDelegationParamSchema,
+        z.object({ type: z.literal('LiveDecisionsDelegationParam') }),
+      ),
     ])
     .meta({
       description:
         'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type DelegationSchema = z.infer<typeof DelegationSchema>
@@ -18792,7 +19387,7 @@ export const LiveInitialDeveloperMessageItemParamSchema = z
             description:
               'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -18806,7 +19401,7 @@ export const LiveInitialDeveloperMessageItemParamSchema = z
           description:
             'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     role: z
@@ -18839,7 +19434,7 @@ export const LiveInitialUserMessageItemParamSchema = z
             description:
               'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -18853,7 +19448,7 @@ export const LiveInitialUserMessageItemParamSchema = z
           description:
             'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     role: z
@@ -18928,7 +19523,7 @@ export const LiveInitialAssistantMessageItemParamSchema = z
             description:
               'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -18942,7 +19537,7 @@ export const LiveInitialAssistantMessageItemParamSchema = z
           description:
             'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     role: z
@@ -18951,7 +19546,16 @@ export const LiveInitialAssistantMessageItemParamSchema = z
       .meta({ description: 'The author of this history message. Always `assistant`.' }),
     content: z
       .array(
-        z.xor([LiveInitialTextContentPartParamSchema, LiveInitialOutputTextContentPartParamSchema]),
+        z.xor([
+          z.intersection(
+            LiveInitialTextContentPartParamSchema,
+            z.object({ type: z.literal('LiveInitialTextContentPartParam') }),
+          ),
+          z.intersection(
+            LiveInitialOutputTextContentPartParamSchema,
+            z.object({ type: z.literal('LiveInitialOutputTextContentPartParam') }),
+          ),
+        ]),
       )
       .length(1)
       .meta({
@@ -18969,9 +19573,18 @@ export type LiveInitialAssistantMessageItemParamSchema = z.infer<
 
 export const LiveInitialItemSchema = z
   .xor([
-    LiveInitialDeveloperMessageItemParamSchema,
-    LiveInitialUserMessageItemParamSchema,
-    LiveInitialAssistantMessageItemParamSchema,
+    z.intersection(
+      LiveInitialDeveloperMessageItemParamSchema,
+      z.object({ role: z.literal('LiveInitialDeveloperMessageItemParam') }),
+    ),
+    z.intersection(
+      LiveInitialUserMessageItemParamSchema,
+      z.object({ role: z.literal('LiveInitialUserMessageItemParam') }),
+    ),
+    z.intersection(
+      LiveInitialAssistantMessageItemParamSchema,
+      z.object({ role: z.literal('LiveInitialAssistantMessageItemParam') }),
+    ),
   ])
   .meta({
     description:
@@ -19121,9 +19734,18 @@ export type LiveSessionAudioFormatPCMAParamSchema = z.infer<
 
 export const LiveAudioFormatSchema = z
   .xor([
-    LiveSessionAudioFormatPCMParamSchema,
-    LiveSessionAudioFormatPCMUParamSchema,
-    LiveSessionAudioFormatPCMAParamSchema,
+    z.intersection(
+      LiveSessionAudioFormatPCMParamSchema,
+      z.object({ type: z.literal('LiveSessionAudioFormatPCMParam') }),
+    ),
+    z.intersection(
+      LiveSessionAudioFormatPCMUParamSchema,
+      z.object({ type: z.literal('LiveSessionAudioFormatPCMUParam') }),
+    ),
+    z.intersection(
+      LiveSessionAudioFormatPCMAParamSchema,
+      z.object({ type: z.literal('LiveSessionAudioFormatPCMAParam') }),
+    ),
   ])
   .meta({
     description:
@@ -19239,7 +19861,7 @@ export const LiveSessionCreateParamsSchema = z
             description:
               'A stable identifier for your end user, used for safety monitoring and abuse detection.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     instructions: z
@@ -19250,7 +19872,7 @@ export const LiveSessionCreateParamsSchema = z
             description:
               'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input: z
@@ -19269,15 +19891,24 @@ export const LiveSessionCreateParamsSchema = z
       .union([
         z
           .xor([
-            LiveClientDelegationParamSchema,
-            LiveResponsesDelegationParamSchema,
-            LiveDecisionsDelegationParamSchema,
+            z.intersection(
+              LiveClientDelegationParamSchema,
+              z.object({ type: z.literal('LiveClientDelegationParam') }),
+            ),
+            z.intersection(
+              LiveResponsesDelegationParamSchema,
+              z.object({ type: z.literal('LiveResponsesDelegationParam') }),
+            ),
+            z.intersection(
+              LiveDecisionsDelegationParamSchema,
+              z.object({ type: z.literal('LiveDecisionsDelegationParam') }),
+            ),
           ])
           .meta({
             description:
               'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     triggers: z
@@ -19318,7 +19949,7 @@ export const LiveSessionStartEventSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19367,7 +19998,7 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = z
             description:
               'Instructions for the delegated Responses model, separate from Live instructions. See [backend prompting](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt).',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_tokens: z
@@ -19376,7 +20007,7 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = z
           .int()
           .min(16)
           .meta({ description: 'Maximum number of output tokens for each delegated response.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     service_tier: z
@@ -19384,7 +20015,7 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = z
         LiveResponsesServiceTierSchema.meta({
           description: 'Service tier for delegated Responses requests.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     reasoning: z
@@ -19392,7 +20023,7 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = z
         LiveDelegationReasoningInputParamSchema.meta({
           description: 'Reasoning settings passed to each delegated Responses request.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     text: z
@@ -19400,25 +20031,64 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = z
         LiveDelegationTextInputParamSchema.meta({
           description: 'Text generation settings passed to each delegated Responses request.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     tools: z
       .array(
         z.xor([
-          LiveFunctionToolInputParamSchema,
-          LiveWebSearchToolInputParamSchema,
-          LiveFileSearchToolInputParamSchema,
-          LiveCodeInterpreterToolInputParamSchema,
-          LiveHostedShellToolInputParamSchema,
-          LiveImageGenerationToolInputParamSchema,
-          LiveMCPToolInputParamSchema,
-          LiveCustomToolInputParamSchema,
-          LiveNamespaceToolInputParamSchema,
-          LiveToolSearchToolInputParamSchema,
-          LiveProgrammaticToolInputParamSchema,
-          LiveComputerToolInputParamSchema,
-          LiveApplyPatchToolInputParamSchema,
+          z.intersection(
+            LiveFunctionToolInputParamSchema,
+            z.object({ type: z.literal('LiveFunctionToolInputParam') }),
+          ),
+          z.intersection(
+            LiveWebSearchToolInputParamSchema,
+            z.object({ type: z.literal('LiveWebSearchToolInputParam') }),
+          ),
+          z.intersection(
+            LiveFileSearchToolInputParamSchema,
+            z.object({ type: z.literal('LiveFileSearchToolInputParam') }),
+          ),
+          z.intersection(
+            LiveCodeInterpreterToolInputParamSchema,
+            z.object({ type: z.literal('LiveCodeInterpreterToolInputParam') }),
+          ),
+          z.intersection(
+            LiveHostedShellToolInputParamSchema,
+            z.object({ type: z.literal('LiveHostedShellToolInputParam') }),
+          ),
+          z.intersection(
+            LiveImageGenerationToolInputParamSchema,
+            z.object({ type: z.literal('LiveImageGenerationToolInputParam') }),
+          ),
+          z.intersection(
+            LiveMCPToolInputParamSchema,
+            z.object({ type: z.literal('LiveMCPToolInputParam') }),
+          ),
+          z.intersection(
+            LiveCustomToolInputParamSchema,
+            z.object({ type: z.literal('LiveCustomToolInputParam') }),
+          ),
+          z.intersection(
+            LiveNamespaceToolInputParamSchema,
+            z.object({ type: z.literal('LiveNamespaceToolInputParam') }),
+          ),
+          z.intersection(
+            LiveToolSearchToolInputParamSchema,
+            z.object({ type: z.literal('LiveToolSearchToolInputParam') }),
+          ),
+          z.intersection(
+            LiveProgrammaticToolInputParamSchema,
+            z.object({ type: z.literal('LiveProgrammaticToolInputParam') }),
+          ),
+          z.intersection(
+            LiveComputerToolInputParamSchema,
+            z.object({ type: z.literal('LiveComputerToolInputParam') }),
+          ),
+          z.intersection(
+            LiveApplyPatchToolInputParamSchema,
+            z.object({ type: z.literal('LiveApplyPatchToolInputParam') }),
+          ),
         ]),
       )
       .meta({
@@ -19430,18 +20100,54 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = z
       .xor([
         LiveToolChoiceEnumSchema,
         z.xor([
-          LiveFunctionToolChoiceParamSchema,
-          LiveMCPToolChoiceParamSchema,
-          LiveSpecificFileSearchParamSchema,
-          LiveSpecificWebSearchParamSchema,
-          LiveSpecificWebSearchPreviewParamSchema,
-          LiveSpecificImageGenParamSchema,
-          LiveSpecificComputerParamSchema,
-          LiveSpecificCodeInterpreterParamSchema,
-          LiveSpecificProgrammaticToolCallingParamSchema,
-          LiveSpecificFunctionShellParamSchema,
-          LiveSpecificCustomToolParamSchema,
-          LiveSpecificApplyPatchParamSchema,
+          z.intersection(
+            LiveFunctionToolChoiceParamSchema,
+            z.object({ type: z.literal('LiveFunctionToolChoiceParam') }),
+          ),
+          z.intersection(
+            LiveMCPToolChoiceParamSchema,
+            z.object({ type: z.literal('LiveMCPToolChoiceParam') }),
+          ),
+          z.intersection(
+            LiveSpecificFileSearchParamSchema,
+            z.object({ type: z.literal('LiveSpecificFileSearchParam') }),
+          ),
+          z.intersection(
+            LiveSpecificWebSearchParamSchema,
+            z.object({ type: z.literal('LiveSpecificWebSearchParam') }),
+          ),
+          z.intersection(
+            LiveSpecificWebSearchPreviewParamSchema,
+            z.object({ type: z.literal('LiveSpecificWebSearchPreviewParam') }),
+          ),
+          z.intersection(
+            LiveSpecificImageGenParamSchema,
+            z.object({ type: z.literal('LiveSpecificImageGenParam') }),
+          ),
+          z.intersection(
+            LiveSpecificComputerParamSchema,
+            z.object({ type: z.literal('LiveSpecificComputerParam') }),
+          ),
+          z.intersection(
+            LiveSpecificCodeInterpreterParamSchema,
+            z.object({ type: z.literal('LiveSpecificCodeInterpreterParam') }),
+          ),
+          z.intersection(
+            LiveSpecificProgrammaticToolCallingParamSchema,
+            z.object({ type: z.literal('LiveSpecificProgrammaticToolCallingParam') }),
+          ),
+          z.intersection(
+            LiveSpecificFunctionShellParamSchema,
+            z.object({ type: z.literal('LiveSpecificFunctionShellParam') }),
+          ),
+          z.intersection(
+            LiveSpecificCustomToolParamSchema,
+            z.object({ type: z.literal('LiveSpecificCustomToolParam') }),
+          ),
+          z.intersection(
+            LiveSpecificApplyPatchParamSchema,
+            z.object({ type: z.literal('LiveSpecificApplyPatchParam') }),
+          ),
         ]),
         LiveAllowedToolsChoiceParamSchema,
       ])
@@ -19458,7 +20164,7 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = z
             description:
               'Whether the delegated Responses model may request multiple tool calls in a single response.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -19541,15 +20247,24 @@ export const LiveSessionUpdateParamsSchema = z
       .union([
         z
           .xor([
-            LiveClientDelegationParamSchema,
-            LiveResponsesDelegationUpdateParamSchema,
-            LiveDecisionsDelegationUpdateParamSchema,
+            z.intersection(
+              LiveClientDelegationParamSchema,
+              z.object({ type: z.literal('LiveClientDelegationParam') }),
+            ),
+            z.intersection(
+              LiveResponsesDelegationUpdateParamSchema,
+              z.object({ type: z.literal('LiveResponsesDelegationUpdateParam') }),
+            ),
+            z.intersection(
+              LiveDecisionsDelegationUpdateParamSchema,
+              z.object({ type: z.literal('LiveDecisionsDelegationUpdateParam') }),
+            ),
           ])
           .meta({
             description:
               'Delegation settings to update. The delegation type must match the current session; omitted settings retain their values.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     triggers: z
@@ -19578,7 +20293,7 @@ export const LiveSessionUpdateParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19623,7 +20338,7 @@ export const LiveInputAudioAppendEventSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19657,7 +20372,7 @@ export const LiveInputAudioMuteParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19684,7 +20399,7 @@ export const LiveInputAudioUnmuteParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19711,7 +20426,7 @@ export const LiveOutputAudioFixturePlayParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19749,7 +20464,7 @@ export const LiveInstructionsAppendParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19764,7 +20479,7 @@ export const LiveInstructionsAppendParamSchema = z
           description:
             'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     content: z
       .string()
@@ -19799,7 +20514,7 @@ export const LiveThinkingAppendParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19814,7 +20529,7 @@ export const LiveThinkingAppendParamSchema = z
           description:
             'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     content: z
       .string()
@@ -19849,7 +20564,7 @@ export const LiveCommentaryAppendParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -19864,7 +20579,7 @@ export const LiveCommentaryAppendParamSchema = z
           description:
             'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     content: z
       .string()
@@ -19925,7 +20640,7 @@ export const LiveDecisionUserInputImageParamSchema = z.object({
         description:
           'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -19936,10 +20651,7 @@ export type LiveDecisionUserInputImageParamSchema = z.infer<
 
 export const LiveDecisionUserMessageParamSchema = z.object({
   id: z
-    .union([
-      z.string().meta({ description: 'The unique ID of this message item.' }),
-      z.null().nullable(),
-    ])
+    .union([z.string().meta({ description: 'The unique ID of this message item.' }), z.null()])
     .exactOptional(),
   type: z.literal('message').default('message').exactOptional(),
   role: z.literal('user').default('user').meta({ description: 'The message role. Always `user`.' }),
@@ -19947,9 +20659,18 @@ export const LiveDecisionUserMessageParamSchema = z.object({
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
     z.array(
       z.xor([
-        LiveDecisionUserInputTextParamSchema,
-        LiveDecisionUserInputImageParamSchema,
-        LiveDecisionInputJsonParamSchema,
+        z.intersection(
+          LiveDecisionUserInputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionUserInputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionUserInputImageParamSchema,
+          z.object({ type: z.literal('LiveDecisionUserInputImageParam') }),
+        ),
+        z.intersection(
+          LiveDecisionInputJsonParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputJsonParam') }),
+        ),
       ]),
     ),
   ]),
@@ -19959,10 +20680,7 @@ export type LiveDecisionUserMessageParamSchema = z.infer<typeof LiveDecisionUser
 
 export const LiveDecisionDeveloperMessageParamSchema = z.object({
   id: z
-    .union([
-      z.string().meta({ description: 'The unique ID of this message item.' }),
-      z.null().nullable(),
-    ])
+    .union([z.string().meta({ description: 'The unique ID of this message item.' }), z.null()])
     .exactOptional(),
   type: z.literal('message').default('message').exactOptional(),
   role: z.literal('developer').default('developer'),
@@ -19978,10 +20696,7 @@ export type LiveDecisionDeveloperMessageParamSchema = z.infer<
 
 export const LiveDecisionSystemMessageParamSchema = z.object({
   id: z
-    .union([
-      z.string().meta({ description: 'The unique ID of this message item.' }),
-      z.null().nullable(),
-    ])
+    .union([z.string().meta({ description: 'The unique ID of this message item.' }), z.null()])
     .exactOptional(),
   type: z.literal('message').default('message').exactOptional(),
   role: z.literal('system').default('system'),
@@ -20015,16 +20730,24 @@ export type LiveMessagePhaseSchema = z.infer<typeof LiveMessagePhaseSchema>
 
 export const LiveDecisionAssistantMessageParamSchema = z.object({
   id: z
-    .union([
-      z.string().meta({ description: 'The unique ID of this message item.' }),
-      z.null().nullable(),
-    ])
+    .union([z.string().meta({ description: 'The unique ID of this message item.' }), z.null()])
     .exactOptional(),
   type: z.literal('message').default('message').exactOptional(),
   role: z.literal('assistant').default('assistant'),
   content: z.xor([
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
-    z.array(z.xor([LiveDecisionOutputTextParamSchema, LiveDecisionRefusalParamSchema])),
+    z.array(
+      z.xor([
+        z.intersection(
+          LiveDecisionOutputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionOutputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionRefusalParamSchema,
+          z.object({ type: z.literal('LiveDecisionRefusalParam') }),
+        ),
+      ]),
+    ),
   ]),
   phase: z
     .union([
@@ -20032,7 +20755,7 @@ export const LiveDecisionAssistantMessageParamSchema = z.object({
         description:
           'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -20047,14 +20770,14 @@ export type LiveFunctionCallItemStatusSchema = z.infer<typeof LiveFunctionCallIt
 
 export const LiveDecisionFunctionCallParamSchema = z.object({
   id: z
-    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null().nullable()])
+    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null()])
     .exactOptional(),
   call_id: z
     .string()
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z
     .literal('function_call')
     .default('function_call')
@@ -20072,7 +20795,7 @@ export const LiveDecisionFunctionCallParamSchema = z.object({
         .min(1)
         .max(128)
         .meta({ description: 'The namespace of the function to call.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   arguments: z.string().meta({ description: 'The function arguments as a JSON string.' }),
@@ -20084,14 +20807,14 @@ export type LiveDecisionFunctionCallParamSchema = z.infer<
 
 export const LiveDecisionFunctionCallOutputParamSchema = z.object({
   id: z
-    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null().nullable()])
+    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null()])
     .exactOptional(),
   call_id: z
     .string()
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z
     .literal('function_call_output')
     .default('function_call_output')
@@ -20100,7 +20823,18 @@ export const LiveDecisionFunctionCallOutputParamSchema = z.object({
     }),
   output: z.xor([
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
-    z.array(z.xor([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    z.array(
+      z.xor([
+        z.intersection(
+          LiveDecisionInputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionInputImageParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputImageParam') }),
+        ),
+      ]),
+    ),
   ]),
 })
 
@@ -20110,14 +20844,14 @@ export type LiveDecisionFunctionCallOutputParamSchema = z.infer<
 
 export const LiveDecisionCustomToolCallParamSchema = z.object({
   id: z
-    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null().nullable()])
+    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null()])
     .exactOptional(),
   call_id: z
     .string()
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z
     .literal('custom_tool_call')
     .default('custom_tool_call')
@@ -20136,7 +20870,7 @@ export const LiveDecisionCustomToolCallParamSchema = z.object({
         .min(1)
         .max(64)
         .meta({ description: 'The namespace of the function to call.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   input: z.string().meta({ description: 'The input to the custom tool call.' }),
@@ -20148,18 +20882,29 @@ export type LiveDecisionCustomToolCallParamSchema = z.infer<
 
 export const LiveDecisionCustomToolCallOutputParamSchema = z.object({
   id: z
-    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null().nullable()])
+    .union([z.string().meta({ description: 'The local Decision item ID.' }), z.null()])
     .exactOptional(),
   call_id: z
     .string()
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z.literal('custom_tool_call_output').default('custom_tool_call_output'),
   output: z.xor([
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
-    z.array(z.xor([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    z.array(
+      z.xor([
+        z.intersection(
+          LiveDecisionInputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionInputImageParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputImageParam') }),
+        ),
+      ]),
+    ),
   ]),
 })
 
@@ -20169,15 +20914,39 @@ export type LiveDecisionCustomToolCallOutputParamSchema = z.infer<
 
 export const LiveDecisionInputItemParamSchema = z.xor([
   z.xor([
-    LiveDecisionUserMessageParamSchema,
-    LiveDecisionDeveloperMessageParamSchema,
-    LiveDecisionSystemMessageParamSchema,
-    LiveDecisionAssistantMessageParamSchema,
+    z.intersection(
+      LiveDecisionUserMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionUserMessageParam') }),
+    ),
+    z.intersection(
+      LiveDecisionDeveloperMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionDeveloperMessageParam') }),
+    ),
+    z.intersection(
+      LiveDecisionSystemMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionSystemMessageParam') }),
+    ),
+    z.intersection(
+      LiveDecisionAssistantMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionAssistantMessageParam') }),
+    ),
   ]),
-  LiveDecisionFunctionCallParamSchema,
-  LiveDecisionFunctionCallOutputParamSchema,
-  LiveDecisionCustomToolCallParamSchema,
-  LiveDecisionCustomToolCallOutputParamSchema,
+  z.intersection(
+    LiveDecisionFunctionCallParamSchema,
+    z.object({ type: z.literal('LiveDecisionFunctionCallParam') }),
+  ),
+  z.intersection(
+    LiveDecisionFunctionCallOutputParamSchema,
+    z.object({ type: z.literal('LiveDecisionFunctionCallOutputParam') }),
+  ),
+  z.intersection(
+    LiveDecisionCustomToolCallParamSchema,
+    z.object({ type: z.literal('LiveDecisionCustomToolCallParam') }),
+  ),
+  z.intersection(
+    LiveDecisionCustomToolCallOutputParamSchema,
+    z.object({ type: z.literal('LiveDecisionCustomToolCallOutputParam') }),
+  ),
 ])
 
 export type LiveDecisionInputItemParamSchema = z.infer<typeof LiveDecisionInputItemParamSchema>
@@ -20193,7 +20962,7 @@ export const LiveDecisionItemCreateParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z.literal('decision.item.create').default('decision.item.create'),
@@ -20228,7 +20997,7 @@ export const LiveDecisionItemDeleteParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z.literal('decision.item.delete').default('decision.item.delete'),
@@ -20255,7 +21024,7 @@ export const LiveResponseItemCreateParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -20296,7 +21065,7 @@ export const LiveResponseCreateParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -20323,7 +21092,7 @@ export const LiveSessionCloseParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -20341,21 +21110,66 @@ export type LiveSessionCloseParamSchema = z.infer<typeof LiveSessionCloseParamSc
 
 export const LiveClientEventSchema = z
   .xor([
-    LiveSessionStartEventSchema,
-    LiveSessionUpdateParamSchema,
-    LiveInputAudioAppendEventSchema,
-    LiveInputAudioMuteParamSchema,
-    LiveInputAudioUnmuteParamSchema,
-    LiveOutputAudioFixturePlayParamSchema,
-    LiveInstructionsAppendParamSchema,
-    LiveThinkingAppendParamSchema,
-    LiveCommentaryAppendParamSchema,
-    LiveDecisionCreateParamSchema,
-    LiveDecisionItemCreateParamSchema,
-    LiveDecisionItemDeleteParamSchema,
-    LiveResponseItemCreateParamSchema,
-    LiveResponseCreateParamSchema,
-    LiveSessionCloseParamSchema,
+    z.intersection(
+      LiveSessionStartEventSchema,
+      z.object({ type: z.literal('LiveSessionStartEvent') }),
+    ),
+    z.intersection(
+      LiveSessionUpdateParamSchema,
+      z.object({ type: z.literal('LiveSessionUpdateParam') }),
+    ),
+    z.intersection(
+      LiveInputAudioAppendEventSchema,
+      z.object({ type: z.literal('LiveInputAudioAppendEvent') }),
+    ),
+    z.intersection(
+      LiveInputAudioMuteParamSchema,
+      z.object({ type: z.literal('LiveInputAudioMuteParam') }),
+    ),
+    z.intersection(
+      LiveInputAudioUnmuteParamSchema,
+      z.object({ type: z.literal('LiveInputAudioUnmuteParam') }),
+    ),
+    z.intersection(
+      LiveOutputAudioFixturePlayParamSchema,
+      z.object({ type: z.literal('LiveOutputAudioFixturePlayParam') }),
+    ),
+    z.intersection(
+      LiveInstructionsAppendParamSchema,
+      z.object({ type: z.literal('LiveInstructionsAppendParam') }),
+    ),
+    z.intersection(
+      LiveThinkingAppendParamSchema,
+      z.object({ type: z.literal('LiveThinkingAppendParam') }),
+    ),
+    z.intersection(
+      LiveCommentaryAppendParamSchema,
+      z.object({ type: z.literal('LiveCommentaryAppendParam') }),
+    ),
+    z.intersection(
+      LiveDecisionCreateParamSchema,
+      z.object({ type: z.literal('LiveDecisionCreateParam') }),
+    ),
+    z.intersection(
+      LiveDecisionItemCreateParamSchema,
+      z.object({ type: z.literal('LiveDecisionItemCreateParam') }),
+    ),
+    z.intersection(
+      LiveDecisionItemDeleteParamSchema,
+      z.object({ type: z.literal('LiveDecisionItemDeleteParam') }),
+    ),
+    z.intersection(
+      LiveResponseItemCreateParamSchema,
+      z.object({ type: z.literal('LiveResponseItemCreateParam') }),
+    ),
+    z.intersection(
+      LiveResponseCreateParamSchema,
+      z.object({ type: z.literal('LiveResponseCreateParam') }),
+    ),
+    z.intersection(
+      LiveSessionCloseParamSchema,
+      z.object({ type: z.literal('LiveSessionCloseParam') }),
+    ),
   ])
   .meta({
     description:
@@ -20539,7 +21353,7 @@ export const LiveForkSessionStartEventSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -20561,21 +21375,66 @@ export type LiveForkSessionStartEventSchema = z.infer<typeof LiveForkSessionStar
 
 export const LiveForkClientEventSchema = z
   .xor([
-    LiveForkSessionStartEventSchema,
-    LiveSessionUpdateParamSchema,
-    LiveInputAudioAppendEventSchema,
-    LiveInputAudioMuteParamSchema,
-    LiveInputAudioUnmuteParamSchema,
-    LiveOutputAudioFixturePlayParamSchema,
-    LiveInstructionsAppendParamSchema,
-    LiveThinkingAppendParamSchema,
-    LiveCommentaryAppendParamSchema,
-    LiveDecisionCreateParamSchema,
-    LiveDecisionItemCreateParamSchema,
-    LiveDecisionItemDeleteParamSchema,
-    LiveResponseItemCreateParamSchema,
-    LiveResponseCreateParamSchema,
-    LiveSessionCloseParamSchema,
+    z.intersection(
+      LiveForkSessionStartEventSchema,
+      z.object({ type: z.literal('LiveForkSessionStartEvent') }),
+    ),
+    z.intersection(
+      LiveSessionUpdateParamSchema,
+      z.object({ type: z.literal('LiveSessionUpdateParam') }),
+    ),
+    z.intersection(
+      LiveInputAudioAppendEventSchema,
+      z.object({ type: z.literal('LiveInputAudioAppendEvent') }),
+    ),
+    z.intersection(
+      LiveInputAudioMuteParamSchema,
+      z.object({ type: z.literal('LiveInputAudioMuteParam') }),
+    ),
+    z.intersection(
+      LiveInputAudioUnmuteParamSchema,
+      z.object({ type: z.literal('LiveInputAudioUnmuteParam') }),
+    ),
+    z.intersection(
+      LiveOutputAudioFixturePlayParamSchema,
+      z.object({ type: z.literal('LiveOutputAudioFixturePlayParam') }),
+    ),
+    z.intersection(
+      LiveInstructionsAppendParamSchema,
+      z.object({ type: z.literal('LiveInstructionsAppendParam') }),
+    ),
+    z.intersection(
+      LiveThinkingAppendParamSchema,
+      z.object({ type: z.literal('LiveThinkingAppendParam') }),
+    ),
+    z.intersection(
+      LiveCommentaryAppendParamSchema,
+      z.object({ type: z.literal('LiveCommentaryAppendParam') }),
+    ),
+    z.intersection(
+      LiveDecisionCreateParamSchema,
+      z.object({ type: z.literal('LiveDecisionCreateParam') }),
+    ),
+    z.intersection(
+      LiveDecisionItemCreateParamSchema,
+      z.object({ type: z.literal('LiveDecisionItemCreateParam') }),
+    ),
+    z.intersection(
+      LiveDecisionItemDeleteParamSchema,
+      z.object({ type: z.literal('LiveDecisionItemDeleteParam') }),
+    ),
+    z.intersection(
+      LiveResponseItemCreateParamSchema,
+      z.object({ type: z.literal('LiveResponseItemCreateParam') }),
+    ),
+    z.intersection(
+      LiveResponseCreateParamSchema,
+      z.object({ type: z.literal('LiveResponseCreateParam') }),
+    ),
+    z.intersection(
+      LiveSessionCloseParamSchema,
+      z.object({ type: z.literal('LiveSessionCloseParam') }),
+    ),
   ])
   .meta({
     description:
@@ -20647,7 +21506,7 @@ export const LiveSessionResourceParamSchema = z
             description:
               'A stable identifier for your end user, used for safety monitoring and abuse detection.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     instructions: z
@@ -20658,7 +21517,7 @@ export const LiveSessionResourceParamSchema = z
             description:
               'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input: z
@@ -20677,15 +21536,24 @@ export const LiveSessionResourceParamSchema = z
       .union([
         z
           .xor([
-            LiveClientDelegationParamSchema,
-            LiveResponsesDelegationParamSchema,
-            LiveDecisionsDelegationParamSchema,
+            z.intersection(
+              LiveClientDelegationParamSchema,
+              z.object({ type: z.literal('LiveClientDelegationParam') }),
+            ),
+            z.intersection(
+              LiveResponsesDelegationParamSchema,
+              z.object({ type: z.literal('LiveResponsesDelegationParam') }),
+            ),
+            z.intersection(
+              LiveDecisionsDelegationParamSchema,
+              z.object({ type: z.literal('LiveDecisionsDelegationParam') }),
+            ),
           ])
           .meta({
             description:
               'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     triggers: z
@@ -21423,10 +22291,10 @@ export type AnswerResourceRefusalSchema = z.infer<typeof AnswerResourceRefusalSc
 
 export const AnswerResourceSchema = z
   .xor([
-    AnswerResourcePredicateSchema,
-    AnswerResourceChoiceSchema,
-    AnswerResourceScoreSchema,
-    AnswerResourceRefusalSchema,
+    z.intersection(AnswerResourcePredicateSchema, z.object({ type: z.literal('predicate') })),
+    z.intersection(AnswerResourceChoiceSchema, z.object({ type: z.literal('choice') })),
+    z.intersection(AnswerResourceScoreSchema, z.object({ type: z.literal('score') })),
+    z.intersection(AnswerResourceRefusalSchema, z.object({ type: z.literal('refusal') })),
   ])
   .meta({
     description: 'A completed question always includes its name, including null when unnamed.',
@@ -21506,7 +22374,7 @@ export const LiveDecisionEventSchema = z
     event_id: z.string().meta({ description: 'The unique ID of this Live server event.' }),
     delegation_id: z.union([
       z.string().meta({ description: 'The Live delegation ID, or null for a transcript trigger.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     trigger_id: z.union([
       z
@@ -21514,14 +22382,14 @@ export const LiveDecisionEventSchema = z
         .meta({
           description: 'The Live-assigned ID of this trigger firing, or null for a delegation.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     source_event_type: z.union([
       z.xor([
         z.literal('session.input_transcript.delta').default('session.input_transcript.delta'),
         z.literal('session.output_transcript.delta').default('session.output_transcript.delta'),
       ]),
-      z.null().nullable(),
+      z.null(),
     ]),
     source_event_id: z.union([
       z
@@ -21530,7 +22398,7 @@ export const LiveDecisionEventSchema = z
           description:
             'The event_id of the transcript delta that fired this trigger, or null for a delegation.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     event: LiveDecisionCompletedSchema,
   })
@@ -21573,9 +22441,18 @@ export const LiveDecisionStoredUserMessageParamSchema = z.object({
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
     z.array(
       z.xor([
-        LiveDecisionUserInputTextParamSchema,
-        LiveDecisionUserInputImageParamSchema,
-        LiveDecisionInputJsonParamSchema,
+        z.intersection(
+          LiveDecisionUserInputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionUserInputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionUserInputImageParamSchema,
+          z.object({ type: z.literal('LiveDecisionUserInputImageParam') }),
+        ),
+        z.intersection(
+          LiveDecisionInputJsonParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputJsonParam') }),
+        ),
       ]),
     ),
   ]),
@@ -21619,7 +22496,18 @@ export const LiveDecisionStoredAssistantMessageParamSchema = z.object({
   role: z.literal('assistant').default('assistant'),
   content: z.xor([
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
-    z.array(z.xor([LiveDecisionOutputTextParamSchema, LiveDecisionRefusalParamSchema])),
+    z.array(
+      z.xor([
+        z.intersection(
+          LiveDecisionOutputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionOutputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionRefusalParamSchema,
+          z.object({ type: z.literal('LiveDecisionRefusalParam') }),
+        ),
+      ]),
+    ),
   ]),
   phase: z
     .union([
@@ -21627,7 +22515,7 @@ export const LiveDecisionStoredAssistantMessageParamSchema = z.object({
         description:
           'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -21643,7 +22531,7 @@ export const LiveDecisionStoredFunctionCallParamSchema = z.object({
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z
     .literal('function_call')
     .default('function_call')
@@ -21661,7 +22549,7 @@ export const LiveDecisionStoredFunctionCallParamSchema = z.object({
         .min(1)
         .max(128)
         .meta({ description: 'The namespace of the function to call.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   arguments: z.string().meta({ description: 'The function arguments as a JSON string.' }),
@@ -21678,7 +22566,7 @@ export const LiveDecisionStoredFunctionCallOutputParamSchema = z.object({
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z
     .literal('function_call_output')
     .default('function_call_output')
@@ -21687,7 +22575,18 @@ export const LiveDecisionStoredFunctionCallOutputParamSchema = z.object({
     }),
   output: z.xor([
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
-    z.array(z.xor([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    z.array(
+      z.xor([
+        z.intersection(
+          LiveDecisionInputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionInputImageParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputImageParam') }),
+        ),
+      ]),
+    ),
   ]),
 })
 
@@ -21702,7 +22601,7 @@ export const LiveDecisionStoredCustomToolCallParamSchema = z.object({
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z
     .literal('custom_tool_call')
     .default('custom_tool_call')
@@ -21721,7 +22620,7 @@ export const LiveDecisionStoredCustomToolCallParamSchema = z.object({
         .min(1)
         .max(64)
         .meta({ description: 'The namespace of the function to call.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   input: z.string().meta({ description: 'The input to the custom tool call.' }),
@@ -21738,11 +22637,22 @@ export const LiveDecisionStoredCustomToolCallOutputParamSchema = z.object({
     .min(1)
     .max(64)
     .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-  status: z.union([LiveFunctionCallItemStatusSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([LiveFunctionCallItemStatusSchema, z.null()]).exactOptional(),
   type: z.literal('custom_tool_call_output').default('custom_tool_call_output'),
   output: z.xor([
     z.string().max(10485760).meta({ description: 'The text input to the model.' }),
-    z.array(z.xor([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    z.array(
+      z.xor([
+        z.intersection(
+          LiveDecisionInputTextParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputTextParam') }),
+        ),
+        z.intersection(
+          LiveDecisionInputImageParamSchema,
+          z.object({ type: z.literal('LiveDecisionInputImageParam') }),
+        ),
+      ]),
+    ),
   ]),
 })
 
@@ -21752,15 +22662,39 @@ export type LiveDecisionStoredCustomToolCallOutputParamSchema = z.infer<
 
 export const LiveDecisionStoredInputItemParamSchema = z.xor([
   z.xor([
-    LiveDecisionStoredUserMessageParamSchema,
-    LiveDecisionStoredDeveloperMessageParamSchema,
-    LiveDecisionStoredSystemMessageParamSchema,
-    LiveDecisionStoredAssistantMessageParamSchema,
+    z.intersection(
+      LiveDecisionStoredUserMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionStoredUserMessageParam') }),
+    ),
+    z.intersection(
+      LiveDecisionStoredDeveloperMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionStoredDeveloperMessageParam') }),
+    ),
+    z.intersection(
+      LiveDecisionStoredSystemMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionStoredSystemMessageParam') }),
+    ),
+    z.intersection(
+      LiveDecisionStoredAssistantMessageParamSchema,
+      z.object({ role: z.literal('LiveDecisionStoredAssistantMessageParam') }),
+    ),
   ]),
-  LiveDecisionStoredFunctionCallParamSchema,
-  LiveDecisionStoredFunctionCallOutputParamSchema,
-  LiveDecisionStoredCustomToolCallParamSchema,
-  LiveDecisionStoredCustomToolCallOutputParamSchema,
+  z.intersection(
+    LiveDecisionStoredFunctionCallParamSchema,
+    z.object({ type: z.literal('LiveDecisionStoredFunctionCallParam') }),
+  ),
+  z.intersection(
+    LiveDecisionStoredFunctionCallOutputParamSchema,
+    z.object({ type: z.literal('LiveDecisionStoredFunctionCallOutputParam') }),
+  ),
+  z.intersection(
+    LiveDecisionStoredCustomToolCallParamSchema,
+    z.object({ type: z.literal('LiveDecisionStoredCustomToolCallParam') }),
+  ),
+  z.intersection(
+    LiveDecisionStoredCustomToolCallOutputParamSchema,
+    z.object({ type: z.literal('LiveDecisionStoredCustomToolCallOutputParam') }),
+  ),
 ])
 
 export type LiveDecisionStoredInputItemParamSchema = z.infer<
@@ -21848,7 +22782,7 @@ export const LiveResponseEventSchema = z
             description:
               'The Live delegation associated with the nested Responses event. May be null or omitted when the event cannot be correlated with a delegation.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     event: z
@@ -22238,35 +23172,89 @@ export type LiveTransportFailedSchema = z.infer<typeof LiveTransportFailedSchema
 
 export const LiveServerEvent2Schema = z
   .xor([
-    LiveSessionStartedSchema,
-    LiveSessionUpdatedSchema,
-    LiveSessionResumedSchema,
-    LiveSessionPausedSchema,
-    LiveInputAudioMutedSchema,
-    LiveInputAudioUnmutedSchema,
-    LiveOutputAudioFixturePlayingSchema,
-    LiveOutputAudioFixturePlayedSchema,
-    LiveInstructionsAppendedSchema,
-    LiveThinkingAppendedSchema,
-    LiveCommentaryAppendedSchema,
-    LiveInputAudioAppendSchema,
-    LiveOutputAudioDeltaSchema,
-    LiveInputTranscriptDeltaSchema,
-    LiveOutputTranscriptDeltaSchema,
-    LiveDelegationCreatedSchema,
-    LiveDecisionEventSchema,
-    LiveDecisionItemCreatedSchema,
-    LiveDecisionItemDeletedSchema,
-    LiveResponseEventSchema,
-    LiveSessionUsageUpdatedSchema,
-    LiveSessionClosedSchema,
-    LiveErrorEventSchema,
-    LiveInfoEventSchema,
-    LiveTransportDTMFReceivedSchema,
-    LiveTransportDTMFSentSchema,
-    LiveTransportRingingSchema,
-    LiveTransportAnsweredSchema,
-    LiveTransportFailedSchema,
+    z.intersection(LiveSessionStartedSchema, z.object({ type: z.literal('LiveSessionStarted') })),
+    z.intersection(LiveSessionUpdatedSchema, z.object({ type: z.literal('LiveSessionUpdated') })),
+    z.intersection(LiveSessionResumedSchema, z.object({ type: z.literal('LiveSessionResumed') })),
+    z.intersection(LiveSessionPausedSchema, z.object({ type: z.literal('LiveSessionPaused') })),
+    z.intersection(LiveInputAudioMutedSchema, z.object({ type: z.literal('LiveInputAudioMuted') })),
+    z.intersection(
+      LiveInputAudioUnmutedSchema,
+      z.object({ type: z.literal('LiveInputAudioUnmuted') }),
+    ),
+    z.intersection(
+      LiveOutputAudioFixturePlayingSchema,
+      z.object({ type: z.literal('LiveOutputAudioFixturePlaying') }),
+    ),
+    z.intersection(
+      LiveOutputAudioFixturePlayedSchema,
+      z.object({ type: z.literal('LiveOutputAudioFixturePlayed') }),
+    ),
+    z.intersection(
+      LiveInstructionsAppendedSchema,
+      z.object({ type: z.literal('LiveInstructionsAppended') }),
+    ),
+    z.intersection(
+      LiveThinkingAppendedSchema,
+      z.object({ type: z.literal('LiveThinkingAppended') }),
+    ),
+    z.intersection(
+      LiveCommentaryAppendedSchema,
+      z.object({ type: z.literal('LiveCommentaryAppended') }),
+    ),
+    z.intersection(
+      LiveInputAudioAppendSchema,
+      z.object({ type: z.literal('LiveInputAudioAppend') }),
+    ),
+    z.intersection(
+      LiveOutputAudioDeltaSchema,
+      z.object({ type: z.literal('LiveOutputAudioDelta') }),
+    ),
+    z.intersection(
+      LiveInputTranscriptDeltaSchema,
+      z.object({ type: z.literal('LiveInputTranscriptDelta') }),
+    ),
+    z.intersection(
+      LiveOutputTranscriptDeltaSchema,
+      z.object({ type: z.literal('LiveOutputTranscriptDelta') }),
+    ),
+    z.intersection(
+      LiveDelegationCreatedSchema,
+      z.object({ type: z.literal('LiveDelegationCreated') }),
+    ),
+    z.intersection(LiveDecisionEventSchema, z.object({ type: z.literal('LiveDecisionEvent') })),
+    z.intersection(
+      LiveDecisionItemCreatedSchema,
+      z.object({ type: z.literal('LiveDecisionItemCreated') }),
+    ),
+    z.intersection(
+      LiveDecisionItemDeletedSchema,
+      z.object({ type: z.literal('LiveDecisionItemDeleted') }),
+    ),
+    z.intersection(LiveResponseEventSchema, z.object({ type: z.literal('LiveResponseEvent') })),
+    z.intersection(
+      LiveSessionUsageUpdatedSchema,
+      z.object({ type: z.literal('LiveSessionUsageUpdated') }),
+    ),
+    z.intersection(LiveSessionClosedSchema, z.object({ type: z.literal('LiveSessionClosed') })),
+    z.intersection(LiveErrorEventSchema, z.object({ type: z.literal('LiveErrorEvent') })),
+    z.intersection(LiveInfoEventSchema, z.object({ type: z.literal('LiveInfoEvent') })),
+    z.intersection(
+      LiveTransportDTMFReceivedSchema,
+      z.object({ type: z.literal('LiveTransportDTMFReceived') }),
+    ),
+    z.intersection(
+      LiveTransportDTMFSentSchema,
+      z.object({ type: z.literal('LiveTransportDTMFSent') }),
+    ),
+    z.intersection(
+      LiveTransportRingingSchema,
+      z.object({ type: z.literal('LiveTransportRinging') }),
+    ),
+    z.intersection(
+      LiveTransportAnsweredSchema,
+      z.object({ type: z.literal('LiveTransportAnswered') }),
+    ),
+    z.intersection(LiveTransportFailedSchema, z.object({ type: z.literal('LiveTransportFailed') })),
   ])
   .meta({
     description: 'An event sent by the Live API on a primary WebSocket or sideband connection.',
@@ -22364,7 +23352,13 @@ export const LiveSessionCreateRequestSchema = z
       description: 'Startup configuration for the Live session.',
     }),
     transport: z
-      .xor([LiveWebRTCTransportSchema, LiveSIPTransportSchema])
+      .xor([
+        z.intersection(
+          LiveWebRTCTransportSchema,
+          z.object({ type: z.literal('LiveWebRTCTransport') }),
+        ),
+        z.intersection(LiveSIPTransportSchema, z.object({ type: z.literal('LiveSIPTransport') })),
+      ])
       .meta({
         description:
           'WebRTC transport with an SDP offer, or SIP transport with a destination and per-call trunk credentials.',
@@ -22398,7 +23392,10 @@ export const LiveSessionCreateResponseSchema = z
     session: SessionSchema,
     transport: z
       .xor([
-        LiveWebRTCTransportSchema,
+        z.intersection(
+          LiveWebRTCTransportSchema,
+          z.object({ type: z.literal('LiveWebRTCTransport') }),
+        ),
         z
           .object({
             type: z
@@ -22430,7 +23427,7 @@ export const LiveTransportDTMFSendParamSchema = z
             description:
               "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z.literal('transport.dtmf.send').default('transport.dtmf.send'),
@@ -22450,20 +23447,62 @@ export type LiveTransportDTMFSendParamSchema = z.infer<typeof LiveTransportDTMFS
 
 export const LiveSidebandClientEventSchema = z
   .xor([
-    LiveSessionUpdateParamSchema,
-    LiveInputAudioMuteParamSchema,
-    LiveInputAudioUnmuteParamSchema,
-    LiveOutputAudioFixturePlayParamSchema,
-    LiveTransportDTMFSendParamSchema,
-    LiveInstructionsAppendParamSchema,
-    LiveThinkingAppendParamSchema,
-    LiveCommentaryAppendParamSchema,
-    LiveDecisionCreateParamSchema,
-    LiveDecisionItemCreateParamSchema,
-    LiveDecisionItemDeleteParamSchema,
-    LiveResponseItemCreateParamSchema,
-    LiveResponseCreateParamSchema,
-    LiveSessionCloseParamSchema,
+    z.intersection(
+      LiveSessionUpdateParamSchema,
+      z.object({ type: z.literal('LiveSessionUpdateParam') }),
+    ),
+    z.intersection(
+      LiveInputAudioMuteParamSchema,
+      z.object({ type: z.literal('LiveInputAudioMuteParam') }),
+    ),
+    z.intersection(
+      LiveInputAudioUnmuteParamSchema,
+      z.object({ type: z.literal('LiveInputAudioUnmuteParam') }),
+    ),
+    z.intersection(
+      LiveOutputAudioFixturePlayParamSchema,
+      z.object({ type: z.literal('LiveOutputAudioFixturePlayParam') }),
+    ),
+    z.intersection(
+      LiveTransportDTMFSendParamSchema,
+      z.object({ type: z.literal('LiveTransportDTMFSendParam') }),
+    ),
+    z.intersection(
+      LiveInstructionsAppendParamSchema,
+      z.object({ type: z.literal('LiveInstructionsAppendParam') }),
+    ),
+    z.intersection(
+      LiveThinkingAppendParamSchema,
+      z.object({ type: z.literal('LiveThinkingAppendParam') }),
+    ),
+    z.intersection(
+      LiveCommentaryAppendParamSchema,
+      z.object({ type: z.literal('LiveCommentaryAppendParam') }),
+    ),
+    z.intersection(
+      LiveDecisionCreateParamSchema,
+      z.object({ type: z.literal('LiveDecisionCreateParam') }),
+    ),
+    z.intersection(
+      LiveDecisionItemCreateParamSchema,
+      z.object({ type: z.literal('LiveDecisionItemCreateParam') }),
+    ),
+    z.intersection(
+      LiveDecisionItemDeleteParamSchema,
+      z.object({ type: z.literal('LiveDecisionItemDeleteParam') }),
+    ),
+    z.intersection(
+      LiveResponseItemCreateParamSchema,
+      z.object({ type: z.literal('LiveResponseItemCreateParam') }),
+    ),
+    z.intersection(
+      LiveResponseCreateParamSchema,
+      z.object({ type: z.literal('LiveResponseCreateParam') }),
+    ),
+    z.intersection(
+      LiveSessionCloseParamSchema,
+      z.object({ type: z.literal('LiveSessionCloseParam') }),
+    ),
   ])
   .meta({
     description:
@@ -22503,33 +23542,81 @@ export type LiveSidebandPathParamsSchema = z.infer<typeof LiveSidebandPathParams
 
 export const LiveSidebandServerEventSchema = z
   .xor([
-    LiveTransportRingingSchema,
-    LiveTransportAnsweredSchema,
-    LiveTransportFailedSchema,
-    LiveTransportDTMFReceivedSchema,
-    LiveTransportDTMFSentSchema,
-    LiveSessionStartedSchema,
-    LiveSessionUpdatedSchema,
-    LiveSessionResumedSchema,
-    LiveSessionPausedSchema,
-    LiveInputAudioMutedSchema,
-    LiveInputAudioUnmutedSchema,
-    LiveOutputAudioFixturePlayingSchema,
-    LiveOutputAudioFixturePlayedSchema,
-    LiveInstructionsAppendedSchema,
-    LiveThinkingAppendedSchema,
-    LiveCommentaryAppendedSchema,
-    LiveInputTranscriptDeltaSchema,
-    LiveOutputTranscriptDeltaSchema,
-    LiveDelegationCreatedSchema,
-    LiveDecisionEventSchema,
-    LiveDecisionItemCreatedSchema,
-    LiveDecisionItemDeletedSchema,
-    LiveResponseEventSchema,
-    LiveSessionUsageUpdatedSchema,
-    LiveSessionClosedSchema,
-    LiveErrorEventSchema,
-    LiveInfoEventSchema,
+    z.intersection(
+      LiveTransportRingingSchema,
+      z.object({ type: z.literal('LiveTransportRinging') }),
+    ),
+    z.intersection(
+      LiveTransportAnsweredSchema,
+      z.object({ type: z.literal('LiveTransportAnswered') }),
+    ),
+    z.intersection(LiveTransportFailedSchema, z.object({ type: z.literal('LiveTransportFailed') })),
+    z.intersection(
+      LiveTransportDTMFReceivedSchema,
+      z.object({ type: z.literal('LiveTransportDTMFReceived') }),
+    ),
+    z.intersection(
+      LiveTransportDTMFSentSchema,
+      z.object({ type: z.literal('LiveTransportDTMFSent') }),
+    ),
+    z.intersection(LiveSessionStartedSchema, z.object({ type: z.literal('LiveSessionStarted') })),
+    z.intersection(LiveSessionUpdatedSchema, z.object({ type: z.literal('LiveSessionUpdated') })),
+    z.intersection(LiveSessionResumedSchema, z.object({ type: z.literal('LiveSessionResumed') })),
+    z.intersection(LiveSessionPausedSchema, z.object({ type: z.literal('LiveSessionPaused') })),
+    z.intersection(LiveInputAudioMutedSchema, z.object({ type: z.literal('LiveInputAudioMuted') })),
+    z.intersection(
+      LiveInputAudioUnmutedSchema,
+      z.object({ type: z.literal('LiveInputAudioUnmuted') }),
+    ),
+    z.intersection(
+      LiveOutputAudioFixturePlayingSchema,
+      z.object({ type: z.literal('LiveOutputAudioFixturePlaying') }),
+    ),
+    z.intersection(
+      LiveOutputAudioFixturePlayedSchema,
+      z.object({ type: z.literal('LiveOutputAudioFixturePlayed') }),
+    ),
+    z.intersection(
+      LiveInstructionsAppendedSchema,
+      z.object({ type: z.literal('LiveInstructionsAppended') }),
+    ),
+    z.intersection(
+      LiveThinkingAppendedSchema,
+      z.object({ type: z.literal('LiveThinkingAppended') }),
+    ),
+    z.intersection(
+      LiveCommentaryAppendedSchema,
+      z.object({ type: z.literal('LiveCommentaryAppended') }),
+    ),
+    z.intersection(
+      LiveInputTranscriptDeltaSchema,
+      z.object({ type: z.literal('LiveInputTranscriptDelta') }),
+    ),
+    z.intersection(
+      LiveOutputTranscriptDeltaSchema,
+      z.object({ type: z.literal('LiveOutputTranscriptDelta') }),
+    ),
+    z.intersection(
+      LiveDelegationCreatedSchema,
+      z.object({ type: z.literal('LiveDelegationCreated') }),
+    ),
+    z.intersection(LiveDecisionEventSchema, z.object({ type: z.literal('LiveDecisionEvent') })),
+    z.intersection(
+      LiveDecisionItemCreatedSchema,
+      z.object({ type: z.literal('LiveDecisionItemCreated') }),
+    ),
+    z.intersection(
+      LiveDecisionItemDeletedSchema,
+      z.object({ type: z.literal('LiveDecisionItemDeleted') }),
+    ),
+    z.intersection(LiveResponseEventSchema, z.object({ type: z.literal('LiveResponseEvent') })),
+    z.intersection(
+      LiveSessionUsageUpdatedSchema,
+      z.object({ type: z.literal('LiveSessionUsageUpdated') }),
+    ),
+    z.intersection(LiveSessionClosedSchema, z.object({ type: z.literal('LiveSessionClosed') })),
+    z.intersection(LiveErrorEventSchema, z.object({ type: z.literal('LiveErrorEvent') })),
+    z.intersection(LiveInfoEventSchema, z.object({ type: z.literal('LiveInfoEvent') })),
   ])
   .meta({
     description:
@@ -22557,7 +23644,7 @@ export const ModelIdsSchema = z.union([ModelIdsSharedSchema, ModelIdsResponsesSc
 export type ModelIdsSchema = z.infer<typeof ModelIdsSchema>
 
 export const ModelIdsCompactionSchema = z
-  .union([ModelIdsResponsesSchema, z.string(), z.null().nullable()])
+  .union([ModelIdsResponsesSchema, z.string(), z.null()])
   .meta({
     description:
       'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
@@ -22582,7 +23669,7 @@ export const ModifyAssistantRequestSchema = z.strictObject({
         .meta({
           description: 'The name of the assistant. The maximum length is 256 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   description: z
@@ -22593,7 +23680,7 @@ export const ModifyAssistantRequestSchema = z.strictObject({
         .meta({
           description: 'The description of the assistant. The maximum length is 512 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   instructions: z
@@ -22605,7 +23692,7 @@ export const ModifyAssistantRequestSchema = z.strictObject({
           description:
             'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   tools: z
@@ -22657,7 +23744,7 @@ export const ModifyAssistantRequestSchema = z.strictObject({
           description:
             "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   metadata: MetadataSchema.exactOptional(),
@@ -22673,7 +23760,7 @@ export const ModifyAssistantRequestSchema = z.strictObject({
             'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   top_p: z
@@ -22688,12 +23775,10 @@ export const ModifyAssistantRequestSchema = z.strictObject({
             'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
-  response_format: z
-    .union([AssistantsApiResponseFormatOptionSchema, z.null().nullable()])
-    .exactOptional(),
+  response_format: z.union([AssistantsApiResponseFormatOptionSchema, z.null()]).exactOptional(),
 })
 
 export type ModifyAssistantRequestSchema = z.infer<typeof ModifyAssistantRequestSchema>
@@ -22749,7 +23834,7 @@ export const ModifyThreadRequestSchema = z.strictObject({
           description:
             "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   metadata: MetadataSchema.exactOptional(),
@@ -22870,10 +23955,10 @@ export const OrganizationSpendAlertListResourceSchema = z
       .array(OrganizationSpendAlertSchema)
       .meta({ description: 'Spend alerts returned in the current page.' }),
     first_id: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The ID of the first spend alert in this page.' }),
     last_id: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The ID of the last spend alert in this page.' }),
     has_more: z
       .boolean()
@@ -22900,34 +23985,58 @@ export const OutputAudioSchema = z
 export type OutputAudioSchema = z.infer<typeof OutputAudioSchema>
 
 export const OutputItemSchema = z.xor([
-  OutputMessageSchema,
-  FileSearchToolCallSchema,
-  FunctionToolCallSchema,
-  FunctionToolCallOutputResourceSchema,
-  WebSearchToolCallSchema,
-  ComputerToolCallSchema,
-  ComputerToolCallOutputResourceSchema,
-  ReasoningItemSchema,
-  ProgramSchema,
-  ProgramOutputSchema,
-  ToolSearchCallSchema,
-  ToolSearchOutputSchema,
-  AdditionalToolsSchema,
-  CompactionBodySchema,
-  ImageGenToolCallSchema,
-  CodeInterpreterToolCallSchema,
-  LocalShellToolCallSchema,
-  LocalShellToolCallOutputSchema,
-  FunctionShellCallSchema,
-  FunctionShellCallOutputSchema,
-  ApplyPatchToolCallSchema,
-  ApplyPatchToolCallOutputSchema,
-  MCPToolCallSchema,
-  MCPListToolsSchema,
-  MCPApprovalRequestSchema,
-  MCPApprovalResponseResourceSchema,
-  CustomToolCallSchema,
-  CustomToolCallOutputResourceSchema,
+  z.intersection(OutputMessageSchema, z.object({ type: z.literal('OutputMessage') })),
+  z.intersection(FileSearchToolCallSchema, z.object({ type: z.literal('FileSearchToolCall') })),
+  z.intersection(FunctionToolCallSchema, z.object({ type: z.literal('FunctionToolCall') })),
+  z.intersection(
+    FunctionToolCallOutputResourceSchema,
+    z.object({ type: z.literal('FunctionToolCallOutputResource') }),
+  ),
+  z.intersection(WebSearchToolCallSchema, z.object({ type: z.literal('WebSearchToolCall') })),
+  z.intersection(ComputerToolCallSchema, z.object({ type: z.literal('ComputerToolCall') })),
+  z.intersection(
+    ComputerToolCallOutputResourceSchema,
+    z.object({ type: z.literal('ComputerToolCallOutputResource') }),
+  ),
+  z.intersection(ReasoningItemSchema, z.object({ type: z.literal('ReasoningItem') })),
+  z.intersection(ProgramSchema, z.object({ type: z.literal('Program') })),
+  z.intersection(ProgramOutputSchema, z.object({ type: z.literal('ProgramOutput') })),
+  z.intersection(ToolSearchCallSchema, z.object({ type: z.literal('ToolSearchCall') })),
+  z.intersection(ToolSearchOutputSchema, z.object({ type: z.literal('ToolSearchOutput') })),
+  z.intersection(AdditionalToolsSchema, z.object({ type: z.literal('AdditionalTools') })),
+  z.intersection(CompactionBodySchema, z.object({ type: z.literal('CompactionBody') })),
+  z.intersection(ImageGenToolCallSchema, z.object({ type: z.literal('ImageGenToolCall') })),
+  z.intersection(
+    CodeInterpreterToolCallSchema,
+    z.object({ type: z.literal('CodeInterpreterToolCall') }),
+  ),
+  z.intersection(LocalShellToolCallSchema, z.object({ type: z.literal('LocalShellToolCall') })),
+  z.intersection(
+    LocalShellToolCallOutputSchema,
+    z.object({ type: z.literal('LocalShellToolCallOutput') }),
+  ),
+  z.intersection(FunctionShellCallSchema, z.object({ type: z.literal('FunctionShellCall') })),
+  z.intersection(
+    FunctionShellCallOutputSchema,
+    z.object({ type: z.literal('FunctionShellCallOutput') }),
+  ),
+  z.intersection(ApplyPatchToolCallSchema, z.object({ type: z.literal('ApplyPatchToolCall') })),
+  z.intersection(
+    ApplyPatchToolCallOutputSchema,
+    z.object({ type: z.literal('ApplyPatchToolCallOutput') }),
+  ),
+  z.intersection(MCPToolCallSchema, z.object({ type: z.literal('MCPToolCall') })),
+  z.intersection(MCPListToolsSchema, z.object({ type: z.literal('MCPListTools') })),
+  z.intersection(MCPApprovalRequestSchema, z.object({ type: z.literal('MCPApprovalRequest') })),
+  z.intersection(
+    MCPApprovalResponseResourceSchema,
+    z.object({ type: z.literal('MCPApprovalResponseResource') }),
+  ),
+  z.intersection(CustomToolCallSchema, z.object({ type: z.literal('CustomToolCall') })),
+  z.intersection(
+    CustomToolCallOutputResourceSchema,
+    z.object({ type: z.literal('CustomToolCallOutputResource') }),
+  ),
 ])
 
 export type OutputItemSchema = z.infer<typeof OutputItemSchema>
@@ -22972,7 +24081,7 @@ export const ProjectSchema = z
       .literal('organization.project')
       .meta({ description: 'The object type, which is always `organization.project`' }),
     name: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The name of the project. This appears in reporting.' })
       .exactOptional(),
     created_at: z
@@ -22986,15 +24095,15 @@ export const ProjectSchema = z
             description:
               'The Unix timestamp (in seconds) of when the project was archived or `null`.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: '`active` or `archived`' })
       .exactOptional(),
     external_key_id: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The external key associated with the project.' })
       .exactOptional(),
     residency: PublicProjectResidencySchema.meta({
@@ -23051,14 +24160,14 @@ export const ProjectApiKeySchema = z
       .int()
       .meta({ description: 'The Unix timestamp (in seconds) of when the API key was created' }),
     expires_at: z
-      .union([z.int(), z.null().nullable()])
+      .union([z.int(), z.null()])
       .meta({
         description:
           'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
       })
       .exactOptional(),
     last_used_at: z
-      .union([z.int(), z.null().nullable()])
+      .union([z.int(), z.null()])
       .meta({ description: 'The Unix timestamp (in seconds) of when the API key was last used.' }),
     id: z
       .string()
@@ -23092,8 +24201,8 @@ export type ProjectApiKeyDeleteResponseSchema = z.infer<typeof ProjectApiKeyDele
 export const ProjectApiKeyListResponseSchema = z.object({
   object: z.literal('list'),
   data: z.array(ProjectApiKeySchema),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -23104,7 +24213,7 @@ export const ProjectCreateRequestSchema = z.object({
     .string()
     .meta({ description: 'The friendly name of the project, this name appears in reports.' }),
   geography: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({
       description:
         'Create the project with the specified data residency region. Your organization must have access to Data residency functionality in order to use. See [data residency controls](https://developers.openai.com/api/docs/guides/your-data#data-residency-controls) to review the functionality and limitations of setting this field.\nDeprecated: use `residency` instead. Do not provide both `geography` and `residency`.',
@@ -23112,14 +24221,14 @@ export const ProjectCreateRequestSchema = z.object({
     })
     .exactOptional(),
   residency: z
-    .union([PublicProjectResidencySchema, z.null().nullable()])
+    .union([PublicProjectResidencySchema, z.null()])
     .meta({
       description:
         'Create the project with the specified residency configuration. Your organization must have access to the requested residency configuration in order to use it. See [data residency controls](https://developers.openai.com/api/docs/guides/your-data#data-residency-controls) to review the functionality and limitations of setting this field.',
     })
     .exactOptional(),
   external_key_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'External key ID to associate with the project.' })
     .exactOptional(),
 })
@@ -23188,7 +24297,7 @@ export const ProjectGroupListResourceSchema = z
       .boolean()
       .meta({ description: 'Whether additional project group memberships are available.' }),
     next: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({
         description:
           'Cursor to fetch the next page of results, or `null` when there are no more results.',
@@ -23212,23 +24321,23 @@ export type ProjectHostedToolPermissionsSchema = z.infer<typeof ProjectHostedToo
 
 export const ProjectHostedToolPermissionsUpdateRequestSchema = z.object({
   file_search: z
-    .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+    .union([HostedToolPermissionUpdateSchema, z.null()])
     .meta({ description: 'The file search permission update.' })
     .exactOptional(),
   web_search: z
-    .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+    .union([HostedToolPermissionUpdateSchema, z.null()])
     .meta({ description: 'The web search permission update.' })
     .exactOptional(),
   image_generation: z
-    .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+    .union([HostedToolPermissionUpdateSchema, z.null()])
     .meta({ description: 'The image generation permission update.' })
     .exactOptional(),
   mcp: z
-    .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+    .union([HostedToolPermissionUpdateSchema, z.null()])
     .meta({ description: 'The MCP permission update.' })
     .exactOptional(),
   code_interpreter: z
-    .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+    .union([HostedToolPermissionUpdateSchema, z.null()])
     .meta({ description: 'The code interpreter permission update.' })
     .exactOptional(),
 })
@@ -23240,8 +24349,8 @@ export type ProjectHostedToolPermissionsUpdateRequestSchema = z.infer<
 export const ProjectListResponseSchema = z.object({
   object: z.literal('list'),
   data: z.array(ProjectSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -23332,8 +24441,8 @@ export type ProjectRateLimitSchema = z.infer<typeof ProjectRateLimitSchema>
 export const ProjectRateLimitListResponseSchema = z.object({
   object: z.literal('list'),
   data: z.array(ProjectRateLimitSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -23407,7 +24516,7 @@ export const ProjectServiceAccountApiKeySchema = z.object({
   name: z.string(),
   created_at: z.int(),
   expires_at: z
-    .union([z.int(), z.null().nullable()])
+    .union([z.int(), z.null()])
     .meta({
       description:
         'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
@@ -23425,11 +24534,11 @@ export const ProjectServiceAccountCreateRequestSchema = z.object({
       z
         .boolean()
         .meta({ description: 'Create the service account without default roles or an API key.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   expires_in_seconds: z
-    .union([z.int().min(1).max(31536000), z.null().nullable()])
+    .union([z.int().min(1).max(31536000), z.null()])
     .meta({
       description:
         'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
@@ -23452,7 +24561,7 @@ export const ProjectServiceAccountCreateResponseSchema = z.object({
         'Service accounts created with default project membership have role `member`. Accounts created with `create_service_account_only` have role `none`.\n',
     }),
   created_at: z.int(),
-  api_key: z.union([ProjectServiceAccountApiKeySchema, z.null().nullable()]),
+  api_key: z.union([ProjectServiceAccountApiKeySchema, z.null()]),
 })
 
 export type ProjectServiceAccountCreateResponseSchema = z.infer<
@@ -23472,8 +24581,8 @@ export type ProjectServiceAccountDeleteResponseSchema = z.infer<
 export const ProjectServiceAccountListResponseSchema = z.object({
   object: z.literal('list'),
   data: z.array(ProjectServiceAccountSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -23521,10 +24630,10 @@ export const ProjectSpendAlertListResourceSchema = z
       .array(ProjectSpendAlertSchema)
       .meta({ description: 'Spend alerts returned in the current page.' }),
     first_id: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The ID of the first spend alert in this page.' }),
     last_id: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The ID of the last spend alert in this page.' }),
     has_more: z
       .boolean()
@@ -23538,15 +24647,15 @@ export type ProjectSpendAlertListResourceSchema = z.infer<
 
 export const ProjectUpdateRequestSchema = z.object({
   name: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'The updated name of the project, this name appears in reports.' })
     .exactOptional(),
   external_key_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'External key ID to associate with the project.' })
     .exactOptional(),
   geography: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({
       description:
         'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
@@ -23566,11 +24675,11 @@ export const ProjectUserSchema = z
       .string()
       .meta({ description: 'The identifier, which can be referenced in API endpoints' }),
     name: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The name of the user' })
       .exactOptional(),
     email: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The email address of the user' })
       .exactOptional(),
     role: z.string().meta({ description: '`owner` or `member`' }),
@@ -23584,11 +24693,11 @@ export type ProjectUserSchema = z.infer<typeof ProjectUserSchema>
 
 export const ProjectUserCreateRequestSchema = z.object({
   user_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'The ID of the user.' })
     .exactOptional(),
   email: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'Email of the user to add.' })
     .exactOptional(),
   role: z.string().meta({ description: '`owner` or `member`' }),
@@ -23607,8 +24716,8 @@ export type ProjectUserDeleteResponseSchema = z.infer<typeof ProjectUserDeleteRe
 export const ProjectUserListResponseSchema = z.object({
   object: z.string(),
   data: z.array(ProjectUserSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -23616,7 +24725,7 @@ export type ProjectUserListResponseSchema = z.infer<typeof ProjectUserListRespon
 
 export const ProjectUserUpdateRequestSchema = z.object({
   role: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: '`owner` or `member`' })
     .exactOptional(),
 })
@@ -23636,7 +24745,7 @@ export const PublicCreateOrganizationRoleBodySchema = z
     role_name: z.string().meta({ description: 'Unique name for the role.' }),
     permissions: z.array(z.string()).meta({ description: 'Permissions to grant to the role.' }),
     description: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'Optional description of the role.' })
       .exactOptional(),
   })
@@ -23654,7 +24763,7 @@ export const PublicRoleListResourceSchema = z
       .boolean()
       .meta({ description: 'Whether more roles are available when paginating.' }),
     next: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({
         description:
           'Cursor to fetch the next page of results, or `null` when there are no additional roles.',
@@ -23667,15 +24776,15 @@ export type PublicRoleListResourceSchema = z.infer<typeof PublicRoleListResource
 export const PublicUpdateOrganizationRoleBodySchema = z
   .object({
     permissions: z
-      .union([z.array(z.string()), z.null().nullable()])
+      .union([z.array(z.string()), z.null()])
       .meta({ description: 'Updated set of permissions for the role.' })
       .exactOptional(),
     description: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'New description for the role.' })
       .exactOptional(),
     role_name: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'New name for the role.' })
       .exactOptional(),
   })
@@ -23982,10 +25091,7 @@ export const RealtimeMCPApprovalResponseSchema = z
       .meta({ description: 'The ID of the approval request being answered.' }),
     approve: z.boolean().meta({ description: 'Whether the request was approved.' }),
     reason: z
-      .union([
-        z.string().meta({ description: 'Optional reason for the decision.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'Optional reason for the decision.' }), z.null()])
       .exactOptional(),
   })
   .meta({ description: 'A Realtime item responding to an MCP approval request.\n' })
@@ -24044,14 +25150,11 @@ export const RealtimeMCPToolCallSchema = z
     approval_request_id: z
       .union([
         z.string().meta({ description: 'The ID of an associated approval request, if any.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output: z
-      .union([
-        z.string().meta({ description: 'The output from the tool call.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The output from the tool call.' }), z.null()])
       .exactOptional(),
     error: z
       .union([
@@ -24062,7 +25165,7 @@ export const RealtimeMCPToolCallSchema = z
             RealtimeMCPHTTPErrorSchema,
           ])
           .meta({ description: 'The error from the tool call, if any.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -24988,7 +26091,7 @@ export const RealtimeBetaServerEventConversationItemCreatedSchema = z
             description:
               'The ID of the preceding item in the Conversation context, allows the\nclient to understand the order of the conversation. Can be `null` if the\nitem has no predecessor.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     item: RealtimeConversationItemSchema,
@@ -25047,7 +26150,7 @@ export const RealtimeBetaServerEventConversationItemInputAudioTranscriptionCompl
         z
           .array(LogProbPropertiesSchema)
           .meta({ description: 'The log probabilities of the transcription.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     usage: z
@@ -25082,7 +26185,7 @@ export const RealtimeBetaServerEventConversationItemInputAudioTranscriptionDelta
         z
           .array(LogProbPropertiesSchema)
           .meta({ description: 'The log probabilities of the transcription.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -25217,13 +26320,13 @@ export const RealtimeBetaServerEventErrorSchema = z
             description: 'The type of error (e.g., "invalid_request_error", "server_error").\n',
           }),
         code: z
-          .union([z.string().meta({ description: 'Error code, if any.' }), z.null().nullable()])
+          .union([z.string().meta({ description: 'Error code, if any.' }), z.null()])
           .exactOptional(),
         message: z.string().meta({ description: 'A human-readable error message.' }),
         param: z
           .union([
             z.string().meta({ description: 'Parameter related to the error, if any.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         event_id: z
@@ -25234,7 +26337,7 @@ export const RealtimeBetaServerEventErrorSchema = z
                 description:
                   'The event_id of the client event that caused the error, if applicable.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       })
@@ -25277,7 +26380,7 @@ export const RealtimeBetaServerEventInputAudioBufferCommittedSchema = z
             description:
               'The ID of the preceding item after which the new item will be inserted.\nCan be `null` if the item has no predecessor.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     item_id: z
@@ -25685,7 +26788,7 @@ export const RealtimeBetaServerEventResponseMCPCallArgumentsDeltaSchema = z
     obfuscation: z
       .union([
         z.string().meta({ description: 'If present, indicates the delta text was obfuscated.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -25903,7 +27006,7 @@ export const RealtimeTurnDetectionSchema = z.union([
                   description:
                     "Optional timeout after which a model response will be triggered automatically. This is\nuseful for situations in which a long pause from the user is unexpected, such as a phone\ncall. The model will effectively prompt the user to continue the conversation based\non the current context.\n\nThe timeout value will be applied after the last model response's audio has finished playing,\ni.e. it's set to the `response.done` time plus audio playback duration.\n\nAn `input_audio_buffer.timeout_triggered` event (plus events\nassociated with the Response) will be emitted when the timeout is reached.\nIdle timeout is currently only supported for `server_vad` mode.\n",
                 }),
-              z.null().nullable(),
+              z.null(),
             ])
             .exactOptional(),
         })
@@ -25952,7 +27055,7 @@ export const RealtimeTurnDetectionSchema = z.union([
       description:
         'Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.\n\nServer VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.\n\nSemantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.\n\nFor `gpt-realtime-whisper` transcription sessions, turn detection must be\nset to `null`; VAD is not supported.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type RealtimeTurnDetectionSchema = z.infer<typeof RealtimeTurnDetectionSchema>
@@ -26054,7 +27157,7 @@ export const RealtimeSessionSchema = z
           description:
             'Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.\n',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     turn_detection: RealtimeTurnDetectionSchema.exactOptional(),
@@ -26120,7 +27223,7 @@ export const RealtimeSessionSchema = z
             description:
               'Configuration options for tracing. Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     tools: z
@@ -26154,7 +27257,7 @@ export const RealtimeSessionSchema = z
       .int()
       .meta({ description: 'Expiration timestamp for the session, in seconds since epoch.' })
       .exactOptional(),
-    prompt: z.union([PromptSchema, z.null().nullable()]).exactOptional(),
+    prompt: z.union([PromptSchema, z.null()]).exactOptional(),
     include: z
       .union([
         z
@@ -26163,7 +27266,7 @@ export const RealtimeSessionSchema = z
             description:
               'Additional fields to include in server outputs.\n- `item.input_audio_transcription.logprobs`: Include logprobs for input audio transcription.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -26498,8 +27601,9 @@ export const RealtimeSessionCreateRequestGASchema = z
               .exactOptional(),
           })
           .meta({ description: 'Granular configuration for tracing.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
+      .default(null)
       .meta({
         description:
           'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
@@ -26822,7 +27926,7 @@ export const RealtimeResponseInputMessageFieldsSchema = z.strictObject({
     .exactOptional(),
   type: z.literal('message'),
   status: z
-    .union([z.literal('completed'), z.literal('incomplete'), z.literal(null)])
+    .enum(['completed', 'incomplete'])
     .nullable()
     .default('completed')
     .meta({ description: 'Optional input status. Omission or null defaults to completed.' })
@@ -26887,11 +27991,7 @@ export const RealtimeResponseInputImageSchema = z.strictObject({
     .url()
     .regex(/^data:image\/[^;,]+;base64,.+/)
     .meta({ description: 'A base64 data URL with an image MIME type; use PNG or JPEG.' }),
-  detail: z
-    .union([z.literal('low'), z.literal('high'), z.literal('auto'), z.literal(null)])
-    .nullable()
-    .default('auto')
-    .exactOptional(),
+  detail: z.enum(['low', 'high', 'auto']).nullable().default('auto').exactOptional(),
 })
 
 export type RealtimeResponseInputImageSchema = z.infer<typeof RealtimeResponseInputImageSchema>
@@ -26954,14 +28054,10 @@ export const RealtimeResponseInputFunctionCallSchema = z
       .min(1)
       .max(32)
       .nullable()
-      .refine((val) => !['root'].includes(val))
+      .refine((val) => val === null || !['root'].includes(val))
       .exactOptional(),
     type: z.literal('function_call'),
-    status: z
-      .union([z.literal('completed'), z.literal('incomplete'), z.literal(null)])
-      .nullable()
-      .default('completed')
-      .exactOptional(),
+    status: z.enum(['completed', 'incomplete']).nullable().default('completed').exactOptional(),
     call_id: z
       .string()
       .regex(/^[a-zA-Z0-9_-]+$/)
@@ -26989,14 +28085,10 @@ export const RealtimeResponseInputFunctionCallOutputSchema = z
       .min(1)
       .max(32)
       .nullable()
-      .refine((val) => !['root'].includes(val))
+      .refine((val) => val === null || !['root'].includes(val))
       .exactOptional(),
     type: z.literal('function_call_output'),
-    status: z
-      .union([z.literal('completed'), z.literal('incomplete'), z.literal(null)])
-      .nullable()
-      .default('completed')
-      .exactOptional(),
+    status: z.enum(['completed', 'incomplete']).nullable().default('completed').exactOptional(),
     call_id: z
       .string()
       .regex(/^[a-zA-Z0-9_-]+$/)
@@ -27516,7 +28608,7 @@ export const RealtimeSessionCreateResponseGASchema = z
               description: 'The format of the input audio.',
             }).exactOptional(),
             transcription: z
-              .union([AudioTranscriptionResponseSchema, z.null().nullable()])
+              .union([AudioTranscriptionResponseSchema, z.null()])
               .meta({
                 description:
                   'Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.\n',
@@ -27612,7 +28704,7 @@ export const RealtimeSessionCreateResponseGASchema = z
             description:
               'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     tools: z
@@ -27677,7 +28769,7 @@ export const RealtimeTranscriptionSessionCreateResponseGASchema = z
           .object({
             format: RealtimeAudioFormatsSchema.exactOptional(),
             transcription: z
-              .union([AudioTranscriptionResponseSchema, z.null().nullable()])
+              .union([AudioTranscriptionResponseSchema, z.null()])
               .meta({ description: 'Configuration of the transcription model.\n' })
               .exactOptional(),
             noise_reduction: z
@@ -27725,7 +28817,7 @@ export const RealtimeTranscriptionSessionCreateResponseGASchema = z
                     description:
                       'Configuration for turn detection. Can be set to `null` to turn off. Server\nVAD means that the model will detect the start and end of speech based on\naudio volume and respond at the end of user speech. For `gpt-realtime-whisper`, this must be `null`; VAD is not supported.\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .meta({
                 description:
@@ -27752,8 +28844,14 @@ export const RealtimeCreateClientSecretResponseSchema = z
       .meta({ description: 'Expiration timestamp for the client secret, in seconds since epoch.' }),
     session: z
       .xor([
-        RealtimeSessionCreateResponseGASchema,
-        RealtimeTranscriptionSessionCreateResponseGASchema,
+        z.intersection(
+          RealtimeSessionCreateResponseGASchema,
+          z.object({ type: z.literal('realtime') }),
+        ),
+        z.intersection(
+          RealtimeTranscriptionSessionCreateResponseGASchema,
+          z.object({ type: z.literal('transcription') }),
+        ),
       ])
       .meta({
         description: 'The session configuration for either a realtime or transcription session.\n',
@@ -27997,7 +29095,7 @@ export const RealtimeServerEventConversationItemCreatedSchema = z
             description:
               'The ID of the preceding item in the Conversation context, allows the\nclient to understand the order of the conversation. Can be `null` if the\nitem has no predecessor.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     item: RealtimeConversationItemSchema,
@@ -28056,7 +29154,7 @@ export const RealtimeServerEventConversationItemInputAudioTranscriptionCompleted
         z
           .array(LogProbPropertiesSchema)
           .meta({ description: 'The log probabilities of the transcription.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     usage: z
@@ -28099,7 +29197,7 @@ export const RealtimeServerEventConversationItemInputAudioTranscriptionDeltaSche
             description:
               'The log probabilities of the transcription. These can be enabled by configuring the session with `"include": ["item.input_audio_transcription.logprobs"]`. Each entry in the array corresponds a log probability of which token would be selected for this chunk of transcription. This can help to identify if it was possible there were multiple valid options for a given chunk of transcription.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -28205,13 +29303,13 @@ export const RealtimeServerEventErrorSchema = z
             description: 'The type of error (e.g., "invalid_request_error", "server_error").\n',
           }),
         code: z
-          .union([z.string().meta({ description: 'Error code, if any.' }), z.null().nullable()])
+          .union([z.string().meta({ description: 'Error code, if any.' }), z.null()])
           .exactOptional(),
         message: z.string().meta({ description: 'A human-readable error message.' }),
         param: z
           .union([
             z.string().meta({ description: 'Parameter related to the error, if any.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         event_id: z
@@ -28222,7 +29320,7 @@ export const RealtimeServerEventErrorSchema = z
                 description:
                   'The event_id of the client event that caused the error, if applicable.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       })
@@ -28265,7 +29363,7 @@ export const RealtimeServerEventInputAudioBufferCommittedSchema = z
             description:
               'The ID of the preceding item after which the new item will be inserted.\nCan be `null` if the item has no predecessor.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     item_id: z
@@ -28836,7 +29934,7 @@ export const RealtimeServerEventConversationItemAddedSchema = z
             description:
               'The ID of the item that precedes this one, if any. This is used to\nmaintain ordering when items are inserted.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     item: RealtimeConversationItemSchema,
@@ -28864,7 +29962,7 @@ export const RealtimeServerEventConversationItemDoneSchema = z
             description:
               'The ID of the item that precedes this one, if any. This is used to\nmaintain ordering when items are inserted.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     item: RealtimeConversationItemSchema,
@@ -28991,7 +30089,7 @@ export const RealtimeServerEventResponseMCPCallArgumentsDeltaSchema = z
     obfuscation: z
       .union([
         z.string().meta({ description: 'If present, indicates the delta text was obfuscated.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -29337,7 +30435,7 @@ export const RealtimeTranslationSessionUpdateRequestSchema = z
                     description:
                       'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
             noise_reduction: z
@@ -29350,7 +30448,7 @@ export const RealtimeTranslationSessionUpdateRequestSchema = z
                   .meta({
                     description: 'Optional input noise reduction. Set to `null` to disable it.\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
           })
@@ -29477,7 +30575,7 @@ export const RealtimeTranslationSessionCreateRequestSchema = z
                     description:
                       'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
             noise_reduction: z
@@ -29490,7 +30588,7 @@ export const RealtimeTranslationSessionCreateRequestSchema = z
                   .meta({
                     description: 'Optional input noise reduction. Set to `null` to disable it.\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
           })
@@ -29593,7 +30691,7 @@ export const RealtimeTranslationSessionSchema = z
                     description:
                       'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
             noise_reduction: z
@@ -29604,7 +30702,7 @@ export const RealtimeTranslationSessionSchema = z
                     strength: RealtimeNoiseReductionStrengthSchema.exactOptional(),
                   })
                   .meta({ description: 'Optional input noise reduction.\n' }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
           })
@@ -29718,7 +30816,7 @@ export const RealtimeTranslationServerEventSessionInputTranscriptDeltaSchema = z
             description:
               'Timing metadata for stream alignment, derived from the translation frame\nwhen available. It advances in 200 ms increments, but multiple transcript\ndeltas may share the same `elapsed_ms`. Treat it as alignment metadata,\nnot a unique transcript-delta identifier.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -29748,7 +30846,7 @@ export const RealtimeTranslationServerEventSessionOutputTranscriptDeltaSchema = 
             description:
               'Timing metadata for stream alignment, derived from the translation frame\nwhen available. It advances in 200 ms increments, but multiple transcript\ndeltas may share the same `elapsed_ms`. Treat it as alignment metadata,\nnot a unique transcript-delta identifier.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -29783,7 +30881,7 @@ export const RealtimeTranslationServerEventSessionOutputAudioDeltaSchema = z
             description:
               'Timing metadata for stream alignment, derived from the translation frame\nwhen available. Treat `elapsed_ms` as alignment metadata, not a unique\nevent identifier.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -29866,11 +30964,11 @@ export const ResponseErrorSchema = z.union([
   z
     .object({
       type: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'The original error type, or null if it was not recorded.' })
         .exactOptional(),
       param: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({
           description:
             'The request parameter associated with the error, or null if none was recorded.',
@@ -29883,7 +30981,7 @@ export const ResponseErrorSchema = z.union([
     .meta({
       description: 'An error object returned when the model fails to generate a Response.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type ResponseErrorSchema = z.infer<typeof ResponseErrorSchema>
@@ -30022,7 +31120,7 @@ export const PromptCacheOptionsSchema = z
           .meta({
             description: 'The response ID supplied as the prompt cache diagnostics comparison.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -30094,10 +31192,22 @@ export type PromptCacheUnavailableDiagnosticsBodySchema = z.infer<
 
 export const PromptCacheDiagnosticsSchema = z
   .xor([
-    PromptCacheMissDiagnosticsBodySchema,
-    PromptCacheHitDiagnosticsBodySchema,
-    PromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
-    PromptCacheUnavailableDiagnosticsBodySchema,
+    z.intersection(
+      PromptCacheMissDiagnosticsBodySchema,
+      z.object({ type: z.literal('PromptCacheMissDiagnosticsBody') }),
+    ),
+    z.intersection(
+      PromptCacheHitDiagnosticsBodySchema,
+      z.object({ type: z.literal('PromptCacheHitDiagnosticsBody') }),
+    ),
+    z.intersection(
+      PromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
+      z.object({ type: z.literal('PromptCacheComparisonResponseNotFoundDiagnosticsBody') }),
+    ),
+    z.intersection(
+      PromptCacheUnavailableDiagnosticsBodySchema,
+      z.object({ type: z.literal('PromptCacheUnavailableDiagnosticsBody') }),
+    ),
   ])
   .meta({ description: 'Prompt cache diagnostics requested for this response.' })
 
@@ -30121,10 +31231,28 @@ export type ModerationErrorBodySchema = z.infer<typeof ModerationErrorBodySchema
 export const ModerationSchema = z
   .object({
     input: z
-      .xor([ModerationResultBodySchema, ModerationErrorBodySchema])
+      .xor([
+        z.intersection(
+          ModerationResultBodySchema,
+          z.object({ type: z.literal('ModerationResultBody') }),
+        ),
+        z.intersection(
+          ModerationErrorBodySchema,
+          z.object({ type: z.literal('ModerationErrorBody') }),
+        ),
+      ])
       .meta({ description: 'Moderation for the response input.' }),
     output: z
-      .xor([ModerationResultBodySchema, ModerationErrorBodySchema])
+      .xor([
+        z.intersection(
+          ModerationResultBodySchema,
+          z.object({ type: z.literal('ModerationResultBody') }),
+        ),
+        z.intersection(
+          ModerationErrorBodySchema,
+          z.object({ type: z.literal('ModerationErrorBody') }),
+        ),
+      ])
       .meta({ description: 'Moderation for the response output.' }),
   })
   .meta({ description: 'Moderation results or errors for the response input and output.' })
@@ -30149,139 +31277,147 @@ export type ResponseConversationSchema = z.infer<typeof ResponseConversationSche
 export const ResponseSchema = z
   .intersection(
     z.intersection(ModelResponsePropertiesSchema, ResponsePropertiesSchema),
-    z.object({
-      image: ResolvedImageOptionsSchema.exactOptional(),
-      service_tier: ServiceTierResponsesSchema.exactOptional(),
-      truncation: z
-        .union([
-          z
-            .enum(['auto', 'disabled'])
-            .default('disabled')
-            .meta({
-              description:
-                "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      id: z.string().meta({ description: 'Unique identifier for this Response.\n' }),
-      object: z
-        .literal('response')
-        .meta({ description: 'The object type of this resource - always set to `response`.\n' }),
-      status: z
-        .enum(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete'])
-        .meta({
-          description:
-            'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
-        })
-        .exactOptional(),
-      access_programs: z.union([AccessProgramsBodySchema, z.null().nullable()]),
-      created_at: z
-        .number()
-        .meta({ description: 'Unix timestamp (in seconds) of when this Response was created.\n' }),
-      completed_at: z
-        .union([
-          z
-            .number()
-            .meta({
-              description:
-                'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      error: ResponseErrorSchema,
-      incomplete_details: z.union([
-        z
-          .object({
-            reason: z
-              .enum(['max_output_tokens', 'max_messages', 'content_filter', 'steered'])
+    z
+      .looseObject({
+        image: ResolvedImageOptionsSchema.exactOptional(),
+        service_tier: ServiceTierResponsesSchema.exactOptional(),
+        truncation: z
+          .union([
+            z
+              .enum(['auto', 'disabled'])
+              .default('disabled')
               .meta({
                 description:
-                  'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
-              })
-              .exactOptional(),
+                  "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+              }),
+            z.null(),
+          ])
+          .exactOptional(),
+        id: z.string().meta({ description: 'Unique identifier for this Response.\n' }),
+        object: z
+          .literal('response')
+          .meta({ description: 'The object type of this resource - always set to `response`.\n' }),
+        status: z
+          .enum(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete'])
+          .meta({
+            description:
+              'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
           })
-          .meta({ description: 'Details about why the response is incomplete.\n' }),
-        z.null().nullable(),
-      ]),
-      input_transformations: z
-        .array(ReasoningInputTransformationSchema)
-        .meta({ description: 'Reasoning inputs withheld from the model, in input order.' })
-        .exactOptional(),
-      output: z
-        .array(OutputItemSchema)
-        .meta({
-          description:
-            "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
-        }),
-      reasoning: z.union([ReasoningSchema, z.null().nullable()]).exactOptional(),
-      instructions: z.union([
-        z
-          .xor([
+          .exactOptional(),
+        access_programs: z.union([AccessProgramsBodySchema, z.null()]),
+        created_at: z
+          .number()
+          .meta({
+            description: 'Unix timestamp (in seconds) of when this Response was created.\n',
+          }),
+        completed_at: z
+          .union([
+            z
+              .number()
+              .meta({
+                description:
+                  'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
+              }),
+            z.null(),
+          ])
+          .exactOptional(),
+        error: ResponseErrorSchema,
+        incomplete_details: z.union([
+          z
+            .object({
+              reason: z
+                .enum(['max_output_tokens', 'max_messages', 'content_filter', 'steered'])
+                .meta({
+                  description:
+                    'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
+                })
+                .exactOptional(),
+            })
+            .meta({ description: 'Details about why the response is incomplete.\n' }),
+          z.null(),
+        ]),
+        input_transformations: z
+          .array(ReasoningInputTransformationSchema)
+          .meta({ description: 'Reasoning inputs withheld from the model, in input order.' })
+          .exactOptional(),
+        output: z
+          .array(OutputItemSchema)
+          .meta({
+            description:
+              "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
+          }),
+        reasoning: z.union([ReasoningSchema, z.null()]).exactOptional(),
+        instructions: z.union([
+          z
+            .xor([
+              z
+                .string()
+                .meta({
+                  description:
+                    'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
+                }),
+              z
+                .array(InputItemSchema)
+                .meta({
+                  description:
+                    'A list of one or many input items to the model, containing\ndifferent content types.\n',
+                }),
+            ])
+            .meta({
+              description:
+                "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
+            }),
+          z.null(),
+        ]),
+        output_text: z
+          .union([
             z
               .string()
               .meta({
                 description:
-                  'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
+                  'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
               }),
+            z.null(),
+          ])
+          .exactOptional(),
+        usage: z.union([ResponseUsageSchema, z.null()]).exactOptional(),
+        tool_usage: ResponseToolUsageSchema.meta({
+          description:
+            'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
+        }).exactOptional(),
+        prompt_cache_options: PromptCacheOptionsSchema.exactOptional(),
+        prompt_cache_diagnostics: PromptCacheDiagnosticsSchema.exactOptional(),
+        moderation: z
+          .union([
+            ModerationSchema.meta({
+              description:
+                'Moderation results for the response input and output, if moderated completions were requested.\n',
+            }),
+            z.null(),
+          ])
+          .exactOptional(),
+        parallel_tool_calls: z
+          .boolean()
+          .default(true)
+          .meta({ description: 'Whether to allow the model to run tool calls in parallel.\n' }),
+        conversation: z.union([ResponseConversationSchema, z.null()]).exactOptional(),
+        max_output_tokens: z
+          .union([
             z
-              .array(InputItemSchema)
+              .int()
               .meta({
                 description:
-                  'A list of one or many input items to the model, containing\ndifferent content types.\n',
+                  'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
               }),
+            z.null(),
           ])
-          .meta({
-            description:
-              "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
-          }),
-        z.null().nullable(),
-      ]),
-      output_text: z
-        .union([
-          z
-            .string()
-            .meta({
-              description:
-                'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      usage: z.union([ResponseUsageSchema, z.null().nullable()]).exactOptional(),
-      tool_usage: ResponseToolUsageSchema.meta({
-        description:
-          'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
-      }).exactOptional(),
-      prompt_cache_options: PromptCacheOptionsSchema.exactOptional(),
-      prompt_cache_diagnostics: PromptCacheDiagnosticsSchema.exactOptional(),
-      moderation: z
-        .union([
-          ModerationSchema.meta({
-            description:
-              'Moderation results for the response input and output, if moderated completions were requested.\n',
-          }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      parallel_tool_calls: z
-        .boolean()
-        .default(true)
-        .meta({ description: 'Whether to allow the model to run tool calls in parallel.\n' }),
-      conversation: z.union([ResponseConversationSchema, z.null().nullable()]).exactOptional(),
-      max_output_tokens: z
-        .union([
-          z
-            .int()
-            .meta({
-              description:
-                'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-    }),
+          .exactOptional(),
+      })
+      .refine((val) =>
+        ['model', 'tools', 'metadata', 'tool_choice', 'temperature', 'top_p'].every(
+          (key) => key in val,
+        ),
+      ),
   )
   .meta({
     examples: [
@@ -30363,24 +31499,26 @@ export const ResponseAudioDeltaEventSchema = z
 export type ResponseAudioDeltaEventSchema = z.infer<typeof ResponseAudioDeltaEventSchema>
 
 export const ResponseAudioDoneEventSchema = z
-  .object({
+  .looseObject({
     type: z
       .literal('response.audio.done')
       .meta({ description: 'The type of the event. Always `response.audio.done`.\n' }),
     sequence_number: z.int().meta({ description: 'The sequence number of the delta.\n' }),
   })
+  .refine((val) => ['response_id'].every((key) => key in val))
   .meta({ description: 'Emitted when the audio response is complete.' })
 
 export type ResponseAudioDoneEventSchema = z.infer<typeof ResponseAudioDoneEventSchema>
 
 export const ResponseAudioTranscriptDeltaEventSchema = z
-  .object({
+  .looseObject({
     type: z
       .literal('response.audio.transcript.delta')
       .meta({ description: 'The type of the event. Always `response.audio.transcript.delta`.\n' }),
     delta: z.string().meta({ description: 'The partial transcript of the audio response.\n' }),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
   })
+  .refine((val) => ['response_id'].every((key) => key in val))
   .meta({ description: 'Emitted when there is a partial transcript of audio.' })
 
 export type ResponseAudioTranscriptDeltaEventSchema = z.infer<
@@ -30388,12 +31526,13 @@ export type ResponseAudioTranscriptDeltaEventSchema = z.infer<
 >
 
 export const ResponseAudioTranscriptDoneEventSchema = z
-  .object({
+  .looseObject({
     type: z
       .literal('response.audio.transcript.done')
       .meta({ description: 'The type of the event. Always `response.audio.transcript.done`.\n' }),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
   })
+  .refine((val) => ['response_id'].every((key) => key in val))
   .meta({ description: 'Emitted when the full audio transcript is completed.' })
 
 export type ResponseAudioTranscriptDoneEventSchema = z.infer<
@@ -30674,12 +31813,9 @@ export type ResponseCustomToolCallInputDoneEventSchema = z.infer<
 export const ResponseErrorEventSchema = z
   .object({
     type: z.literal('error').meta({ description: 'The type of the event. Always `error`.\n' }),
-    code: z.union([z.string().meta({ description: 'The error code.\n' }), z.null().nullable()]),
+    code: z.union([z.string().meta({ description: 'The error code.\n' }), z.null()]),
     message: z.string().meta({ description: 'The error message.\n' }),
-    param: z.union([
-      z.string().meta({ description: 'The error parameter.\n' }),
-      z.null().nullable(),
-    ]),
+    param: z.union([z.string().meta({ description: 'The error parameter.\n' }), z.null()]),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
   })
   .meta({ description: 'Emitted when an error occurs.' })
@@ -31232,7 +32368,7 @@ export const ResponseOutputTextAnnotationAddedEventSchema = z
       .meta({ description: 'The index of the annotation within the content part.' }),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
     annotation: z
-      .union([AnnotationSchema, z.null().nullable()])
+      .union([AnnotationSchema, z.null()])
       .meta({
         description: 'The annotation object being added. (See annotation schema for details.)',
       }),
@@ -31533,7 +32669,7 @@ export const UserMessageItemParamSchema = z.object({
       z
         .string()
         .meta({ description: 'The unique ID of this message item.', examples: ['msg_123'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -31546,9 +32682,18 @@ export const UserMessageItemParamSchema = z.object({
       z.array(
         z
           .xor([
-            InputTextContentParamSchema,
-            InputImageContentParamAutoParamSchema,
-            InputFileContentParamSchema,
+            z.intersection(
+              InputTextContentParamSchema,
+              z.object({ type: z.literal('InputTextContentParam') }),
+            ),
+            z.intersection(
+              InputImageContentParamAutoParamSchema,
+              z.object({ type: z.literal('InputImageContentParamAutoParam') }),
+            ),
+            z.intersection(
+              InputFileContentParamSchema,
+              z.object({ type: z.literal('InputFileContentParam') }),
+            ),
           ])
           .meta({ description: 'A piece of message content, such as text, an image, or a file.' }),
       ),
@@ -31556,10 +32701,7 @@ export const UserMessageItemParamSchema = z.object({
     ])
     .meta({ description: 'The message content, as an array of content parts.' }),
   status: z
-    .union([
-      z.string().meta({ description: 'The status of the message item.' }),
-      z.null().nullable(),
-    ])
+    .union([z.string().meta({ description: 'The status of the message item.' }), z.null()])
     .exactOptional(),
 })
 
@@ -32087,14 +33229,14 @@ export const ErrorPayloadSchema = z
     type: z.string().meta({ description: 'The error type that was emitted.' }),
     code: z.union([
       z.string().meta({ description: 'The error code that was emitted, if any.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     message: z.string().meta({ description: 'The human-readable error message that was emitted.' }),
     param: z.union([
       z
         .string()
         .meta({ description: 'The parameter name that was associated with the error, if any.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     headers: z
       .record(z.string(), z.string().meta({ description: 'The header value that was emitted.' }))
@@ -33129,7 +34271,7 @@ export const RoleListResourceSchema = z
       .boolean()
       .meta({ description: 'Whether additional assignments are available when paginating.' }),
     next: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({
         description:
           'Cursor to fetch the next page of results, or `null` when there are no more assignments.',
@@ -33179,13 +34321,13 @@ export const RunGraderResponseSchema = z.object({
       invalid_variable_error: z.boolean(),
       other_error: z.boolean(),
       python_grader_server_error: z.boolean(),
-      python_grader_server_error_type: z.union([z.string(), z.null().nullable()]),
+      python_grader_server_error_type: z.union([z.string(), z.null()]),
       python_grader_runtime_error: z.boolean(),
-      python_grader_runtime_error_details: z.union([z.string(), z.null().nullable()]),
+      python_grader_runtime_error_details: z.union([z.string(), z.null()]),
       model_grader_server_error: z.boolean(),
       model_grader_refusal_error: z.boolean(),
       model_grader_parse_error: z.boolean(),
-      model_grader_server_error_details: z.union([z.string(), z.null().nullable()]),
+      model_grader_server_error_details: z.union([z.string(), z.null()]),
     }),
     execution_time: z.number(),
     scores: z.record(z.string(), z.any()),
@@ -33193,12 +34335,12 @@ export const RunGraderResponseSchema = z.object({
       z.object({
         prompt_tokens: z.int(),
         total_tokens: z.int(),
-        completion_tokens: z.union([z.int(), z.null().nullable()]).exactOptional(),
-        cached_tokens: z.union([z.int(), z.null().nullable()]).exactOptional(),
+        completion_tokens: z.union([z.int(), z.null()]).exactOptional(),
+        cached_tokens: z.union([z.int(), z.null()]).exactOptional(),
       }),
-      z.null().nullable(),
+      z.null(),
     ]),
-    sampled_model_name: z.union([z.string(), z.null().nullable()]),
+    sampled_model_name: z.union([z.string(), z.null()]),
   }),
   sub_rewards: z.record(z.string(), z.any()),
   model_grader_token_usage_per_model: z.record(z.string(), z.any()),
@@ -33232,7 +34374,7 @@ export const SubmitToolOutputsRunRequestSchema = z.strictObject({
           description:
             'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -33380,7 +34522,7 @@ export const UploadSchema = z
       .meta({ description: 'The object type, which is always "upload".' })
       .exactOptional(),
     file: z
-      .union([OpenAIFileSchema, z.null().nullable()])
+      .union([OpenAIFileSchema, z.null()])
       .meta({ description: 'The ready File object after the Upload is completed.' })
       .exactOptional(),
   })
@@ -33431,7 +34573,7 @@ export const UsageAudioSpeechesResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -33442,7 +34584,7 @@ export const UsageAudioSpeechesResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -33453,7 +34595,7 @@ export const UsageAudioSpeechesResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -33464,7 +34606,7 @@ export const UsageAudioSpeechesResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33489,7 +34631,7 @@ export const UsageAudioTranscriptionsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -33500,7 +34642,7 @@ export const UsageAudioTranscriptionsResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -33511,7 +34653,7 @@ export const UsageAudioTranscriptionsResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -33522,7 +34664,7 @@ export const UsageAudioTranscriptionsResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33546,7 +34688,7 @@ export const UsageCodeInterpreterSessionsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33562,7 +34704,7 @@ export type UsageCodeInterpreterSessionsResultSchema = z.infer<
 export const UsageCompletionsResultSchema = z
   .object({
     api_source: z
-      .union([z.enum(['agents_api', 'unlabeled']), z.null().nullable()])
+      .union([z.enum(['agents_api', 'unlabeled']), z.null()])
       .meta({
         description:
           'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
@@ -33597,7 +34739,7 @@ export const UsageCompletionsResultSchema = z
             description:
               'The aggregated number of input tokens written to the cache with a 30-minute retention period. May be absent or null for older responses.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_cache_write_12h_tokens: z
@@ -33668,7 +34810,7 @@ export const UsageCompletionsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -33679,7 +34821,7 @@ export const UsageCompletionsResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -33690,7 +34832,7 @@ export const UsageCompletionsResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -33701,7 +34843,7 @@ export const UsageCompletionsResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     batch: z
@@ -33712,7 +34854,7 @@ export const UsageCompletionsResultSchema = z
             description:
               'When `group_by=batch`, this field tells whether the grouped usage result is batch or not.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     service_tier: z
@@ -33723,7 +34865,7 @@ export const UsageCompletionsResultSchema = z
             description:
               'When `group_by=service_tier`, this field provides the service tier of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33744,7 +34886,7 @@ export const UsageEmbeddingsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -33755,7 +34897,7 @@ export const UsageEmbeddingsResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -33766,7 +34908,7 @@ export const UsageEmbeddingsResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -33777,7 +34919,7 @@ export const UsageEmbeddingsResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33797,7 +34939,7 @@ export const UsageFileSearchCallsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -33808,7 +34950,7 @@ export const UsageFileSearchCallsResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -33819,7 +34961,7 @@ export const UsageFileSearchCallsResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     vector_store_id: z
@@ -33830,7 +34972,7 @@ export const UsageFileSearchCallsResultSchema = z
             description:
               'When `group_by=vector_store_id`, this field provides the vector store ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33853,7 +34995,7 @@ export const UsageImagesResultSchema = z
             description:
               'When `group_by=source`, this field provides the source of the grouped usage result, possible values are `image.generation`, `image.edit`, `image.variation`.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     size: z
@@ -33864,7 +35006,7 @@ export const UsageImagesResultSchema = z
             description:
               'When `group_by=size`, this field provides the image size of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     project_id: z
@@ -33875,7 +35017,7 @@ export const UsageImagesResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -33886,7 +35028,7 @@ export const UsageImagesResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -33897,7 +35039,7 @@ export const UsageImagesResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -33908,7 +35050,7 @@ export const UsageImagesResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33929,7 +35071,7 @@ export const UsageModerationsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -33940,7 +35082,7 @@ export const UsageModerationsResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -33951,7 +35093,7 @@ export const UsageModerationsResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -33962,7 +35104,7 @@ export const UsageModerationsResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33982,7 +35124,7 @@ export const UsageVectorStoresResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -33993,7 +35135,7 @@ export type UsageVectorStoresResultSchema = z.infer<typeof UsageVectorStoresResu
 export const UsageWebSearchCallsResultSchema = z
   .object({
     api_source: z
-      .union([z.enum(['agents_api', 'unlabeled']), z.null().nullable()])
+      .union([z.enum(['agents_api', 'unlabeled']), z.null()])
       .meta({
         description:
           'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
@@ -34010,7 +35152,7 @@ export const UsageWebSearchCallsResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -34021,7 +35163,7 @@ export const UsageWebSearchCallsResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -34032,7 +35174,7 @@ export const UsageWebSearchCallsResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -34043,7 +35185,7 @@ export const UsageWebSearchCallsResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     context_level: z
@@ -34054,7 +35196,7 @@ export const UsageWebSearchCallsResultSchema = z
             description:
               'When `group_by=context_level`, this field provides the search context size of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -34070,17 +35212,44 @@ export const UsageTimeBucketSchema = z.object({
   end_time: z.int(),
   results: z.array(
     z.xor([
-      UsageCompletionsResultSchema,
-      UsageEmbeddingsResultSchema,
-      UsageModerationsResultSchema,
-      UsageImagesResultSchema,
-      UsageAudioSpeechesResultSchema,
-      UsageAudioTranscriptionsResultSchema,
-      UsageVectorStoresResultSchema,
-      UsageCodeInterpreterSessionsResultSchema,
-      UsageFileSearchCallsResultSchema,
-      UsageWebSearchCallsResultSchema,
-      CostsResultSchema,
+      z.intersection(
+        UsageCompletionsResultSchema,
+        z.object({ object: z.literal('UsageCompletionsResult') }),
+      ),
+      z.intersection(
+        UsageEmbeddingsResultSchema,
+        z.object({ object: z.literal('UsageEmbeddingsResult') }),
+      ),
+      z.intersection(
+        UsageModerationsResultSchema,
+        z.object({ object: z.literal('UsageModerationsResult') }),
+      ),
+      z.intersection(UsageImagesResultSchema, z.object({ object: z.literal('UsageImagesResult') })),
+      z.intersection(
+        UsageAudioSpeechesResultSchema,
+        z.object({ object: z.literal('UsageAudioSpeechesResult') }),
+      ),
+      z.intersection(
+        UsageAudioTranscriptionsResultSchema,
+        z.object({ object: z.literal('UsageAudioTranscriptionsResult') }),
+      ),
+      z.intersection(
+        UsageVectorStoresResultSchema,
+        z.object({ object: z.literal('UsageVectorStoresResult') }),
+      ),
+      z.intersection(
+        UsageCodeInterpreterSessionsResultSchema,
+        z.object({ object: z.literal('UsageCodeInterpreterSessionsResult') }),
+      ),
+      z.intersection(
+        UsageFileSearchCallsResultSchema,
+        z.object({ object: z.literal('UsageFileSearchCallsResult') }),
+      ),
+      z.intersection(
+        UsageWebSearchCallsResultSchema,
+        z.object({ object: z.literal('UsageWebSearchCallsResult') }),
+      ),
+      z.intersection(CostsResultSchema, z.object({ object: z.literal('CostsResult') })),
     ]),
   ),
 })
@@ -34091,7 +35260,7 @@ export const UsageResponseSchema = z.object({
   object: z.literal('page'),
   data: z.array(UsageTimeBucketSchema),
   has_more: z.boolean(),
-  next_page: z.union([z.string(), z.null().nullable()]),
+  next_page: z.union([z.string(), z.null()]),
 })
 
 export type UsageResponseSchema = z.infer<typeof UsageResponseSchema>
@@ -34105,15 +35274,15 @@ export const UserSchema = z
       .string()
       .meta({ description: 'The identifier, which can be referenced in API endpoints' }),
     name: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The name of the user' })
       .exactOptional(),
     email: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The email address of the user' })
       .exactOptional(),
     role: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: '`owner` or `reader`' })
       .exactOptional(),
     added_at: z
@@ -34131,12 +35300,12 @@ export const UserSchema = z
       .object({
         object: z.literal('user'),
         id: z.string(),
-        email: z.union([z.string(), z.null().nullable()]).exactOptional(),
-        name: z.union([z.string(), z.null().nullable()]).exactOptional(),
-        picture: z.union([z.string(), z.null().nullable()]).exactOptional(),
-        enabled: z.union([z.boolean(), z.null().nullable()]).exactOptional(),
-        banned: z.union([z.boolean(), z.null().nullable()]).exactOptional(),
-        banned_at: z.union([z.int(), z.null().nullable()]).exactOptional(),
+        email: z.union([z.string(), z.null()]).exactOptional(),
+        name: z.union([z.string(), z.null()]).exactOptional(),
+        picture: z.union([z.string(), z.null()]).exactOptional(),
+        enabled: z.union([z.boolean(), z.null()]).exactOptional(),
+        banned: z.union([z.boolean(), z.null()]).exactOptional(),
+        banned_at: z.union([z.int(), z.null()]).exactOptional(),
       })
       .meta({ description: 'Nested user details.' })
       .exactOptional(),
@@ -34145,7 +35314,7 @@ export const UserSchema = z
       .meta({ description: 'Whether the user is a service account.' })
       .exactOptional(),
     is_scale_tier_authorized_purchaser: z
-      .union([z.boolean(), z.null().nullable()])
+      .union([z.boolean(), z.null()])
       .meta({ description: 'Whether the user is an authorized purchaser for Scale Tier.' })
       .exactOptional(),
     is_scim_managed: z
@@ -34153,15 +35322,15 @@ export const UserSchema = z
       .meta({ description: 'Whether the user is managed through SCIM.' })
       .exactOptional(),
     api_key_last_used_at: z
-      .union([z.int(), z.null().nullable()])
+      .union([z.int(), z.null()])
       .meta({ description: "The Unix timestamp (in seconds) of the user's last API key usage." })
       .exactOptional(),
     technical_level: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The technical level metadata for the user.' })
       .exactOptional(),
     developer_persona: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({ description: 'The developer persona metadata for the user.' })
       .exactOptional(),
     projects: z
@@ -34170,13 +35339,13 @@ export const UserSchema = z
           object: z.literal('list'),
           data: z.array(
             z.object({
-              id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-              name: z.union([z.string(), z.null().nullable()]).exactOptional(),
-              role: z.union([z.string(), z.null().nullable()]).exactOptional(),
+              id: z.union([z.string(), z.null()]).exactOptional(),
+              name: z.union([z.string(), z.null()]).exactOptional(),
+              role: z.union([z.string(), z.null()]).exactOptional(),
             }),
           ),
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .meta({ description: 'Projects associated with the user, if included.' })
       .exactOptional(),
@@ -34201,7 +35370,7 @@ export const UserListResourceSchema = z
       .boolean()
       .meta({ description: 'Whether more users are available when paginating.' }),
     next: z
-      .union([z.string(), z.null().nullable()])
+      .union([z.string(), z.null()])
       .meta({
         description:
           'Cursor to fetch the next page of results, or `null` when no further users are available.',
@@ -34216,8 +35385,8 @@ export type UserListResourceSchema = z.infer<typeof UserListResourceSchema>
 export const UserListResponseSchema = z.object({
   object: z.literal('list'),
   data: z.array(UserSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -34235,19 +35404,19 @@ export type UserRoleAssignmentSchema = z.infer<typeof UserRoleAssignmentSchema>
 
 export const UserRoleUpdateRequestSchema = z.object({
   role: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: '`owner` or `reader`' })
     .exactOptional(),
   role_id: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'Role ID to assign to the user.' })
     .exactOptional(),
   technical_level: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'Technical level metadata.' })
     .exactOptional(),
   developer_persona: z
-    .union([z.string(), z.null().nullable()])
+    .union([z.string(), z.null()])
     .meta({ description: 'Developer persona metadata.' })
     .exactOptional(),
 })
@@ -34344,7 +35513,7 @@ export const VectorStoreFileContentResponseSchema = z
       .meta({ description: 'Indicates if there are more content pages to fetch.' }),
     next_page: z.union([
       z.string().meta({ description: 'The token for the next page, if any.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Represents the parsed content of a vector store file.' })
@@ -34429,7 +35598,7 @@ export const VectorStoreSearchResultsPageSchema = z.strictObject({
   has_more: z.boolean().meta({ description: 'Indicates if there are more results to fetch.' }),
   next_page: z.union([
     z.string().meta({ description: 'The token for the next page, if any.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
 })
 
@@ -34474,8 +35643,8 @@ export type VoiceConsentResourceSchema = z.infer<typeof VoiceConsentResourceSche
 export const VoiceConsentListResourceSchema = z.strictObject({
   object: z.literal('list'),
   data: z.array(VoiceConsentResourceSchema),
-  first_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  last_id: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  first_id: z.union([z.string(), z.null()]).exactOptional(),
+  last_id: z.union([z.string(), z.null()]).exactOptional(),
   has_more: z.boolean(),
 })
 
@@ -35487,7 +36656,7 @@ export const CreateConversationBodySchema = z.object({
         description:
           'Set of 16 key-value pairs that can be attached to an object. This can be         useful for storing additional information about the object in a structured         format, and querying for objects via API or the dashboard.\n        Keys are strings with a maximum length of 64 characters. Values are strings         with a maximum length of 512 characters.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   items: z
@@ -35499,7 +36668,7 @@ export const CreateConversationBodySchema = z.object({
           description:
             'Initial items to include in the conversation context. You may add up to 20 items at a time.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -35528,7 +36697,7 @@ export const SafetyCaseResourceSchema = z.object({
   object: z.literal('safety.case').default('safety.case'),
   created_at: z.int(),
   entity_identifier: z.string(),
-  reason: z.union([z.string(), z.null().nullable()]),
+  reason: z.union([z.string(), z.null()]),
   notice: SafetyCaseNoticeSchema,
 })
 
@@ -35564,7 +36733,7 @@ export const SafetyAlertResourceSchema = z.object({
         description:
           'A customer-safe description derived from error_type, or null for zero data retention requests.',
       }),
-    z.null().nullable(),
+    z.null(),
   ]),
   detailed_explanation: z
     .union([
@@ -35574,7 +36743,7 @@ export const SafetyAlertResourceSchema = z.object({
           description:
             'A generated explanation, temporarily available for eligible zero data retention alerts. Omitted when unavailable.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -35625,8 +36794,8 @@ export type ExternalKeyResourceSchema = z.infer<typeof ExternalKeyResourceSchema
 export const ListExternalKeysResourceSchema = z.object({
   object: z.literal('list').default('list'),
   data: z.array(ExternalKeyResourceSchema),
-  first_id: z.union([z.string(), z.null().nullable()]),
-  last_id: z.union([z.string(), z.null().nullable()]),
+  first_id: z.union([z.string(), z.null()]),
+  last_id: z.union([z.string(), z.null()]),
   has_more: z.boolean(),
 })
 
@@ -35749,10 +36918,13 @@ export const OciExternalKeyParamsSchema = z.object({
 export type OciExternalKeyParamsSchema = z.infer<typeof OciExternalKeyParamsSchema>
 
 export const V1OrganizationExternalKeysPostRequestSchema = z.xor([
-  AwsExternalKeyParamsSchema,
-  GcpExternalKeyParamsSchema,
-  AzureExternalKeyParamsSchema,
-  OciExternalKeyParamsSchema,
+  z.intersection(AwsExternalKeyParamsSchema, z.object({ type: z.literal('AwsExternalKeyParams') })),
+  z.intersection(GcpExternalKeyParamsSchema, z.object({ type: z.literal('GcpExternalKeyParams') })),
+  z.intersection(
+    AzureExternalKeyParamsSchema,
+    z.object({ type: z.literal('AzureExternalKeyParams') }),
+  ),
+  z.intersection(OciExternalKeyParamsSchema, z.object({ type: z.literal('OciExternalKeyParams') })),
 ])
 
 export type V1OrganizationExternalKeysPostRequestSchema = z.infer<
@@ -35765,7 +36937,7 @@ export type ValidateExternalKeyResourceSchema = z.infer<typeof ValidateExternalK
 
 export const DiscoveryVerificationSchema = z.object({
   type: z.literal('discovery').default('discovery'),
-  discovery_url: z.union([z.string(), z.null().nullable()]),
+  discovery_url: z.union([z.string(), z.null()]),
 })
 
 export type DiscoveryVerificationSchema = z.infer<typeof DiscoveryVerificationSchema>
@@ -35791,7 +36963,7 @@ export const PlatformProviderSchema = z.object({
   issuer: z.string(),
   audience: z.string(),
   verification: z.xor([DiscoveryVerificationSchema, UploadedJwksVerificationSchema]),
-  description: z.union([z.string(), z.null().nullable()]),
+  description: z.union([z.string(), z.null()]),
   attribute_transformations: z.array(TransformationSchema),
   enabled: z.boolean(),
   created_at: z.int(),
@@ -35803,8 +36975,8 @@ export type PlatformProviderSchema = z.infer<typeof PlatformProviderSchema>
 export const PlatformProviderListResourceSchema = z.object({
   object: z.literal('list').default('list'),
   data: z.array(PlatformProviderSchema),
-  first_id: z.union([z.string(), z.null().nullable()]),
-  last_id: z.union([z.string(), z.null().nullable()]),
+  first_id: z.union([z.string(), z.null()]),
+  last_id: z.union([z.string(), z.null()]),
   has_more: z.boolean(),
 })
 
@@ -35812,7 +36984,7 @@ export type PlatformProviderListResourceSchema = z.infer<typeof PlatformProvider
 
 export const DiscoveryVerificationParamSchema = z.object({
   type: z.literal('discovery').default('discovery'),
-  discovery_url: z.union([z.string(), z.null().nullable()]),
+  discovery_url: z.union([z.string(), z.null()]),
 })
 
 export type DiscoveryVerificationParamSchema = z.infer<typeof DiscoveryVerificationParamSchema>
@@ -35857,7 +37029,7 @@ export const UpdatePlatformWorkloadIdentityProviderBodySchema = z.object({
   verification: z
     .xor([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema])
     .exactOptional(),
-  description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  description: z.union([z.string(), z.null()]).exactOptional(),
   attribute_transformations: z.array(TransformationParamSchema).max(20).exactOptional(),
   enabled: z.boolean().exactOptional(),
 })
@@ -35899,8 +37071,8 @@ export const PlatformFederationRuleSchema = z.object({
   workload_identity_provider_id: z.string(),
   project_id: z.string(),
   service_account_id: z.string(),
-  name: z.union([z.string(), z.null().nullable()]),
-  description: z.union([z.string(), z.null().nullable()]),
+  name: z.union([z.string(), z.null()]),
+  description: z.union([z.string(), z.null()]),
   attribute_matchers: z.record(
     z.string(),
     z.xor([z.string(), z.boolean(), z.union([z.int(), z.number()])]),
@@ -35916,8 +37088,8 @@ export type PlatformFederationRuleSchema = z.infer<typeof PlatformFederationRule
 export const PlatformFederationRuleListResourceSchema = z.object({
   object: z.literal('list').default('list'),
   data: z.array(PlatformFederationRuleSchema),
-  first_id: z.union([z.string(), z.null().nullable()]),
-  last_id: z.union([z.string(), z.null().nullable()]),
+  first_id: z.union([z.string(), z.null()]),
+  last_id: z.union([z.string(), z.null()]),
   has_more: z.boolean(),
 })
 
@@ -35958,8 +37130,8 @@ export type CreatePlatformWorkloadIdentityFederationRuleBodySchema = z.infer<
 >
 
 export const UpdatePlatformWorkloadIdentityFederationRuleBodySchema = z.object({
-  name: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  name: z.union([z.string(), z.null()]).exactOptional(),
+  description: z.union([z.string(), z.null()]).exactOptional(),
   attribute_matchers: z
     .record(z.string(), z.xor([z.string(), z.boolean(), z.union([z.int(), z.number()])]))
     .exactOptional(),
@@ -36013,7 +37185,7 @@ export const DecisionsUsageResultSchema = z
           description:
             'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     object: z
@@ -36033,7 +37205,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'The aggregated number of cached input tokens used across text, audio, and image inputs. For customers subscribed to Scale Tier, this includes Scale Tier tokens.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_cache_write_tokens: z
@@ -36044,7 +37216,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'The aggregated number of input tokens written to the cache across 30-minute and 12-hour retention periods.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_cache_write_30m_tokens: z
@@ -36055,7 +37227,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'The aggregated number of input tokens written to the cache with a 30-minute retention period.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_cache_write_12h_tokens: z
@@ -36066,7 +37238,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'The aggregated number of input tokens written to the cache with a 12-hour retention period.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_uncached_tokens: z
@@ -36077,7 +37249,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'The aggregated number of uncached input tokens used across text, audio, and image inputs, excluding cache-write tokens.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output_tokens: z
@@ -36094,55 +37266,55 @@ export const DecisionsUsageResultSchema = z
             description:
               'The aggregated number of uncached text input tokens used, excluding cache-write tokens.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output_text_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of text output tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_cached_text_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of cached text input tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_audio_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of uncached audio input tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_cached_audio_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of cached audio input tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output_audio_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of audio output tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_image_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of uncached image input tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     input_cached_image_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of cached image input tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output_image_tokens: z
       .union([
         z.int().meta({ description: 'The aggregated number of image output tokens used.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     num_model_requests: z.int().meta({ description: 'The count of requests made to the model.' }),
@@ -36154,7 +37326,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_id: z
@@ -36165,7 +37337,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     api_key_id: z
@@ -36176,7 +37348,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     model: z
@@ -36187,7 +37359,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'When `group_by=model`, this field provides the model name of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     batch: z
@@ -36198,7 +37370,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'When `group_by=batch`, this field tells whether the grouped usage result is batch or not.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     service_tier: z
@@ -36209,7 +37381,7 @@ export const DecisionsUsageResultSchema = z
             description:
               'When `group_by=service_tier`, this field provides the service tier of the grouped usage result.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -36229,7 +37401,7 @@ export type DecisionsUsageBucketSchema = z.infer<typeof DecisionsUsageBucketSche
 export const PublicDecisionsUsageResponseResourceSchema = z.object({
   object: z.literal('page').default('page'),
   has_more: z.boolean(),
-  next_page: z.union([z.string(), z.null().nullable()]),
+  next_page: z.union([z.string(), z.null()]),
   data: z.array(DecisionsUsageBucketSchema),
 })
 
@@ -36238,9 +37410,9 @@ export type PublicDecisionsUsageResponseResourceSchema = z.infer<
 >
 
 export const DecisionsUsageErrorDetailsSchema = z.object({
-  code: z.union([z.string(), z.null().nullable()]),
+  code: z.union([z.string(), z.null()]),
   message: z.string(),
-  param: z.union([z.string(), z.null().nullable()]),
+  param: z.union([z.string(), z.null()]),
   type: z.string(),
 })
 
@@ -36278,10 +37450,22 @@ export const ExternalStorageResponseSchema = z.object({
   id: z.string(),
   project_id: z.string(),
   provider: z.xor([
-    AwsExternalStorageProviderResponseSchema,
-    AzureExternalStorageProviderResponseSchema,
-    GcpExternalStorageProviderResponseSchema,
-    OciExternalStorageProviderResponseSchema,
+    z.intersection(
+      AwsExternalStorageProviderResponseSchema,
+      z.object({ type: z.literal('AwsExternalStorageProviderResponse') }),
+    ),
+    z.intersection(
+      AzureExternalStorageProviderResponseSchema,
+      z.object({ type: z.literal('AzureExternalStorageProviderResponse') }),
+    ),
+    z.intersection(
+      GcpExternalStorageProviderResponseSchema,
+      z.object({ type: z.literal('GcpExternalStorageProviderResponse') }),
+    ),
+    z.intersection(
+      OciExternalStorageProviderResponseSchema,
+      z.object({ type: z.literal('OciExternalStorageProviderResponse') }),
+    ),
   ]),
   geography: z.string(),
   status: ExternalStorageStatusSchema,
@@ -36293,8 +37477,8 @@ export type ExternalStorageResponseSchema = z.infer<typeof ExternalStorageRespon
 export const ExternalStorageListResourceSchema = z.object({
   object: z.literal('list').default('list'),
   data: z.array(ExternalStorageResponseSchema),
-  first_id: z.union([z.string(), z.null().nullable()]),
-  last_id: z.union([z.string(), z.null().nullable()]),
+  first_id: z.union([z.string(), z.null()]),
+  last_id: z.union([z.string(), z.null()]),
   has_more: z.boolean(),
 })
 
@@ -36349,10 +37533,22 @@ export type OciExternalStorageProviderParamsSchema = z.infer<
 export const CreateExternalStorageBodySchema = z.object({
   project_id: z.string().meta({ examples: ['proj_123'] }),
   provider: z.xor([
-    AwsExternalStorageProviderParamsSchema,
-    AzureExternalStorageProviderParamsSchema,
-    GcpExternalStorageProviderParamsSchema,
-    OciExternalStorageProviderParamsSchema,
+    z.intersection(
+      AwsExternalStorageProviderParamsSchema,
+      z.object({ type: z.literal('AwsExternalStorageProviderParams') }),
+    ),
+    z.intersection(
+      AzureExternalStorageProviderParamsSchema,
+      z.object({ type: z.literal('AzureExternalStorageProviderParams') }),
+    ),
+    z.intersection(
+      GcpExternalStorageProviderParamsSchema,
+      z.object({ type: z.literal('GcpExternalStorageProviderParams') }),
+    ),
+    z.intersection(
+      OciExternalStorageProviderParamsSchema,
+      z.object({ type: z.literal('OciExternalStorageProviderParams') }),
+    ),
   ]),
 })
 
@@ -36398,7 +37594,7 @@ export type SpendLimitEnforcementSchema = z.infer<typeof SpendLimitEnforcementSc
 export const EmailNotificationChannelSchema = z.object({
   type: z.literal('email').default('email'),
   recipients: z.array(z.string()),
-  subject_prefix: z.union([z.string(), z.null().nullable()]).exactOptional(),
+  subject_prefix: z.union([z.string(), z.null()]).exactOptional(),
 })
 
 export type EmailNotificationChannelSchema = z.infer<typeof EmailNotificationChannelSchema>
@@ -36448,7 +37644,7 @@ export const SpendLimitEmailNotificationChannelParamsSchema = z
             description:
               'Email subject prefix. Omit to keep it unchanged; send null or an empty string to clear it.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -36484,7 +37680,7 @@ export const UpdateOrganizationSpendLimitBodySchema = z
           description:
             'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -36560,7 +37756,7 @@ export const UpdateProjectSpendLimitBodySchema = z
           description:
             'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -36627,7 +37823,7 @@ export const CreateProjectServiceAccountApiKeyBodySchema = z
           .min(1)
           .max(31536000)
           .meta({ description: 'Number of seconds until the API key expires.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -36658,7 +37854,7 @@ export const ServiceAccountApiKeyBodySchema = z.object({
           description:
             'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z.string().meta({ description: 'The identifier of the API key.' }),
@@ -36703,13 +37899,13 @@ export const C2PAProvenanceResultSchema = z.object({
   }),
   issuer: z.union([
     z.string().meta({ description: 'The C2PA manifest issuer, when available.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   model: z.union([
     z
       .string()
       .meta({ description: 'The OpenAI model recorded by the provenance signal, when available.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   generated_at: z.union([
     z
@@ -36718,7 +37914,7 @@ export const C2PAProvenanceResultSchema = z.object({
         description:
           'The UTC RFC 3339 timestamp recorded by the provenance signal for when the asset was generated, when available.',
       }),
-    z.null().nullable(),
+    z.null(),
   ]),
 })
 
@@ -36737,7 +37933,7 @@ export const SynthIDProvenanceResultSchema = z.object({
     z
       .string()
       .meta({ description: 'The OpenAI model recorded by the provenance signal, when available.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   generated_at: z.union([
     z
@@ -36746,7 +37942,7 @@ export const SynthIDProvenanceResultSchema = z.object({
         description:
           'The UTC RFC 3339 timestamp recorded by the provenance signal for when the asset was generated, when available.',
       }),
-    z.null().nullable(),
+    z.null(),
   ]),
 })
 
@@ -36762,7 +37958,18 @@ export const ProvenanceResourceSchema = z.object({
       description: 'The Unix timestamp, in seconds, when the provenance check was created.',
     }),
   results: z
-    .array(z.xor([C2PAProvenanceResultSchema, SynthIDProvenanceResultSchema]))
+    .array(
+      z.xor([
+        z.intersection(
+          C2PAProvenanceResultSchema,
+          z.object({ type: z.literal('C2PAProvenanceResult') }),
+        ),
+        z.intersection(
+          SynthIDProvenanceResultSchema,
+          z.object({ type: z.literal('SynthIDProvenanceResult') }),
+        ),
+      ]),
+    )
     .meta({
       description:
         'The provenance results that apply to the uploaded file. Image results include C2PA and SynthID; audio results include SynthID.',
@@ -36800,7 +38007,7 @@ export const Error2Schema = z
         z
           .string()
           .meta({ description: 'The original error type, or null if it was not recorded.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     param: z
@@ -36811,7 +38018,7 @@ export const Error2Schema = z
             description:
               'The request parameter associated with the error, or null if none was recorded.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     message: z
@@ -36851,7 +38058,7 @@ export const VideoResourceSchema = z
       z
         .int()
         .meta({ description: 'Unix timestamp (seconds) for when the job completed, if finished.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     expires_at: z.union([
       z
@@ -36859,11 +38066,11 @@ export const VideoResourceSchema = z
         .meta({
           description: 'Unix timestamp (seconds) for when the downloadable assets expire, if set.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     prompt: z.union([
       z.string().meta({ description: 'The prompt that was used to generate the video.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     size: VideoSizeSchema.meta({ description: 'The resolution of the generated video.' }),
     seconds: z
@@ -36874,13 +38081,13 @@ export const VideoResourceSchema = z
       }),
     remixed_from_video_id: z.union([
       z.string().meta({ description: 'Identifier of the source video if this video is a remix.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     error: z.union([
       Error2Schema.meta({
         description: 'Error payload that explains why generation failed, if applicable.',
       }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Structured information describing a generated video job.' })
@@ -36895,11 +38102,11 @@ export const VideoListResourceSchema = z.object({
   data: z.array(VideoResourceSchema).meta({ description: 'A list of items' }),
   first_id: z.union([
     z.string().meta({ description: 'The ID of the first item in the list.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   last_id: z.union([
     z.string().meta({ description: 'The ID of the last item in the list.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   has_more: z.boolean().meta({ description: 'Whether there are more items available.' }),
 })
@@ -37000,12 +38207,9 @@ export type CreateVideoCharacterBodySchema = z.infer<typeof CreateVideoCharacter
 export const VideoCharacterResourceSchema = z.object({
   id: z.union([
     z.string().meta({ description: 'Identifier for the character creation cameo.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
-  name: z.union([
-    z.string().meta({ description: 'Display name for the character.' }),
-    z.null().nullable(),
-  ]),
+  name: z.union([z.string().meta({ description: 'Display name for the character.' }), z.null()]),
   created_at: z
     .int()
     .meta({ description: 'Unix timestamp (in seconds) when the character was created.' }),
@@ -37145,7 +38349,7 @@ export const TokenCountsBodySchema = z.object({
           description:
             'Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   input: z
@@ -37170,7 +38374,7 @@ export const TokenCountsBodySchema = z.object({
         .meta({
           description: 'Text, image, or file inputs to the model, used to generate a response',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   previous_response_id: z
@@ -37182,7 +38386,7 @@ export const TokenCountsBodySchema = z.object({
             'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
           examples: ['resp_123'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   tools: z
@@ -37193,17 +38397,17 @@ export const TokenCountsBodySchema = z.object({
           description:
             'An array of tools the model may call while generating a response. You can specify which tool to use by setting the `tool_choice` parameter.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
-  text: z.union([ResponseTextParamSchema, z.null().nullable()]).exactOptional(),
+  text: z.union([ResponseTextParamSchema, z.null()]).exactOptional(),
   reasoning: z
     .union([
       ReasoningSchema.meta({
         description:
           '**gpt-5 and o-series models only** Configuration options for [reasoning models](https://developers.openai.com/api/docs/guides/reasoning).',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   truncation: TruncationEnumSchema.meta({
@@ -37219,20 +38423,20 @@ export const TokenCountsBodySchema = z.object({
           description:
             "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   personality: PersonalityEnumSchema.meta({
     description:
       "A model-owned style preset to apply to this request. Omit this parameter to use the model's default style. Supported values may expand over time. Values must be at most 64 characters.",
   }).exactOptional(),
-  conversation: z.union([ConversationParamSchema, z.null().nullable()]).exactOptional(),
+  conversation: z.union([ConversationParamSchema, z.null()]).exactOptional(),
   tool_choice: z
     .union([
       ToolChoiceParamSchema.meta({
         description: 'Controls which tool the model should use, if any.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   parallel_tool_calls: z
@@ -37240,7 +38444,7 @@ export const TokenCountsBodySchema = z.object({
       z
         .boolean()
         .meta({ description: 'Whether to allow the model to run tool calls in parallel.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -37288,7 +38492,7 @@ export const CompactResponseMethodPublicBodySchema = z.object({
         .meta({
           description: 'Text, image, or file inputs to the model, used to generate a response',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   previous_response_id: z
@@ -37300,7 +38504,7 @@ export const CompactResponseMethodPublicBodySchema = z.object({
             'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
           examples: ['resp_123'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   instructions: z
@@ -37312,7 +38516,7 @@ export const CompactResponseMethodPublicBodySchema = z.object({
             "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
           deprecated: true,
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   image: ImageOptionsParamSchema.meta({
@@ -37324,7 +38528,7 @@ export const CompactResponseMethodPublicBodySchema = z.object({
         .string()
         .max(64)
         .meta({ description: 'A key to use when reading from or writing to the prompt cache.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   prompt_cache_retention: z
@@ -37333,19 +38537,17 @@ export const CompactResponseMethodPublicBodySchema = z.object({
         description: 'How long to retain a prompt cache entry created by this request.',
         deprecated: true,
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
-  prompt_cache_options: z
-    .union([PromptCacheOptionsParamSchema, z.null().nullable()])
-    .exactOptional(),
+  prompt_cache_options: z.union([PromptCacheOptionsParamSchema, z.null()]).exactOptional(),
   service_tier: z
     .union([
       ServiceTierEnumSchema.meta({
         description:
           "Specifies the processing type used for serving the request.   - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.   - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.   - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.   - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. For models with a dedicated Fast tier, either value resolves to `service_tier=fast`; for other models, either value resolves to `service_tier=priority`.   - When not set, the default behavior is 'auto'.\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.",
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -37356,34 +38558,61 @@ export type CompactResponseMethodPublicBodySchema = z.infer<
 
 export const ItemFieldSchema = z
   .xor([
-    MessageSchema,
-    ProgramSchema,
-    ProgramOutputSchema,
-    FunctionToolCallSchema,
-    ToolSearchCallSchema,
-    ToolSearchOutputSchema,
-    AdditionalToolsSchema,
-    FunctionToolCallOutputSchema,
-    FileSearchToolCallSchema,
-    WebSearchToolCallSchema,
-    ImageGenToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerToolCallOutputResourceSchema,
-    ReasoningItemSchema,
-    CompactionBodySchema,
-    CodeInterpreterToolCallSchema,
-    LocalShellToolCallSchema.meta({ deprecated: true }),
-    LocalShellToolCallOutputSchema.meta({ deprecated: true }),
-    FunctionShellCallSchema,
-    FunctionShellCallOutputSchema,
-    ApplyPatchToolCallSchema,
-    ApplyPatchToolCallOutputSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseResourceSchema,
-    MCPToolCallSchema,
-    CustomToolCallSchema,
-    CustomToolCallOutputSchema,
+    z.intersection(MessageSchema, z.object({ type: z.literal('Message') })),
+    z.intersection(ProgramSchema, z.object({ type: z.literal('Program') })),
+    z.intersection(ProgramOutputSchema, z.object({ type: z.literal('ProgramOutput') })),
+    z.intersection(FunctionToolCallSchema, z.object({ type: z.literal('FunctionToolCall') })),
+    z.intersection(ToolSearchCallSchema, z.object({ type: z.literal('ToolSearchCall') })),
+    z.intersection(ToolSearchOutputSchema, z.object({ type: z.literal('ToolSearchOutput') })),
+    z.intersection(AdditionalToolsSchema, z.object({ type: z.literal('AdditionalTools') })),
+    z.intersection(
+      FunctionToolCallOutputSchema,
+      z.object({ type: z.literal('FunctionToolCallOutput') }),
+    ),
+    z.intersection(FileSearchToolCallSchema, z.object({ type: z.literal('FileSearchToolCall') })),
+    z.intersection(WebSearchToolCallSchema, z.object({ type: z.literal('WebSearchToolCall') })),
+    z.intersection(ImageGenToolCallSchema, z.object({ type: z.literal('ImageGenToolCall') })),
+    z.intersection(ComputerToolCallSchema, z.object({ type: z.literal('ComputerToolCall') })),
+    z.intersection(
+      ComputerToolCallOutputResourceSchema,
+      z.object({ type: z.literal('ComputerToolCallOutputResource') }),
+    ),
+    z.intersection(ReasoningItemSchema, z.object({ type: z.literal('ReasoningItem') })),
+    z.intersection(CompactionBodySchema, z.object({ type: z.literal('CompactionBody') })),
+    z.intersection(
+      CodeInterpreterToolCallSchema,
+      z.object({ type: z.literal('CodeInterpreterToolCall') }),
+    ),
+    z.intersection(
+      LocalShellToolCallSchema.meta({ deprecated: true }),
+      z.object({ type: z.literal('LocalShellToolCall') }),
+    ),
+    z.intersection(
+      LocalShellToolCallOutputSchema.meta({ deprecated: true }),
+      z.object({ type: z.literal('LocalShellToolCallOutput') }),
+    ),
+    z.intersection(FunctionShellCallSchema, z.object({ type: z.literal('FunctionShellCall') })),
+    z.intersection(
+      FunctionShellCallOutputSchema,
+      z.object({ type: z.literal('FunctionShellCallOutput') }),
+    ),
+    z.intersection(ApplyPatchToolCallSchema, z.object({ type: z.literal('ApplyPatchToolCall') })),
+    z.intersection(
+      ApplyPatchToolCallOutputSchema,
+      z.object({ type: z.literal('ApplyPatchToolCallOutput') }),
+    ),
+    z.intersection(MCPListToolsSchema, z.object({ type: z.literal('MCPListTools') })),
+    z.intersection(MCPApprovalRequestSchema, z.object({ type: z.literal('MCPApprovalRequest') })),
+    z.intersection(
+      MCPApprovalResponseResourceSchema,
+      z.object({ type: z.literal('MCPApprovalResponseResource') }),
+    ),
+    z.intersection(MCPToolCallSchema, z.object({ type: z.literal('MCPToolCall') })),
+    z.intersection(CustomToolCallSchema, z.object({ type: z.literal('CustomToolCall') })),
+    z.intersection(
+      CustomToolCallOutputSchema,
+      z.object({ type: z.literal('CustomToolCallOutput') }),
+    ),
   ])
   .meta({
     description:
@@ -37477,11 +38706,11 @@ export const SkillListResourceSchema = z.object({
   data: z.array(SkillResourceSchema).meta({ description: 'A list of items' }),
   first_id: z.union([
     z.string().meta({ description: 'The ID of the first item in the list.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   last_id: z.union([
     z.string().meta({ description: 'The ID of the last item in the list.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   has_more: z.boolean().meta({ description: 'Whether there are more items available.' }),
 })
@@ -37548,11 +38777,11 @@ export const SkillVersionListResourceSchema = z.object({
   data: z.array(SkillVersionResourceSchema).meta({ description: 'A list of items' }),
   first_id: z.union([
     z.string().meta({ description: 'The ID of the first item in the list.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   last_id: z.union([
     z.string().meta({ description: 'The ID of the last item in the list.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   has_more: z.boolean().meta({ description: 'Whether there are more items available.' }),
 })
@@ -37602,19 +38831,16 @@ export const ChatkitWorkflowSchema = z
           description:
             'Specific workflow version used for the session. Defaults to null when using the latest deployment.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     state_variables: z.union([
       z
-        .record(
-          z.string(),
-          z.union([z.string(), z.int(), z.boolean(), z.number(), z.null().nullable()]),
-        )
+        .record(z.string(), z.union([z.string(), z.int(), z.boolean(), z.number(), z.null()]))
         .meta({
           description:
             'State variable key-value pairs applied when invoking the workflow. Defaults to null when no overrides were provided.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     tracing: ChatkitWorkflowTracingSchema.meta({
       description: 'Tracing settings applied to the workflow.',
@@ -37653,11 +38879,11 @@ export const ChatSessionFileUploadSchema = z
     enabled: z.boolean().meta({ description: 'Indicates if uploads are enabled for the session.' }),
     max_file_size: z.union([
       z.int().meta({ description: 'Maximum upload size in megabytes.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     max_files: z.union([
       z.int().meta({ description: 'Maximum number of uploads allowed during the session.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Upload permissions and limits applied to the session.' })
@@ -37676,7 +38902,7 @@ export const ChatSessionHistorySchema = z
           description:
             'Number of prior threads surfaced in history views. Defaults to null when all history is retained.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'History retention preferences returned for the session.' })
@@ -37963,7 +39189,7 @@ export const AttachmentSchema = z
     mime_type: z.string().meta({ description: 'MIME type of the attachment.' }),
     preview_url: z.union([
       z.url().meta({ description: 'Preview URL for rendering the attachment inline.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Attachment metadata included on thread items.' })
@@ -37982,7 +39208,7 @@ export const InferenceOptionsSchema = z
       ToolChoiceSchema.meta({
         description: 'Preferred tool to invoke. Defaults to null when ChatKit should auto-select.',
       }),
-      z.null().nullable(),
+      z.null(),
     ]),
     model: z.union([
       z
@@ -37991,7 +39217,7 @@ export const InferenceOptionsSchema = z
           description:
             'Model name that generated the response. Defaults to null when using the session default.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Model and tool overrides applied when generating the assistant response.' })
@@ -38013,7 +39239,16 @@ export const UserMessageItemSchema = z
     content: z
       .array(
         z
-          .xor([UserMessageInputTextSchema, UserMessageQuotedTextSchema])
+          .xor([
+            z.intersection(
+              UserMessageInputTextSchema,
+              z.object({ type: z.literal('UserMessageInputText') }),
+            ),
+            z.intersection(
+              UserMessageQuotedTextSchema,
+              z.object({ type: z.literal('UserMessageQuotedText') }),
+            ),
+          ])
           .meta({ description: 'Content blocks that comprise a user message.' }),
       )
       .meta({ description: 'Ordered content elements supplied by the user.' }),
@@ -38026,7 +39261,7 @@ export const UserMessageItemSchema = z
       InferenceOptionsSchema.meta({
         description: 'Inference overrides applied to the message. Defaults to null when unset.',
       }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'User-authored messages within a thread.' })
@@ -38093,7 +39328,10 @@ export const ResponseOutputTextSchema = z
     annotations: z
       .array(
         z
-          .xor([FileAnnotationSchema, UrlAnnotationSchema])
+          .xor([
+            z.intersection(FileAnnotationSchema, z.object({ type: z.literal('FileAnnotation') })),
+            z.intersection(UrlAnnotationSchema, z.object({ type: z.literal('UrlAnnotation') })),
+          ])
           .meta({ description: 'Annotation object describing a cited source.' }),
       )
       .meta({ description: 'Ordered list of annotations attached to the response text.' }),
@@ -38178,7 +39416,7 @@ export const ClientToolCallItemSchema = z
           description:
             'JSON-encoded output captured from the tool. Defaults to null while execution is in progress.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Record of a client side tool invocation initiated by the assistant.' })
@@ -38211,7 +39449,7 @@ export const TaskItemSchema = z
         .meta({
           description: 'Optional heading for the task. Defaults to null when not provided.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     summary: z.union([
       z
@@ -38219,7 +39457,7 @@ export const TaskItemSchema = z
         .meta({
           description: 'Optional summary that describes the task. Defaults to null when omitted.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Task emitted by the workflow to show progress and status updates.' })
@@ -38235,7 +39473,7 @@ export const TaskGroupTaskSchema = z
         .meta({
           description: 'Optional heading for the grouped task. Defaults to null when not provided.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     summary: z.union([
       z
@@ -38244,7 +39482,7 @@ export const TaskGroupTaskSchema = z
           description:
             'Optional summary that describes the grouped task. Defaults to null when omitted.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Task entry that appears within a TaskGroup.' })
@@ -38273,12 +39511,12 @@ export const TaskGroupItemSchema = z
 export type TaskGroupItemSchema = z.infer<typeof TaskGroupItemSchema>
 
 export const ThreadItemSchema = z.xor([
-  UserMessageItemSchema,
-  AssistantMessageItemSchema,
-  WidgetMessageItemSchema,
-  ClientToolCallItemSchema,
-  TaskItemSchema,
-  TaskGroupItemSchema,
+  z.intersection(UserMessageItemSchema, z.object({ type: z.literal('UserMessageItem') })),
+  z.intersection(AssistantMessageItemSchema, z.object({ type: z.literal('AssistantMessageItem') })),
+  z.intersection(WidgetMessageItemSchema, z.object({ type: z.literal('WidgetMessageItem') })),
+  z.intersection(ClientToolCallItemSchema, z.object({ type: z.literal('ClientToolCallItem') })),
+  z.intersection(TaskItemSchema, z.object({ type: z.literal('TaskItem') })),
+  z.intersection(TaskGroupItemSchema, z.object({ type: z.literal('TaskGroupItem') })),
 ])
 
 export type ThreadItemSchema = z.infer<typeof ThreadItemSchema>
@@ -38292,11 +39530,11 @@ export const ThreadItemListResourceSchema = z
     data: z.array(ThreadItemSchema).meta({ description: 'A list of items' }),
     first_id: z.union([
       z.string().meta({ description: 'The ID of the first item in the list.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     last_id: z.union([
       z.string().meta({ description: 'The ID of the last item in the list.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     has_more: z.boolean().meta({ description: 'Whether there are more items available.' }),
   })
@@ -38328,7 +39566,7 @@ export const LockedStatusSchema = z
           description:
             'Reason that the thread was locked. Defaults to null when no reason is recorded.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Indicates that a thread is locked and cannot accept new input.' })
@@ -38348,7 +39586,7 @@ export const ClosedStatusSchema = z
           description:
             'Reason that the thread was closed. Defaults to null when no reason is recorded.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Indicates that a thread has been closed.' })
@@ -38372,10 +39610,14 @@ export const ThreadResourceSchema = z
           description:
             'Optional human-readable title for the thread. Defaults to null when no title has been generated.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     status: z
-      .xor([ActiveStatusSchema, LockedStatusSchema, ClosedStatusSchema])
+      .xor([
+        z.intersection(ActiveStatusSchema, z.object({ type: z.literal('ActiveStatus') })),
+        z.intersection(LockedStatusSchema, z.object({ type: z.literal('LockedStatus') })),
+        z.intersection(ClosedStatusSchema, z.object({ type: z.literal('ClosedStatus') })),
+      ])
       .meta({
         description:
           'Current status for the thread. Defaults to `active` for newly created threads.',
@@ -38422,11 +39664,11 @@ export const ThreadListResourceSchema = z
     data: z.array(ThreadResourceSchema).meta({ description: 'A list of items' }),
     first_id: z.union([
       z.string().meta({ description: 'The ID of the first item in the list.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     last_id: z.union([
       z.string().meta({ description: 'The ID of the last item in the list.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     has_more: z.boolean().meta({ description: 'Whether there are more items available.' }),
   })
@@ -38470,7 +39712,7 @@ export const DecisionInputImageSchema = z
           'A base64-encoded image in a data URL or a publicly accessible HTTP(S) image URL.',
       }),
     detail: z
-      .union([ImageDetailParamSchema, z.null().nullable()])
+      .union([ImageDetailParamSchema, z.null()])
       .default('auto')
       .meta({
         description:
@@ -38503,8 +39745,8 @@ export const DecisionInputJsonSchema = z
   .strictObject({
     type: z.literal('input_json').default('input_json'),
     data: z.xor([
-      z.record(z.string(), z.union([z.any(), z.null().nullable()])),
-      z.array(z.record(z.string(), z.union([z.any(), z.null().nullable()]))).min(0),
+      z.record(z.string(), z.union([z.any(), z.null()])),
+      z.array(z.record(z.string(), z.union([z.any(), z.null()]))).min(0),
     ]),
   })
   .meta({
@@ -38515,7 +39757,13 @@ export const DecisionInputJsonSchema = z
 export type DecisionInputJsonSchema = z.infer<typeof DecisionInputJsonSchema>
 
 export const DecisionInputContentPartsSchema = z
-  .array(z.xor([DecisionInputTextSchema, DecisionInputImageSchema, DecisionInputJsonSchema]))
+  .array(
+    z.xor([
+      z.intersection(DecisionInputTextSchema, z.object({ type: z.literal('input_text') })),
+      z.intersection(DecisionInputImageSchema, z.object({ type: z.literal('input_image') })),
+      z.intersection(DecisionInputJsonSchema, z.object({ type: z.literal('input_json') })),
+    ]),
+  )
   .min(0)
   .max(16384)
 
@@ -38591,7 +39839,12 @@ export const DecisionInputRefusalSchema = z.strictObject({
 export type DecisionInputRefusalSchema = z.infer<typeof DecisionInputRefusalSchema>
 
 export const DecisionInputAssistantContentPartsSchema = z
-  .array(z.xor([DecisionInputOutputTextSchema, DecisionInputRefusalSchema]))
+  .array(
+    z.xor([
+      z.intersection(DecisionInputOutputTextSchema, z.object({ type: z.literal('output_text') })),
+      z.intersection(DecisionInputRefusalSchema, z.object({ type: z.literal('refusal') })),
+    ]),
+  )
   .min(0)
   .max(16384)
 
@@ -38616,7 +39869,7 @@ export const DecisionInputAssistantMessageSchema = z
     role: z.literal('assistant').default('assistant'),
     content: DecisionInputAssistantContentSchema,
     phase: z
-      .union([MessagePhaseParamSchema, z.null().nullable()])
+      .union([MessagePhaseParamSchema, z.null()])
       .meta({ description: 'The phase of an assistant message.' })
       .exactOptional(),
     type: z.literal('message').default('message').exactOptional(),
@@ -38628,10 +39881,10 @@ export type DecisionInputAssistantMessageSchema = z.infer<
 >
 
 export const DecisionInputMessageSchema = z.xor([
-  DecisionInputUserMessageSchema,
-  DecisionInputDeveloperMessageSchema,
-  DecisionInputSystemMessageSchema,
-  DecisionInputAssistantMessageSchema,
+  z.intersection(DecisionInputUserMessageSchema, z.object({ role: z.literal('user') })),
+  z.intersection(DecisionInputDeveloperMessageSchema, z.object({ role: z.literal('developer') })),
+  z.intersection(DecisionInputSystemMessageSchema, z.object({ role: z.literal('system') })),
+  z.intersection(DecisionInputAssistantMessageSchema, z.object({ role: z.literal('assistant') })),
 ])
 
 export type DecisionInputMessageSchema = z.infer<typeof DecisionInputMessageSchema>
@@ -38656,14 +39909,19 @@ export const DecisionInputFunctionCallSchema = z.strictObject({
     .min(1)
     .max(128),
   arguments: z.string().min(0).max(1048576),
-  status: z.union([FunctionCallStatusParamSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([FunctionCallStatusParamSchema, z.null()]).exactOptional(),
   type: z.literal('function_call').default('function_call'),
 })
 
 export type DecisionInputFunctionCallSchema = z.infer<typeof DecisionInputFunctionCallSchema>
 
 export const DecisionInputToolOutputContentPartsSchema = z
-  .array(z.xor([DecisionInputTextSchema, DecisionInputImageSchema]))
+  .array(
+    z.xor([
+      z.intersection(DecisionInputTextSchema, z.object({ type: z.literal('input_text') })),
+      z.intersection(DecisionInputImageSchema, z.object({ type: z.literal('input_image') })),
+    ]),
+  )
   .min(0)
   .max(16384)
 
@@ -38683,7 +39941,7 @@ export const DecisionInputFunctionCallOutputSchema = z.strictObject({
   id: z.string().min(0).max(1048576).nullable().exactOptional(),
   call_id: z.string().min(1).max(64),
   output: DecisionInputToolOutputContentSchema,
-  status: z.union([FunctionCallStatusParamSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([FunctionCallStatusParamSchema, z.null()]).exactOptional(),
   type: z.literal('function_call_output').default('function_call_output'),
 })
 
@@ -38707,7 +39965,7 @@ export const DecisionInputCustomToolCallSchema = z.strictObject({
     .min(1)
     .max(64),
   input: z.string().min(0).max(1048576),
-  status: z.union([FunctionCallStatusParamSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([FunctionCallStatusParamSchema, z.null()]).exactOptional(),
   type: z.literal('custom_tool_call').default('custom_tool_call'),
 })
 
@@ -38717,7 +39975,7 @@ export const DecisionInputCustomToolCallOutputSchema = z.strictObject({
   id: z.string().min(0).max(1048576).nullable().exactOptional(),
   call_id: z.string().min(1).max(64),
   output: DecisionInputToolOutputContentSchema,
-  status: z.union([FunctionCallStatusParamSchema, z.null().nullable()]).exactOptional(),
+  status: z.union([FunctionCallStatusParamSchema, z.null()]).exactOptional(),
   type: z.literal('custom_tool_call_output').default('custom_tool_call_output'),
 })
 
@@ -38731,11 +39989,23 @@ export const DecisionInputSchema = z
     z
       .array(
         z.xor([
-          DecisionInputMessageSchema,
-          DecisionInputFunctionCallSchema,
-          DecisionInputFunctionCallOutputSchema,
-          DecisionInputCustomToolCallSchema,
-          DecisionInputCustomToolCallOutputSchema,
+          z.intersection(DecisionInputMessageSchema, z.object({ type: z.literal('message') })),
+          z.intersection(
+            DecisionInputFunctionCallSchema,
+            z.object({ type: z.literal('function_call') }),
+          ),
+          z.intersection(
+            DecisionInputFunctionCallOutputSchema,
+            z.object({ type: z.literal('function_call_output') }),
+          ),
+          z.intersection(
+            DecisionInputCustomToolCallSchema,
+            z.object({ type: z.literal('custom_tool_call') }),
+          ),
+          z.intersection(
+            DecisionInputCustomToolCallOutputSchema,
+            z.object({ type: z.literal('custom_tool_call_output') }),
+          ),
         ]),
       )
       .min(0)
@@ -38767,7 +40037,7 @@ export const DecisionQuestionInputImageSchema = z
           'A base64-encoded image in a data URL or a publicly accessible HTTP(S) image URL.',
       }),
     detail: z
-      .union([ImageDetailParamSchema, z.null().nullable()])
+      .union([ImageDetailParamSchema, z.null()])
       .default('auto')
       .meta({
         description:
@@ -38784,7 +40054,11 @@ export const DecisionQuestionInputImageSchema = z
 export type DecisionQuestionInputImageSchema = z.infer<typeof DecisionQuestionInputImageSchema>
 
 export const DecisionQuestionInputPartSchema = z
-  .xor([DecisionQuestionInputTextSchema, DecisionQuestionInputImageSchema, DecisionInputJsonSchema])
+  .xor([
+    z.intersection(DecisionQuestionInputTextSchema, z.object({ type: z.literal('input_text') })),
+    z.intersection(DecisionQuestionInputImageSchema, z.object({ type: z.literal('input_image') })),
+    z.intersection(DecisionInputJsonSchema, z.object({ type: z.literal('input_json') })),
+  ])
   .meta({ description: 'A text, image, or JSON content part in a question instruction.' })
 
 export type DecisionQuestionInputPartSchema = z.infer<typeof DecisionQuestionInputPartSchema>
@@ -38866,7 +40140,11 @@ export const QuestionParamScoreSchema = z
 export type QuestionParamScoreSchema = z.infer<typeof QuestionParamScoreSchema>
 
 export const QuestionParamSchema = z
-  .xor([QuestionParamPredicateSchema, QuestionParamChoiceSchema, QuestionParamScoreSchema])
+  .xor([
+    z.intersection(QuestionParamPredicateSchema, z.object({ type: z.literal('predicate') })),
+    z.intersection(QuestionParamChoiceSchema, z.object({ type: z.literal('choice') })),
+    z.intersection(QuestionParamScoreSchema, z.object({ type: z.literal('score') })),
+  ])
   .meta({ description: "A question about the request's input, with an optional correlation name." })
 
 export type QuestionParamSchema = z.infer<typeof QuestionParamSchema>
@@ -38914,7 +40192,7 @@ export const DecisionRequestSchema = z.strictObject({
         })
         .exactOptional(),
       mode: z
-        .union([z.literal('implicit'), z.literal('explicit'), z.literal(null)])
+        .enum(['implicit', 'explicit'])
         .nullable()
         .meta({
           description:
@@ -38953,13 +40231,13 @@ export type ReasoningSummaryResourceSchema = z.infer<typeof ReasoningSummaryReso
 export const ReasoningResourceSchema = z
   .strictObject({
     effort: z
-      .union([ReasoningEffortResourceSchema, z.null().nullable()])
+      .union([ReasoningEffortResourceSchema, z.null()])
       .meta({
         description:
           'The requested reasoning effort, or `null` when the model selects its own default.',
       }),
     summary: z
-      .union([ReasoningSummaryResourceSchema, z.null().nullable()])
+      .union([ReasoningSummaryResourceSchema, z.null()])
       .meta({
         description:
           'The requested reasoning summary format, or `null` when summaries are disabled.',
@@ -38995,7 +40273,13 @@ export const TextFormatResourceJsonSchemaSchema = z
 export type TextFormatResourceJsonSchemaSchema = z.infer<typeof TextFormatResourceJsonSchemaSchema>
 
 export const TextFormatResourceSchema = z
-  .xor([TextFormatResourceTextSchema, TextFormatResourceJsonSchemaSchema])
+  .xor([
+    z.intersection(TextFormatResourceTextSchema, z.object({ type: z.literal('text') })),
+    z.intersection(
+      TextFormatResourceJsonSchemaSchema,
+      z.object({ type: z.literal('json_schema') }),
+    ),
+  ])
   .meta({ description: 'The effective output format for generated text.' })
 
 export type TextFormatResourceSchema = z.infer<typeof TextFormatResourceSchema>
@@ -39110,7 +40394,10 @@ export const McpTransportResourceStdioSchema = z
 export type McpTransportResourceStdioSchema = z.infer<typeof McpTransportResourceStdioSchema>
 
 export const McpTransportResourceSchema = z
-  .xor([McpTransportResourceHttpSchema, McpTransportResourceStdioSchema])
+  .xor([
+    z.intersection(McpTransportResourceHttpSchema, z.object({ type: z.literal('http') })),
+    z.intersection(McpTransportResourceStdioSchema, z.object({ type: z.literal('stdio') })),
+  ])
   .meta({ description: 'The transport used to connect to an MCP server.' })
 
 export type McpTransportResourceSchema = z.infer<typeof McpTransportResourceSchema>
@@ -39213,7 +40500,7 @@ export const AgentToolResourceWebSearchSchema = z
       .nullable()
       .meta({ description: 'Allowed search domains, or `null` when the search is unrestricted.' }),
     location: z
-      .union([WebSearchLocationResourceSchema, z.null().nullable()])
+      .union([WebSearchLocationResourceSchema, z.null()])
       .meta({ description: 'Approximate location used to localize search results, if provided.' }),
   })
   .meta({ description: 'Web search.' })
@@ -39247,12 +40534,21 @@ export type AgentToolResourceAutomationsSchema = z.infer<typeof AgentToolResourc
 
 export const AgentToolResourceSchema = z
   .xor([
-    AgentToolResourceFunctionSchema,
-    AgentToolResourceProgrammaticToolCallingSchema,
-    AgentToolResourceMcpSchema,
-    AgentToolResourceWebSearchSchema,
-    AgentToolResourceComputerUseSchema,
-    AgentToolResourceAutomationsSchema,
+    z.intersection(AgentToolResourceFunctionSchema, z.object({ type: z.literal('function') })),
+    z.intersection(
+      AgentToolResourceProgrammaticToolCallingSchema,
+      z.object({ type: z.literal('programmatic_tool_calling') }),
+    ),
+    z.intersection(AgentToolResourceMcpSchema, z.object({ type: z.literal('mcp') })),
+    z.intersection(AgentToolResourceWebSearchSchema, z.object({ type: z.literal('web_search') })),
+    z.intersection(
+      AgentToolResourceComputerUseSchema,
+      z.object({ type: z.literal('computer_use') }),
+    ),
+    z.intersection(
+      AgentToolResourceAutomationsSchema,
+      z.object({ type: z.literal('automations') }),
+    ),
   ])
   .meta({ description: 'A tool available to the agent.' })
 
@@ -39441,7 +40737,16 @@ export type HostedTemplateSkillResourceInlineSchema = z.infer<
 >
 
 export const HostedTemplateSkillResourceSchema = z
-  .xor([HostedTemplateSkillResourceSkillReferenceSchema, HostedTemplateSkillResourceInlineSchema])
+  .xor([
+    z.intersection(
+      HostedTemplateSkillResourceSkillReferenceSchema,
+      z.object({ type: z.literal('skill_reference') }),
+    ),
+    z.intersection(
+      HostedTemplateSkillResourceInlineSchema,
+      z.object({ type: z.literal('inline') }),
+    ),
+  ])
   .meta({ description: 'Safe metadata for a skill configured by an environment template.' })
 
 export type HostedTemplateSkillResourceSchema = z.infer<typeof HostedTemplateSkillResourceSchema>
@@ -39460,7 +40765,7 @@ export const HostedPluginResourceInlineSchema = z
 export type HostedPluginResourceInlineSchema = z.infer<typeof HostedPluginResourceInlineSchema>
 
 export const HostedPluginResourceSchema = z
-  .xor([HostedPluginResourceInlineSchema])
+  .xor([z.intersection(HostedPluginResourceInlineSchema, z.object({ type: z.literal('inline') }))])
   .meta({ description: 'A plugin installed in an OpenAI-hosted environment.' })
 
 export type HostedPluginResourceSchema = z.infer<typeof HostedPluginResourceSchema>
@@ -39508,7 +40813,13 @@ export type HostedTemplateFileResourceInlineSchema = z.infer<
 >
 
 export const HostedTemplateFileResourceSchema = z
-  .xor([HostedTemplateFileResourceFileIdSchema, HostedTemplateFileResourceInlineSchema])
+  .xor([
+    z.intersection(
+      HostedTemplateFileResourceFileIdSchema,
+      z.object({ type: z.literal('file_id') }),
+    ),
+    z.intersection(HostedTemplateFileResourceInlineSchema, z.object({ type: z.literal('inline') })),
+  ])
   .meta({ description: 'Safe metadata for a file configured by an environment template.' })
 
 export type HostedTemplateFileResourceSchema = z.infer<typeof HostedTemplateFileResourceSchema>
@@ -39533,20 +40844,20 @@ export const AutomationEnvironmentResourceOpenaiHostedSchema = z
       .nullable()
       .meta({ description: 'A template reference, or null when no template is selected.' }),
     container_size: z
-      .union([ContainerSizeResourceSchema, z.null().nullable()])
+      .union([ContainerSizeResourceSchema, z.null()])
       .meta({ description: 'The configured container size, or null to use the creation default.' }),
     packages: z
-      .union([EnvironmentPackagesResourceSchema, z.null().nullable()])
+      .union([EnvironmentPackagesResourceSchema, z.null()])
       .meta({
         description: 'Package overrides, or null to inherit the template or creation default.',
       }),
     network: z
-      .union([NetworkPolicyResourceSchema, z.null().nullable()])
+      .union([NetworkPolicyResourceSchema, z.null()])
       .meta({
         description: 'Network overrides, or null to inherit the template or creation default.',
       }),
     desktop: z
-      .union([DesktopResourceSchema, z.null().nullable()])
+      .union([DesktopResourceSchema, z.null()])
       .meta({
         description: 'Desktop overrides, or null to inherit the template or creation default.',
       }),
@@ -39615,9 +40926,15 @@ export type AutomationEnvironmentResourceSelfHostedSchema = z.infer<
 
 export const AutomationEnvironmentResourceSchema = z
   .xor([
-    AutomationEnvironmentResourceNoneSchema,
-    AutomationEnvironmentResourceOpenaiHostedSchema,
-    AutomationEnvironmentResourceSelfHostedSchema,
+    z.intersection(AutomationEnvironmentResourceNoneSchema, z.object({ type: z.literal('none') })),
+    z.intersection(
+      AutomationEnvironmentResourceOpenaiHostedSchema,
+      z.object({ type: z.literal('openai_hosted') }),
+    ),
+    z.intersection(
+      AutomationEnvironmentResourceSelfHostedSchema,
+      z.object({ type: z.literal('self_hosted') }),
+    ),
   ])
   .meta({ description: 'Environment selection saved before an invocation creates its session.' })
 
@@ -39660,7 +40977,16 @@ export type InputContentResourceInputImageSchema = z.infer<
 >
 
 export const InputContentResourceSchema = z
-  .xor([InputContentResourceInputTextSchema, InputContentResourceInputImageSchema])
+  .xor([
+    z.intersection(
+      InputContentResourceInputTextSchema,
+      z.object({ type: z.literal('input_text') }),
+    ),
+    z.intersection(
+      InputContentResourceInputImageSchema,
+      z.object({ type: z.literal('input_image') }),
+    ),
+  ])
   .meta({ description: 'User-provided content recorded in a session item.' })
 
 export type InputContentResourceSchema = z.infer<typeof InputContentResourceSchema>
@@ -39698,7 +41024,7 @@ export const AutomationTargetResourceNewSessionSchema = z.strictObject({
       description: 'The saved agent reference, or null when an inline agent is configured.',
     }),
   agent: z
-    .union([AutomationAgentConfigResourceSchema, z.null().nullable()])
+    .union([AutomationAgentConfigResourceSchema, z.null()])
     .meta({ description: 'The inline agent configuration, or null when agent_id is configured.' }),
   environment: AutomationEnvironmentResourceSchema.meta({
     description: 'Configuration or references used to select the execution environment.',
@@ -39739,7 +41065,16 @@ export type AutomationTargetResourceExistingSessionSchema = z.infer<
 >
 
 export const AutomationTargetResourceSchema = z
-  .xor([AutomationTargetResourceNewSessionSchema, AutomationTargetResourceExistingSessionSchema])
+  .xor([
+    z.intersection(
+      AutomationTargetResourceNewSessionSchema,
+      z.object({ type: z.literal('new_session') }),
+    ),
+    z.intersection(
+      AutomationTargetResourceExistingSessionSchema,
+      z.object({ type: z.literal('existing_session') }),
+    ),
+  ])
   .meta({ description: 'Saved target configuration, excluding confidential request-only values.' })
 
 export type AutomationTargetResourceSchema = z.infer<typeof AutomationTargetResourceSchema>
@@ -39775,7 +41110,13 @@ export type AutomationCreatedByResourceAgentSchema = z.infer<
 >
 
 export const AutomationCreatedByResourceSchema = z
-  .xor([AutomationCreatedByResourceDeveloperSchema, AutomationCreatedByResourceAgentSchema])
+  .xor([
+    z.intersection(
+      AutomationCreatedByResourceDeveloperSchema,
+      z.object({ type: z.literal('developer') }),
+    ),
+    z.intersection(AutomationCreatedByResourceAgentSchema, z.object({ type: z.literal('agent') })),
+  ])
   .meta({
     description: 'How the automation was created, independently of how an invocation started.',
   })
@@ -39815,7 +41156,7 @@ export const AutomationResourcePeriodicSchema = z
       description: 'Service-recorded provenance; callers cannot supply this field.',
     }),
     pause_reason: z
-      .union([z.literal('target_session_failed'), z.literal(null)])
+      .literal('target_session_failed')
       .nullable()
       .default('target_session_failed')
       .meta({ description: 'Why the service paused this schedule, or null for other schedules.' })
@@ -39867,7 +41208,7 @@ export const AutomationResourceOnceSchema = z
       description: 'Service-recorded provenance; callers cannot supply this field.',
     }),
     pause_reason: z
-      .union([z.literal('target_session_failed'), z.literal(null)])
+      .literal('target_session_failed')
       .nullable()
       .default('target_session_failed')
       .meta({ description: 'Why the service paused this schedule, or null for other schedules.' })
@@ -39886,7 +41227,10 @@ export const AutomationResourceOnceSchema = z
 export type AutomationResourceOnceSchema = z.infer<typeof AutomationResourceOnceSchema>
 
 export const AutomationResourceSchema = z
-  .xor([AutomationResourcePeriodicSchema, AutomationResourceOnceSchema])
+  .xor([
+    z.intersection(AutomationResourcePeriodicSchema, z.object({ type: z.literal('periodic') })),
+    z.intersection(AutomationResourceOnceSchema, z.object({ type: z.literal('once') })),
+  ])
   .meta({ description: 'A saved automation and its schedule.' })
 
 export type AutomationResourceSchema = z.infer<typeof AutomationResourceSchema>
@@ -39950,14 +41294,14 @@ export type ReasoningSummaryParamSchema = z.infer<typeof ReasoningSummaryParamSc
 export const ReasoningParamSchema = z
   .strictObject({
     effort: z
-      .union([ReasoningEffortParamSchema, z.null().nullable()])
+      .union([ReasoningEffortParamSchema, z.null()])
       .meta({
         description:
           'The amount of reasoning effort the model should use. Omission lets the model select it.',
       })
       .exactOptional(),
     summary: z
-      .union([ReasoningSummaryParamSchema, z.null().nullable()])
+      .union([ReasoningSummaryParamSchema, z.null()])
       .meta({ description: 'Controls whether the response includes a reasoning summary.' })
       .exactOptional(),
   })
@@ -39991,7 +41335,10 @@ export const TextFormatParamJsonSchemaSchema = z
 export type TextFormatParamJsonSchemaSchema = z.infer<typeof TextFormatParamJsonSchemaSchema>
 
 export const TextFormatParamSchema = z
-  .xor([TextFormatParamTextSchema, TextFormatParamJsonSchemaSchema])
+  .xor([
+    z.intersection(TextFormatParamTextSchema, z.object({ type: z.literal('text') })),
+    z.intersection(TextFormatParamJsonSchemaSchema, z.object({ type: z.literal('json_schema') })),
+  ])
   .meta({ description: 'The output format for generated text.' })
 
 export type TextFormatParamSchema = z.infer<typeof TextFormatParamSchema>
@@ -40005,11 +41352,11 @@ export type VerbosityParamSchema = z.infer<typeof VerbosityParamSchema>
 export const TextParamSchema = z
   .strictObject({
     format: z
-      .union([TextFormatParamSchema, z.null().nullable()])
+      .union([TextFormatParamSchema, z.null()])
       .meta({ description: 'The output format. Omission uses ordinary text (`{"type": "text"}`).' })
       .exactOptional(),
     verbosity: z
-      .union([VerbosityParamSchema, z.null().nullable()])
+      .union([VerbosityParamSchema, z.null()])
       .meta({
         description:
           'The amount of text the model should produce. Defaults to `medium`, matching Responses.',
@@ -40194,7 +41541,10 @@ export const McpTransportConfigParamStdioSchema = z
 export type McpTransportConfigParamStdioSchema = z.infer<typeof McpTransportConfigParamStdioSchema>
 
 export const McpTransportConfigParamSchema = z
-  .xor([McpTransportConfigParamHttpSchema, McpTransportConfigParamStdioSchema])
+  .xor([
+    z.intersection(McpTransportConfigParamHttpSchema, z.object({ type: z.literal('http') })),
+    z.intersection(McpTransportConfigParamStdioSchema, z.object({ type: z.literal('stdio') })),
+  ])
   .meta({ description: 'The transport used to connect to an MCP server.' })
 
 export type McpTransportConfigParamSchema = z.infer<typeof McpTransportConfigParamSchema>
@@ -40252,7 +41602,7 @@ export const AgentToolConfigParamMcpSchema = z
       })
       .exactOptional(),
     connection_origin: z
-      .union([McpConnectionOriginParamSchema, z.null().nullable()])
+      .union([McpConnectionOriginParamSchema, z.null()])
       .meta({
         description:
           "Selects where outbound MCP HTTP connections originate. Omitted or `service` uses the Managed Agents service network; `environment` uses the session's selected environment.",
@@ -40317,11 +41667,11 @@ export const AgentToolConfigParamWebSearchSchema = z
       .default('web_search')
       .meta({ description: 'The type of the object. Always `web_search`.' }),
     mode: z
-      .union([WebSearchModeParamSchema, z.null().nullable()])
+      .union([WebSearchModeParamSchema, z.null()])
       .meta({ description: 'The source used for web search results. Defaults to `live`.' })
       .exactOptional(),
     context_size: z
-      .union([WebSearchContextSizeParamSchema, z.null().nullable()])
+      .union([WebSearchContextSizeParamSchema, z.null()])
       .meta({
         description:
           'The amount of search context made available to the model. Defaults to `medium`.',
@@ -40335,7 +41685,7 @@ export const AgentToolConfigParamWebSearchSchema = z
       .meta({ description: 'Domains the search may include.' })
       .exactOptional(),
     location: z
-      .union([WebSearchLocationParamSchema, z.null().nullable()])
+      .union([WebSearchLocationParamSchema, z.null()])
       .meta({ description: 'Approximate location used to localize search results.' })
       .exactOptional(),
   })
@@ -40380,13 +41730,28 @@ export type AgentToolConfigParamAutomationsSchema = z.infer<
 
 export const AgentToolConfigParamSchema = z
   .xor([
-    AgentToolConfigParamFunctionSchema,
-    AgentToolConfigParamToolSearchSchema,
-    AgentToolConfigParamProgrammaticToolCallingSchema,
-    AgentToolConfigParamMcpSchema,
-    AgentToolConfigParamWebSearchSchema,
-    AgentToolConfigParamComputerUseSchema,
-    AgentToolConfigParamAutomationsSchema,
+    z.intersection(AgentToolConfigParamFunctionSchema, z.object({ type: z.literal('function') })),
+    z.intersection(
+      AgentToolConfigParamToolSearchSchema,
+      z.object({ type: z.literal('tool_search') }),
+    ),
+    z.intersection(
+      AgentToolConfigParamProgrammaticToolCallingSchema,
+      z.object({ type: z.literal('programmatic_tool_calling') }),
+    ),
+    z.intersection(AgentToolConfigParamMcpSchema, z.object({ type: z.literal('mcp') })),
+    z.intersection(
+      AgentToolConfigParamWebSearchSchema,
+      z.object({ type: z.literal('web_search') }),
+    ),
+    z.intersection(
+      AgentToolConfigParamComputerUseSchema,
+      z.object({ type: z.literal('computer_use') }),
+    ),
+    z.intersection(
+      AgentToolConfigParamAutomationsSchema,
+      z.object({ type: z.literal('automations') }),
+    ),
   ])
   .meta({ description: 'A tool available to the agent.' })
 
@@ -40409,18 +41774,18 @@ export const SessionAgentConfigParamSchema = z
       })
       .exactOptional(),
     reasoning: z
-      .union([ReasoningParamSchema, z.null().nullable()])
+      .union([ReasoningParamSchema, z.null()])
       .meta({
         description:
           "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
       })
       .exactOptional(),
     text: z
-      .union([TextParamSchema, z.null().nullable()])
+      .union([TextParamSchema, z.null()])
       .meta({ description: 'Configuration for text generated by the agent.' })
       .exactOptional(),
     service_tier: z
-      .union([ServiceTierParamSchema, z.null().nullable()])
+      .union([ServiceTierParamSchema, z.null()])
       .meta({ description: 'The service tier used for model requests.' })
       .exactOptional(),
     instructions: z
@@ -40434,11 +41799,11 @@ export const SessionAgentConfigParamSchema = z
       })
       .exactOptional(),
     multi_agent: z
-      .union([MultiAgentConfigCurrentParamSchema, z.null().nullable()])
+      .union([MultiAgentConfigCurrentParamSchema, z.null()])
       .meta({ description: 'Configuration for creating and coordinating subagents.' })
       .exactOptional(),
     compaction: z
-      .union([CompactionParamSchema, z.null().nullable()])
+      .union([CompactionParamSchema, z.null()])
       .meta({
         description:
           'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
@@ -40612,7 +41977,12 @@ export type InlineCapabilitySourceParamBase64Schema = z.infer<
 >
 
 export const InlineCapabilitySourceParamSchema = z
-  .xor([InlineCapabilitySourceParamBase64Schema])
+  .xor([
+    z.intersection(
+      InlineCapabilitySourceParamBase64Schema,
+      z.object({ type: z.literal('base64') }),
+    ),
+  ])
   .meta({ description: 'The encoded ZIP archive for an inline skill or plugin.' })
 
 export type InlineCapabilitySourceParamSchema = z.infer<typeof InlineCapabilitySourceParamSchema>
@@ -40636,7 +42006,13 @@ export const HostedSkillParamInlineSchema = z
 export type HostedSkillParamInlineSchema = z.infer<typeof HostedSkillParamInlineSchema>
 
 export const HostedSkillParamSchema = z
-  .xor([HostedSkillParamSkillReferenceSchema, HostedSkillParamInlineSchema])
+  .xor([
+    z.intersection(
+      HostedSkillParamSkillReferenceSchema,
+      z.object({ type: z.literal('skill_reference') }),
+    ),
+    z.intersection(HostedSkillParamInlineSchema, z.object({ type: z.literal('inline') })),
+  ])
   .meta({ description: 'A skill installed in an OpenAI-hosted environment.' })
 
 export type HostedSkillParamSchema = z.infer<typeof HostedSkillParamSchema>
@@ -40664,7 +42040,7 @@ export const HostedPluginParamInlineSchema = z
 export type HostedPluginParamInlineSchema = z.infer<typeof HostedPluginParamInlineSchema>
 
 export const HostedPluginParamSchema = z
-  .xor([HostedPluginParamInlineSchema])
+  .xor([z.intersection(HostedPluginParamInlineSchema, z.object({ type: z.literal('inline') }))])
   .meta({ description: 'A plugin installed in an OpenAI-hosted environment.' })
 
 export type HostedPluginParamSchema = z.infer<typeof HostedPluginParamSchema>
@@ -40712,7 +42088,13 @@ export type HostedEnvironmentFileParamInlineSchema = z.infer<
 >
 
 export const HostedEnvironmentFileParamSchema = z
-  .xor([HostedEnvironmentFileParamFileIdSchema, HostedEnvironmentFileParamInlineSchema])
+  .xor([
+    z.intersection(
+      HostedEnvironmentFileParamFileIdSchema,
+      z.object({ type: z.literal('file_id') }),
+    ),
+    z.intersection(HostedEnvironmentFileParamInlineSchema, z.object({ type: z.literal('inline') })),
+  ])
   .meta({ description: 'A file materialized in an OpenAI-hosted execution environment.' })
 
 export type HostedEnvironmentFileParamSchema = z.infer<typeof HostedEnvironmentFileParamSchema>
@@ -40730,7 +42112,7 @@ export const EnvironmentParamOpenaiHostedSchema = z
       .default('openai_hosted')
       .meta({ description: 'The type of the object. Always `openai_hosted`.' }),
     packages: z
-      .union([EnvironmentPackagesParamSchema, z.null().nullable()])
+      .union([EnvironmentPackagesParamSchema, z.null()])
       .meta({
         description: 'Packages to install in the environment. Defaults to empty package lists.',
       })
@@ -40745,14 +42127,14 @@ export const EnvironmentParamOpenaiHostedSchema = z
       })
       .exactOptional(),
     network: z
-      .union([NetworkPolicyParamSchema, z.null().nullable()])
+      .union([NetworkPolicyParamSchema, z.null()])
       .meta({
         description:
           'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
       })
       .exactOptional(),
     desktop: z
-      .union([DesktopParamSchema, z.null().nullable()])
+      .union([DesktopParamSchema, z.null()])
       .meta({
         description:
           'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
@@ -40872,9 +42254,12 @@ export type EnvironmentParamSelfHostedSchema = z.infer<typeof EnvironmentParamSe
 
 export const EnvironmentParamSchema = z
   .xor([
-    EnvironmentParamNoneSchema,
-    EnvironmentParamOpenaiHostedSchema,
-    EnvironmentParamSelfHostedSchema,
+    z.intersection(EnvironmentParamNoneSchema, z.object({ type: z.literal('none') })),
+    z.intersection(
+      EnvironmentParamOpenaiHostedSchema,
+      z.object({ type: z.literal('openai_hosted') }),
+    ),
+    z.intersection(EnvironmentParamSelfHostedSchema, z.object({ type: z.literal('self_hosted') })),
   ])
   .meta({ description: 'The execution environment and optional reusable template for a session.' })
 
@@ -40909,7 +42294,10 @@ export const InputContentParamInputImageSchema = z
 export type InputContentParamInputImageSchema = z.infer<typeof InputContentParamInputImageSchema>
 
 export const InputContentParamSchema = z
-  .xor([InputContentParamInputTextSchema, InputContentParamInputImageSchema])
+  .xor([
+    z.intersection(InputContentParamInputTextSchema, z.object({ type: z.literal('input_text') })),
+    z.intersection(InputContentParamInputImageSchema, z.object({ type: z.literal('input_image') })),
+  ])
   .meta({ description: 'Content included in an input message.' })
 
 export type InputContentParamSchema = z.infer<typeof InputContentParamSchema>
@@ -41001,7 +42389,16 @@ export type AutomationTargetParamExistingSessionSchema = z.infer<
 >
 
 export const AutomationTargetParamSchema = z
-  .xor([AutomationTargetParamNewSessionSchema, AutomationTargetParamExistingSessionSchema])
+  .xor([
+    z.intersection(
+      AutomationTargetParamNewSessionSchema,
+      z.object({ type: z.literal('new_session') }),
+    ),
+    z.intersection(
+      AutomationTargetParamExistingSessionSchema,
+      z.object({ type: z.literal('existing_session') }),
+    ),
+  ])
   .meta({ description: 'The session an automation invocation targets.' })
 
 export type AutomationTargetParamSchema = z.infer<typeof AutomationTargetParamSchema>
@@ -41056,7 +42453,10 @@ export const CreateAutomationParamsOnceSchema = z.strictObject({
 export type CreateAutomationParamsOnceSchema = z.infer<typeof CreateAutomationParamsOnceSchema>
 
 export const CreateAutomationParamsSchema = z
-  .xor([CreateAutomationParamsPeriodicSchema, CreateAutomationParamsOnceSchema])
+  .xor([
+    z.intersection(CreateAutomationParamsPeriodicSchema, z.object({ type: z.literal('periodic') })),
+    z.intersection(CreateAutomationParamsOnceSchema, z.object({ type: z.literal('once') })),
+  ])
   .meta({ description: 'Creates an automation without invoking it immediately.' })
 
 export type CreateAutomationParamsSchema = z.infer<typeof CreateAutomationParamsSchema>
@@ -41136,8 +42536,14 @@ export type AutomationInvocationSourceResourceAutomationSchema = z.infer<
 >
 
 export const AutomationInvocationSourceResourceSchema = z.xor([
-  AutomationInvocationSourceResourceManualSchema,
-  AutomationInvocationSourceResourceAutomationSchema,
+  z.intersection(
+    AutomationInvocationSourceResourceManualSchema,
+    z.object({ type: z.literal('manual') }),
+  ),
+  z.intersection(
+    AutomationInvocationSourceResourceAutomationSchema,
+    z.object({ type: z.literal('automation') }),
+  ),
 ])
 
 export type AutomationInvocationSourceResourceSchema = z.infer<
@@ -41203,12 +42609,12 @@ export const AutomationInvocationResourceSchema = z
       description: "Delivery status; completed does not mean the agent's work has finished.",
     }),
     skip_reason: z
-      .union([z.literal('pending_delivery'), z.literal(null)])
+      .literal('pending_delivery')
       .nullable()
       .default('pending_delivery')
       .meta({ description: 'Why an occurrence was skipped, or null when it was not skipped.' }),
     error: z
-      .union([AutomationInvocationErrorResourceSchema, z.null().nullable()])
+      .union([AutomationInvocationErrorResourceSchema, z.null()])
       .meta({ description: 'The permanent delivery failure, or null when no failure occurred.' }),
   })
   .meta({ description: 'One attempted delivery by an automation.' })
@@ -41287,7 +42693,16 @@ export type HostedEnvironmentFileResourceInlineSchema = z.infer<
 >
 
 export const HostedEnvironmentFileResourceSchema = z
-  .xor([HostedEnvironmentFileResourceFileIdSchema, HostedEnvironmentFileResourceInlineSchema])
+  .xor([
+    z.intersection(
+      HostedEnvironmentFileResourceFileIdSchema,
+      z.object({ type: z.literal('file_id') }),
+    ),
+    z.intersection(
+      HostedEnvironmentFileResourceInlineSchema,
+      z.object({ type: z.literal('inline') }),
+    ),
+  ])
   .meta({
     description: 'Metadata for a file materialized in an OpenAI-hosted execution environment.',
   })
@@ -41330,7 +42745,13 @@ export const HostedSkillResourceInlineSchema = z
 export type HostedSkillResourceInlineSchema = z.infer<typeof HostedSkillResourceInlineSchema>
 
 export const HostedSkillResourceSchema = z
-  .xor([HostedSkillResourceSkillReferenceSchema, HostedSkillResourceInlineSchema])
+  .xor([
+    z.intersection(
+      HostedSkillResourceSkillReferenceSchema,
+      z.object({ type: z.literal('skill_reference') }),
+    ),
+    z.intersection(HostedSkillResourceInlineSchema, z.object({ type: z.literal('inline') })),
+  ])
   .meta({ description: 'A skill installed in an OpenAI-hosted environment.' })
 
 export type HostedSkillResourceSchema = z.infer<typeof HostedSkillResourceSchema>
@@ -41415,7 +42836,7 @@ export const CreateEnvironmentParamOpenaiHostedSchema = z
       .default('openai_hosted')
       .meta({ description: 'The type of the object. Always `openai_hosted`.' }),
     packages: z
-      .union([EnvironmentPackagesParamSchema, z.null().nullable()])
+      .union([EnvironmentPackagesParamSchema, z.null()])
       .meta({
         description: 'Packages to install in the environment. Defaults to empty package lists.',
       })
@@ -41430,14 +42851,14 @@ export const CreateEnvironmentParamOpenaiHostedSchema = z
       })
       .exactOptional(),
     network: z
-      .union([NetworkPolicyParamSchema, z.null().nullable()])
+      .union([NetworkPolicyParamSchema, z.null()])
       .meta({
         description:
           'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
       })
       .exactOptional(),
     desktop: z
-      .union([DesktopParamSchema, z.null().nullable()])
+      .union([DesktopParamSchema, z.null()])
       .meta({
         description:
           'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
@@ -41501,7 +42922,12 @@ export type CreateEnvironmentParamOpenaiHostedSchema = z.infer<
 >
 
 export const CreateEnvironmentParamSchema = z
-  .xor([CreateEnvironmentParamOpenaiHostedSchema])
+  .xor([
+    z.intersection(
+      CreateEnvironmentParamOpenaiHostedSchema,
+      z.object({ type: z.literal('openai_hosted') }),
+    ),
+  ])
   .meta({ description: 'Configuration for a new prewarmed OpenAI-hosted environment.' })
 
 export type CreateEnvironmentParamSchema = z.infer<typeof CreateEnvironmentParamSchema>
@@ -41611,7 +43037,13 @@ export const EncryptedContentResourceSchema = z
 export type EncryptedContentResourceSchema = z.infer<typeof EncryptedContentResourceSchema>
 
 export const AgentContentResourceSchema = z
-  .xor([OutputTextResourceSchema, EncryptedContentResourceSchema])
+  .xor([
+    z.intersection(OutputTextResourceSchema, z.object({ type: z.literal('output_text') })),
+    z.intersection(
+      EncryptedContentResourceSchema,
+      z.object({ type: z.literal('encrypted_content') }),
+    ),
+  ])
   .meta({ description: 'A plaintext or encrypted content part exchanged between agents.' })
 
 export type AgentContentResourceSchema = z.infer<typeof AgentContentResourceSchema>
@@ -41731,9 +43163,18 @@ export type MessageContentResourceOutputTextSchema = z.infer<
 
 export const MessageContentResourceSchema = z
   .xor([
-    MessageContentResourceInputTextSchema,
-    MessageContentResourceInputImageSchema,
-    MessageContentResourceOutputTextSchema,
+    z.intersection(
+      MessageContentResourceInputTextSchema,
+      z.object({ type: z.literal('input_text') }),
+    ),
+    z.intersection(
+      MessageContentResourceInputImageSchema,
+      z.object({ type: z.literal('input_image') }),
+    ),
+    z.intersection(
+      MessageContentResourceOutputTextSchema,
+      z.object({ type: z.literal('output_text') }),
+    ),
   ])
   .meta({ description: 'A content part in a session message.' })
 
@@ -41779,7 +43220,7 @@ export const MessageItemResourceSchema = z
       description: 'The status of the message. User messages are always `completed`.',
     }),
     phase: z
-      .union([MessagePhaseResourceSchema, z.null().nullable()])
+      .union([MessagePhaseResourceSchema, z.null()])
       .meta({ description: 'The phase of an assistant message. Null for user messages.' }),
   })
   .meta({ description: 'A user or assistant message recorded in a session.' })
@@ -41812,7 +43253,7 @@ export const ReasoningItemResourceSchema = z
       .max(2000)
       .meta({ description: 'The reasoning summaries produced by the agent.' }),
     status: z
-      .union([OutputItemStatusResourceSchema, z.null().nullable()])
+      .union([OutputItemStatusResourceSchema, z.null()])
       .meta({ description: 'The status of the reasoning item.' }),
   })
   .meta({ description: 'A reasoning item produced by the agent.' })
@@ -41866,7 +43307,7 @@ export const FunctionCallOutputItemResourceSchema = z
       description: 'The status of the function call.',
     }),
     output: z
-      .union([FunctionCallOutputResourceSchema, z.null().nullable()])
+      .union([FunctionCallOutputResourceSchema, z.null()])
       .meta({ description: 'The function result, if the call succeeded.' }),
     error: z
       .string()
@@ -41921,10 +43362,10 @@ export const McpCallItemResourceSchema = z
       description: 'The status of the MCP tool call.',
     }),
     output: z
-      .union([z.any(), z.null().nullable()])
+      .union([z.any(), z.null()])
       .meta({ description: 'The output returned by the MCP tool, if any.' }),
     error: z
-      .union([z.any(), z.null().nullable()])
+      .union([z.any(), z.null()])
       .meta({ description: 'The error returned by the MCP tool, if any.' }),
   })
   .meta({ description: 'A call to a tool on an MCP server.' })
@@ -41963,7 +43404,7 @@ export const ComputerUseCallItemResourceSchema = z
       description: 'The execution status of the activity.',
     }),
     output: z
-      .union([ComputerScreenshotResourceSchema, z.null().nullable()])
+      .union([ComputerScreenshotResourceSchema, z.null()])
       .meta({
         description:
           'The last screenshot emitted by the model. Null when screenshot inclusion is disabled or the call emitted no screenshot.',
@@ -42042,7 +43483,10 @@ export type BrowserAuthenticationHistoryRequestKindResourceBrowserAuthentication
 >
 
 export const BrowserAuthenticationHistoryRequestKindResourceSchema = z.xor([
-  BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema,
+  z.intersection(
+    BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema,
+    z.object({ type: z.literal('browser_authentication') }),
+  ),
 ])
 
 export type BrowserAuthenticationHistoryRequestKindResourceSchema = z.infer<
@@ -42090,8 +43534,14 @@ export type ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelRe
   z.infer<typeof ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema>
 
 export const ComputerUseApprovalResponseKindResourceSchema = z.xor([
-  ComputerUseApprovalResponseKindResourceBrowserAuthenticationSubmitResourceSchema,
-  ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema,
+  z.intersection(
+    ComputerUseApprovalResponseKindResourceBrowserAuthenticationSubmitResourceSchema,
+    z.object({ action: z.literal('submit') }),
+  ),
+  z.intersection(
+    ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema,
+    z.object({ action: z.literal('cancel') }),
+  ),
 ])
 
 export type ComputerUseApprovalResponseKindResourceSchema = z.infer<
@@ -42195,10 +43645,16 @@ export type WebSearchActionResourceOtherSchema = z.infer<typeof WebSearchActionR
 
 export const WebSearchActionResourceSchema = z
   .xor([
-    WebSearchActionResourceSearchSchema,
-    WebSearchActionResourceOpenPageSchema,
-    WebSearchActionResourceFindInPageSchema,
-    WebSearchActionResourceOtherSchema,
+    z.intersection(WebSearchActionResourceSearchSchema, z.object({ type: z.literal('search') })),
+    z.intersection(
+      WebSearchActionResourceOpenPageSchema,
+      z.object({ type: z.literal('open_page') }),
+    ),
+    z.intersection(
+      WebSearchActionResourceFindInPageSchema,
+      z.object({ type: z.literal('find_in_page') }),
+    ),
+    z.intersection(WebSearchActionResourceOtherSchema, z.object({ type: z.literal('other') })),
   ])
   .meta({ description: 'An action performed by the web search tool.' })
 
@@ -42216,7 +43672,7 @@ export const WebSearchCallItemResourceSchema = z
       description: 'The status of the web search call.',
     }),
     action: z
-      .union([WebSearchActionResourceSchema, z.null().nullable()])
+      .union([WebSearchActionResourceSchema, z.null()])
       .meta({ description: 'The action performed by the web search tool.' }),
   })
   .meta({ description: 'A web search call produced by the agent.' })
@@ -42418,23 +43874,59 @@ export type CloseSubagentCallItemResourceSchema = z.infer<
 
 export const SessionTurnItemResourceSchema = z
   .xor([
-    MessageItemResourceSchema,
-    ReasoningItemResourceSchema,
-    FunctionCallItemResourceSchema,
-    FunctionCallOutputItemResourceSchema,
-    AgentMessageItemResourceSchema,
-    McpCallItemResourceSchema,
-    ComputerUseCallItemResourceSchema,
-    BrowserAuthenticationRequestItemResourceSchema,
-    ComputerUseApprovalRequestResultItemResourceSchema,
-    WebSearchCallItemResourceSchema,
-    CommandExecutionItemResourceSchema,
-    CreateSubagentCallItemResourceSchema,
-    SendSubagentInputCallItemResourceSchema,
-    ResumeSubagentCallItemResourceSchema,
-    WaitForSubagentsCallItemResourceSchema,
-    InterruptSubagentCallItemResourceSchema,
-    CloseSubagentCallItemResourceSchema,
+    z.intersection(MessageItemResourceSchema, z.object({ type: z.literal('message') })),
+    z.intersection(ReasoningItemResourceSchema, z.object({ type: z.literal('reasoning') })),
+    z.intersection(FunctionCallItemResourceSchema, z.object({ type: z.literal('function_call') })),
+    z.intersection(
+      FunctionCallOutputItemResourceSchema,
+      z.object({ type: z.literal('function_call_output') }),
+    ),
+    z.intersection(AgentMessageItemResourceSchema, z.object({ type: z.literal('agent_message') })),
+    z.intersection(McpCallItemResourceSchema, z.object({ type: z.literal('mcp_call') })),
+    z.intersection(
+      ComputerUseCallItemResourceSchema,
+      z.object({ type: z.literal('computer_use_call') }),
+    ),
+    z.intersection(
+      BrowserAuthenticationRequestItemResourceSchema,
+      z.object({ type: z.literal('computer_use_approval_request') }),
+    ),
+    z.intersection(
+      ComputerUseApprovalRequestResultItemResourceSchema,
+      z.object({ type: z.literal('computer_use_approval_request_result') }),
+    ),
+    z.intersection(
+      WebSearchCallItemResourceSchema,
+      z.object({ type: z.literal('web_search_call') }),
+    ),
+    z.intersection(
+      CommandExecutionItemResourceSchema,
+      z.object({ type: z.literal('command_execution') }),
+    ),
+    z.intersection(
+      CreateSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('create_subagent_call') }),
+    ),
+    z.intersection(
+      SendSubagentInputCallItemResourceSchema,
+      z.object({ type: z.literal('send_subagent_input_call') }),
+    ),
+    z.intersection(
+      ResumeSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('resume_subagent_call') }),
+    ),
+    z.intersection(
+      WaitForSubagentsCallItemResourceSchema,
+      z.object({ type: z.literal('wait_for_subagents_call') }),
+    ),
+    z.intersection(
+      InterruptSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('interrupt_subagent_call') }),
+    ),
+    z.intersection(
+      CloseSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('close_subagent_call') }),
+    ),
   ])
   .meta({ description: 'An item associated with a session turn.' })
 
@@ -42600,7 +44092,7 @@ export type TokenUsageResourceSchema = z.infer<typeof TokenUsageResourceSchema>
 export const TurnResourceSchema = z
   .strictObject({
     prompt_cache_options: z
-      .union([PromptCacheOptionsResourceSchema, z.null().nullable()])
+      .union([PromptCacheOptionsResourceSchema, z.null()])
       .meta({
         description:
           'Prompt cache lifetime selected when this turn started, including an inherited session TTL. Null when the turn used the model default or no TTL was recorded.',
@@ -42644,10 +44136,10 @@ export const TurnResourceSchema = z
         description: 'The Unix timestamp, in seconds, when the turn reached a terminal state.',
       }),
     error: z
-      .union([SessionTurnErrorResourceSchema, z.null().nullable()])
+      .union([SessionTurnErrorResourceSchema, z.null()])
       .meta({ description: 'A customer-safe error. Non-null only for a failed turn.' }),
     usage: z
-      .union([TokenUsageResourceSchema, z.null().nullable()])
+      .union([TokenUsageResourceSchema, z.null()])
       .meta({
         description:
           'Best-effort token usage for the turn, or null if unknown. Recorded usage may change.',
@@ -42800,7 +44292,13 @@ export type PersistedMcpTransportResourceStdioSchema = z.infer<
 >
 
 export const PersistedMcpTransportResourceSchema = z
-  .xor([PersistedMcpTransportResourceHttpSchema, PersistedMcpTransportResourceStdioSchema])
+  .xor([
+    z.intersection(PersistedMcpTransportResourceHttpSchema, z.object({ type: z.literal('http') })),
+    z.intersection(
+      PersistedMcpTransportResourceStdioSchema,
+      z.object({ type: z.literal('stdio') }),
+    ),
+  ])
   .meta({ description: 'A credential-free transport used to connect to an MCP server.' })
 
 export type PersistedMcpTransportResourceSchema = z.infer<
@@ -42869,7 +44367,7 @@ export const PersistedAgentToolResourceWebSearchSchema = z
       .nullable()
       .meta({ description: 'Allowed search domains, or `null` when the search is unrestricted.' }),
     location: z
-      .union([WebSearchLocationResourceSchema, z.null().nullable()])
+      .union([WebSearchLocationResourceSchema, z.null()])
       .meta({ description: 'Approximate location used to localize search results, if provided.' }),
   })
   .meta({ description: 'Web search.' })
@@ -42909,13 +44407,31 @@ export type PersistedAgentToolResourceAutomationsSchema = z.infer<
 
 export const PersistedAgentToolResourceSchema = z
   .xor([
-    PersistedAgentToolResourceFunctionSchema,
-    PersistedAgentToolResourceToolSearchSchema,
-    PersistedAgentToolResourceProgrammaticToolCallingSchema,
-    PersistedAgentToolResourceMcpSchema,
-    PersistedAgentToolResourceWebSearchSchema,
-    PersistedAgentToolResourceComputerUseSchema,
-    PersistedAgentToolResourceAutomationsSchema,
+    z.intersection(
+      PersistedAgentToolResourceFunctionSchema,
+      z.object({ type: z.literal('function') }),
+    ),
+    z.intersection(
+      PersistedAgentToolResourceToolSearchSchema,
+      z.object({ type: z.literal('tool_search') }),
+    ),
+    z.intersection(
+      PersistedAgentToolResourceProgrammaticToolCallingSchema,
+      z.object({ type: z.literal('programmatic_tool_calling') }),
+    ),
+    z.intersection(PersistedAgentToolResourceMcpSchema, z.object({ type: z.literal('mcp') })),
+    z.intersection(
+      PersistedAgentToolResourceWebSearchSchema,
+      z.object({ type: z.literal('web_search') }),
+    ),
+    z.intersection(
+      PersistedAgentToolResourceComputerUseSchema,
+      z.object({ type: z.literal('computer_use') }),
+    ),
+    z.intersection(
+      PersistedAgentToolResourceAutomationsSchema,
+      z.object({ type: z.literal('automations') }),
+    ),
   ])
   .meta({ description: 'A credential-free tool available to a reusable agent.' })
 
@@ -43165,7 +44681,16 @@ export type PersistedMcpTransportConfigParamStdioSchema = z.infer<
 >
 
 export const PersistedMcpTransportConfigParamSchema = z
-  .xor([PersistedMcpTransportConfigParamHttpSchema, PersistedMcpTransportConfigParamStdioSchema])
+  .xor([
+    z.intersection(
+      PersistedMcpTransportConfigParamHttpSchema,
+      z.object({ type: z.literal('http') }),
+    ),
+    z.intersection(
+      PersistedMcpTransportConfigParamStdioSchema,
+      z.object({ type: z.literal('stdio') }),
+    ),
+  ])
   .meta({ description: 'A credential-free transport used to connect to an MCP server.' })
 
 export type PersistedMcpTransportConfigParamSchema = z.infer<
@@ -43219,7 +44744,7 @@ export const PersistedAgentToolConfigParamMcpSchema = z
       })
       .exactOptional(),
     connection_origin: z
-      .union([McpConnectionOriginParamSchema, z.null().nullable()])
+      .union([McpConnectionOriginParamSchema, z.null()])
       .meta({ description: 'Selects where outbound MCP HTTP connections originate.' })
       .exactOptional(),
   })
@@ -43236,11 +44761,11 @@ export const PersistedAgentToolConfigParamWebSearchSchema = z
       .default('web_search')
       .meta({ description: 'The type of the object. Always `web_search`.' }),
     mode: z
-      .union([WebSearchModeParamSchema, z.null().nullable()])
+      .union([WebSearchModeParamSchema, z.null()])
       .meta({ description: 'The source used for web search results. Defaults to `live`.' })
       .exactOptional(),
     context_size: z
-      .union([WebSearchContextSizeParamSchema, z.null().nullable()])
+      .union([WebSearchContextSizeParamSchema, z.null()])
       .meta({
         description:
           'The amount of search context made available to the model. Defaults to `medium`.',
@@ -43254,7 +44779,7 @@ export const PersistedAgentToolConfigParamWebSearchSchema = z
       .meta({ description: 'Domains the search may include.' })
       .exactOptional(),
     location: z
-      .union([WebSearchLocationParamSchema, z.null().nullable()])
+      .union([WebSearchLocationParamSchema, z.null()])
       .meta({ description: 'Approximate location used to localize search results.' })
       .exactOptional(),
   })
@@ -43299,13 +44824,31 @@ export type PersistedAgentToolConfigParamAutomationsSchema = z.infer<
 
 export const PersistedAgentToolConfigParamSchema = z
   .xor([
-    PersistedAgentToolConfigParamFunctionSchema,
-    PersistedAgentToolConfigParamToolSearchSchema,
-    PersistedAgentToolConfigParamProgrammaticToolCallingSchema,
-    PersistedAgentToolConfigParamMcpSchema,
-    PersistedAgentToolConfigParamWebSearchSchema,
-    PersistedAgentToolConfigParamComputerUseSchema,
-    PersistedAgentToolConfigParamAutomationsSchema,
+    z.intersection(
+      PersistedAgentToolConfigParamFunctionSchema,
+      z.object({ type: z.literal('function') }),
+    ),
+    z.intersection(
+      PersistedAgentToolConfigParamToolSearchSchema,
+      z.object({ type: z.literal('tool_search') }),
+    ),
+    z.intersection(
+      PersistedAgentToolConfigParamProgrammaticToolCallingSchema,
+      z.object({ type: z.literal('programmatic_tool_calling') }),
+    ),
+    z.intersection(PersistedAgentToolConfigParamMcpSchema, z.object({ type: z.literal('mcp') })),
+    z.intersection(
+      PersistedAgentToolConfigParamWebSearchSchema,
+      z.object({ type: z.literal('web_search') }),
+    ),
+    z.intersection(
+      PersistedAgentToolConfigParamComputerUseSchema,
+      z.object({ type: z.literal('computer_use') }),
+    ),
+    z.intersection(
+      PersistedAgentToolConfigParamAutomationsSchema,
+      z.object({ type: z.literal('automations') }),
+    ),
   ])
   .meta({
     description: 'A tool that can be stored on a reusable agent without session credentials.',
@@ -43348,20 +44891,20 @@ export const CreateAgentParamsSchema = z
         description: 'The model to use for the agent. The requested model name is preserved.',
       }),
     reasoning: z
-      .union([ReasoningParamSchema, z.null().nullable()])
+      .union([ReasoningParamSchema, z.null()])
       .meta({
         description: "Configuration for model reasoning. Omission uses the model's default effort.",
       })
       .exactOptional(),
     text: z
-      .union([TextParamSchema, z.null().nullable()])
+      .union([TextParamSchema, z.null()])
       .meta({
         description:
           'Configuration for generated text. Defaults to the `text` format and medium verbosity.',
       })
       .exactOptional(),
     service_tier: z
-      .union([ServiceTierParamSchema, z.null().nullable()])
+      .union([ServiceTierParamSchema, z.null()])
       .meta({ description: 'The service tier used for model requests. Defaults to `auto`.' })
       .exactOptional(),
     instructions: z
@@ -43385,14 +44928,14 @@ export const CreateAgentParamsSchema = z
       })
       .exactOptional(),
     multi_agent: z
-      .union([MultiAgentConfigCurrentParamSchema, z.null().nullable()])
+      .union([MultiAgentConfigCurrentParamSchema, z.null()])
       .meta({
         description:
           'Configuration for creating and coordinating subagents. Subagent tools are disabled by default.',
       })
       .exactOptional(),
     compaction: z
-      .union([CompactionParamSchema, z.null().nullable()])
+      .union([CompactionParamSchema, z.null()])
       .meta({
         description: 'Context compaction settings. Omission or null uses blocking compaction.',
       })
@@ -43419,18 +44962,18 @@ export const UpdateAgentParamsSchema = z
       })
       .exactOptional(),
     reasoning: z
-      .union([ReasoningParamSchema, z.null().nullable()])
+      .union([ReasoningParamSchema, z.null()])
       .meta({
         description:
           "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
       })
       .exactOptional(),
     text: z
-      .union([TextParamSchema, z.null().nullable()])
+      .union([TextParamSchema, z.null()])
       .meta({ description: 'Configuration for text generated by the agent.' })
       .exactOptional(),
     service_tier: z
-      .union([ServiceTierParamSchema, z.null().nullable()])
+      .union([ServiceTierParamSchema, z.null()])
       .meta({ description: 'The service tier used for model requests.' })
       .exactOptional(),
     instructions: z
@@ -43444,11 +44987,11 @@ export const UpdateAgentParamsSchema = z
       })
       .exactOptional(),
     multi_agent: z
-      .union([MultiAgentConfigCurrentParamSchema, z.null().nullable()])
+      .union([MultiAgentConfigCurrentParamSchema, z.null()])
       .meta({ description: 'Configuration for creating and coordinating subagents.' })
       .exactOptional(),
     compaction: z
-      .union([CompactionParamSchema, z.null().nullable()])
+      .union([CompactionParamSchema, z.null()])
       .meta({
         description:
           'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
@@ -43599,7 +45142,7 @@ export type EnvironmentTemplateListResourceSchema = z.infer<
 export const CreateEnvironmentTemplateParamsSchema = z
   .strictObject({
     packages: z
-      .union([EnvironmentPackagesParamSchema, z.null().nullable()])
+      .union([EnvironmentPackagesParamSchema, z.null()])
       .meta({
         description: 'Packages to install in the environment. Defaults to empty package lists.',
       })
@@ -43614,14 +45157,14 @@ export const CreateEnvironmentTemplateParamsSchema = z
       })
       .exactOptional(),
     network: z
-      .union([NetworkPolicyParamSchema, z.null().nullable()])
+      .union([NetworkPolicyParamSchema, z.null()])
       .meta({
         description:
           'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
       })
       .exactOptional(),
     desktop: z
-      .union([DesktopParamSchema, z.null().nullable()])
+      .union([DesktopParamSchema, z.null()])
       .meta({
         description:
           'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
@@ -43695,7 +45238,7 @@ export const UpdateEnvironmentTemplateParamsSchema = z
       })
       .exactOptional(),
     packages: z
-      .union([EnvironmentPackagesParamSchema, z.null().nullable()])
+      .union([EnvironmentPackagesParamSchema, z.null()])
       .meta({ description: 'Packages installed before the runtime network policy applies.' })
       .exactOptional(),
     setup_commands: z
@@ -43709,14 +45252,14 @@ export const UpdateEnvironmentTemplateParamsSchema = z
       })
       .exactOptional(),
     network: z
-      .union([NetworkPolicyParamSchema, z.null().nullable()])
+      .union([NetworkPolicyParamSchema, z.null()])
       .meta({
         description:
           'Network access available after setup completes. Omit to preserve the current policy, or pass `null` to reset to the default policy.',
       })
       .exactOptional(),
     desktop: z
-      .union([DesktopParamSchema, z.null().nullable()])
+      .union([DesktopParamSchema, z.null()])
       .meta({ description: 'Replacement desktop configuration, or null to disable the desktop.' })
       .exactOptional(),
     env: z
@@ -43826,7 +45369,7 @@ export const McpApprovalRequestResourceMcpToolCallSchema = z.strictObject({
     .nullable()
     .meta({ description: 'The tool name, or null when CCA does not provide it.' }),
   arguments: z
-    .union([z.any(), z.null().nullable()])
+    .union([z.any(), z.null()])
     .meta({ description: 'The tool arguments as JSON, or null when CCA does not provide them.' }),
   message: z.string().min(0),
 })
@@ -43836,7 +45379,12 @@ export type McpApprovalRequestResourceMcpToolCallSchema = z.infer<
 >
 
 export const McpApprovalRequestResourceSchema = z
-  .xor([McpApprovalRequestResourceMcpToolCallSchema])
+  .xor([
+    z.intersection(
+      McpApprovalRequestResourceMcpToolCallSchema,
+      z.object({ type: z.literal('mcp_tool_call') }),
+    ),
+  ])
   .meta({ description: 'Information for presenting an MCP approval.' })
 
 export type McpApprovalRequestResourceSchema = z.infer<typeof McpApprovalRequestResourceSchema>
@@ -43918,8 +45466,14 @@ export type ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema = z.
 >
 
 export const ComputerUseApprovalRequestKindResourceSchema = z.xor([
-  ComputerUseApprovalRequestKindResourceBrowserAuthenticationSchema,
-  ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema,
+  z.intersection(
+    ComputerUseApprovalRequestKindResourceBrowserAuthenticationSchema,
+    z.object({ type: z.literal('browser_authentication') }),
+  ),
+  z.intersection(
+    ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema,
+    z.object({ type: z.literal('browser_origin_access') }),
+  ),
 ])
 
 export type ComputerUseApprovalRequestKindResourceSchema = z.infer<
@@ -43989,10 +45543,22 @@ export type SessionRequiredActionResourceEnvironmentConnectionSchema = z.infer<
 
 export const SessionRequiredActionResourceSchema = z
   .xor([
-    SessionRequiredActionResourceMcpApprovalRequestSchema,
-    SessionRequiredActionResourceComputerUseApprovalRequestSchema,
-    SessionRequiredActionResourceFunctionCallSchema,
-    SessionRequiredActionResourceEnvironmentConnectionSchema,
+    z.intersection(
+      SessionRequiredActionResourceMcpApprovalRequestSchema,
+      z.object({ type: z.literal('mcp_approval_request') }),
+    ),
+    z.intersection(
+      SessionRequiredActionResourceComputerUseApprovalRequestSchema,
+      z.object({ type: z.literal('computer_use_approval_request') }),
+    ),
+    z.intersection(
+      SessionRequiredActionResourceFunctionCallSchema,
+      z.object({ type: z.literal('function_call') }),
+    ),
+    z.intersection(
+      SessionRequiredActionResourceEnvironmentConnectionSchema,
+      z.object({ type: z.literal('environment_connection') }),
+    ),
   ])
   .meta({ description: 'An action that must be completed before a session can continue.' })
 
@@ -44069,7 +45635,7 @@ export const EnvironmentResourceOpenaiHostedSchema = z
       .meta({ description: 'The type of the object. Always `openai_hosted`.' }),
     id: z.string().min(0).meta({ description: 'The public ID of the environment.' }),
     container_size: z
-      .union([ContainerSizeResourceSchema, z.null().nullable()])
+      .union([ContainerSizeResourceSchema, z.null()])
       .meta({
         description:
           'The effective CPU and memory tier, or null when unknown or outside the public tiers.',
@@ -44148,9 +45714,15 @@ export type EnvironmentResourceSelfHostedSchema = z.infer<
 
 export const EnvironmentResourceSchema = z
   .xor([
-    EnvironmentResourceNoneSchema,
-    EnvironmentResourceOpenaiHostedSchema,
-    EnvironmentResourceSelfHostedSchema,
+    z.intersection(EnvironmentResourceNoneSchema, z.object({ type: z.literal('none') })),
+    z.intersection(
+      EnvironmentResourceOpenaiHostedSchema,
+      z.object({ type: z.literal('openai_hosted') }),
+    ),
+    z.intersection(
+      EnvironmentResourceSelfHostedSchema,
+      z.object({ type: z.literal('self_hosted') }),
+    ),
   ])
   .meta({ description: 'The execution environment for a session.' })
 
@@ -44159,7 +45731,7 @@ export type EnvironmentResourceSchema = z.infer<typeof EnvironmentResourceSchema
 export const SessionResourceSchema = z
   .strictObject({
     prompt_cache_options: z
-      .union([PromptCacheOptionsResourceSchema, z.null().nullable()])
+      .union([PromptCacheOptionsResourceSchema, z.null()])
       .meta({
         description: 'Default prompt cache lifetime for turns in this session, when configured.',
       })
@@ -44211,7 +45783,7 @@ export const SessionResourceSchema = z
       .max(2000)
       .meta({ description: 'The IDs of vaults made available to the session.' }),
     usage: z
-      .union([TokenUsageResourceSchema, z.null().nullable()])
+      .union([TokenUsageResourceSchema, z.null()])
       .meta({
         description:
           'Best-effort token usage for the session, or null if unknown. Recorded usage may change.',
@@ -44320,7 +45892,7 @@ export const CreateAgentSessionParamsSchema = z
       description: 'Action review mode. Omit to use none.',
     }).exactOptional(),
     spend_control: z
-      .union([SessionBudgetControlParamsSchema, z.null().nullable()])
+      .union([SessionBudgetControlParamsSchema, z.null()])
       .meta({
         description:
           'Optional spending limit in USD cents. Omission or null creates an unlimited session.',
@@ -44355,14 +45927,14 @@ export const CreateAgentSessionParamsSchema = z
       .meta({ description: 'The IDs of vaults made available to the session.' })
       .exactOptional(),
     input: z
-      .union([CreateSessionInputParamSchema, z.null().nullable()])
+      .union([CreateSessionInputParamSchema, z.null()])
       .meta({
         description:
           'Initial input to submit when the session is created. A string is shorthand for a single user message. Required when `environment.type` is `none`, or when `stream` is `true` for an environment that is not `self_hosted`; optional for self-hosted and non-streaming execution environments.',
       })
       .exactOptional(),
     prompt_cache_options: z
-      .union([PromptCacheOptionsParam2Schema, z.null().nullable()])
+      .union([PromptCacheOptionsParam2Schema, z.null()])
       .meta({
         description:
           'Default prompt cache lifetime for turns in this session. Omit to use the model default.',
@@ -44460,7 +46032,7 @@ export const SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema = z
       .meta({ description: 'The index of the summary part.' }),
     part: SummaryTextResourceSchema.meta({ description: 'The completed summary part.' }),
     status: z
-      .union([z.literal('incomplete'), z.literal(null)])
+      .literal('incomplete')
       .nullable()
       .meta({ description: 'Present as `incomplete` when summary generation was interrupted.' }),
     obfuscation: z
@@ -44595,7 +46167,7 @@ export const SessionEnvironmentStateResourceSchema = z
       description: "The environment's connection status.",
     }),
     error: z
-      .union([SessionEnvironmentErrorResourceSchema, z.null().nullable()])
+      .union([SessionEnvironmentErrorResourceSchema, z.null()])
       .meta({ description: 'The error reported while preparing the environment, if any.' }),
   })
   .meta({ description: 'The current state of a session environment.' })
@@ -44893,7 +46465,7 @@ export const SessionEventAgentSessionTurnCompletedSchema = z
       .meta({ description: 'The ID of the turn associated with the event.' }),
     turn: TurnResourceSchema.meta({ description: 'The completed turn.' }),
     usage: z
-      .union([TokenUsageResourceSchema, z.null().nullable()])
+      .union([TokenUsageResourceSchema, z.null()])
       .meta({ description: 'Token usage by the root agent during the turn, when available.' }),
     obfuscation: z
       .string()
@@ -44926,7 +46498,7 @@ export const SessionEventAgentSessionTurnFailedSchema = z
       .meta({ description: 'The ID of the turn associated with the event.' }),
     turn: TurnResourceSchema.meta({ description: 'The failed turn.' }),
     usage: z
-      .union([TokenUsageResourceSchema, z.null().nullable()])
+      .union([TokenUsageResourceSchema, z.null()])
       .meta({ description: 'Token usage by the root agent during the turn, when available.' }),
     obfuscation: z
       .string()
@@ -44959,7 +46531,7 @@ export const SessionEventAgentSessionTurnCancelledSchema = z
       .meta({ description: 'The ID of the turn associated with the event.' }),
     turn: TurnResourceSchema.meta({ description: 'The cancelled turn.' }),
     usage: z
-      .union([TokenUsageResourceSchema, z.null().nullable()])
+      .union([TokenUsageResourceSchema, z.null()])
       .meta({ description: 'Token usage by the root agent during the turn, when available.' }),
     obfuscation: z
       .string()
@@ -45345,7 +46917,7 @@ export const AssistantMessageItemResourceSchema = z
       .max(2000)
       .meta({ description: 'The content of the message.' }),
     phase: z
-      .union([MessagePhaseResourceSchema, z.null().nullable()])
+      .union([MessagePhaseResourceSchema, z.null()])
       .meta({ description: 'The phase of the assistant message.' }),
   })
   .meta({ description: 'An assistant message produced by the agent.' })
@@ -45354,20 +46926,50 @@ export type AssistantMessageItemResourceSchema = z.infer<typeof AssistantMessage
 
 export const AgentOutputItemResourceSchema = z
   .xor([
-    AssistantMessageItemResourceSchema,
-    ReasoningItemResourceSchema,
-    FunctionCallItemResourceSchema,
-    McpCallItemResourceSchema,
-    ComputerUseCallItemResourceSchema,
-    BrowserAuthenticationRequestItemResourceSchema,
-    WebSearchCallItemResourceSchema,
-    CommandExecutionItemResourceSchema,
-    CreateSubagentCallItemResourceSchema,
-    SendSubagentInputCallItemResourceSchema,
-    ResumeSubagentCallItemResourceSchema,
-    WaitForSubagentsCallItemResourceSchema,
-    InterruptSubagentCallItemResourceSchema,
-    CloseSubagentCallItemResourceSchema,
+    z.intersection(AssistantMessageItemResourceSchema, z.object({ type: z.literal('message') })),
+    z.intersection(ReasoningItemResourceSchema, z.object({ type: z.literal('reasoning') })),
+    z.intersection(FunctionCallItemResourceSchema, z.object({ type: z.literal('function_call') })),
+    z.intersection(McpCallItemResourceSchema, z.object({ type: z.literal('mcp_call') })),
+    z.intersection(
+      ComputerUseCallItemResourceSchema,
+      z.object({ type: z.literal('computer_use_call') }),
+    ),
+    z.intersection(
+      BrowserAuthenticationRequestItemResourceSchema,
+      z.object({ type: z.literal('computer_use_approval_request') }),
+    ),
+    z.intersection(
+      WebSearchCallItemResourceSchema,
+      z.object({ type: z.literal('web_search_call') }),
+    ),
+    z.intersection(
+      CommandExecutionItemResourceSchema,
+      z.object({ type: z.literal('command_execution') }),
+    ),
+    z.intersection(
+      CreateSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('create_subagent_call') }),
+    ),
+    z.intersection(
+      SendSubagentInputCallItemResourceSchema,
+      z.object({ type: z.literal('send_subagent_input_call') }),
+    ),
+    z.intersection(
+      ResumeSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('resume_subagent_call') }),
+    ),
+    z.intersection(
+      WaitForSubagentsCallItemResourceSchema,
+      z.object({ type: z.literal('wait_for_subagents_call') }),
+    ),
+    z.intersection(
+      InterruptSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('interrupt_subagent_call') }),
+    ),
+    z.intersection(
+      CloseSubagentCallItemResourceSchema,
+      z.object({ type: z.literal('close_subagent_call') }),
+    ),
   ])
   .meta({ description: 'An output item produced by an agent.' })
 
@@ -45632,40 +47234,139 @@ export type SessionEventAgentSessionTurnReasoningSummaryPartAddedSchema = z.infe
 
 export const SessionEventSchema = z
   .xor([
-    SessionEventErrorSchema,
-    SessionEventAgentSessionEnvironmentReadySchema,
-    SessionEventAgentSessionEnvironmentSuspendedSchema,
-    SessionEventAgentSessionEnvironmentExpiredSchema,
-    SessionEventAgentSessionEnvironmentResetSchema,
-    SessionEventAgentOutputCommandExecutionOutputDeltaSchema,
-    SessionEventAgentSessionCreatedSchema,
-    SessionEventAgentSessionTurnCreatedSchema,
-    SessionEventAgentSessionTurnInProgressSchema,
-    SessionEventAgentSessionTurnCompletedSchema,
-    SessionEventAgentSessionTurnFailedSchema,
-    SessionEventAgentSessionTurnCancelledSchema,
-    SessionEventAgentSessionTurnItemAddedSchema,
-    SessionEventAgentSessionIdleSchema,
-    SessionEventAgentSessionBudgetReachedSchema,
-    SessionEventAgentSessionInProgressSchema,
-    SessionEventAgentSessionRequiresActionSchema,
-    SessionEventAgentSessionFailedSchema,
-    SessionEventAgentSessionEnvironmentPendingSchema,
-    SessionEventAgentSessionEnvironmentConnectedSchema,
-    SessionEventAgentSessionEnvironmentDisconnectedSchema,
-    SessionEventAgentSessionEnvironmentFailedSchema,
-    SessionEventAgentSessionSubagentCreatedSchema,
-    SessionEventAgentSessionSubagentActiveSchema,
-    SessionEventAgentSessionSubagentClosedSchema,
-    SessionEventAgentSessionTurnItemDoneSchema,
-    SessionEventAgentSessionTurnContentPartAddedSchema,
-    SessionEventAgentSessionTurnContentPartDoneSchema,
-    SessionEventAgentSessionTurnOutputTextDeltaSchema,
-    SessionEventAgentSessionTurnOutputTextDoneSchema,
-    SessionEventAgentSessionTurnReasoningSummaryPartAddedSchema,
-    SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema,
-    SessionEventAgentSessionTurnReasoningSummaryTextDeltaSchema,
-    SessionEventAgentSessionTurnReasoningSummaryTextDoneSchema,
+    z.intersection(SessionEventErrorSchema, z.object({ type: z.literal('error') })),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentReadySchema,
+      z.object({ type: z.literal('agent.session.environment.ready') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentSuspendedSchema,
+      z.object({ type: z.literal('agent.session.environment.suspended') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentExpiredSchema,
+      z.object({ type: z.literal('agent.session.environment.expired') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentResetSchema,
+      z.object({ type: z.literal('agent.session.environment.reset') }),
+    ),
+    z.intersection(
+      SessionEventAgentOutputCommandExecutionOutputDeltaSchema,
+      z.object({ type: z.literal('agent.output.command_execution_output.delta') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionCreatedSchema,
+      z.object({ type: z.literal('agent.session.created') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnCreatedSchema,
+      z.object({ type: z.literal('agent.session.turn.created') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnInProgressSchema,
+      z.object({ type: z.literal('agent.session.turn.in_progress') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnCompletedSchema,
+      z.object({ type: z.literal('agent.session.turn.completed') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnFailedSchema,
+      z.object({ type: z.literal('agent.session.turn.failed') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnCancelledSchema,
+      z.object({ type: z.literal('agent.session.turn.cancelled') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnItemAddedSchema,
+      z.object({ type: z.literal('agent.session.turn.item.added') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionIdleSchema,
+      z.object({ type: z.literal('agent.session.idle') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionBudgetReachedSchema,
+      z.object({ type: z.literal('agent.session.budget_reached') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionInProgressSchema,
+      z.object({ type: z.literal('agent.session.in_progress') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionRequiresActionSchema,
+      z.object({ type: z.literal('agent.session.requires_action') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionFailedSchema,
+      z.object({ type: z.literal('agent.session.failed') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentPendingSchema,
+      z.object({ type: z.literal('agent.session.environment.pending') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentConnectedSchema,
+      z.object({ type: z.literal('agent.session.environment.connected') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentDisconnectedSchema,
+      z.object({ type: z.literal('agent.session.environment.disconnected') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionEnvironmentFailedSchema,
+      z.object({ type: z.literal('agent.session.environment.failed') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionSubagentCreatedSchema,
+      z.object({ type: z.literal('agent.session.subagent.created') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionSubagentActiveSchema,
+      z.object({ type: z.literal('agent.session.subagent.active') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionSubagentClosedSchema,
+      z.object({ type: z.literal('agent.session.subagent.closed') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnItemDoneSchema,
+      z.object({ type: z.literal('agent.session.turn.item.done') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnContentPartAddedSchema,
+      z.object({ type: z.literal('agent.session.turn.content_part.added') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnContentPartDoneSchema,
+      z.object({ type: z.literal('agent.session.turn.content_part.done') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnOutputTextDeltaSchema,
+      z.object({ type: z.literal('agent.session.turn.output_text.delta') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnOutputTextDoneSchema,
+      z.object({ type: z.literal('agent.session.turn.output_text.done') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnReasoningSummaryPartAddedSchema,
+      z.object({ type: z.literal('agent.session.turn.reasoning_summary_part.added') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema,
+      z.object({ type: z.literal('agent.session.turn.reasoning_summary_part.done') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnReasoningSummaryTextDeltaSchema,
+      z.object({ type: z.literal('agent.session.turn.reasoning_summary_text.delta') }),
+    ),
+    z.intersection(
+      SessionEventAgentSessionTurnReasoningSummaryTextDoneSchema,
+      z.object({ type: z.literal('agent.session.turn.reasoning_summary_text.done') }),
+    ),
   ])
   .meta({ description: 'An event emitted by a Managed Agents session.' })
 
@@ -45674,7 +47375,7 @@ export type SessionEventSchema = z.infer<typeof SessionEventSchema>
 export const UpdateSessionReasoningParamSchema = z
   .strictObject({
     effort: z
-      .union([ReasoningEffortParamSchema, z.null().nullable()])
+      .union([ReasoningEffortParamSchema, z.null()])
       .meta({
         description: "Omit to keep the current effort. Null selects the model's default effort.",
       })
@@ -45708,7 +47409,7 @@ export const UpdateSessionAgentParamSchema = z
       description: 'Reasoning settings to update. Omit to keep the current effort.',
     }).exactOptional(),
     service_tier: z
-      .union([ServiceTierParamSchema, z.null().nullable()])
+      .union([ServiceTierParamSchema, z.null()])
       .meta({ description: 'Omit to keep the current tier. Null resets it to auto.' })
       .exactOptional(),
   })
@@ -45719,7 +47420,7 @@ export type UpdateSessionAgentParamSchema = z.infer<typeof UpdateSessionAgentPar
 export const UpdateAgentSessionParamsSchema = z
   .strictObject({
     prompt_cache_options: z
-      .union([PromptCacheOptionsParam2Schema, z.null().nullable()])
+      .union([PromptCacheOptionsParam2Schema, z.null()])
       .meta({
         description:
           'Default prompt cache lifetime for future turns. Send null to clear the session default.',
@@ -45740,7 +47441,7 @@ export const UpdateAgentSessionParamsSchema = z
         'Default action review for new root turns. Existing turns and their subagents keep their review mode.',
     }).exactOptional(),
     spend_control: z
-      .union([SessionBudgetControlParamsSchema, z.null().nullable()])
+      .union([SessionBudgetControlParamsSchema, z.null()])
       .meta({
         description:
           'Omit to retain the limit; null or a null limit removes it without resetting spend.',
@@ -45893,7 +47594,12 @@ export type McpApprovalResponseParamMcpToolCallSchema = z.infer<
 >
 
 export const McpApprovalResponseParamSchema = z
-  .xor([McpApprovalResponseParamMcpToolCallSchema])
+  .xor([
+    z.intersection(
+      McpApprovalResponseParamMcpToolCallSchema,
+      z.object({ type: z.literal('mcp_tool_call') }),
+    ),
+  ])
   .meta({ description: "The user's decision for a pending MCP tool call." })
 
 export type McpApprovalResponseParamSchema = z.infer<typeof McpApprovalResponseParamSchema>
@@ -45979,8 +47685,14 @@ export type ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSche
 >
 
 export const ComputerUseApprovalResponseParamBrowserAuthenticationSchema = z.xor([
-  ComputerUseApprovalResponseParamBrowserAuthenticationSubmitParamSchema,
-  ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSchema,
+  z.intersection(
+    ComputerUseApprovalResponseParamBrowserAuthenticationSubmitParamSchema,
+    z.object({ action: z.literal('submit') }),
+  ),
+  z.intersection(
+    ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSchema,
+    z.object({ action: z.literal('cancel') }),
+  ),
 ])
 
 export type ComputerUseApprovalResponseParamBrowserAuthenticationSchema = z.infer<
@@ -46007,8 +47719,14 @@ export type ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema = z.i
 >
 
 export const ComputerUseApprovalResponseParamSchema = z.xor([
-  ComputerUseApprovalResponseParamBrowserAuthenticationSchema,
-  ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema,
+  z.intersection(
+    ComputerUseApprovalResponseParamBrowserAuthenticationSchema,
+    z.object({ type: z.literal('browser_authentication') }),
+  ),
+  z.intersection(
+    ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema,
+    z.object({ type: z.literal('browser_origin_access') }),
+  ),
 ])
 
 export type ComputerUseApprovalResponseParamSchema = z.infer<
@@ -46090,7 +47808,7 @@ export const SessionInputParamAgentSessionInputToolResultSchema = z
     call_id: z.string().min(0).max(1048576).meta({ description: 'The ID of the function call.' }),
     success: z.boolean().meta({ description: 'Whether the function call succeeded.' }),
     output: z
-      .union([FunctionCallOutputParamSchema, z.null().nullable()])
+      .union([FunctionCallOutputParamSchema, z.null()])
       .meta({ description: 'The function result when the call succeeded.' })
       .exactOptional(),
     error: z
@@ -46109,11 +47827,26 @@ export type SessionInputParamAgentSessionInputToolResultSchema = z.infer<
 
 export const SessionInputParamSchema = z
   .xor([
-    SessionInputParamAgentSessionInputMcpApprovalRequestResultSchema,
-    SessionInputParamAgentSessionInputComputerUseApprovalRequestResultSchema,
-    SessionInputParamAgentSessionInputMessageSchema,
-    SessionInputParamAgentSessionInputCancelSchema,
-    SessionInputParamAgentSessionInputToolResultSchema,
+    z.intersection(
+      SessionInputParamAgentSessionInputMcpApprovalRequestResultSchema,
+      z.object({ type: z.literal('agent.session.input.mcp_approval_request_result') }),
+    ),
+    z.intersection(
+      SessionInputParamAgentSessionInputComputerUseApprovalRequestResultSchema,
+      z.object({ type: z.literal('agent.session.input.computer_use_approval_request_result') }),
+    ),
+    z.intersection(
+      SessionInputParamAgentSessionInputMessageSchema,
+      z.object({ type: z.literal('agent.session.input.message') }),
+    ),
+    z.intersection(
+      SessionInputParamAgentSessionInputCancelSchema,
+      z.object({ type: z.literal('agent.session.input.cancel') }),
+    ),
+    z.intersection(
+      SessionInputParamAgentSessionInputToolResultSchema,
+      z.object({ type: z.literal('agent.session.input.tool_result') }),
+    ),
   ])
   .meta({ description: 'Input submitted to an existing session.' })
 
@@ -46376,9 +48109,18 @@ export type McpOauthTokenEndpointAuthResourceClientSecretPostSchema = z.infer<
 
 export const McpOauthTokenEndpointAuthResourceSchema = z
   .xor([
-    McpOauthTokenEndpointAuthResourceNoneSchema,
-    McpOauthTokenEndpointAuthResourceClientSecretBasicSchema,
-    McpOauthTokenEndpointAuthResourceClientSecretPostSchema,
+    z.intersection(
+      McpOauthTokenEndpointAuthResourceNoneSchema,
+      z.object({ type: z.literal('none') }),
+    ),
+    z.intersection(
+      McpOauthTokenEndpointAuthResourceClientSecretBasicSchema,
+      z.object({ type: z.literal('client_secret_basic') }),
+    ),
+    z.intersection(
+      McpOauthTokenEndpointAuthResourceClientSecretPostSchema,
+      z.object({ type: z.literal('client_secret_post') }),
+    ),
   ])
   .meta({ description: 'The client authentication method used for OAuth token refresh.' })
 
@@ -46441,7 +48183,7 @@ export const VaultCredentialAuthResourceMcpOauthSchema = z
         description: 'When the OAuth access token expires, as an RFC 3339 timestamp, if known.',
       }),
     refresh: z
-      .union([McpOauthRefreshResourceSchema, z.null().nullable()])
+      .union([McpOauthRefreshResourceSchema, z.null()])
       .meta({
         description: 'Public refresh metadata without refresh tokens or OAuth client secrets.',
       }),
@@ -46514,8 +48256,14 @@ export type VaultCredentialNetworkingResourceLimitedSchema = z.infer<
 
 export const VaultCredentialNetworkingResourceSchema = z
   .xor([
-    VaultCredentialNetworkingResourceUnrestrictedSchema,
-    VaultCredentialNetworkingResourceLimitedSchema,
+    z.intersection(
+      VaultCredentialNetworkingResourceUnrestrictedSchema,
+      z.object({ type: z.literal('unrestricted') }),
+    ),
+    z.intersection(
+      VaultCredentialNetworkingResourceLimitedSchema,
+      z.object({ type: z.literal('limited') }),
+    ),
   ])
   .meta({
     description:
@@ -46554,9 +48302,18 @@ export type VaultCredentialAuthResourceEnvironmentVariableSchema = z.infer<
 
 export const VaultCredentialAuthResourceSchema = z
   .xor([
-    VaultCredentialAuthResourceMcpOauthSchema,
-    VaultCredentialAuthResourceStaticBearerSchema,
-    VaultCredentialAuthResourceEnvironmentVariableSchema,
+    z.intersection(
+      VaultCredentialAuthResourceMcpOauthSchema,
+      z.object({ type: z.literal('mcp_oauth') }),
+    ),
+    z.intersection(
+      VaultCredentialAuthResourceStaticBearerSchema,
+      z.object({ type: z.literal('static_bearer') }),
+    ),
+    z.intersection(
+      VaultCredentialAuthResourceEnvironmentVariableSchema,
+      z.object({ type: z.literal('environment_variable') }),
+    ),
   ])
   .meta({
     description: 'The authentication configuration of a vault credential, excluding secrets.',
@@ -46692,9 +48449,18 @@ export type CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema = z.infer
 
 export const CreateMcpOauthTokenEndpointAuthParamSchema = z
   .xor([
-    CreateMcpOauthTokenEndpointAuthParamNoneSchema,
-    CreateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
-    CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+    z.intersection(
+      CreateMcpOauthTokenEndpointAuthParamNoneSchema,
+      z.object({ type: z.literal('none') }),
+    ),
+    z.intersection(
+      CreateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
+      z.object({ type: z.literal('client_secret_basic') }),
+    ),
+    z.intersection(
+      CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+      z.object({ type: z.literal('client_secret_post') }),
+    ),
   ])
   .meta({ description: 'Client authentication credentials for OAuth token refresh.' })
 
@@ -46780,7 +48546,7 @@ export const CreateVaultCredentialAuthParamMcpOauthSchema = z
       })
       .exactOptional(),
     refresh: z
-      .union([CreateMcpOauthRefreshParamSchema, z.null().nullable()])
+      .union([CreateMcpOauthRefreshParamSchema, z.null()])
       .meta({ description: 'Optional refresh configuration for an HTTPS OAuth token endpoint.' })
       .exactOptional(),
   })
@@ -46858,8 +48624,14 @@ export type VaultCredentialNetworkingParamLimitedSchema = z.infer<
 
 export const VaultCredentialNetworkingParamSchema = z
   .xor([
-    VaultCredentialNetworkingParamUnrestrictedSchema,
-    VaultCredentialNetworkingParamLimitedSchema,
+    z.intersection(
+      VaultCredentialNetworkingParamUnrestrictedSchema,
+      z.object({ type: z.literal('unrestricted') }),
+    ),
+    z.intersection(
+      VaultCredentialNetworkingParamLimitedSchema,
+      z.object({ type: z.literal('limited') }),
+    ),
   ])
   .meta({
     description:
@@ -46908,9 +48680,18 @@ export type CreateVaultCredentialAuthParamEnvironmentVariableSchema = z.infer<
 
 export const CreateVaultCredentialAuthParamSchema = z
   .xor([
-    CreateVaultCredentialAuthParamMcpOauthSchema,
-    CreateVaultCredentialAuthParamStaticBearerSchema,
-    CreateVaultCredentialAuthParamEnvironmentVariableSchema,
+    z.intersection(
+      CreateVaultCredentialAuthParamMcpOauthSchema,
+      z.object({ type: z.literal('mcp_oauth') }),
+    ),
+    z.intersection(
+      CreateVaultCredentialAuthParamStaticBearerSchema,
+      z.object({ type: z.literal('static_bearer') }),
+    ),
+    z.intersection(
+      CreateVaultCredentialAuthParamEnvironmentVariableSchema,
+      z.object({ type: z.literal('environment_variable') }),
+    ),
   ])
   .meta({
     description: 'Authentication credentials for an MCP server or an OpenAI-hosted environment.',
@@ -46996,8 +48777,14 @@ export type RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema = z.infer
 
 export const RotateMcpOauthTokenEndpointAuthParamSchema = z
   .xor([
-    RotateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
-    RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+    z.intersection(
+      RotateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
+      z.object({ type: z.literal('client_secret_basic') }),
+    ),
+    z.intersection(
+      RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+      z.object({ type: z.literal('client_secret_post') }),
+    ),
   ])
   .meta({
     description:
@@ -47031,7 +48818,7 @@ export const RotateMcpOauthRefreshParamSchema = z
       })
       .exactOptional(),
     token_endpoint_auth: z
-      .union([RotateMcpOauthTokenEndpointAuthParamSchema, z.null().nullable()])
+      .union([RotateMcpOauthTokenEndpointAuthParamSchema, z.null()])
       .meta({
         description: 'Client-secret updates for the existing token endpoint authentication method.',
       })
@@ -47065,7 +48852,7 @@ export const RotateVaultCredentialAuthParamMcpOauthSchema = z
       })
       .exactOptional(),
     refresh: z
-      .union([RotateMcpOauthRefreshParamSchema, z.null().nullable()])
+      .union([RotateMcpOauthRefreshParamSchema, z.null()])
       .meta({ description: 'Optional write-only refresh-token and client-secret updates.' })
       .exactOptional(),
   })
@@ -47122,9 +48909,18 @@ export type RotateVaultCredentialAuthParamEnvironmentVariableSchema = z.infer<
 
 export const RotateVaultCredentialAuthParamSchema = z
   .xor([
-    RotateVaultCredentialAuthParamMcpOauthSchema,
-    RotateVaultCredentialAuthParamStaticBearerSchema,
-    RotateVaultCredentialAuthParamEnvironmentVariableSchema,
+    z.intersection(
+      RotateVaultCredentialAuthParamMcpOauthSchema,
+      z.object({ type: z.literal('mcp_oauth') }),
+    ),
+    z.intersection(
+      RotateVaultCredentialAuthParamStaticBearerSchema,
+      z.object({ type: z.literal('static_bearer') }),
+    ),
+    z.intersection(
+      RotateVaultCredentialAuthParamEnvironmentVariableSchema,
+      z.object({ type: z.literal('environment_variable') }),
+    ),
   ])
   .meta({
     description:
@@ -47193,7 +48989,7 @@ export const WebhookEndpointBodySchema = z.object({
     .meta({ description: 'The event types that trigger deliveries to this endpoint.' }),
   signing_secret_hint: z.union([
     z.string().meta({ description: "A masked hint for the endpoint's signing secret." }),
-    z.null().nullable(),
+    z.null(),
   ]),
 })
 
@@ -47209,11 +49005,11 @@ export const WebhookEndpointListResourceSchema = z.object({
     .meta({ description: 'The webhook endpoints in this page.' }),
   first_id: z.union([
     z.string().meta({ description: 'The ID of the first endpoint in this page.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   last_id: z.union([
     z.string().meta({ description: 'The ID of the last endpoint in this page.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   has_more: z.boolean().meta({ description: 'Whether more webhook endpoints are available.' }),
 })
@@ -47292,7 +49088,7 @@ export const WebhookEndpointWithSecretResourceSchema = z.object({
     .meta({ description: 'The event types that trigger deliveries to this endpoint.' }),
   signing_secret_hint: z.union([
     z.string().meta({ description: "A masked hint for the endpoint's signing secret." }),
-    z.null().nullable(),
+    z.null(),
   ]),
   signing_secret: z
     .string()
@@ -47467,13 +49263,13 @@ export const BetaInputImageContentSchema = z
             description:
               'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_id: z
       .union([
         z.string().meta({ description: 'The ID of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     detail: BetaImageDetailSchema.meta({
@@ -47502,7 +49298,7 @@ export const BetaInputFileContentSchema = z
     file_id: z
       .union([
         z.string().meta({ description: 'The ID of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     filename: z
@@ -47528,9 +49324,12 @@ export const BetaInputFileContentSchema = z
 export type BetaInputFileContentSchema = z.infer<typeof BetaInputFileContentSchema>
 
 export const BetaInputContentSchema = z.xor([
-  BetaInputTextContentSchema,
-  BetaInputImageContentSchema,
-  BetaInputFileContentSchema,
+  z.intersection(BetaInputTextContentSchema, z.object({ type: z.literal('BetaInputTextContent') })),
+  z.intersection(
+    BetaInputImageContentSchema,
+    z.object({ type: z.literal('BetaInputImageContent') }),
+  ),
+  z.intersection(BetaInputFileContentSchema, z.object({ type: z.literal('BetaInputFileContent') })),
 ])
 
 export type BetaInputContentSchema = z.infer<typeof BetaInputContentSchema>
@@ -47570,7 +49369,7 @@ export const BetaEasyInputMessageSchema = z
         description:
           'Text, image, or audio input to the model, used to generate a response.\nCan also contain previous assistant responses.\n',
       }),
-    phase: z.union([BetaMessagePhaseSchema, z.null().nullable()]).exactOptional(),
+    phase: z.union([BetaMessagePhaseSchema, z.null()]).exactOptional(),
     type: z
       .literal('message')
       .meta({ description: 'The type of the message input. Always `message`.\n' })
@@ -47594,7 +49393,7 @@ export type BetaAgentTagSchema = z.infer<typeof BetaAgentTagSchema>
 export const BetaInputMessageSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -47703,10 +49502,16 @@ export type BetaFilePathSchema = z.infer<typeof BetaFilePathSchema>
 
 export const BetaAnnotationSchema = z
   .xor([
-    BetaFileCitationBodySchema,
-    BetaUrlCitationBodySchema,
-    BetaContainerFileCitationBodySchema,
-    BetaFilePathSchema,
+    z.intersection(
+      BetaFileCitationBodySchema,
+      z.object({ type: z.literal('BetaFileCitationBody') }),
+    ),
+    z.intersection(BetaUrlCitationBodySchema, z.object({ type: z.literal('BetaUrlCitationBody') })),
+    z.intersection(
+      BetaContainerFileCitationBodySchema,
+      z.object({ type: z.literal('BetaContainerFileCitationBody') }),
+    ),
+    z.intersection(BetaFilePathSchema, z.object({ type: z.literal('BetaFilePath') })),
   ])
   .meta({ description: 'An annotation that applies to a span of output text.' })
 
@@ -47758,8 +49563,11 @@ export const BetaRefusalContentSchema = z
 export type BetaRefusalContentSchema = z.infer<typeof BetaRefusalContentSchema>
 
 export const BetaOutputMessageContentSchema = z.xor([
-  BetaOutputTextContentSchema,
-  BetaRefusalContentSchema,
+  z.intersection(
+    BetaOutputTextContentSchema,
+    z.object({ type: z.literal('BetaOutputTextContent') }),
+  ),
+  z.intersection(BetaRefusalContentSchema, z.object({ type: z.literal('BetaRefusalContent') })),
 ])
 
 export type BetaOutputMessageContentSchema = z.infer<typeof BetaOutputMessageContentSchema>
@@ -47767,7 +49575,7 @@ export type BetaOutputMessageContentSchema = z.infer<typeof BetaOutputMessageCon
 export const BetaOutputMessageSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     id: z.string().meta({ description: 'The unique ID of the output message.\n' }),
@@ -47780,7 +49588,7 @@ export const BetaOutputMessageSchema = z
     content: z
       .array(BetaOutputMessageContentSchema)
       .meta({ description: 'The content of the output message.\n' }),
-    phase: z.union([BetaMessagePhaseSchema, z.null().nullable()]).exactOptional(),
+    phase: z.union([BetaMessagePhaseSchema, z.null()]).exactOptional(),
     status: z
       .enum(['in_progress', 'completed', 'incomplete'])
       .meta({
@@ -47799,7 +49607,7 @@ export const BetaVectorStoreFileAttributesSchema = z.union([
       description:
         'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard. Keys are strings\nwith a maximum length of 64 characters. Values are strings with a maximum\nlength of 512 characters, booleans, or numbers.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaVectorStoreFileAttributesSchema = z.infer<
@@ -47809,7 +49617,7 @@ export type BetaVectorStoreFileAttributesSchema = z.infer<
 export const BetaFileSearchToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     id: z.string().meta({ description: 'The unique ID of the file search tool call.\n' }),
@@ -47847,7 +49655,7 @@ export const BetaFileSearchToolCallSchema = z
             }),
           )
           .meta({ description: 'The results of the file search tool call.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -47880,7 +49688,7 @@ export const BetaClickParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while clicking.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -47901,7 +49709,7 @@ export const BetaDoubleClickActionSchema = z
     y: z.int().meta({ description: 'The y-coordinate where the double click occurred.' }),
     keys: z.union([
       z.array(z.string()).meta({ description: 'The keys being held while double-clicking.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'A double click action.' })
@@ -47935,7 +49743,7 @@ export const BetaDragParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while dragging the mouse.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -47979,7 +49787,7 @@ export const BetaMoveParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while moving the mouse.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -48017,7 +49825,7 @@ export const BetaScrollParamSchema = z
     keys: z
       .union([
         z.array(z.string()).meta({ description: 'The keys being held while scrolling.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -48055,15 +49863,18 @@ export const BetaWaitParamSchema = z
 export type BetaWaitParamSchema = z.infer<typeof BetaWaitParamSchema>
 
 export const BetaComputerActionSchema = z.xor([
-  BetaClickParamSchema,
-  BetaDoubleClickActionSchema,
-  BetaDragParamSchema,
-  BetaKeyPressActionSchema,
-  BetaMoveParamSchema,
-  BetaScreenshotParamSchema,
-  BetaScrollParamSchema,
-  BetaTypeParamSchema,
-  BetaWaitParamSchema,
+  z.intersection(BetaClickParamSchema, z.object({ type: z.literal('BetaClickParam') })),
+  z.intersection(
+    BetaDoubleClickActionSchema,
+    z.object({ type: z.literal('BetaDoubleClickAction') }),
+  ),
+  z.intersection(BetaDragParamSchema, z.object({ type: z.literal('BetaDragParam') })),
+  z.intersection(BetaKeyPressActionSchema, z.object({ type: z.literal('BetaKeyPressAction') })),
+  z.intersection(BetaMoveParamSchema, z.object({ type: z.literal('BetaMoveParam') })),
+  z.intersection(BetaScreenshotParamSchema, z.object({ type: z.literal('BetaScreenshotParam') })),
+  z.intersection(BetaScrollParamSchema, z.object({ type: z.literal('BetaScrollParam') })),
+  z.intersection(BetaTypeParamSchema, z.object({ type: z.literal('BetaTypeParam') })),
+  z.intersection(BetaWaitParamSchema, z.object({ type: z.literal('BetaWaitParam') })),
 ])
 
 export type BetaComputerActionSchema = z.infer<typeof BetaComputerActionSchema>
@@ -48081,15 +49892,12 @@ export const BetaComputerCallSafetyCheckParamSchema = z
   .object({
     id: z.string().meta({ description: 'The ID of the pending safety check.' }),
     code: z
-      .union([
-        z.string().meta({ description: 'The type of the pending safety check.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The type of the pending safety check.' }), z.null()])
       .exactOptional(),
     message: z
       .union([
         z.string().meta({ description: 'Details about the pending safety check.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -48102,7 +49910,7 @@ export type BetaComputerCallSafetyCheckParamSchema = z.infer<
 export const BetaComputerToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -48170,7 +49978,7 @@ export const BetaComputerCallOutputItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
@@ -48178,7 +49986,7 @@ export const BetaComputerCallOutputItemParamSchema = z
         z
           .string()
           .meta({ description: 'The ID of the computer tool call output.', examples: ['cuo_123'] }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -48201,7 +50009,7 @@ export const BetaComputerCallOutputItemParamSchema = z
             description:
               'The safety checks reported by the API that have been acknowledged by the developer.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: z
@@ -48210,7 +50018,7 @@ export const BetaComputerCallOutputItemParamSchema = z
           description:
             'The status of the message input. One of `in_progress`, `completed`, or `incomplete`. Populated when input items are returned via API.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -48261,7 +50069,7 @@ export const BetaWebSearchActionOpenPageSchema = z
   .object({
     type: z.literal('open_page').meta({ description: 'The action type.\n' }),
     url: z
-      .union([z.url(), z.null().nullable()])
+      .union([z.url(), z.null()])
       .meta({ description: 'The URL opened by the model.\n' })
       .exactOptional(),
   })
@@ -48273,7 +50081,7 @@ export const BetaWebSearchActionFindSchema = z
   .object({
     type: z.literal('find_in_page').meta({ description: 'The action type.\n' }),
     url: z
-      .union([z.url(), z.null().nullable()])
+      .union([z.url(), z.null()])
       .meta({ description: 'The URL of the page searched for the pattern, when available.\n' })
       .exactOptional(),
     pattern: z
@@ -48289,7 +50097,7 @@ export type BetaWebSearchActionFindSchema = z.infer<typeof BetaWebSearchActionFi
 export const BetaWebSearchToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     id: z.string().meta({ description: 'The unique ID of the web search tool call.\n' }),
@@ -48301,9 +50109,18 @@ export const BetaWebSearchToolCallSchema = z
     }),
     action: z
       .xor([
-        BetaWebSearchActionSearchSchema,
-        BetaWebSearchActionOpenPageSchema,
-        BetaWebSearchActionFindSchema,
+        z.intersection(
+          BetaWebSearchActionSearchSchema,
+          z.object({ type: z.literal('BetaWebSearchActionSearch') }),
+        ),
+        z.intersection(
+          BetaWebSearchActionOpenPageSchema,
+          z.object({ type: z.literal('BetaWebSearchActionOpenPage') }),
+        ),
+        z.intersection(
+          BetaWebSearchActionFindSchema,
+          z.object({ type: z.literal('BetaWebSearchActionFind') }),
+        ),
       ])
       .meta({
         description:
@@ -48334,7 +50151,16 @@ export const BetaProgramToolCallCallerSchema = z.object({
 export type BetaProgramToolCallCallerSchema = z.infer<typeof BetaProgramToolCallCallerSchema>
 
 export const BetaToolCallCallerSchema = z
-  .xor([BetaDirectToolCallCallerSchema, BetaProgramToolCallCallerSchema])
+  .xor([
+    z.intersection(
+      BetaDirectToolCallCallerSchema,
+      z.object({ type: z.literal('BetaDirectToolCallCaller') }),
+    ),
+    z.intersection(
+      BetaProgramToolCallCallerSchema,
+      z.object({ type: z.literal('BetaProgramToolCallCaller') }),
+    ),
+  ])
   .meta({ description: 'The execution context that produced this tool call.' })
 
 export type BetaToolCallCallerSchema = z.infer<typeof BetaToolCallCallerSchema>
@@ -48342,7 +50168,7 @@ export type BetaToolCallCallerSchema = z.infer<typeof BetaToolCallCallerSchema>
 export const BetaFunctionToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     id: z
@@ -48355,7 +50181,7 @@ export const BetaFunctionToolCallSchema = z
     call_id: z
       .string()
       .meta({ description: 'The unique ID of the function tool call generated by the model.\n' }),
-    caller: z.union([BetaToolCallCallerSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([BetaToolCallCallerSchema, z.null()]).exactOptional(),
     namespace: z
       .string()
       .meta({ description: 'The namespace of the function to run.\n' })
@@ -48413,7 +50239,7 @@ export const BetaInputTextContentParamSchema = z
       .meta({ description: 'The type of the input item. Always `input_text`.' }),
     text: z.string().max(10485760).meta({ description: 'The text input to the model.' }),
     prompt_cache_breakpoint: z
-      .union([BetaPromptCacheBreakpointParamSchema, z.null().nullable()])
+      .union([BetaPromptCacheBreakpointParamSchema, z.null()])
       .exactOptional(),
   })
   .meta({ description: 'A text input to the model.' })
@@ -48439,7 +50265,7 @@ export const BetaInputImageContentParamAutoParamSchema = z
             description:
               'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_id: z
@@ -48450,7 +50276,7 @@ export const BetaInputImageContentParamAutoParamSchema = z
             description: 'The ID of the file to be sent to the model.',
             examples: ['file-123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     detail: z
@@ -48459,11 +50285,11 @@ export const BetaInputImageContentParamAutoParamSchema = z
           description:
             'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     prompt_cache_breakpoint: z
-      .union([BetaPromptCacheBreakpointParamSchema, z.null().nullable()])
+      .union([BetaPromptCacheBreakpointParamSchema, z.null()])
       .exactOptional(),
   })
   .meta({
@@ -48493,13 +50319,13 @@ export const BetaInputFileContentParamSchema = z
             description: 'The ID of the file to be sent to the model.',
             examples: ['file-123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     filename: z
       .union([
         z.string().meta({ description: 'The name of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_data: z
@@ -48508,13 +50334,13 @@ export const BetaInputFileContentParamSchema = z
           .string()
           .max(73400320)
           .meta({ description: 'The base64-encoded data of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     file_url: z
       .union([
         z.url().meta({ description: 'The URL of the file to be sent to the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     detail: BetaFileDetailEnumSchema.meta({
@@ -48522,7 +50348,7 @@ export const BetaInputFileContentParamSchema = z
         'The detail level of the file to be sent to the model. Use `auto` to let the system select the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which may increase input token usage. Use `low` for lower-cost rendering, or `high` to render the file at higher quality. Defaults to `auto`.',
     }).exactOptional(),
     prompt_cache_breakpoint: z
-      .union([BetaPromptCacheBreakpointParamSchema, z.null().nullable()])
+      .union([BetaPromptCacheBreakpointParamSchema, z.null()])
       .exactOptional(),
   })
   .meta({ description: 'A file input to the model.' })
@@ -48557,7 +50383,16 @@ export type BetaProgramToolCallCallerParamSchema = z.infer<
 >
 
 export const BetaToolCallCallerParamSchema = z
-  .xor([BetaDirectToolCallCallerParamSchema, BetaProgramToolCallCallerParamSchema])
+  .xor([
+    z.intersection(
+      BetaDirectToolCallCallerParamSchema,
+      z.object({ type: z.literal('BetaDirectToolCallCallerParam') }),
+    ),
+    z.intersection(
+      BetaProgramToolCallCallerParamSchema,
+      z.object({ type: z.literal('BetaProgramToolCallCallerParam') }),
+    ),
+  ])
   .meta({ description: 'The execution context that produced this tool call.' })
 
 export type BetaToolCallCallerParamSchema = z.infer<typeof BetaToolCallCallerParamSchema>
@@ -48567,7 +50402,7 @@ export const BetaFunctionCallOutputItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
@@ -48579,7 +50414,7 @@ export const BetaFunctionCallOutputItemParamSchema = z
               'The unique ID of the function tool call output. Populated when this item is returned via API.',
             examples: ['fc_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -48589,7 +50424,7 @@ export const BetaFunctionCallOutputItemParamSchema = z
           .min(1)
           .max(64)
           .meta({ description: 'The unique ID of the function tool call generated by the model.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -48608,9 +50443,18 @@ export const BetaFunctionCallOutputItemParamSchema = z
           .array(
             z
               .xor([
-                BetaInputTextContentParamSchema,
-                BetaInputImageContentParamAutoParamSchema,
-                BetaInputFileContentParamSchema,
+                z.intersection(
+                  BetaInputTextContentParamSchema,
+                  z.object({ type: z.literal('BetaInputTextContentParam') }),
+                ),
+                z.intersection(
+                  BetaInputImageContentParamAutoParamSchema,
+                  z.object({ type: z.literal('BetaInputImageContentParamAutoParam') }),
+                ),
+                z.intersection(
+                  BetaInputFileContentParamSchema,
+                  z.object({ type: z.literal('BetaInputFileContentParam') }),
+                ),
               ])
               .meta({
                 description: 'A piece of message content, such as text, an image, or a file.',
@@ -48629,7 +50473,7 @@ export const BetaFunctionCallOutputItemParamSchema = z
           .min(1)
           .max(128)
           .meta({ description: 'The name of the tool that produced the output.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     namespace: z
@@ -48640,7 +50484,7 @@ export const BetaFunctionCallOutputItemParamSchema = z
           .min(1)
           .max(128)
           .meta({ description: 'The namespace of the tool that produced the output.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     caller: z
@@ -48648,7 +50492,7 @@ export const BetaFunctionCallOutputItemParamSchema = z
         BetaToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: z
@@ -48657,7 +50501,7 @@ export const BetaFunctionCallOutputItemParamSchema = z
           description:
             'The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -48687,7 +50531,7 @@ export const BetaAgentMessageItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
@@ -48698,7 +50542,7 @@ export const BetaAgentMessageItemParamSchema = z
             description: 'The unique ID of this agent message item.',
             examples: ['amsg_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -48711,9 +50555,18 @@ export const BetaAgentMessageItemParamSchema = z
       .array(
         z
           .xor([
-            BetaInputTextContentParamSchema,
-            BetaInputImageContentParamAutoParamSchema,
-            BetaEncryptedContentParamSchema,
+            z.intersection(
+              BetaInputTextContentParamSchema,
+              z.object({ type: z.literal('BetaInputTextContentParam') }),
+            ),
+            z.intersection(
+              BetaInputImageContentParamAutoParamSchema,
+              z.object({ type: z.literal('BetaInputImageContentParamAutoParam') }),
+            ),
+            z.intersection(
+              BetaEncryptedContentParamSchema,
+              z.object({ type: z.literal('BetaEncryptedContentParam') }),
+            ),
           ])
           .meta({ description: 'A plaintext, image, or encrypted agent message content part.' }),
       )
@@ -48738,7 +50591,7 @@ export const BetaMultiAgentCallItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z
@@ -48746,7 +50599,7 @@ export const BetaMultiAgentCallItemParamSchema = z.object({
       z
         .string()
         .meta({ description: 'The unique ID of this multi-agent call.', examples: ['mac_123'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   call_id: z
@@ -48832,9 +50685,18 @@ export const BetaOutputTextContentParamSchema = z.object({
   annotations: z
     .array(
       z.xor([
-        BetaFileCitationParamSchema,
-        BetaUrlCitationParamSchema,
-        BetaContainerFileCitationParamSchema,
+        z.intersection(
+          BetaFileCitationParamSchema,
+          z.object({ type: z.literal('BetaFileCitationParam') }),
+        ),
+        z.intersection(
+          BetaUrlCitationParamSchema,
+          z.object({ type: z.literal('BetaUrlCitationParam') }),
+        ),
+        z.intersection(
+          BetaContainerFileCitationParamSchema,
+          z.object({ type: z.literal('BetaContainerFileCitationParam') }),
+        ),
       ]),
     )
     .meta({ description: 'Citations associated with the text content.' })
@@ -48847,7 +50709,7 @@ export const BetaMultiAgentCallOutputItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z
@@ -48858,7 +50720,7 @@ export const BetaMultiAgentCallOutputItemParamSchema = z.object({
           description: 'The unique ID of this multi-agent call output.',
           examples: ['maco_123'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   call_id: z
@@ -48894,7 +50756,7 @@ export const BetaToolSearchCallItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z
@@ -48902,7 +50764,7 @@ export const BetaToolSearchCallItemParamSchema = z.object({
       z
         .string()
         .meta({ description: 'The unique ID of this tool search call.', examples: ['tsc_123'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   call_id: z
@@ -48912,7 +50774,7 @@ export const BetaToolSearchCallItemParamSchema = z.object({
         .min(1)
         .max(64)
         .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -48928,7 +50790,7 @@ export const BetaToolSearchCallItemParamSchema = z.object({
   status: z
     .union([
       BetaFunctionCallItemStatusSchema.meta({ description: 'The status of the tool search call.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -48957,14 +50819,14 @@ export const BetaFunctionToolSchema = z
             description:
               'A description of the function. Used by the model to determine whether or not to call the function.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     parameters: z.union([
       z
         .record(z.string(), z.any())
         .meta({ description: 'A JSON schema object describing the parameters of the function.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     output_schema: z
       .union([
@@ -48974,7 +50836,7 @@ export const BetaFunctionToolSchema = z
             description:
               'A JSON schema object describing the JSON value encoded in string outputs for this function.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     strict: z.union([
@@ -48983,7 +50845,7 @@ export const BetaFunctionToolSchema = z
         .meta({
           description: 'Whether strict parameter validation is enforced for this function tool.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     defer_loading: z
       .boolean()
@@ -48994,7 +50856,7 @@ export const BetaFunctionToolSchema = z
         z
           .array(BetaCallableToolAllowedCallerSchema)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -49072,7 +50934,18 @@ export const BetaCompoundFilterSchema: z.ZodType<BetaCompoundFilterType> = z
   .strictObject({
     type: z.enum(['and', 'or']).meta({ description: 'Type of operation: `and` or `or`.' }),
     filters: z
-      .array(z.xor([BetaComparisonFilterSchema, z.lazy(() => BetaCompoundFilterSchema)]))
+      .array(
+        z.xor([
+          z.intersection(
+            BetaComparisonFilterSchema,
+            z.object({ type: z.literal('BetaComparisonFilter') }),
+          ),
+          z.intersection(
+            z.lazy(() => BetaCompoundFilterSchema),
+            z.object({ type: z.literal('BetaCompoundFilter') }),
+          ),
+        ]),
+      )
       .meta({
         description:
           'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
@@ -49106,7 +50979,7 @@ export const BetaFileSearchToolSchema = z
       description: 'Ranking options for search.',
     }).exactOptional(),
     filters: z
-      .union([BetaFiltersSchema.meta({ description: 'A filter to apply.' }), z.null().nullable()])
+      .union([BetaFiltersSchema.meta({ description: 'A filter to apply.' }), z.null()])
       .exactOptional(),
   })
   .meta({
@@ -49175,7 +51048,7 @@ export const BetaWebSearchApproximateLocationSchema = z.union([
               description:
                 'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       region: z
@@ -49185,7 +51058,7 @@ export const BetaWebSearchApproximateLocationSchema = z.union([
             .meta({
               description: 'Free text input for the region of the user, e.g. `California`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       city: z
@@ -49195,7 +51068,7 @@ export const BetaWebSearchApproximateLocationSchema = z.union([
             .meta({
               description: 'Free text input for the city of the user, e.g. `San Francisco`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       timezone: z
@@ -49206,12 +51079,12 @@ export const BetaWebSearchApproximateLocationSchema = z.union([
               description:
                 'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
     })
     .meta({ description: 'The approximate location of the user.\n' }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaWebSearchApproximateLocationSchema = z.infer<
@@ -49248,12 +51121,12 @@ export const BetaWebSearchToolSchema = z
                     description:
                       'Allowed domains for the search. If not provided, all domains are allowed.\nSubdomains of the provided domains are allowed as well.\n\nExample: `["pubmed.ncbi.nlm.nih.gov"]`\n',
                   }),
-                z.null().nullable(),
+                z.null(),
               ])
               .exactOptional(),
           })
           .meta({ description: 'Filters for the search.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     user_location: BetaWebSearchApproximateLocationSchema.meta({
@@ -49353,7 +51226,7 @@ export const BetaMCPToolSchema = z
             description:
               'Optional HTTP headers to send to the MCP server. Use for authentication\nor other purposes.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     allowed_tools: z
@@ -49364,7 +51237,7 @@ export const BetaMCPToolSchema = z
             BetaMCPToolFilterSchema,
           ])
           .meta({ description: 'List of allowed tool names or a filter object.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     allowed_callers: z
@@ -49373,7 +51246,7 @@ export const BetaMCPToolSchema = z
           .array(BetaCallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     require_approval: z
@@ -49398,7 +51271,7 @@ export const BetaMCPToolSchema = z
           ])
           .default('always')
           .meta({ description: "Specify which of the MCP server's tools require approval." }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     defer_loading: z
@@ -49477,13 +51350,19 @@ export const BetaAutoCodeInterpreterToolParamSchema = z
         BetaContainerMemoryLimitSchema.meta({
           description: 'The memory limit for the code interpreter container.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     network_policy: z
       .xor([
-        BetaContainerNetworkPolicyDisabledParamSchema,
-        BetaContainerNetworkPolicyAllowlistParamSchema,
+        z.intersection(
+          BetaContainerNetworkPolicyDisabledParamSchema,
+          z.object({ type: z.literal('BetaContainerNetworkPolicyDisabledParam') }),
+        ),
+        z.intersection(
+          BetaContainerNetworkPolicyAllowlistParamSchema,
+          z.object({ type: z.literal('BetaContainerNetworkPolicyAllowlistParam') }),
+        ),
       ])
       .meta({ description: 'Network access policy for the container.' })
       .exactOptional(),
@@ -49517,7 +51396,7 @@ export const BetaCodeInterpreterToolSchema = z
           .array(BetaCallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -49574,7 +51453,7 @@ export const BetaSvgParamSchema = z.object({
         description:
           "Reasoning effort for SVG authoring. When omitted, uses the author model's default in both Images and Responses.",
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -49698,7 +51577,7 @@ export const BetaImageGenToolSchema = z
           'Set the background of the generated image. One of `transparent`, `opaque`,\nor `auto`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including\ntheir `2026-09-08` snapshots, support `opaque` and `transparent`\nbackgrounds. Transparent backgrounds are available for supported GPT Image\nmodels. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in\npreview. When using `transparent`, set the output format to `png` or `webp`.\nDefault: `auto`.\n',
       })
       .exactOptional(),
-    input_fidelity: z.union([BetaInputFidelitySchema, z.null().nullable()]).exactOptional(),
+    input_fidelity: z.union([BetaInputFidelitySchema, z.null()]).exactOptional(),
     input_image_mask: z
       .strictObject({
         image_url: z.string().meta({ description: 'Base64-encoded mask image.\n' }).exactOptional(),
@@ -49799,18 +51678,35 @@ export const BetaContainerAutoParamSchema = z.object({
   memory_limit: z
     .union([
       BetaContainerMemoryLimitSchema.meta({ description: 'The memory limit for the container.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   network_policy: z
     .xor([
-      BetaContainerNetworkPolicyDisabledParamSchema,
-      BetaContainerNetworkPolicyAllowlistParamSchema,
+      z.intersection(
+        BetaContainerNetworkPolicyDisabledParamSchema,
+        z.object({ type: z.literal('BetaContainerNetworkPolicyDisabledParam') }),
+      ),
+      z.intersection(
+        BetaContainerNetworkPolicyAllowlistParamSchema,
+        z.object({ type: z.literal('BetaContainerNetworkPolicyAllowlistParam') }),
+      ),
     ])
     .meta({ description: 'Network access policy for the container.' })
     .exactOptional(),
   skills: z
-    .array(z.xor([BetaSkillReferenceParamSchema, BetaInlineSkillParamSchema]))
+    .array(
+      z.xor([
+        z.intersection(
+          BetaSkillReferenceParamSchema,
+          z.object({ type: z.literal('BetaSkillReferenceParam') }),
+        ),
+        z.intersection(
+          BetaInlineSkillParamSchema,
+          z.object({ type: z.literal('BetaInlineSkillParam') }),
+        ),
+      ]),
+    )
     .max(200)
     .meta({
       description:
@@ -49864,11 +51760,20 @@ export const BetaFunctionShellToolParamSchema = z
     environment: z
       .union([
         z.xor([
-          BetaContainerAutoParamSchema,
-          BetaLocalEnvironmentParamSchema,
-          BetaContainerReferenceParamSchema,
+          z.intersection(
+            BetaContainerAutoParamSchema,
+            z.object({ type: z.literal('BetaContainerAutoParam') }),
+          ),
+          z.intersection(
+            BetaLocalEnvironmentParamSchema,
+            z.object({ type: z.literal('BetaLocalEnvironmentParam') }),
+          ),
+          z.intersection(
+            BetaContainerReferenceParamSchema,
+            z.object({ type: z.literal('BetaContainerReferenceParam') }),
+          ),
         ]),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     allowed_callers: z
@@ -49877,7 +51782,7 @@ export const BetaFunctionShellToolParamSchema = z
           .array(BetaCallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -49938,7 +51843,16 @@ export const BetaCustomToolParamSchema = z
       })
       .exactOptional(),
     format: z
-      .xor([BetaCustomTextFormatParamSchema, BetaCustomGrammarFormatParamSchema])
+      .xor([
+        z.intersection(
+          BetaCustomTextFormatParamSchema,
+          z.object({ type: z.literal('BetaCustomTextFormatParam') }),
+        ),
+        z.intersection(
+          BetaCustomGrammarFormatParamSchema,
+          z.object({ type: z.literal('BetaCustomGrammarFormatParam') }),
+        ),
+      ])
       .meta({ description: 'The input format for the custom tool. Default is unconstrained text.' })
       .exactOptional(),
     defer_loading: z
@@ -49951,7 +51865,7 @@ export const BetaCustomToolParamSchema = z
           .array(BetaCallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -49969,8 +51883,8 @@ export const BetaToolSearchOutputFunctionToolParamSchema = z.object({
     .min(1)
     .max(128)
     .meta({ description: 'The name of the loaded function tool.' }),
-  description: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  parameters: z.union([BetaEmptyModelParamSchema, z.null().nullable()]).exactOptional(),
+  description: z.union([z.string(), z.null()]).exactOptional(),
+  parameters: z.union([BetaEmptyModelParamSchema, z.null()]).exactOptional(),
   strict: z
     .union([
       z
@@ -49979,7 +51893,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = z.object({
           description:
             'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z.literal('function').default('function'),
@@ -49998,7 +51912,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = z.object({
           description:
             'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   defer_loading: z
@@ -50013,7 +51927,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = z.object({
         .array(BetaCallableToolAllowedCallerSchema)
         .min(1)
         .meta({ description: 'The tool invocation context(s).' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -50038,7 +51952,16 @@ export const BetaToolSearchOutputNamespaceToolParamSchema = z
     tools: z
       .array(
         z
-          .xor([BetaToolSearchOutputFunctionToolParamSchema, BetaCustomToolParamSchema])
+          .xor([
+            z.intersection(
+              BetaToolSearchOutputFunctionToolParamSchema,
+              z.object({ type: z.literal('BetaToolSearchOutputFunctionToolParam') }),
+            ),
+            z.intersection(
+              BetaCustomToolParamSchema,
+              z.object({ type: z.literal('BetaCustomToolParam') }),
+            ),
+          ])
           .meta({
             description: 'A function or custom tool loaded into a namespace by tool search.',
           }),
@@ -50068,7 +51991,7 @@ export const BetaToolSearchToolParamSchema = z
           .meta({
             description: 'Description shown to the model for a client-executed tool search tool.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     parameters: z
@@ -50076,7 +51999,7 @@ export const BetaToolSearchToolParamSchema = z
         BetaEmptyModelParamSchema.meta({
           description: 'Parameter schema for a client-executed tool search tool.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -50097,7 +52020,7 @@ export const BetaApproximateLocationSchema = z.object({
           description:
             'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   region: z
@@ -50105,7 +52028,7 @@ export const BetaApproximateLocationSchema = z.object({
       z
         .string()
         .meta({ description: 'Free text input for the region of the user, e.g. `California`.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   city: z
@@ -50113,7 +52036,7 @@ export const BetaApproximateLocationSchema = z.object({
       z
         .string()
         .meta({ description: 'Free text input for the city of the user, e.g. `San Francisco`.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   timezone: z
@@ -50124,7 +52047,7 @@ export const BetaApproximateLocationSchema = z.object({
           description:
             'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -50154,7 +52077,7 @@ export const BetaWebSearchPreviewToolSchema = z
           description:
             'The approximate location of the user. If omitted or null, defaults to the United States. To avoid this fallback, pass `{"type": "approximate"}` without location fields. To localize results, provide the relevant location fields.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     search_context_size: BetaSearchContextSizeSchema.meta({
@@ -50182,7 +52105,7 @@ export const BetaApplyPatchToolParamSchema = z
           .array(BetaCallableToolAllowedCallerSchema)
           .min(1)
           .meta({ description: 'The tool invocation context(s).' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -50194,22 +52117,49 @@ export type BetaApplyPatchToolParamSchema = z.infer<typeof BetaApplyPatchToolPar
 
 export const BetaToolSearchOutputToolSchema = z
   .xor([
-    BetaFunctionToolSchema,
-    BetaFileSearchToolSchema,
-    BetaComputerToolSchema,
-    BetaComputerUsePreviewToolSchema,
-    BetaWebSearchToolSchema,
-    BetaMCPToolSchema,
-    BetaCodeInterpreterToolSchema,
-    BetaProgrammaticToolCallingParamSchema,
-    BetaImageGenToolSchema,
-    BetaLocalShellToolParamSchema,
-    BetaFunctionShellToolParamSchema,
-    BetaCustomToolParamSchema,
-    BetaToolSearchOutputNamespaceToolParamSchema,
-    BetaToolSearchToolParamSchema,
-    BetaWebSearchPreviewToolSchema,
-    BetaApplyPatchToolParamSchema,
+    z.intersection(BetaFunctionToolSchema, z.object({ type: z.literal('BetaFunctionTool') })),
+    z.intersection(BetaFileSearchToolSchema, z.object({ type: z.literal('BetaFileSearchTool') })),
+    z.intersection(BetaComputerToolSchema, z.object({ type: z.literal('BetaComputerTool') })),
+    z.intersection(
+      BetaComputerUsePreviewToolSchema,
+      z.object({ type: z.literal('BetaComputerUsePreviewTool') }),
+    ),
+    z.intersection(BetaWebSearchToolSchema, z.object({ type: z.literal('BetaWebSearchTool') })),
+    z.intersection(BetaMCPToolSchema, z.object({ type: z.literal('BetaMCPTool') })),
+    z.intersection(
+      BetaCodeInterpreterToolSchema,
+      z.object({ type: z.literal('BetaCodeInterpreterTool') }),
+    ),
+    z.intersection(
+      BetaProgrammaticToolCallingParamSchema,
+      z.object({ type: z.literal('BetaProgrammaticToolCallingParam') }),
+    ),
+    z.intersection(BetaImageGenToolSchema, z.object({ type: z.literal('BetaImageGenTool') })),
+    z.intersection(
+      BetaLocalShellToolParamSchema,
+      z.object({ type: z.literal('BetaLocalShellToolParam') }),
+    ),
+    z.intersection(
+      BetaFunctionShellToolParamSchema,
+      z.object({ type: z.literal('BetaFunctionShellToolParam') }),
+    ),
+    z.intersection(BetaCustomToolParamSchema, z.object({ type: z.literal('BetaCustomToolParam') })),
+    z.intersection(
+      BetaToolSearchOutputNamespaceToolParamSchema,
+      z.object({ type: z.literal('BetaToolSearchOutputNamespaceToolParam') }),
+    ),
+    z.intersection(
+      BetaToolSearchToolParamSchema,
+      z.object({ type: z.literal('BetaToolSearchToolParam') }),
+    ),
+    z.intersection(
+      BetaWebSearchPreviewToolSchema,
+      z.object({ type: z.literal('BetaWebSearchPreviewTool') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolParamSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolParam') }),
+    ),
   ])
   .meta({ description: 'A tool definition returned by a tool search output.\n' })
 
@@ -50219,7 +52169,7 @@ export const BetaToolSearchOutputItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z
@@ -50227,7 +52177,7 @@ export const BetaToolSearchOutputItemParamSchema = z.object({
       z
         .string()
         .meta({ description: 'The unique ID of this tool search output.', examples: ['tso_123'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   call_id: z
@@ -50237,7 +52187,7 @@ export const BetaToolSearchOutputItemParamSchema = z.object({
         .min(1)
         .max(64)
         .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -50255,7 +52205,7 @@ export const BetaToolSearchOutputItemParamSchema = z.object({
       BetaFunctionCallItemStatusSchema.meta({
         description: 'The status of the tool search output.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -50270,8 +52220,8 @@ export const BetaFunctionToolParamSchema = z.object({
     .regex(/^[a-zA-Z0-9_-]+$/)
     .min(1)
     .max(128),
-  description: z.union([z.string(), z.null().nullable()]).exactOptional(),
-  parameters: z.union([BetaEmptyModelParamSchema, z.null().nullable()]).exactOptional(),
+  description: z.union([z.string(), z.null()]).exactOptional(),
+  parameters: z.union([BetaEmptyModelParamSchema, z.null()]).exactOptional(),
   strict: z
     .union([
       z
@@ -50280,7 +52230,7 @@ export const BetaFunctionToolParamSchema = z.object({
           description:
             'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z.literal('function').default('function'),
@@ -50299,7 +52249,7 @@ export const BetaFunctionToolParamSchema = z.object({
           description:
             'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   defer_loading: z
@@ -50314,7 +52264,7 @@ export const BetaFunctionToolParamSchema = z.object({
         .array(BetaCallableToolAllowedCallerSchema)
         .min(1)
         .meta({ description: 'The tool invocation context(s).' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -50337,7 +52287,16 @@ export const BetaNamespaceToolParamSchema = z
     tools: z
       .array(
         z
-          .xor([BetaFunctionToolParamSchema, BetaCustomToolParamSchema])
+          .xor([
+            z.intersection(
+              BetaFunctionToolParamSchema,
+              z.object({ type: z.literal('BetaFunctionToolParam') }),
+            ),
+            z.intersection(
+              BetaCustomToolParamSchema,
+              z.object({ type: z.literal('BetaCustomToolParam') }),
+            ),
+          ])
           .meta({ description: 'A function or custom tool that belongs to a namespace.' }),
       )
       .min(1)
@@ -50349,22 +52308,49 @@ export type BetaNamespaceToolParamSchema = z.infer<typeof BetaNamespaceToolParam
 
 export const BetaToolSchema = z
   .xor([
-    BetaFunctionToolSchema,
-    BetaFileSearchToolSchema,
-    BetaComputerToolSchema,
-    BetaComputerUsePreviewToolSchema,
-    BetaWebSearchToolSchema,
-    BetaMCPToolSchema,
-    BetaCodeInterpreterToolSchema,
-    BetaProgrammaticToolCallingParamSchema,
-    BetaImageGenToolSchema,
-    BetaLocalShellToolParamSchema,
-    BetaFunctionShellToolParamSchema,
-    BetaCustomToolParamSchema,
-    BetaNamespaceToolParamSchema,
-    BetaToolSearchToolParamSchema,
-    BetaWebSearchPreviewToolSchema,
-    BetaApplyPatchToolParamSchema,
+    z.intersection(BetaFunctionToolSchema, z.object({ type: z.literal('BetaFunctionTool') })),
+    z.intersection(BetaFileSearchToolSchema, z.object({ type: z.literal('BetaFileSearchTool') })),
+    z.intersection(BetaComputerToolSchema, z.object({ type: z.literal('BetaComputerTool') })),
+    z.intersection(
+      BetaComputerUsePreviewToolSchema,
+      z.object({ type: z.literal('BetaComputerUsePreviewTool') }),
+    ),
+    z.intersection(BetaWebSearchToolSchema, z.object({ type: z.literal('BetaWebSearchTool') })),
+    z.intersection(BetaMCPToolSchema, z.object({ type: z.literal('BetaMCPTool') })),
+    z.intersection(
+      BetaCodeInterpreterToolSchema,
+      z.object({ type: z.literal('BetaCodeInterpreterTool') }),
+    ),
+    z.intersection(
+      BetaProgrammaticToolCallingParamSchema,
+      z.object({ type: z.literal('BetaProgrammaticToolCallingParam') }),
+    ),
+    z.intersection(BetaImageGenToolSchema, z.object({ type: z.literal('BetaImageGenTool') })),
+    z.intersection(
+      BetaLocalShellToolParamSchema,
+      z.object({ type: z.literal('BetaLocalShellToolParam') }),
+    ),
+    z.intersection(
+      BetaFunctionShellToolParamSchema,
+      z.object({ type: z.literal('BetaFunctionShellToolParam') }),
+    ),
+    z.intersection(BetaCustomToolParamSchema, z.object({ type: z.literal('BetaCustomToolParam') })),
+    z.intersection(
+      BetaNamespaceToolParamSchema,
+      z.object({ type: z.literal('BetaNamespaceToolParam') }),
+    ),
+    z.intersection(
+      BetaToolSearchToolParamSchema,
+      z.object({ type: z.literal('BetaToolSearchToolParam') }),
+    ),
+    z.intersection(
+      BetaWebSearchPreviewToolSchema,
+      z.object({ type: z.literal('BetaWebSearchPreviewTool') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolParamSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolParam') }),
+    ),
   ])
   .meta({ description: 'A tool that can be used to generate a response.\n' })
 
@@ -50374,7 +52360,7 @@ export const BetaAdditionalToolsItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z
@@ -50385,7 +52371,7 @@ export const BetaAdditionalToolsItemParamSchema = z.object({
           description: 'The unique ID of this additional tools item.',
           examples: ['at_123'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -50413,7 +52399,7 @@ export const BetaReasoningEffortSchema = z.union([
       description:
         'Constrains effort on reasoning for reasoning models. Currently supported\nvalues are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.\nReducing reasoning effort can result in faster responses and fewer tokens\nused on reasoning in a response. Not all reasoning models support every\nvalue. See the\n[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning)\nfor model-specific support.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaReasoningEffortSchema = z.infer<typeof BetaReasoningEffortSchema>
@@ -50467,7 +52453,7 @@ export const BetaTextResponseFormatJsonSchemaSchema = z
             description:
               'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -50485,7 +52471,7 @@ export const BetaResponseConfigurationUpdateItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
@@ -50496,7 +52482,7 @@ export const BetaResponseConfigurationUpdateItemParamSchema = z
             description: 'The unique ID of the configuration update item.',
             examples: ['cnfu_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -50515,7 +52501,16 @@ export const BetaResponseConfigurationUpdateItemParamSchema = z
     text: z
       .object({
         format: z
-          .xor([BetaResponseFormatTextSchema, BetaTextResponseFormatJsonSchemaSchema])
+          .xor([
+            z.intersection(
+              BetaResponseFormatTextSchema,
+              z.object({ type: z.literal('BetaResponseFormatText') }),
+            ),
+            z.intersection(
+              BetaTextResponseFormatJsonSchemaSchema,
+              z.object({ type: z.literal('BetaTextResponseFormatJsonSchema') }),
+            ),
+          ])
           .meta({
             description: 'Use a JSON schema for structured output or text to return to plain text.',
           }),
@@ -50561,7 +52556,7 @@ export type BetaReasoningTextContentSchema = z.infer<typeof BetaReasoningTextCon
 export const BetaReasoningItemSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -50576,7 +52571,7 @@ export const BetaReasoningItemSchema = z
             description:
               'The encrypted content of the reasoning item. This is populated by default\nfor reasoning items returned by `POST /v1/responses` and WebSocket\n`response.create` requests.\n\nWhen streaming, use the completed reasoning item and its\n`encrypted_content` from the `response.output_item.done` event in\nsubsequent requests. The `encrypted_content` in\n`response.output_item.added` may be incomplete. This is especially\nimportant when `store` is `false` or when using Zero Data Retention.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     summary: z
@@ -50606,13 +52601,13 @@ export const BetaCompactionSummaryItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
       .union([
         z.string().meta({ description: 'The ID of the compaction item.', examples: ['cmp_123'] }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -50649,13 +52644,10 @@ export type BetaImageGenToolCallModerationDetailsSchema = z.infer<
 >
 
 export const BetaImageGenToolCallErrorSchema = z.object({
-  code: z.union([z.string().meta({ description: 'The error code.' }), z.null().nullable()]),
+  code: z.union([z.string().meta({ description: 'The error code.' }), z.null()]),
   type: z.string().meta({ description: 'The error type.' }),
   message: z.string().meta({ description: 'A description of the error.' }),
-  param: z.union([
-    z.string().meta({ description: 'The related request parameter.' }),
-    z.null().nullable(),
-  ]),
+  param: z.union([z.string().meta({ description: 'The related request parameter.' }), z.null()]),
   moderation_details: BetaImageGenToolCallModerationDetailsSchema.meta({
     description: 'Public details for a `moderation_blocked` error, when available.',
   }).exactOptional(),
@@ -50686,7 +52678,7 @@ export const BetaImageGenToolCallSchema = z
     agent: z
       .union([
         BetaAgentTagSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -50700,7 +52692,7 @@ export const BetaImageGenToolCallSchema = z
       .meta({ description: 'The status of the image generation call.' }),
     result: z.union([
       z.string().meta({ description: 'The generated image encoded in base64.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     error: BetaImageGenToolCallErrorSchema.meta({
       description: 'Details of a moderation failure, when available.',
@@ -50712,7 +52704,7 @@ export const BetaImageGenToolCallSchema = z
           .meta({
             description: 'The image dimensions as a `WIDTHxHEIGHT` string, for example `1536x864`.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     quality: z
@@ -50723,13 +52715,13 @@ export const BetaImageGenToolCallSchema = z
             description:
               'The quality of the image generated by the image generation tool call. One of `low`, `medium`, `high`, `xhigh`, `max`, or `auto`.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     action: z
       .union([
         BetaImageGenActionEnumSchema.meta({ description: 'The action used for image generation.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     background: z
@@ -50737,13 +52729,13 @@ export const BetaImageGenToolCallSchema = z
         BetaImageBackgroundSchema.meta({
           description: 'The background setting used for generation.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output_format: z
       .union([
         BetaImageOutputFormatSchema.meta({ description: 'The output format used for generation.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     svg_usage: BetaSvgUsageSchema.exactOptional(),
@@ -50752,7 +52744,7 @@ export const BetaImageGenToolCallSchema = z
         z
           .string()
           .meta({ description: 'The prompt that was used after any model prompt rewriting.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -50791,7 +52783,7 @@ export type BetaCodeInterpreterOutputImageSchema = z.infer<
 export const BetaCodeInterpreterToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -50813,16 +52805,27 @@ export const BetaCodeInterpreterToolCallSchema = z
       .meta({ description: 'The ID of the container used to run the code.\n' }),
     code: z.union([
       z.string().meta({ description: 'The code to run, or null if not available.\n' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     outputs: z.union([
       z
-        .array(z.xor([BetaCodeInterpreterOutputLogsSchema, BetaCodeInterpreterOutputImageSchema]))
+        .array(
+          z.xor([
+            z.intersection(
+              BetaCodeInterpreterOutputLogsSchema,
+              z.object({ type: z.literal('BetaCodeInterpreterOutputLogs') }),
+            ),
+            z.intersection(
+              BetaCodeInterpreterOutputImageSchema,
+              z.object({ type: z.literal('BetaCodeInterpreterOutputImage') }),
+            ),
+          ]),
+        )
         .meta({
           description:
             'The outputs generated by the code interpreter, such as logs or images.\nCan be null if no outputs are available.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'A tool call to run code.\n' })
@@ -50839,23 +52842,20 @@ export const BetaLocalShellExecActionSchema = z
     timeout_ms: z
       .union([
         z.int().meta({ description: 'Optional timeout in milliseconds for the command.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     working_directory: z
       .union([
         z.string().meta({ description: 'Optional working directory to run the command in.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     env: z
       .record(z.string(), z.string())
       .meta({ description: 'Environment variables to set for the command.' }),
     user: z
-      .union([
-        z.string().meta({ description: 'Optional user to run the command as.' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'Optional user to run the command as.' }), z.null()])
       .exactOptional(),
   })
   .meta({ description: 'Execute a shell command on the server.' })
@@ -50865,7 +52865,7 @@ export type BetaLocalShellExecActionSchema = z.infer<typeof BetaLocalShellExecAc
 export const BetaLocalShellToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -50887,9 +52887,9 @@ export const BetaLocalShellToolCallSchema = z
 export type BetaLocalShellToolCallSchema = z.infer<typeof BetaLocalShellToolCallSchema>
 
 export const BetaLocalShellToolCallOutputSchema = z
-  .object({
+  .looseObject({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -50914,10 +52914,11 @@ export const BetaLocalShellToolCallOutputSchema = z
             description:
               'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
+  .refine((val) => ['call_id'].every((key) => key in val))
   .meta({ description: 'The output of a local shell tool call.\n' })
 
 export type BetaLocalShellToolCallOutputSchema = z.infer<typeof BetaLocalShellToolCallOutputSchema>
@@ -50935,7 +52936,7 @@ export const BetaFunctionShellActionParamSchema = z
             description:
               'Maximum wall-clock time in milliseconds to allow the shell commands to run.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_length: z
@@ -50946,7 +52947,7 @@ export const BetaFunctionShellActionParamSchema = z
             description:
               'Maximum number of UTF-8 characters to capture from combined stdout and stderr output.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -50967,7 +52968,7 @@ export const BetaFunctionShellCallItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
@@ -50979,7 +52980,7 @@ export const BetaFunctionShellCallItemParamSchema = z
               'The unique ID of the shell tool call. Populated when this item is returned via API.',
             examples: ['sh_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -50992,7 +52993,7 @@ export const BetaFunctionShellCallItemParamSchema = z
         BetaToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -51008,15 +53009,24 @@ export const BetaFunctionShellCallItemParamSchema = z
           description:
             'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     environment: z
       .union([
         z
-          .xor([BetaLocalEnvironmentParamSchema, BetaContainerReferenceParamSchema])
+          .xor([
+            z.intersection(
+              BetaLocalEnvironmentParamSchema,
+              z.object({ type: z.literal('BetaLocalEnvironmentParam') }),
+            ),
+            z.intersection(
+              BetaContainerReferenceParamSchema,
+              z.object({ type: z.literal('BetaContainerReferenceParam') }),
+            ),
+          ])
           .meta({ description: 'The environment to execute the shell commands in.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -51055,8 +53065,14 @@ export type BetaFunctionShellCallOutputExitOutcomeParamSchema = z.infer<
 
 export const BetaFunctionShellCallOutputOutcomeParamSchema = z
   .xor([
-    BetaFunctionShellCallOutputTimeoutOutcomeParamSchema,
-    BetaFunctionShellCallOutputExitOutcomeParamSchema,
+    z.intersection(
+      BetaFunctionShellCallOutputTimeoutOutcomeParamSchema,
+      z.object({ type: z.literal('BetaFunctionShellCallOutputTimeoutOutcomeParam') }),
+    ),
+    z.intersection(
+      BetaFunctionShellCallOutputExitOutcomeParamSchema,
+      z.object({ type: z.literal('BetaFunctionShellCallOutputExitOutcomeParam') }),
+    ),
   ])
   .meta({ description: 'The exit or timeout outcome associated with this shell call.' })
 
@@ -51089,7 +53105,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
@@ -51101,7 +53117,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = z
               'The unique ID of the shell tool call output. Populated when this item is returned via API.',
             examples: ['sho_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -51114,7 +53130,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = z
         BetaToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -51132,7 +53148,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = z
         BetaFunctionShellCallItemStatusSchema.meta({
           description: 'The status of the shell call output.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_length: z
@@ -51143,7 +53159,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = z
             description:
               "The maximum number of UTF-8 characters captured for this shell call's combined output.",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -51222,9 +53238,18 @@ export type BetaApplyPatchUpdateFileOperationParamSchema = z.infer<
 
 export const BetaApplyPatchOperationParamSchema = z
   .xor([
-    BetaApplyPatchCreateFileOperationParamSchema,
-    BetaApplyPatchDeleteFileOperationParamSchema,
-    BetaApplyPatchUpdateFileOperationParamSchema,
+    z.intersection(
+      BetaApplyPatchCreateFileOperationParamSchema,
+      z.object({ type: z.literal('BetaApplyPatchCreateFileOperationParam') }),
+    ),
+    z.intersection(
+      BetaApplyPatchDeleteFileOperationParamSchema,
+      z.object({ type: z.literal('BetaApplyPatchDeleteFileOperationParam') }),
+    ),
+    z.intersection(
+      BetaApplyPatchUpdateFileOperationParamSchema,
+      z.object({ type: z.literal('BetaApplyPatchUpdateFileOperationParam') }),
+    ),
   ])
   .meta({
     description:
@@ -51238,7 +53263,7 @@ export const BetaApplyPatchToolCallItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -51254,7 +53279,7 @@ export const BetaApplyPatchToolCallItemParamSchema = z
               'The unique ID of the apply patch tool call. Populated when this item is returned via API.',
             examples: ['apc_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -51267,7 +53292,7 @@ export const BetaApplyPatchToolCallItemParamSchema = z
         BetaToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: BetaApplyPatchCallStatusParamSchema.meta({
@@ -51300,7 +53325,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -51316,7 +53341,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = z
               'The unique ID of the apply patch tool call output. Populated when this item is returned via API.',
             examples: ['apco_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     call_id: z
@@ -51329,7 +53354,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = z
         BetaToolCallCallerParamSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: BetaApplyPatchCallOutputStatusParamSchema.meta({
@@ -51345,7 +53370,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = z
             description:
               'Optional human-readable log text from the apply patch tool (e.g., patch results or errors).',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -51359,10 +53384,7 @@ export const BetaMCPListToolsToolSchema = z
   .object({
     name: z.string().meta({ description: 'The name of the tool.\n' }),
     description: z
-      .union([
-        z.string().meta({ description: 'The description of the tool.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The description of the tool.\n' }), z.null()])
       .exactOptional(),
     input_schema: z
       .object({})
@@ -51370,7 +53392,7 @@ export const BetaMCPListToolsToolSchema = z
     annotations: z
       .union([
         z.object({}).meta({ description: 'Additional annotations about the tool.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -51381,7 +53403,7 @@ export type BetaMCPListToolsToolSchema = z.infer<typeof BetaMCPListToolsToolSche
 export const BetaMCPListToolsSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -51395,7 +53417,7 @@ export const BetaMCPListToolsSchema = z
     error: z
       .union([
         z.string().meta({ description: 'Error message if the server could not list tools.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -51406,7 +53428,7 @@ export type BetaMCPListToolsSchema = z.infer<typeof BetaMCPListToolsSchema>
 export const BetaMCPApprovalRequestSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -51424,9 +53446,9 @@ export const BetaMCPApprovalRequestSchema = z
 export type BetaMCPApprovalRequestSchema = z.infer<typeof BetaMCPApprovalRequestSchema>
 
 export const BetaMCPApprovalResponseSchema = z
-  .object({
+  .looseObject({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -51435,7 +53457,7 @@ export const BetaMCPApprovalResponseSchema = z
     id: z
       .union([
         z.string().meta({ description: 'The unique ID of the approval response\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     approval_request_id: z
@@ -51443,12 +53465,10 @@ export const BetaMCPApprovalResponseSchema = z
       .meta({ description: 'The ID of the approval request being answered.\n' }),
     approve: z.boolean().meta({ description: 'Whether the request was approved.\n' }),
     reason: z
-      .union([
-        z.string().meta({ description: 'Optional reason for the decision.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'Optional reason for the decision.\n' }), z.null()])
       .exactOptional(),
   })
+  .refine((val) => ['request_id'].every((key) => key in val))
   .meta({ description: 'A response to an MCP approval request.\n' })
 
 export type BetaMCPApprovalResponseSchema = z.infer<typeof BetaMCPApprovalResponseSchema>
@@ -51477,9 +53497,12 @@ export const BetaHTTPErrorSchema = z.object({
 export type BetaHTTPErrorSchema = z.infer<typeof BetaHTTPErrorSchema>
 
 export const BetaMCPToolCallErrorSchema = z.xor([
-  BetaMCPProtocolErrorSchema,
-  BetaMCPToolExecutionErrorSchema,
-  BetaHTTPErrorSchema,
+  z.intersection(BetaMCPProtocolErrorSchema, z.object({ type: z.literal('BetaMCPProtocolError') })),
+  z.intersection(
+    BetaMCPToolExecutionErrorSchema,
+    z.object({ type: z.literal('BetaMCPToolExecutionError') }),
+  ),
+  z.intersection(BetaHTTPErrorSchema, z.object({ type: z.literal('BetaHTTPError') })),
 ])
 
 export type BetaMCPToolCallErrorSchema = z.infer<typeof BetaMCPToolCallErrorSchema>
@@ -51497,7 +53520,7 @@ export type BetaMCPToolCallStatusSchema = z.infer<typeof BetaMCPToolCallStatusSc
 export const BetaMCPToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z.literal('mcp_call').meta({ description: 'The type of the item. Always `mcp_call`.\n' }),
@@ -51510,13 +53533,10 @@ export const BetaMCPToolCallSchema = z
       .string()
       .meta({ description: 'A JSON string of the arguments passed to the tool.\n' }),
     output: z
-      .union([
-        z.string().meta({ description: 'The output from the tool call.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'The output from the tool call.\n' }), z.null()])
       .exactOptional(),
     error: z
-      .union([BetaMCPToolCallErrorSchema, z.null().nullable()])
+      .union([BetaMCPToolCallErrorSchema, z.null()])
       .meta({ description: 'The error from the tool call, if any.' })
       .exactOptional(),
     status: BetaMCPToolCallStatusSchema.meta({
@@ -51531,7 +53551,7 @@ export const BetaMCPToolCallSchema = z
             description:
               'Unique identifier for the MCP tool call approval request.\nInclude this value in a subsequent `mcp_approval_response` input to approve or reject the corresponding tool call.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -51540,9 +53560,12 @@ export const BetaMCPToolCallSchema = z
 export type BetaMCPToolCallSchema = z.infer<typeof BetaMCPToolCallSchema>
 
 export const BetaFunctionAndCustomToolCallOutputSchema = z.xor([
-  BetaInputTextContentSchema,
-  BetaInputImageContentSchema,
-  BetaInputFileContentSchema,
+  z.intersection(BetaInputTextContentSchema, z.object({ type: z.literal('BetaInputTextContent') })),
+  z.intersection(
+    BetaInputImageContentSchema,
+    z.object({ type: z.literal('BetaInputImageContent') }),
+  ),
+  z.intersection(BetaInputFileContentSchema, z.object({ type: z.literal('BetaInputFileContent') })),
 ])
 
 export type BetaFunctionAndCustomToolCallOutputSchema = z.infer<
@@ -51552,7 +53575,7 @@ export type BetaFunctionAndCustomToolCallOutputSchema = z.infer<
 export const BetaCustomToolCallOutputSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -51572,7 +53595,7 @@ export const BetaCustomToolCallOutputSchema = z
         description:
           'The call ID, used to map this custom tool call output to a custom tool call.\n',
       }),
-    caller: z.union([BetaToolCallCallerParamSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([BetaToolCallCallerParamSchema, z.null()]).exactOptional(),
     output: z
       .xor([
         z.string().meta({ description: 'A string of the output of the custom tool call.\n' }),
@@ -51594,7 +53617,7 @@ export type BetaCustomToolCallOutputSchema = z.infer<typeof BetaCustomToolCallOu
 export const BetaCustomToolCallSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -51609,7 +53632,7 @@ export const BetaCustomToolCallSchema = z
       .meta({
         description: 'An identifier used to map this custom tool call to a tool call output.\n',
       }),
-    caller: z.union([BetaToolCallCallerSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([BetaToolCallCallerSchema, z.null()]).exactOptional(),
     namespace: z
       .string()
       .meta({ description: 'The namespace of the custom tool being called.\n' })
@@ -51629,37 +53652,112 @@ export type BetaCustomToolCallSchema = z.infer<typeof BetaCustomToolCallSchema>
 
 export const BetaItemSchema = z
   .xor([
-    BetaInputMessageSchema,
-    BetaOutputMessageSchema,
-    BetaFileSearchToolCallSchema,
-    BetaComputerToolCallSchema,
-    BetaComputerCallOutputItemParamSchema,
-    BetaWebSearchToolCallSchema,
-    BetaFunctionToolCallSchema,
-    BetaFunctionCallOutputItemParamSchema,
-    BetaAgentMessageItemParamSchema,
-    BetaMultiAgentCallItemParamSchema,
-    BetaMultiAgentCallOutputItemParamSchema,
-    BetaToolSearchCallItemParamSchema,
-    BetaToolSearchOutputItemParamSchema,
-    BetaAdditionalToolsItemParamSchema,
-    BetaResponseConfigurationUpdateItemParamSchema,
-    BetaReasoningItemSchema,
-    BetaCompactionSummaryItemParamSchema,
-    BetaImageGenToolCallSchema,
-    BetaCodeInterpreterToolCallSchema,
-    BetaLocalShellToolCallSchema,
-    BetaLocalShellToolCallOutputSchema,
-    BetaFunctionShellCallItemParamSchema,
-    BetaFunctionShellCallOutputItemParamSchema,
-    BetaApplyPatchToolCallItemParamSchema,
-    BetaApplyPatchToolCallOutputItemParamSchema,
-    BetaMCPListToolsSchema,
-    BetaMCPApprovalRequestSchema,
-    BetaMCPApprovalResponseSchema,
-    BetaMCPToolCallSchema,
-    BetaCustomToolCallOutputSchema,
-    BetaCustomToolCallSchema,
+    z.intersection(BetaInputMessageSchema, z.object({ type: z.literal('BetaInputMessage') })),
+    z.intersection(BetaOutputMessageSchema, z.object({ type: z.literal('BetaOutputMessage') })),
+    z.intersection(
+      BetaFileSearchToolCallSchema,
+      z.object({ type: z.literal('BetaFileSearchToolCall') }),
+    ),
+    z.intersection(
+      BetaComputerToolCallSchema,
+      z.object({ type: z.literal('BetaComputerToolCall') }),
+    ),
+    z.intersection(
+      BetaComputerCallOutputItemParamSchema,
+      z.object({ type: z.literal('BetaComputerCallOutputItemParam') }),
+    ),
+    z.intersection(
+      BetaWebSearchToolCallSchema,
+      z.object({ type: z.literal('BetaWebSearchToolCall') }),
+    ),
+    z.intersection(
+      BetaFunctionToolCallSchema,
+      z.object({ type: z.literal('BetaFunctionToolCall') }),
+    ),
+    z.intersection(
+      BetaFunctionCallOutputItemParamSchema,
+      z.object({ type: z.literal('BetaFunctionCallOutputItemParam') }),
+    ),
+    z.intersection(
+      BetaAgentMessageItemParamSchema,
+      z.object({ type: z.literal('BetaAgentMessageItemParam') }),
+    ),
+    z.intersection(
+      BetaMultiAgentCallItemParamSchema,
+      z.object({ type: z.literal('BetaMultiAgentCallItemParam') }),
+    ),
+    z.intersection(
+      BetaMultiAgentCallOutputItemParamSchema,
+      z.object({ type: z.literal('BetaMultiAgentCallOutputItemParam') }),
+    ),
+    z.intersection(
+      BetaToolSearchCallItemParamSchema,
+      z.object({ type: z.literal('BetaToolSearchCallItemParam') }),
+    ),
+    z.intersection(
+      BetaToolSearchOutputItemParamSchema,
+      z.object({ type: z.literal('BetaToolSearchOutputItemParam') }),
+    ),
+    z.intersection(
+      BetaAdditionalToolsItemParamSchema,
+      z.object({ type: z.literal('BetaAdditionalToolsItemParam') }),
+    ),
+    z.intersection(
+      BetaResponseConfigurationUpdateItemParamSchema,
+      z.object({ type: z.literal('BetaResponseConfigurationUpdateItemParam') }),
+    ),
+    z.intersection(BetaReasoningItemSchema, z.object({ type: z.literal('BetaReasoningItem') })),
+    z.intersection(
+      BetaCompactionSummaryItemParamSchema,
+      z.object({ type: z.literal('BetaCompactionSummaryItemParam') }),
+    ),
+    z.intersection(
+      BetaImageGenToolCallSchema,
+      z.object({ type: z.literal('BetaImageGenToolCall') }),
+    ),
+    z.intersection(
+      BetaCodeInterpreterToolCallSchema,
+      z.object({ type: z.literal('BetaCodeInterpreterToolCall') }),
+    ),
+    z.intersection(
+      BetaLocalShellToolCallSchema,
+      z.object({ type: z.literal('BetaLocalShellToolCall') }),
+    ),
+    z.intersection(
+      BetaLocalShellToolCallOutputSchema,
+      z.object({ type: z.literal('BetaLocalShellToolCallOutput') }),
+    ),
+    z.intersection(
+      BetaFunctionShellCallItemParamSchema,
+      z.object({ type: z.literal('BetaFunctionShellCallItemParam') }),
+    ),
+    z.intersection(
+      BetaFunctionShellCallOutputItemParamSchema,
+      z.object({ type: z.literal('BetaFunctionShellCallOutputItemParam') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolCallItemParamSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolCallItemParam') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolCallOutputItemParamSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolCallOutputItemParam') }),
+    ),
+    z.intersection(BetaMCPListToolsSchema, z.object({ type: z.literal('BetaMCPListTools') })),
+    z.intersection(
+      BetaMCPApprovalRequestSchema,
+      z.object({ type: z.literal('BetaMCPApprovalRequest') }),
+    ),
+    z.intersection(
+      BetaMCPApprovalResponseSchema,
+      z.object({ type: z.literal('BetaMCPApprovalResponse') }),
+    ),
+    z.intersection(BetaMCPToolCallSchema, z.object({ type: z.literal('BetaMCPToolCall') })),
+    z.intersection(
+      BetaCustomToolCallOutputSchema,
+      z.object({ type: z.literal('BetaCustomToolCallOutput') }),
+    ),
+    z.intersection(BetaCustomToolCallSchema, z.object({ type: z.literal('BetaCustomToolCall') })),
   ])
   .meta({ description: 'Content item used to generate a response.\n' })
 
@@ -51670,7 +53768,7 @@ export const BetaCompactionTriggerItemParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z
@@ -51681,7 +53779,7 @@ export const BetaCompactionTriggerItemParamSchema = z
             description: 'The unique ID of this compaction trigger.',
             examples: ['msg_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -51700,7 +53798,7 @@ export const BetaItemReferenceParamSchema = z
     agent: z
       .union([
         BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     type: z
@@ -51709,7 +53807,7 @@ export const BetaItemReferenceParamSchema = z
           .literal('item_reference')
           .default('item_reference')
           .meta({ description: 'The type of item to reference. Always `item_reference`.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     id: z.string().meta({ description: 'The ID of the item to reference.' }),
@@ -51722,7 +53820,7 @@ export const BetaProgramItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z.string().meta({ description: 'The unique ID of this program item.', examples: ['cm_123'] }),
@@ -51755,7 +53853,7 @@ export const BetaProgramOutputItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z
@@ -51778,15 +53876,27 @@ export const BetaProgramOutputItemParamSchema = z.object({
 export type BetaProgramOutputItemParamSchema = z.infer<typeof BetaProgramOutputItemParamSchema>
 
 export const BetaInputItemSchema = z.xor([
-  BetaEasyInputMessageSchema,
-  BetaItemSchema.meta({
-    description:
-      'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
-  }),
-  BetaCompactionTriggerItemParamSchema,
-  BetaItemReferenceParamSchema,
-  BetaProgramItemParamSchema,
-  BetaProgramOutputItemParamSchema,
+  z.intersection(BetaEasyInputMessageSchema, z.object({ type: z.literal('BetaEasyInputMessage') })),
+  z.intersection(
+    BetaItemSchema.meta({
+      description:
+        'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+    }),
+    z.object({ type: z.literal('BetaItem') }),
+  ),
+  z.intersection(
+    BetaCompactionTriggerItemParamSchema,
+    z.object({ type: z.literal('BetaCompactionTriggerItemParam') }),
+  ),
+  z.intersection(
+    BetaItemReferenceParamSchema,
+    z.object({ type: z.literal('BetaItemReferenceParam') }),
+  ),
+  z.intersection(BetaProgramItemParamSchema, z.object({ type: z.literal('BetaProgramItemParam') })),
+  z.intersection(
+    BetaProgramOutputItemParamSchema,
+    z.object({ type: z.literal('BetaProgramOutputItemParam') }),
+  ),
 ])
 
 export type BetaInputItemSchema = z.infer<typeof BetaInputItemSchema>
@@ -51806,9 +53916,18 @@ export type BetaResponseFormatJsonObjectSchema = z.infer<typeof BetaResponseForm
 
 export const BetaTextResponseFormatConfigurationSchema = z
   .xor([
-    BetaResponseFormatTextSchema,
-    BetaTextResponseFormatJsonSchemaSchema,
-    BetaResponseFormatJsonObjectSchema,
+    z.intersection(
+      BetaResponseFormatTextSchema,
+      z.object({ type: z.literal('BetaResponseFormatText') }),
+    ),
+    z.intersection(
+      BetaTextResponseFormatJsonSchemaSchema,
+      z.object({ type: z.literal('BetaTextResponseFormatJsonSchema') }),
+    ),
+    z.intersection(
+      BetaResponseFormatJsonObjectSchema,
+      z.object({ type: z.literal('BetaResponseFormatJsonObject') }),
+    ),
   ])
   .meta({
     description:
@@ -51827,7 +53946,7 @@ export const BetaVerbositySchema = z.union([
       description:
         "Constrains the verbosity of the model's response. Lower values will result in\nmore concise responses, while higher values will result in more verbose responses.\nCurrently supported values are `low`, `medium`, and `high`. The default is\n`medium`.\n",
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaVerbositySchema = z.infer<typeof BetaVerbositySchema>
@@ -51863,7 +53982,7 @@ export const BetaReasoningSchema = z
             description:
               "A summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n\n`concise` is supported for `computer-use-preview` models and all reasoning models after `gpt-5`.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     context: z
@@ -51874,7 +53993,7 @@ export const BetaReasoningSchema = z
             description:
               'Controls which reasoning items are rendered back to the model on later turns.\nIf omitted or set to `auto`, the model determines the context mode. The\n`gpt-5.6` model family defaults to `all_turns`; earlier models default to\n`current_turn`.\n\nWhen returned on a response, this is the effective reasoning context mode\nused for the response.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     generate_summary: z
@@ -51886,7 +54005,7 @@ export const BetaReasoningSchema = z
               "**Deprecated:** use `summary` instead.\n\nA summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n",
             deprecated: true,
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -52005,7 +54124,7 @@ export const BetaToolChoiceMCPSchema = z
     name: z
       .union([
         z.string().meta({ description: 'The name of the tool to call on the server.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -52092,7 +54211,7 @@ export const BetaTokenCountsBodySchema = z.object({
           description:
             'Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   input: z
@@ -52117,7 +54236,7 @@ export const BetaTokenCountsBodySchema = z.object({
         .meta({
           description: 'Text, image, or file inputs to the model, used to generate a response',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   previous_response_id: z
@@ -52129,7 +54248,7 @@ export const BetaTokenCountsBodySchema = z.object({
             'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
           examples: ['resp_123'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   tools: z
@@ -52140,17 +54259,17 @@ export const BetaTokenCountsBodySchema = z.object({
           description:
             'An array of tools the model may call while generating a response. You can specify which tool to use by setting the `tool_choice` parameter.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
-  text: z.union([BetaResponseTextParamSchema, z.null().nullable()]).exactOptional(),
+  text: z.union([BetaResponseTextParamSchema, z.null()]).exactOptional(),
   reasoning: z
     .union([
       BetaReasoningSchema.meta({
         description:
           '**gpt-5 and o-series models only** Configuration options for [reasoning models](https://developers.openai.com/api/docs/guides/reasoning).',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   truncation: BetaTruncationEnumSchema.meta({
@@ -52166,20 +54285,20 @@ export const BetaTokenCountsBodySchema = z.object({
           description:
             "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   personality: BetaPersonalityEnumSchema.meta({
     description:
       "A model-owned style preset to apply to this request. Omit this parameter to use the model's default style. Supported values may expand over time. Values must be at most 64 characters.",
   }).exactOptional(),
-  conversation: z.union([BetaConversationParamSchema, z.null().nullable()]).exactOptional(),
+  conversation: z.union([BetaConversationParamSchema, z.null()]).exactOptional(),
   tool_choice: z
     .union([
       BetaToolChoiceParamSchema.meta({
         description: 'Controls which tool the model should use, if any.',
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   parallel_tool_calls: z
@@ -52187,7 +54306,7 @@ export const BetaTokenCountsBodySchema = z.object({
       z
         .boolean()
         .meta({ description: 'Whether to allow the model to run tool calls in parallel.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -52330,7 +54449,7 @@ export const BetaModelIdsResponsesSchema = z
 export type BetaModelIdsResponsesSchema = z.infer<typeof BetaModelIdsResponsesSchema>
 
 export const BetaModelIdsCompactionSchema = z
-  .union([BetaModelIdsResponsesSchema, z.string(), z.null().nullable()])
+  .union([BetaModelIdsResponsesSchema, z.string(), z.null()])
   .meta({
     description:
       'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
@@ -52411,7 +54530,7 @@ export const BetaCompactResponseMethodPublicBodySchema = z.object({
         .meta({
           description: 'Text, image, or file inputs to the model, used to generate a response',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   previous_response_id: z
@@ -52423,7 +54542,7 @@ export const BetaCompactResponseMethodPublicBodySchema = z.object({
             'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
           examples: ['resp_123'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   instructions: z
@@ -52435,7 +54554,7 @@ export const BetaCompactResponseMethodPublicBodySchema = z.object({
             "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
           deprecated: true,
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   image: BetaImageOptionsParamSchema.meta({
@@ -52447,7 +54566,7 @@ export const BetaCompactResponseMethodPublicBodySchema = z.object({
         .string()
         .max(64)
         .meta({ description: 'A key to use when reading from or writing to the prompt cache.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   prompt_cache_retention: z
@@ -52456,19 +54575,17 @@ export const BetaCompactResponseMethodPublicBodySchema = z.object({
         description: 'How long to retain a prompt cache entry created by this request.',
         deprecated: true,
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
-  prompt_cache_options: z
-    .union([BetaPromptCacheOptionsParamSchema, z.null().nullable()])
-    .exactOptional(),
+  prompt_cache_options: z.union([BetaPromptCacheOptionsParamSchema, z.null()]).exactOptional(),
   service_tier: z
     .union([
       BetaServiceTierEnumSchema.meta({
         description:
           "Specifies the processing type used for serving the request.   - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.   - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.   - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.   - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. For models with a dedicated Fast tier, either value resolves to `service_tier=fast`; for other models, either value resolves to `service_tier=priority`.   - When not set, the default behavior is 'auto'.\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.",
       }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -52507,7 +54624,7 @@ export const BetaMisalignmentErrorDetailsResourceSchema = z.object({
           description:
             'An opaque target for explicitly continuing this review, or null when unavailable.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   error_type: BetaMisalignmentErrorTypeSchema.meta({
@@ -52527,9 +54644,9 @@ export type BetaMisalignmentErrorDetailsResourceSchema = z.infer<
 >
 
 export const BetaErrorSchema = z.object({
-  code: z.union([z.string(), z.null().nullable()]),
+  code: z.union([z.string(), z.null()]),
   message: z.string(),
-  param: z.union([z.string(), z.null().nullable()]),
+  param: z.union([z.string(), z.null()]),
   type: z.string(),
   misalignment: BetaMisalignmentErrorDetailsResourceSchema.exactOptional(),
 })
@@ -52542,7 +54659,9 @@ export type BetaErrorResponseSchema = z.infer<typeof BetaErrorResponseSchema>
 
 export const BetaInputMessageResourceSchema = z.intersection(
   BetaInputMessageSchema,
-  z.object({ id: z.string().meta({ description: 'The unique ID of the message input.\n' }) }),
+  z
+    .looseObject({ id: z.string().meta({ description: 'The unique ID of the message input.\n' }) })
+    .refine((val) => ['type'].every((key) => key in val)),
 )
 
 export type BetaInputMessageResourceSchema = z.infer<typeof BetaInputMessageResourceSchema>
@@ -52550,7 +54669,7 @@ export type BetaInputMessageResourceSchema = z.infer<typeof BetaInputMessageReso
 export const BetaComputerToolCallOutputSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -52592,16 +54711,18 @@ export type BetaComputerCallOutputStatusSchema = z.infer<typeof BetaComputerCall
 
 export const BetaComputerToolCallOutputResourceSchema = z.intersection(
   BetaComputerToolCallOutputSchema,
-  z.object({
-    status: BetaComputerCallOutputStatusSchema.meta({
-      description:
-        'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
-    }),
-    created_by: z
-      .string()
-      .meta({ description: 'The identifier of the actor that created the item.\n' })
-      .exactOptional(),
-  }),
+  z
+    .looseObject({
+      status: BetaComputerCallOutputStatusSchema.meta({
+        description:
+          'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
+      }),
+      created_by: z
+        .string()
+        .meta({ description: 'The identifier of the actor that created the item.\n' })
+        .exactOptional(),
+    })
+    .refine((val) => ['id'].every((key) => key in val)),
 )
 
 export type BetaComputerToolCallOutputResourceSchema = z.infer<
@@ -52632,7 +54753,7 @@ export type BetaFunctionToolCallResourceSchema = z.infer<typeof BetaFunctionTool
 export const BetaFunctionToolCallOutputSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     id: z
@@ -52659,7 +54780,7 @@ export const BetaFunctionToolCallOutputSchema = z
       .string()
       .meta({ description: 'The namespace of the tool that produced the output.\n' })
       .exactOptional(),
-    caller: z.union([BetaToolCallCallerParamSchema, z.null().nullable()]).exactOptional(),
+    caller: z.union([BetaToolCallCallerParamSchema, z.null()]).exactOptional(),
     output: z
       .xor([
         z.string().meta({ description: 'A string of the output of the function call.\n' }),
@@ -52729,13 +54850,13 @@ export const BetaComputerScreenshotContentSchema = z
       }),
     image_url: z.union([
       z.url().meta({ description: 'The URL of the screenshot image.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     file_id: z.union([
       z
         .string()
         .meta({ description: 'The identifier of an uploaded file that contains the screenshot.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     detail: BetaImageDetailSchema.meta({
       description:
@@ -52779,16 +54900,43 @@ export const BetaAgentMessageSchema = z.object({
     .array(
       z
         .xor([
-          BetaInputTextContentSchema,
-          BetaOutputTextContentSchema,
-          BetaTextContentSchema,
-          BetaSummaryTextContentSchema,
-          BetaReasoningTextContentSchema,
-          BetaRefusalContentSchema,
-          BetaInputImageContentSchema,
-          BetaComputerScreenshotContentSchema,
-          BetaInputFileContentSchema,
-          BetaEncryptedContentSchema,
+          z.intersection(
+            BetaInputTextContentSchema,
+            z.object({ type: z.literal('BetaInputTextContent') }),
+          ),
+          z.intersection(
+            BetaOutputTextContentSchema,
+            z.object({ type: z.literal('BetaOutputTextContent') }),
+          ),
+          z.intersection(BetaTextContentSchema, z.object({ type: z.literal('BetaTextContent') })),
+          z.intersection(
+            BetaSummaryTextContentSchema,
+            z.object({ type: z.literal('BetaSummaryTextContent') }),
+          ),
+          z.intersection(
+            BetaReasoningTextContentSchema,
+            z.object({ type: z.literal('BetaReasoningTextContent') }),
+          ),
+          z.intersection(
+            BetaRefusalContentSchema,
+            z.object({ type: z.literal('BetaRefusalContent') }),
+          ),
+          z.intersection(
+            BetaInputImageContentSchema,
+            z.object({ type: z.literal('BetaInputImageContent') }),
+          ),
+          z.intersection(
+            BetaComputerScreenshotContentSchema,
+            z.object({ type: z.literal('BetaComputerScreenshotContent') }),
+          ),
+          z.intersection(
+            BetaInputFileContentSchema,
+            z.object({ type: z.literal('BetaInputFileContent') }),
+          ),
+          z.intersection(
+            BetaEncryptedContentSchema,
+            z.object({ type: z.literal('BetaEncryptedContent') }),
+          ),
         ])
         .meta({ description: 'A content part that makes up an input or output item.' }),
     )
@@ -52859,7 +55007,7 @@ export const BetaToolSearchCallSchema = z.object({
     z
       .string()
       .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   execution: BetaToolSearchExecutionTypeSchema.meta({
     description: 'Whether tool search was executed by the server or by the client.',
@@ -52889,7 +55037,7 @@ export const BetaToolSearchOutputSchema = z.object({
     z
       .string()
       .meta({ description: 'The unique ID of the tool search call generated by the model.' }),
-    z.null().nullable(),
+    z.null(),
   ]),
   execution: BetaToolSearchExecutionTypeSchema.meta({
     description: 'Whether tool search was executed by the server or by the client.',
@@ -52965,7 +55113,16 @@ export const BetaResponseConfigurationUpdateSchema = z
     text: z
       .object({
         format: z
-          .xor([BetaResponseFormatTextSchema, BetaTextResponseFormatJsonSchemaSchema])
+          .xor([
+            z.intersection(
+              BetaResponseFormatTextSchema,
+              z.object({ type: z.literal('BetaResponseFormatText') }),
+            ),
+            z.intersection(
+              BetaTextResponseFormatJsonSchemaSchema,
+              z.object({ type: z.literal('BetaTextResponseFormatJsonSchema') }),
+            ),
+          ])
           .meta({
             description: 'Use a JSON schema for structured output or text to return to plain text.',
           }),
@@ -53054,7 +55211,7 @@ export const BetaFunctionShellActionSchema = z
     commands: z.array(z.string().meta({ description: 'A list of commands to run.' })),
     timeout_ms: z.union([
       z.int().meta({ description: 'Optional timeout in milliseconds for the commands.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     max_output_length: z.union([
       z
@@ -53062,7 +55219,7 @@ export const BetaFunctionShellActionSchema = z
         .meta({
           description: 'Optional maximum number of characters to return from each command.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
   })
   .meta({ description: 'Execute a shell command.' })
@@ -53121,7 +55278,7 @@ export const BetaFunctionShellCallSchema = z
         BetaToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     action: BetaFunctionShellActionSchema.meta({
@@ -53132,8 +55289,17 @@ export const BetaFunctionShellCallSchema = z
         'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
     }),
     environment: z.union([
-      z.xor([BetaLocalEnvironmentResourceSchema, BetaContainerReferenceResourceSchema]),
-      z.null().nullable(),
+      z.xor([
+        z.intersection(
+          BetaLocalEnvironmentResourceSchema,
+          z.object({ type: z.literal('BetaLocalEnvironmentResource') }),
+        ),
+        z.intersection(
+          BetaContainerReferenceResourceSchema,
+          z.object({ type: z.literal('BetaContainerReferenceResource') }),
+        ),
+      ]),
+      z.null(),
     ]),
     created_by: z
       .string()
@@ -53189,8 +55355,14 @@ export const BetaFunctionShellCallOutputContentSchema = z
     stderr: z.string().meta({ description: 'The standard error output that was captured.' }),
     outcome: z
       .xor([
-        BetaFunctionShellCallOutputTimeoutOutcomeSchema,
-        BetaFunctionShellCallOutputExitOutcomeSchema,
+        z.intersection(
+          BetaFunctionShellCallOutputTimeoutOutcomeSchema,
+          z.object({ type: z.literal('BetaFunctionShellCallOutputTimeoutOutcome') }),
+        ),
+        z.intersection(
+          BetaFunctionShellCallOutputExitOutcomeSchema,
+          z.object({ type: z.literal('BetaFunctionShellCallOutputExitOutcome') }),
+        ),
       ])
       .meta({
         description:
@@ -53230,7 +55402,7 @@ export const BetaFunctionShellCallOutputSchema = z
         BetaToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: BetaFunctionShellCallOutputStatusEnumSchema.meta({
@@ -53247,7 +55419,7 @@ export const BetaFunctionShellCallOutputSchema = z
           description:
             'The maximum length of the shell command output. This is generated by the model and should be passed back with the raw output.',
         }),
-      z.null().nullable(),
+      z.null(),
     ]),
     created_by: z
       .string()
@@ -53329,7 +55501,7 @@ export const BetaApplyPatchToolCallSchema = z
         BetaToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: BetaApplyPatchCallStatusSchema.meta({
@@ -53337,9 +55509,18 @@ export const BetaApplyPatchToolCallSchema = z
     }),
     operation: z
       .xor([
-        BetaApplyPatchCreateFileOperationSchema,
-        BetaApplyPatchDeleteFileOperationSchema,
-        BetaApplyPatchUpdateFileOperationSchema,
+        z.intersection(
+          BetaApplyPatchCreateFileOperationSchema,
+          z.object({ type: z.literal('BetaApplyPatchCreateFileOperation') }),
+        ),
+        z.intersection(
+          BetaApplyPatchDeleteFileOperationSchema,
+          z.object({ type: z.literal('BetaApplyPatchDeleteFileOperation') }),
+        ),
+        z.intersection(
+          BetaApplyPatchUpdateFileOperationSchema,
+          z.object({ type: z.literal('BetaApplyPatchUpdateFileOperation') }),
+        ),
       ])
       .meta({
         description:
@@ -53385,7 +55566,7 @@ export const BetaApplyPatchToolCallOutputSchema = z
         BetaToolCallCallerSchema.meta({
           description: 'The execution context that produced this tool call.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     status: BetaApplyPatchCallOutputStatusSchema.meta({
@@ -53397,7 +55578,7 @@ export const BetaApplyPatchToolCallOutputSchema = z
         z
           .string()
           .meta({ description: 'Optional textual output returned by the apply patch tool.' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     created_by: z
@@ -53410,9 +55591,9 @@ export const BetaApplyPatchToolCallOutputSchema = z
 export type BetaApplyPatchToolCallOutputSchema = z.infer<typeof BetaApplyPatchToolCallOutputSchema>
 
 export const BetaMCPApprovalResponseResourceSchema = z
-  .object({
+  .looseObject({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that produced this item.' })
       .exactOptional(),
     type: z
@@ -53424,12 +55605,10 @@ export const BetaMCPApprovalResponseResourceSchema = z
       .meta({ description: 'The ID of the approval request being answered.\n' }),
     approve: z.boolean().meta({ description: 'Whether the request was approved.\n' }),
     reason: z
-      .union([
-        z.string().meta({ description: 'Optional reason for the decision.\n' }),
-        z.null().nullable(),
-      ])
+      .union([z.string().meta({ description: 'Optional reason for the decision.\n' }), z.null()])
       .exactOptional(),
   })
+  .refine((val) => ['request_id'].every((key) => key in val))
   .meta({ description: 'A response to an MCP approval request.\n' })
 
 export type BetaMCPApprovalResponseResourceSchema = z.infer<
@@ -53474,39 +55653,105 @@ export type BetaCustomToolCallOutputResourceSchema = z.infer<
 
 export const BetaItemResourceSchema = z
   .xor([
-    BetaInputMessageResourceSchema,
-    BetaOutputMessageSchema,
-    BetaFileSearchToolCallSchema,
-    BetaComputerToolCallSchema,
-    BetaComputerToolCallOutputResourceSchema,
-    BetaWebSearchToolCallSchema,
-    BetaFunctionToolCallResourceSchema,
-    BetaFunctionToolCallOutputResourceSchema,
-    BetaAgentMessageSchema,
-    BetaMultiAgentCallSchema,
-    BetaMultiAgentCallOutputSchema,
-    BetaToolSearchCallSchema,
-    BetaToolSearchOutputSchema,
-    BetaAdditionalToolsSchema,
-    BetaResponseConfigurationUpdateSchema,
-    BetaReasoningItemSchema,
-    BetaProgramSchema,
-    BetaProgramOutputSchema,
-    BetaCompactionBodySchema,
-    BetaImageGenToolCallSchema,
-    BetaCodeInterpreterToolCallSchema,
-    BetaLocalShellToolCallSchema,
-    BetaLocalShellToolCallOutputSchema,
-    BetaFunctionShellCallSchema,
-    BetaFunctionShellCallOutputSchema,
-    BetaApplyPatchToolCallSchema,
-    BetaApplyPatchToolCallOutputSchema,
-    BetaMCPListToolsSchema,
-    BetaMCPApprovalRequestSchema,
-    BetaMCPApprovalResponseResourceSchema,
-    BetaMCPToolCallSchema,
-    BetaCustomToolCallResourceSchema,
-    BetaCustomToolCallOutputResourceSchema,
+    z.intersection(
+      BetaInputMessageResourceSchema,
+      z.object({ type: z.literal('BetaInputMessageResource') }),
+    ),
+    z.intersection(BetaOutputMessageSchema, z.object({ type: z.literal('BetaOutputMessage') })),
+    z.intersection(
+      BetaFileSearchToolCallSchema,
+      z.object({ type: z.literal('BetaFileSearchToolCall') }),
+    ),
+    z.intersection(
+      BetaComputerToolCallSchema,
+      z.object({ type: z.literal('BetaComputerToolCall') }),
+    ),
+    z.intersection(
+      BetaComputerToolCallOutputResourceSchema,
+      z.object({ type: z.literal('BetaComputerToolCallOutputResource') }),
+    ),
+    z.intersection(
+      BetaWebSearchToolCallSchema,
+      z.object({ type: z.literal('BetaWebSearchToolCall') }),
+    ),
+    z.intersection(
+      BetaFunctionToolCallResourceSchema,
+      z.object({ type: z.literal('BetaFunctionToolCallResource') }),
+    ),
+    z.intersection(
+      BetaFunctionToolCallOutputResourceSchema,
+      z.object({ type: z.literal('BetaFunctionToolCallOutputResource') }),
+    ),
+    z.intersection(BetaAgentMessageSchema, z.object({ type: z.literal('BetaAgentMessage') })),
+    z.intersection(BetaMultiAgentCallSchema, z.object({ type: z.literal('BetaMultiAgentCall') })),
+    z.intersection(
+      BetaMultiAgentCallOutputSchema,
+      z.object({ type: z.literal('BetaMultiAgentCallOutput') }),
+    ),
+    z.intersection(BetaToolSearchCallSchema, z.object({ type: z.literal('BetaToolSearchCall') })),
+    z.intersection(
+      BetaToolSearchOutputSchema,
+      z.object({ type: z.literal('BetaToolSearchOutput') }),
+    ),
+    z.intersection(BetaAdditionalToolsSchema, z.object({ type: z.literal('BetaAdditionalTools') })),
+    z.intersection(
+      BetaResponseConfigurationUpdateSchema,
+      z.object({ type: z.literal('BetaResponseConfigurationUpdate') }),
+    ),
+    z.intersection(BetaReasoningItemSchema, z.object({ type: z.literal('BetaReasoningItem') })),
+    z.intersection(BetaProgramSchema, z.object({ type: z.literal('BetaProgram') })),
+    z.intersection(BetaProgramOutputSchema, z.object({ type: z.literal('BetaProgramOutput') })),
+    z.intersection(BetaCompactionBodySchema, z.object({ type: z.literal('BetaCompactionBody') })),
+    z.intersection(
+      BetaImageGenToolCallSchema,
+      z.object({ type: z.literal('BetaImageGenToolCall') }),
+    ),
+    z.intersection(
+      BetaCodeInterpreterToolCallSchema,
+      z.object({ type: z.literal('BetaCodeInterpreterToolCall') }),
+    ),
+    z.intersection(
+      BetaLocalShellToolCallSchema,
+      z.object({ type: z.literal('BetaLocalShellToolCall') }),
+    ),
+    z.intersection(
+      BetaLocalShellToolCallOutputSchema,
+      z.object({ type: z.literal('BetaLocalShellToolCallOutput') }),
+    ),
+    z.intersection(
+      BetaFunctionShellCallSchema,
+      z.object({ type: z.literal('BetaFunctionShellCall') }),
+    ),
+    z.intersection(
+      BetaFunctionShellCallOutputSchema,
+      z.object({ type: z.literal('BetaFunctionShellCallOutput') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolCallSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolCall') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolCallOutputSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolCallOutput') }),
+    ),
+    z.intersection(BetaMCPListToolsSchema, z.object({ type: z.literal('BetaMCPListTools') })),
+    z.intersection(
+      BetaMCPApprovalRequestSchema,
+      z.object({ type: z.literal('BetaMCPApprovalRequest') }),
+    ),
+    z.intersection(
+      BetaMCPApprovalResponseResourceSchema,
+      z.object({ type: z.literal('BetaMCPApprovalResponseResource') }),
+    ),
+    z.intersection(BetaMCPToolCallSchema, z.object({ type: z.literal('BetaMCPToolCall') })),
+    z.intersection(
+      BetaCustomToolCallResourceSchema,
+      z.object({ type: z.literal('BetaCustomToolCallResource') }),
+    ),
+    z.intersection(
+      BetaCustomToolCallOutputResourceSchema,
+      z.object({ type: z.literal('BetaCustomToolCallOutputResource') }),
+    ),
   ])
   .meta({ description: 'Content item used to generate a response.\n' })
 
@@ -53570,16 +55815,43 @@ export const BetaMessageSchema = z
       .array(
         z
           .xor([
-            BetaInputTextContentSchema,
-            BetaOutputTextContentSchema,
-            BetaTextContentSchema,
-            BetaSummaryTextContentSchema,
-            BetaReasoningTextContentSchema,
-            BetaRefusalContentSchema,
-            BetaInputImageContentSchema,
-            BetaComputerScreenshotContentSchema,
-            BetaInputFileContentSchema,
-            BetaEncryptedContentSchema,
+            z.intersection(
+              BetaInputTextContentSchema,
+              z.object({ type: z.literal('BetaInputTextContent') }),
+            ),
+            z.intersection(
+              BetaOutputTextContentSchema,
+              z.object({ type: z.literal('BetaOutputTextContent') }),
+            ),
+            z.intersection(BetaTextContentSchema, z.object({ type: z.literal('BetaTextContent') })),
+            z.intersection(
+              BetaSummaryTextContentSchema,
+              z.object({ type: z.literal('BetaSummaryTextContent') }),
+            ),
+            z.intersection(
+              BetaReasoningTextContentSchema,
+              z.object({ type: z.literal('BetaReasoningTextContent') }),
+            ),
+            z.intersection(
+              BetaRefusalContentSchema,
+              z.object({ type: z.literal('BetaRefusalContent') }),
+            ),
+            z.intersection(
+              BetaInputImageContentSchema,
+              z.object({ type: z.literal('BetaInputImageContent') }),
+            ),
+            z.intersection(
+              BetaComputerScreenshotContentSchema,
+              z.object({ type: z.literal('BetaComputerScreenshotContent') }),
+            ),
+            z.intersection(
+              BetaInputFileContentSchema,
+              z.object({ type: z.literal('BetaInputFileContent') }),
+            ),
+            z.intersection(
+              BetaEncryptedContentSchema,
+              z.object({ type: z.literal('BetaEncryptedContent') }),
+            ),
           ])
           .meta({ description: 'A content part that makes up an input or output item.' }),
       )
@@ -53590,7 +55862,7 @@ export const BetaMessageSchema = z
           description:
             'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -53600,37 +55872,94 @@ export type BetaMessageSchema = z.infer<typeof BetaMessageSchema>
 
 export const BetaItemFieldSchema = z
   .xor([
-    BetaMessageSchema,
-    BetaProgramSchema,
-    BetaProgramOutputSchema,
-    BetaFunctionToolCallSchema,
-    BetaMultiAgentCallSchema,
-    BetaMultiAgentCallOutputSchema,
-    BetaToolSearchCallSchema,
-    BetaToolSearchOutputSchema,
-    BetaAdditionalToolsSchema,
-    BetaAgentMessageSchema,
-    BetaFunctionToolCallOutputSchema,
-    BetaFileSearchToolCallSchema,
-    BetaWebSearchToolCallSchema,
-    BetaImageGenToolCallSchema,
-    BetaComputerToolCallSchema,
-    BetaComputerToolCallOutputResourceSchema,
-    BetaReasoningItemSchema,
-    BetaCompactionBodySchema,
-    BetaCodeInterpreterToolCallSchema,
-    BetaLocalShellToolCallSchema.meta({ deprecated: true }),
-    BetaLocalShellToolCallOutputSchema.meta({ deprecated: true }),
-    BetaFunctionShellCallSchema,
-    BetaFunctionShellCallOutputSchema,
-    BetaApplyPatchToolCallSchema,
-    BetaApplyPatchToolCallOutputSchema,
-    BetaMCPListToolsSchema,
-    BetaMCPApprovalRequestSchema,
-    BetaMCPApprovalResponseResourceSchema,
-    BetaMCPToolCallSchema,
-    BetaCustomToolCallSchema,
-    BetaCustomToolCallOutputSchema,
+    z.intersection(BetaMessageSchema, z.object({ type: z.literal('BetaMessage') })),
+    z.intersection(BetaProgramSchema, z.object({ type: z.literal('BetaProgram') })),
+    z.intersection(BetaProgramOutputSchema, z.object({ type: z.literal('BetaProgramOutput') })),
+    z.intersection(
+      BetaFunctionToolCallSchema,
+      z.object({ type: z.literal('BetaFunctionToolCall') }),
+    ),
+    z.intersection(BetaMultiAgentCallSchema, z.object({ type: z.literal('BetaMultiAgentCall') })),
+    z.intersection(
+      BetaMultiAgentCallOutputSchema,
+      z.object({ type: z.literal('BetaMultiAgentCallOutput') }),
+    ),
+    z.intersection(BetaToolSearchCallSchema, z.object({ type: z.literal('BetaToolSearchCall') })),
+    z.intersection(
+      BetaToolSearchOutputSchema,
+      z.object({ type: z.literal('BetaToolSearchOutput') }),
+    ),
+    z.intersection(BetaAdditionalToolsSchema, z.object({ type: z.literal('BetaAdditionalTools') })),
+    z.intersection(BetaAgentMessageSchema, z.object({ type: z.literal('BetaAgentMessage') })),
+    z.intersection(
+      BetaFunctionToolCallOutputSchema,
+      z.object({ type: z.literal('BetaFunctionToolCallOutput') }),
+    ),
+    z.intersection(
+      BetaFileSearchToolCallSchema,
+      z.object({ type: z.literal('BetaFileSearchToolCall') }),
+    ),
+    z.intersection(
+      BetaWebSearchToolCallSchema,
+      z.object({ type: z.literal('BetaWebSearchToolCall') }),
+    ),
+    z.intersection(
+      BetaImageGenToolCallSchema,
+      z.object({ type: z.literal('BetaImageGenToolCall') }),
+    ),
+    z.intersection(
+      BetaComputerToolCallSchema,
+      z.object({ type: z.literal('BetaComputerToolCall') }),
+    ),
+    z.intersection(
+      BetaComputerToolCallOutputResourceSchema,
+      z.object({ type: z.literal('BetaComputerToolCallOutputResource') }),
+    ),
+    z.intersection(BetaReasoningItemSchema, z.object({ type: z.literal('BetaReasoningItem') })),
+    z.intersection(BetaCompactionBodySchema, z.object({ type: z.literal('BetaCompactionBody') })),
+    z.intersection(
+      BetaCodeInterpreterToolCallSchema,
+      z.object({ type: z.literal('BetaCodeInterpreterToolCall') }),
+    ),
+    z.intersection(
+      BetaLocalShellToolCallSchema.meta({ deprecated: true }),
+      z.object({ type: z.literal('BetaLocalShellToolCall') }),
+    ),
+    z.intersection(
+      BetaLocalShellToolCallOutputSchema.meta({ deprecated: true }),
+      z.object({ type: z.literal('BetaLocalShellToolCallOutput') }),
+    ),
+    z.intersection(
+      BetaFunctionShellCallSchema,
+      z.object({ type: z.literal('BetaFunctionShellCall') }),
+    ),
+    z.intersection(
+      BetaFunctionShellCallOutputSchema,
+      z.object({ type: z.literal('BetaFunctionShellCallOutput') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolCallSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolCall') }),
+    ),
+    z.intersection(
+      BetaApplyPatchToolCallOutputSchema,
+      z.object({ type: z.literal('BetaApplyPatchToolCallOutput') }),
+    ),
+    z.intersection(BetaMCPListToolsSchema, z.object({ type: z.literal('BetaMCPListTools') })),
+    z.intersection(
+      BetaMCPApprovalRequestSchema,
+      z.object({ type: z.literal('BetaMCPApprovalRequest') }),
+    ),
+    z.intersection(
+      BetaMCPApprovalResponseResourceSchema,
+      z.object({ type: z.literal('BetaMCPApprovalResponseResource') }),
+    ),
+    z.intersection(BetaMCPToolCallSchema, z.object({ type: z.literal('BetaMCPToolCall') })),
+    z.intersection(BetaCustomToolCallSchema, z.object({ type: z.literal('BetaCustomToolCall') })),
+    z.intersection(
+      BetaCustomToolCallOutputSchema,
+      z.object({ type: z.literal('BetaCustomToolCallOutput') }),
+    ),
   ])
   .meta({
     description:
@@ -53747,7 +56076,7 @@ export type BetaCompactResourceSchema = z.infer<typeof BetaCompactResourceSchema
 export const BetaResponseCustomToolCallInputDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -53769,7 +56098,7 @@ export type BetaResponseCustomToolCallInputDoneEventSchema = z.infer<
 export const BetaResponseCustomToolCallInputDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -53800,7 +56129,7 @@ export const BetaMetadataSchema = z.union([
       description:
         'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaMetadataSchema = z.infer<typeof BetaMetadataSchema>
@@ -53817,7 +56146,7 @@ export const BetaModelResponsePropertiesSchema = z.object({
           description:
             'An integer between 0 and 20 specifying the maximum number of most likely\ntokens to return at each token position, each with an associated log\nprobability. In some cases, the number of returned tokens may be fewer than\nrequested.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   temperature: z
@@ -53832,7 +56161,7 @@ export const BetaModelResponsePropertiesSchema = z.object({
             'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\nWe generally recommend altering this or `top_p` but not both.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   top_p: z
@@ -53847,7 +56176,7 @@ export const BetaModelResponsePropertiesSchema = z.object({
             'An alternative to sampling with temperature, called nucleus sampling,\nwhere the model considers the results of the tokens with top_p probability\nmass. So 0.1 means only the tokens comprising the top 10% probability mass\nare considered.\n\nWe generally recommend altering this or `temperature` but not both.\n',
           examples: [1],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   user: z
@@ -53870,7 +56199,7 @@ export const BetaModelResponsePropertiesSchema = z.object({
             "A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.\nThe IDs should be a string that uniquely identifies each user, with a maximum length of 128 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).\n",
           examples: ['safety-identifier-1234'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   prompt_cache_key: z
@@ -53882,7 +56211,7 @@ export const BetaModelResponsePropertiesSchema = z.object({
             'Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching).\n',
           examples: ['prompt-cache-key-1234'],
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   prompt_cache_retention: z
@@ -53893,7 +56222,7 @@ export const BetaModelResponsePropertiesSchema = z.object({
           description:
             "Deprecated. Use `prompt_cache_options.ttl` instead.\n\nThe retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching#prompt-cache-retention).\nThis field expresses a maximum retention policy, while\n`prompt_cache_options.ttl` expresses a minimum cache lifetime. The two\nfields are independent and do not interact.\nFor `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.\n\nFor older models that support both `in_memory` and `24h`, the default depends on your organization's data retention policy:\n  - Organizations without ZDR enabled default to `24h`.\n  - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is not specified.\n",
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .meta({ deprecated: true })
     .exactOptional(),
@@ -53925,7 +56254,7 @@ export const BetaResponsePromptVariablesSchema = z.union([
       description:
         'Optional map of values to substitute in for variables in your\nprompt. The substitution values can either be strings, or other\nResponse input types like images or files.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaResponsePromptVariablesSchema = z.infer<typeof BetaResponsePromptVariablesSchema>
@@ -53937,7 +56266,7 @@ export const BetaPromptSchema = z.union([
       version: z
         .union([
           z.string().meta({ description: 'Optional version of the prompt template.' }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       variables: BetaResponsePromptVariablesSchema.exactOptional(),
@@ -53946,7 +56275,7 @@ export const BetaPromptSchema = z.union([
       description:
         'Reference to a prompt template and its variables.\n[Learn more](https://developers.openai.com/api/docs/guides/text?api-mode=responses#version-prompts-in-code).\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaPromptSchema = z.infer<typeof BetaPromptSchema>
@@ -53960,7 +56289,7 @@ export const BetaResponsePropertiesSchema = z.object({
           description:
             'The unique ID of the previous response to the model. Use this to\ncreate multi-turn conversations. Learn more about\n[conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   model: BetaModelIdsResponsesSchema.meta({
@@ -53976,7 +56305,7 @@ export const BetaResponsePropertiesSchema = z.object({
           description:
             'Whether to run the model response in the background.\n[Learn more](https://developers.openai.com/api/docs/guides/background).\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   max_tool_calls: z
@@ -53987,7 +56316,7 @@ export const BetaResponsePropertiesSchema = z.object({
           description:
             'The maximum number of total calls to built-in tools that can be processed in a response. This maximum number applies across all built-in tool calls, not per individual tool. Any further attempts to call a tool by the model will be ignored.\n',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   text: BetaResponseTextParamSchema.exactOptional(),
@@ -54006,7 +56335,7 @@ export const BetaServiceTierResponsesSchema = z.union([
       description:
         "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - If set to 'ultrafast', then the request will be processed with the access-controlled Ultrafast Processing service tier. This tier is currently available for `gpt-5.6-sol`; a response served through it will show `service_tier=ultrafast`.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaServiceTierResponsesSchema = z.infer<typeof BetaServiceTierResponsesSchema>
@@ -54059,11 +56388,11 @@ export const BetaResponseErrorSchema = z.union([
   z
     .object({
       type: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({ description: 'The original error type, or null if it was not recorded.' })
         .exactOptional(),
       param: z
-        .union([z.string(), z.null().nullable()])
+        .union([z.string(), z.null()])
         .meta({
           description:
             'The request parameter associated with the error, or null if none was recorded.',
@@ -54076,7 +56405,7 @@ export const BetaResponseErrorSchema = z.union([
     .meta({
       description: 'An error object returned when the model fails to generate a Response.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaResponseErrorSchema = z.infer<typeof BetaResponseErrorSchema>
@@ -54103,37 +56432,82 @@ export type BetaReasoningInputTransformationSchema = z.infer<
 >
 
 export const BetaOutputItemSchema = z.xor([
-  BetaOutputMessageSchema,
-  BetaFileSearchToolCallSchema,
-  BetaFunctionToolCallSchema,
-  BetaFunctionToolCallOutputResourceSchema,
-  BetaAgentMessageSchema,
-  BetaMultiAgentCallSchema,
-  BetaMultiAgentCallOutputSchema,
-  BetaWebSearchToolCallSchema,
-  BetaComputerToolCallSchema,
-  BetaComputerToolCallOutputResourceSchema,
-  BetaReasoningItemSchema,
-  BetaProgramSchema,
-  BetaProgramOutputSchema,
-  BetaToolSearchCallSchema,
-  BetaToolSearchOutputSchema,
-  BetaAdditionalToolsSchema,
-  BetaCompactionBodySchema,
-  BetaImageGenToolCallSchema,
-  BetaCodeInterpreterToolCallSchema,
-  BetaLocalShellToolCallSchema,
-  BetaLocalShellToolCallOutputSchema,
-  BetaFunctionShellCallSchema,
-  BetaFunctionShellCallOutputSchema,
-  BetaApplyPatchToolCallSchema,
-  BetaApplyPatchToolCallOutputSchema,
-  BetaMCPToolCallSchema,
-  BetaMCPListToolsSchema,
-  BetaMCPApprovalRequestSchema,
-  BetaMCPApprovalResponseResourceSchema,
-  BetaCustomToolCallSchema,
-  BetaCustomToolCallOutputResourceSchema,
+  z.intersection(BetaOutputMessageSchema, z.object({ type: z.literal('BetaOutputMessage') })),
+  z.intersection(
+    BetaFileSearchToolCallSchema,
+    z.object({ type: z.literal('BetaFileSearchToolCall') }),
+  ),
+  z.intersection(BetaFunctionToolCallSchema, z.object({ type: z.literal('BetaFunctionToolCall') })),
+  z.intersection(
+    BetaFunctionToolCallOutputResourceSchema,
+    z.object({ type: z.literal('BetaFunctionToolCallOutputResource') }),
+  ),
+  z.intersection(BetaAgentMessageSchema, z.object({ type: z.literal('BetaAgentMessage') })),
+  z.intersection(BetaMultiAgentCallSchema, z.object({ type: z.literal('BetaMultiAgentCall') })),
+  z.intersection(
+    BetaMultiAgentCallOutputSchema,
+    z.object({ type: z.literal('BetaMultiAgentCallOutput') }),
+  ),
+  z.intersection(
+    BetaWebSearchToolCallSchema,
+    z.object({ type: z.literal('BetaWebSearchToolCall') }),
+  ),
+  z.intersection(BetaComputerToolCallSchema, z.object({ type: z.literal('BetaComputerToolCall') })),
+  z.intersection(
+    BetaComputerToolCallOutputResourceSchema,
+    z.object({ type: z.literal('BetaComputerToolCallOutputResource') }),
+  ),
+  z.intersection(BetaReasoningItemSchema, z.object({ type: z.literal('BetaReasoningItem') })),
+  z.intersection(BetaProgramSchema, z.object({ type: z.literal('BetaProgram') })),
+  z.intersection(BetaProgramOutputSchema, z.object({ type: z.literal('BetaProgramOutput') })),
+  z.intersection(BetaToolSearchCallSchema, z.object({ type: z.literal('BetaToolSearchCall') })),
+  z.intersection(BetaToolSearchOutputSchema, z.object({ type: z.literal('BetaToolSearchOutput') })),
+  z.intersection(BetaAdditionalToolsSchema, z.object({ type: z.literal('BetaAdditionalTools') })),
+  z.intersection(BetaCompactionBodySchema, z.object({ type: z.literal('BetaCompactionBody') })),
+  z.intersection(BetaImageGenToolCallSchema, z.object({ type: z.literal('BetaImageGenToolCall') })),
+  z.intersection(
+    BetaCodeInterpreterToolCallSchema,
+    z.object({ type: z.literal('BetaCodeInterpreterToolCall') }),
+  ),
+  z.intersection(
+    BetaLocalShellToolCallSchema,
+    z.object({ type: z.literal('BetaLocalShellToolCall') }),
+  ),
+  z.intersection(
+    BetaLocalShellToolCallOutputSchema,
+    z.object({ type: z.literal('BetaLocalShellToolCallOutput') }),
+  ),
+  z.intersection(
+    BetaFunctionShellCallSchema,
+    z.object({ type: z.literal('BetaFunctionShellCall') }),
+  ),
+  z.intersection(
+    BetaFunctionShellCallOutputSchema,
+    z.object({ type: z.literal('BetaFunctionShellCallOutput') }),
+  ),
+  z.intersection(
+    BetaApplyPatchToolCallSchema,
+    z.object({ type: z.literal('BetaApplyPatchToolCall') }),
+  ),
+  z.intersection(
+    BetaApplyPatchToolCallOutputSchema,
+    z.object({ type: z.literal('BetaApplyPatchToolCallOutput') }),
+  ),
+  z.intersection(BetaMCPToolCallSchema, z.object({ type: z.literal('BetaMCPToolCall') })),
+  z.intersection(BetaMCPListToolsSchema, z.object({ type: z.literal('BetaMCPListTools') })),
+  z.intersection(
+    BetaMCPApprovalRequestSchema,
+    z.object({ type: z.literal('BetaMCPApprovalRequest') }),
+  ),
+  z.intersection(
+    BetaMCPApprovalResponseResourceSchema,
+    z.object({ type: z.literal('BetaMCPApprovalResponseResource') }),
+  ),
+  z.intersection(BetaCustomToolCallSchema, z.object({ type: z.literal('BetaCustomToolCall') })),
+  z.intersection(
+    BetaCustomToolCallOutputResourceSchema,
+    z.object({ type: z.literal('BetaCustomToolCallOutputResource') }),
+  ),
 ])
 
 export type BetaOutputItemSchema = z.infer<typeof BetaOutputItemSchema>
@@ -54236,7 +56610,7 @@ export const BetaPromptCacheOptionsSchema = z
           .meta({
             description: 'The response ID supplied as the prompt cache diagnostics comparison.',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -54308,10 +56682,22 @@ export type BetaPromptCacheUnavailableDiagnosticsBodySchema = z.infer<
 
 export const BetaPromptCacheDiagnosticsSchema = z
   .xor([
-    BetaPromptCacheMissDiagnosticsBodySchema,
-    BetaPromptCacheHitDiagnosticsBodySchema,
-    BetaPromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
-    BetaPromptCacheUnavailableDiagnosticsBodySchema,
+    z.intersection(
+      BetaPromptCacheMissDiagnosticsBodySchema,
+      z.object({ type: z.literal('BetaPromptCacheMissDiagnosticsBody') }),
+    ),
+    z.intersection(
+      BetaPromptCacheHitDiagnosticsBodySchema,
+      z.object({ type: z.literal('BetaPromptCacheHitDiagnosticsBody') }),
+    ),
+    z.intersection(
+      BetaPromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
+      z.object({ type: z.literal('BetaPromptCacheComparisonResponseNotFoundDiagnosticsBody') }),
+    ),
+    z.intersection(
+      BetaPromptCacheUnavailableDiagnosticsBodySchema,
+      z.object({ type: z.literal('BetaPromptCacheUnavailableDiagnosticsBody') }),
+    ),
   ])
   .meta({ description: 'Prompt cache diagnostics requested for this response.' })
 
@@ -54373,10 +56759,28 @@ export type BetaModerationErrorBodySchema = z.infer<typeof BetaModerationErrorBo
 export const BetaModerationSchema = z
   .object({
     input: z
-      .xor([BetaModerationResultBodySchema, BetaModerationErrorBodySchema])
+      .xor([
+        z.intersection(
+          BetaModerationResultBodySchema,
+          z.object({ type: z.literal('BetaModerationResultBody') }),
+        ),
+        z.intersection(
+          BetaModerationErrorBodySchema,
+          z.object({ type: z.literal('BetaModerationErrorBody') }),
+        ),
+      ])
       .meta({ description: 'Moderation for the response input.' }),
     output: z
-      .xor([BetaModerationResultBodySchema, BetaModerationErrorBodySchema])
+      .xor([
+        z.intersection(
+          BetaModerationResultBodySchema,
+          z.object({ type: z.literal('BetaModerationResultBody') }),
+        ),
+        z.intersection(
+          BetaModerationErrorBodySchema,
+          z.object({ type: z.literal('BetaModerationErrorBody') }),
+        ),
+      ])
       .meta({ description: 'Moderation for the response output.' }),
   })
   .meta({ description: 'Moderation results or errors for the response input and output.' })
@@ -54401,139 +56805,147 @@ export type BetaResponseConversationSchema = z.infer<typeof BetaResponseConversa
 export const BetaResponseSchema = z
   .intersection(
     z.intersection(BetaModelResponsePropertiesSchema, BetaResponsePropertiesSchema),
-    z.object({
-      image: BetaResolvedImageOptionsSchema.exactOptional(),
-      service_tier: BetaServiceTierResponsesSchema.exactOptional(),
-      truncation: z
-        .union([
-          z
-            .enum(['auto', 'disabled'])
-            .default('disabled')
-            .meta({
-              description:
-                "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      id: z.string().meta({ description: 'Unique identifier for this Response.\n' }),
-      object: z
-        .literal('response')
-        .meta({ description: 'The object type of this resource - always set to `response`.\n' }),
-      status: z
-        .enum(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete'])
-        .meta({
-          description:
-            'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
-        })
-        .exactOptional(),
-      access_programs: z.union([BetaAccessProgramsBodySchema, z.null().nullable()]),
-      created_at: z
-        .number()
-        .meta({ description: 'Unix timestamp (in seconds) of when this Response was created.\n' }),
-      completed_at: z
-        .union([
-          z
-            .number()
-            .meta({
-              description:
-                'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      error: BetaResponseErrorSchema,
-      incomplete_details: z.union([
-        z
-          .object({
-            reason: z
-              .enum(['max_output_tokens', 'max_messages', 'content_filter', 'steered'])
+    z
+      .looseObject({
+        image: BetaResolvedImageOptionsSchema.exactOptional(),
+        service_tier: BetaServiceTierResponsesSchema.exactOptional(),
+        truncation: z
+          .union([
+            z
+              .enum(['auto', 'disabled'])
+              .default('disabled')
               .meta({
                 description:
-                  'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
-              })
-              .exactOptional(),
+                  "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+              }),
+            z.null(),
+          ])
+          .exactOptional(),
+        id: z.string().meta({ description: 'Unique identifier for this Response.\n' }),
+        object: z
+          .literal('response')
+          .meta({ description: 'The object type of this resource - always set to `response`.\n' }),
+        status: z
+          .enum(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete'])
+          .meta({
+            description:
+              'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
           })
-          .meta({ description: 'Details about why the response is incomplete.\n' }),
-        z.null().nullable(),
-      ]),
-      input_transformations: z
-        .array(BetaReasoningInputTransformationSchema)
-        .meta({ description: 'Reasoning inputs withheld from the model, in input order.' })
-        .exactOptional(),
-      output: z
-        .array(BetaOutputItemSchema)
-        .meta({
-          description:
-            "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
-        }),
-      reasoning: z.union([BetaReasoningSchema, z.null().nullable()]).exactOptional(),
-      instructions: z.union([
-        z
-          .xor([
+          .exactOptional(),
+        access_programs: z.union([BetaAccessProgramsBodySchema, z.null()]),
+        created_at: z
+          .number()
+          .meta({
+            description: 'Unix timestamp (in seconds) of when this Response was created.\n',
+          }),
+        completed_at: z
+          .union([
+            z
+              .number()
+              .meta({
+                description:
+                  'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
+              }),
+            z.null(),
+          ])
+          .exactOptional(),
+        error: BetaResponseErrorSchema,
+        incomplete_details: z.union([
+          z
+            .object({
+              reason: z
+                .enum(['max_output_tokens', 'max_messages', 'content_filter', 'steered'])
+                .meta({
+                  description:
+                    'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
+                })
+                .exactOptional(),
+            })
+            .meta({ description: 'Details about why the response is incomplete.\n' }),
+          z.null(),
+        ]),
+        input_transformations: z
+          .array(BetaReasoningInputTransformationSchema)
+          .meta({ description: 'Reasoning inputs withheld from the model, in input order.' })
+          .exactOptional(),
+        output: z
+          .array(BetaOutputItemSchema)
+          .meta({
+            description:
+              "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
+          }),
+        reasoning: z.union([BetaReasoningSchema, z.null()]).exactOptional(),
+        instructions: z.union([
+          z
+            .xor([
+              z
+                .string()
+                .meta({
+                  description:
+                    'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
+                }),
+              z
+                .array(BetaInputItemSchema)
+                .meta({
+                  description:
+                    'A list of one or many input items to the model, containing\ndifferent content types.\n',
+                }),
+            ])
+            .meta({
+              description:
+                "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
+            }),
+          z.null(),
+        ]),
+        output_text: z
+          .union([
             z
               .string()
               .meta({
                 description:
-                  'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
+                  'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
               }),
+            z.null(),
+          ])
+          .exactOptional(),
+        usage: z.union([BetaResponseUsageSchema, z.null()]).exactOptional(),
+        tool_usage: BetaResponseToolUsageSchema.meta({
+          description:
+            'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
+        }).exactOptional(),
+        prompt_cache_options: BetaPromptCacheOptionsSchema.exactOptional(),
+        prompt_cache_diagnostics: BetaPromptCacheDiagnosticsSchema.exactOptional(),
+        moderation: z
+          .union([
+            BetaModerationSchema.meta({
+              description:
+                'Moderation results for the response input and output, if moderated completions were requested.\n',
+            }),
+            z.null(),
+          ])
+          .exactOptional(),
+        parallel_tool_calls: z
+          .boolean()
+          .default(true)
+          .meta({ description: 'Whether to allow the model to run tool calls in parallel.\n' }),
+        conversation: z.union([BetaResponseConversationSchema, z.null()]).exactOptional(),
+        max_output_tokens: z
+          .union([
             z
-              .array(BetaInputItemSchema)
+              .int()
               .meta({
                 description:
-                  'A list of one or many input items to the model, containing\ndifferent content types.\n',
+                  'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
               }),
+            z.null(),
           ])
-          .meta({
-            description:
-              "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
-          }),
-        z.null().nullable(),
-      ]),
-      output_text: z
-        .union([
-          z
-            .string()
-            .meta({
-              description:
-                'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      usage: z.union([BetaResponseUsageSchema, z.null().nullable()]).exactOptional(),
-      tool_usage: BetaResponseToolUsageSchema.meta({
-        description:
-          'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
-      }).exactOptional(),
-      prompt_cache_options: BetaPromptCacheOptionsSchema.exactOptional(),
-      prompt_cache_diagnostics: BetaPromptCacheDiagnosticsSchema.exactOptional(),
-      moderation: z
-        .union([
-          BetaModerationSchema.meta({
-            description:
-              'Moderation results for the response input and output, if moderated completions were requested.\n',
-          }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-      parallel_tool_calls: z
-        .boolean()
-        .default(true)
-        .meta({ description: 'Whether to allow the model to run tool calls in parallel.\n' }),
-      conversation: z.union([BetaResponseConversationSchema, z.null().nullable()]).exactOptional(),
-      max_output_tokens: z
-        .union([
-          z
-            .int()
-            .meta({
-              description:
-                'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
-            }),
-          z.null().nullable(),
-        ])
-        .exactOptional(),
-    }),
+          .exactOptional(),
+      })
+      .refine((val) =>
+        ['model', 'tools', 'metadata', 'tool_choice', 'temperature', 'top_p'].every(
+          (key) => key in val,
+        ),
+      ),
   )
   .meta({
     examples: [
@@ -54603,7 +57015,7 @@ export type BetaResponseSchema = z.infer<typeof BetaResponseSchema>
 export const BetaResponseQueuedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54619,7 +57031,7 @@ export type BetaResponseQueuedEventSchema = z.infer<typeof BetaResponseQueuedEve
 export const BetaResponseOutputTextAnnotationAddedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54643,7 +57055,7 @@ export const BetaResponseOutputTextAnnotationAddedEventSchema = z
       .meta({ description: 'The index of the annotation within the content part.' }),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
     annotation: z
-      .union([BetaAnnotationSchema, z.null().nullable()])
+      .union([BetaAnnotationSchema, z.null()])
       .meta({
         description: 'The annotation object being added. (See annotation schema for details.)',
       }),
@@ -54657,7 +57069,7 @@ export type BetaResponseOutputTextAnnotationAddedEventSchema = z.infer<
 export const BetaResponseMCPListToolsInProgressEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54685,7 +57097,7 @@ export type BetaResponseMCPListToolsInProgressEventSchema = z.infer<
 export const BetaResponseMCPListToolsFailedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54704,7 +57116,7 @@ export type BetaResponseMCPListToolsFailedEventSchema = z.infer<
 export const BetaResponseMCPListToolsCompletedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54727,7 +57139,7 @@ export type BetaResponseMCPListToolsCompletedEventSchema = z.infer<
 export const BetaResponseMCPCallInProgressEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54750,7 +57162,7 @@ export type BetaResponseMCPCallInProgressEventSchema = z.infer<
 export const BetaResponseMCPCallFailedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54769,7 +57181,7 @@ export type BetaResponseMCPCallFailedEventSchema = z.infer<
 export const BetaResponseMCPCallCompletedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54788,7 +57200,7 @@ export type BetaResponseMCPCallCompletedEventSchema = z.infer<
 export const BetaResponseMCPCallArgumentsDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54816,7 +57228,7 @@ export type BetaResponseMCPCallArgumentsDoneEventSchema = z.infer<
 export const BetaResponseMCPCallArgumentsDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54848,7 +57260,7 @@ export type BetaResponseMCPCallArgumentsDeltaEventSchema = z.infer<
 export const BetaResponseImageGenCallPartialImageEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54899,7 +57311,7 @@ export type BetaResponseImageGenCallPartialImageEventSchema = z.infer<
 export const BetaResponseImageGenCallInProgressEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54926,7 +57338,7 @@ export type BetaResponseImageGenCallInProgressEventSchema = z.infer<
 export const BetaResponseImageGenCallGeneratingEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54956,7 +57368,7 @@ export type BetaResponseImageGenCallGeneratingEventSchema = z.infer<
 export const BetaResponseImageGenCallCompletedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -54984,7 +57396,7 @@ export type BetaResponseImageGenCallCompletedEventSchema = z.infer<
 export const BetaResponseReasoningTextDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55011,7 +57423,7 @@ export type BetaResponseReasoningTextDoneEventSchema = z.infer<
 export const BetaResponseReasoningTextDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55044,7 +57456,7 @@ export type BetaResponseReasoningTextDeltaEventSchema = z.infer<
 export const BetaResponseReasoningSummaryTextDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55075,7 +57487,7 @@ export type BetaResponseReasoningSummaryTextDoneEventSchema = z.infer<
 export const BetaResponseReasoningSummaryTextDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55106,7 +57518,7 @@ export type BetaResponseReasoningSummaryTextDeltaEventSchema = z.infer<
 export const BetaResponseReasoningSummaryPartDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55151,7 +57563,7 @@ export type BetaResponseReasoningSummaryPartDoneEventSchema = z.infer<
 export const BetaResponseReasoningSummaryPartAddedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55213,7 +57625,7 @@ export type BetaResponseLogProbSchema = z.infer<typeof BetaResponseLogProbSchema
 export const BetaResponseTextDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55241,7 +57653,7 @@ export type BetaResponseTextDoneEventSchema = z.infer<typeof BetaResponseTextDon
 export const BetaResponseTextDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55269,7 +57681,7 @@ export type BetaResponseTextDeltaEventSchema = z.infer<typeof BetaResponseTextDe
 export const BetaResponseRefusalDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55294,7 +57706,7 @@ export type BetaResponseRefusalDoneEventSchema = z.infer<typeof BetaResponseRefu
 export const BetaResponseRefusalDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55321,7 +57733,7 @@ export type BetaResponseRefusalDeltaEventSchema = z.infer<
 export const BetaResponseOutputItemDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55342,7 +57754,7 @@ export type BetaResponseOutputItemDoneEventSchema = z.infer<
 export const BetaResponseOutputItemAddedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55364,7 +57776,7 @@ export type BetaResponseOutputItemAddedEventSchema = z.infer<
 export const BetaResponseInProgressEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55527,7 +57939,7 @@ export type BetaResponseShellCallCommandAddedStreamingEventSchema = z.infer<
 export const BetaResponseFunctionCallArgumentsDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z.literal('response.function_call_arguments.done'),
@@ -55545,7 +57957,7 @@ export type BetaResponseFunctionCallArgumentsDoneEventSchema = z.infer<
 export const BetaResponseFunctionCallArgumentsDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55577,7 +57989,7 @@ export type BetaResponseFunctionCallArgumentsDeltaEventSchema = z.infer<
 export const BetaResponseFileSearchCallSearchingEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55604,7 +58016,7 @@ export type BetaResponseFileSearchCallSearchingEventSchema = z.infer<
 export const BetaResponseFileSearchCallInProgressEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55631,7 +58043,7 @@ export type BetaResponseFileSearchCallInProgressEventSchema = z.infer<
 export const BetaResponseFileSearchCallCompletedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55658,16 +58070,13 @@ export type BetaResponseFileSearchCallCompletedEventSchema = z.infer<
 export const BetaResponseErrorEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z.literal('error').meta({ description: 'The type of the event. Always `error`.\n' }),
-    code: z.union([z.string().meta({ description: 'The error code.\n' }), z.null().nullable()]),
+    code: z.union([z.string().meta({ description: 'The error code.\n' }), z.null()]),
     message: z.string().meta({ description: 'The error message.\n' }),
-    param: z.union([
-      z.string().meta({ description: 'The error parameter.\n' }),
-      z.null().nullable(),
-    ]),
+    param: z.union([z.string().meta({ description: 'The error parameter.\n' }), z.null()]),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
   })
   .meta({ description: 'Emitted when an error occurs.' })
@@ -55677,7 +58086,7 @@ export type BetaResponseErrorEventSchema = z.infer<typeof BetaResponseErrorEvent
 export const BetaResponseCreatedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55691,9 +58100,15 @@ export const BetaResponseCreatedEventSchema = z
 export type BetaResponseCreatedEventSchema = z.infer<typeof BetaResponseCreatedEventSchema>
 
 export const BetaOutputContentSchema = z.xor([
-  BetaOutputTextContentSchema,
-  BetaRefusalContentSchema,
-  BetaReasoningTextContentSchema,
+  z.intersection(
+    BetaOutputTextContentSchema,
+    z.object({ type: z.literal('BetaOutputTextContent') }),
+  ),
+  z.intersection(BetaRefusalContentSchema, z.object({ type: z.literal('BetaRefusalContent') })),
+  z.intersection(
+    BetaReasoningTextContentSchema,
+    z.object({ type: z.literal('BetaReasoningTextContent') }),
+  ),
 ])
 
 export type BetaOutputContentSchema = z.infer<typeof BetaOutputContentSchema>
@@ -55701,7 +58116,7 @@ export type BetaOutputContentSchema = z.infer<typeof BetaOutputContentSchema>
 export const BetaResponseContentPartDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55726,7 +58141,7 @@ export type BetaResponseContentPartDoneEventSchema = z.infer<
 export const BetaResponseContentPartAddedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55751,7 +58166,7 @@ export type BetaResponseContentPartAddedEventSchema = z.infer<
 export const BetaResponseCompletedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55791,7 +58206,7 @@ export type BetaResponseCompactionCompactingStreamingEventSchema = z.infer<
 export const BetaResponseCodeInterpreterCallInterpretingEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55823,7 +58238,7 @@ export type BetaResponseCodeInterpreterCallInterpretingEventSchema = z.infer<
 export const BetaResponseCodeInterpreterCallInProgressEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55853,7 +58268,7 @@ export type BetaResponseCodeInterpreterCallInProgressEventSchema = z.infer<
 export const BetaResponseCodeInterpreterCallCompletedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55883,7 +58298,7 @@ export type BetaResponseCodeInterpreterCallCompletedEventSchema = z.infer<
 export const BetaResponseCodeInterpreterCallCodeDoneEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55916,7 +58331,7 @@ export type BetaResponseCodeInterpreterCallCodeDoneEventSchema = z.infer<
 export const BetaResponseCodeInterpreterCallCodeDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55947,9 +58362,9 @@ export type BetaResponseCodeInterpreterCallCodeDeltaEventSchema = z.infer<
 >
 
 export const BetaResponseAudioTranscriptDoneEventSchema = z
-  .object({
+  .looseObject({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55957,6 +58372,7 @@ export const BetaResponseAudioTranscriptDoneEventSchema = z
       .meta({ description: 'The type of the event. Always `response.audio.transcript.done`.\n' }),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
   })
+  .refine((val) => ['response_id'].every((key) => key in val))
   .meta({ description: 'Emitted when the full audio transcript is completed.' })
 
 export type BetaResponseAudioTranscriptDoneEventSchema = z.infer<
@@ -55964,9 +58380,9 @@ export type BetaResponseAudioTranscriptDoneEventSchema = z.infer<
 >
 
 export const BetaResponseAudioTranscriptDeltaEventSchema = z
-  .object({
+  .looseObject({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55975,6 +58391,7 @@ export const BetaResponseAudioTranscriptDeltaEventSchema = z
     delta: z.string().meta({ description: 'The partial transcript of the audio response.\n' }),
     sequence_number: z.int().meta({ description: 'The sequence number of this event.' }),
   })
+  .refine((val) => ['response_id'].every((key) => key in val))
   .meta({ description: 'Emitted when there is a partial transcript of audio.' })
 
 export type BetaResponseAudioTranscriptDeltaEventSchema = z.infer<
@@ -55982,9 +58399,9 @@ export type BetaResponseAudioTranscriptDeltaEventSchema = z.infer<
 >
 
 export const BetaResponseAudioDoneEventSchema = z
-  .object({
+  .looseObject({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -55992,6 +58409,7 @@ export const BetaResponseAudioDoneEventSchema = z
       .meta({ description: 'The type of the event. Always `response.audio.done`.\n' }),
     sequence_number: z.int().meta({ description: 'The sequence number of the delta.\n' }),
   })
+  .refine((val) => ['response_id'].every((key) => key in val))
   .meta({ description: 'Emitted when the audio response is complete.' })
 
 export type BetaResponseAudioDoneEventSchema = z.infer<typeof BetaResponseAudioDoneEventSchema>
@@ -55999,7 +58417,7 @@ export type BetaResponseAudioDoneEventSchema = z.infer<typeof BetaResponseAudioD
 export const BetaResponseAudioDeltaEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -56017,7 +58435,7 @@ export type BetaResponseAudioDeltaEventSchema = z.infer<typeof BetaResponseAudio
 export const BetaResponseIncompleteEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -56036,7 +58454,7 @@ export type BetaResponseIncompleteEventSchema = z.infer<typeof BetaResponseIncom
 export const BetaResponseFailedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -56052,7 +58470,7 @@ export type BetaResponseFailedEventSchema = z.infer<typeof BetaResponseFailedEve
 export const BetaResponseWebSearchCallCompletedEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -56083,7 +58501,7 @@ export type BetaResponseWebSearchCallCompletedEventSchema = z.infer<
 export const BetaResponseWebSearchCallSearchingEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -56114,7 +58532,7 @@ export type BetaResponseWebSearchCallSearchingEventSchema = z.infer<
 export const BetaResponseWebSearchCallInProgressEventSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z
@@ -56146,7 +58564,7 @@ export const BetaUserMessageItemParamSchema = z.object({
   agent: z
     .union([
       BetaAgentTagParamSchema.meta({ description: 'The agent that produced this item.' }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   id: z
@@ -56154,7 +58572,7 @@ export const BetaUserMessageItemParamSchema = z.object({
       z
         .string()
         .meta({ description: 'The unique ID of this message item.', examples: ['msg_123'] }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   type: z
@@ -56167,9 +58585,18 @@ export const BetaUserMessageItemParamSchema = z.object({
       z.array(
         z
           .xor([
-            BetaInputTextContentParamSchema,
-            BetaInputImageContentParamAutoParamSchema,
-            BetaInputFileContentParamSchema,
+            z.intersection(
+              BetaInputTextContentParamSchema,
+              z.object({ type: z.literal('BetaInputTextContentParam') }),
+            ),
+            z.intersection(
+              BetaInputImageContentParamAutoParamSchema,
+              z.object({ type: z.literal('BetaInputImageContentParamAutoParam') }),
+            ),
+            z.intersection(
+              BetaInputFileContentParamSchema,
+              z.object({ type: z.literal('BetaInputFileContentParam') }),
+            ),
           ])
           .meta({ description: 'A piece of message content, such as text, an image, or a file.' }),
       ),
@@ -56177,10 +58604,7 @@ export const BetaUserMessageItemParamSchema = z.object({
     ])
     .meta({ description: 'The message content, as an array of content parts.' }),
   status: z
-    .union([
-      z.string().meta({ description: 'The status of the message item.' }),
-      z.null().nullable(),
-    ])
+    .union([z.string().meta({ description: 'The status of the message item.' }), z.null()])
     .exactOptional(),
 })
 
@@ -56519,14 +58943,14 @@ export const BetaErrorPayloadSchema = z
     type: z.string().meta({ description: 'The error type that was emitted.' }),
     code: z.union([
       z.string().meta({ description: 'The error code that was emitted, if any.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     message: z.string().meta({ description: 'The human-readable error message that was emitted.' }),
     param: z.union([
       z
         .string()
         .meta({ description: 'The parameter name that was associated with the error, if any.' }),
-      z.null().nullable(),
+      z.null(),
     ]),
     headers: z
       .record(z.string(), z.string().meta({ description: 'The header value that was emitted.' }))
@@ -56541,7 +58965,7 @@ export type BetaErrorPayloadSchema = z.infer<typeof BetaErrorPayloadSchema>
 export const BetaResponseWsErrorSchema = z
   .object({
     agent: z
-      .union([BetaAgentTagSchema, z.null().nullable()])
+      .union([BetaAgentTagSchema, z.null()])
       .meta({ description: 'The agent that owns this multi-agent streaming event.' })
       .exactOptional(),
     type: z.literal('error').meta({ description: 'The type of the event. Always `error`.' }),
@@ -57628,7 +60052,7 @@ export const BetaResponsePromptCacheOptionsParamSchema = z
               'The ID of a response to compare when diagnosing prompt cache reuse. Supplying this field requests prompt cache diagnostics when the feature is enabled.',
             examples: ['resp_123'],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -57658,7 +60082,7 @@ export const BetaModerationPolicyParamSchema = z
         BetaModerationConfigParamSchema.meta({
           description: 'The moderation policy for the response input.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     output: z
@@ -57666,7 +60090,7 @@ export const BetaModerationPolicyParamSchema = z
         BetaModerationConfigParamSchema.meta({
           description: 'The moderation policy for the response output.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -57687,7 +60111,7 @@ export const BetaModerationParamSchema = z
         BetaModerationPolicyParamSchema.meta({
           description: 'The policy to apply to moderated response input and output.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   })
@@ -57735,7 +60159,7 @@ export const BetaResponseStreamOptionsSchema = z.union([
     .meta({
       description: 'Options for streaming responses. Only set this when you set `stream: true`.\n',
     }),
-  z.null().nullable(),
+  z.null(),
 ])
 
 export type BetaResponseStreamOptionsSchema = z.infer<typeof BetaResponseStreamOptionsSchema>
@@ -57754,7 +60178,7 @@ export const BetaContextManagementParamSchema = z.object({
         .meta({
           description: 'Token threshold at which compaction should be triggered for this entry.',
         }),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -57797,11 +60221,11 @@ export const BetaCreateResponseSchema = z.intersection(
             description:
               "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .meta({ deprecated: true })
       .exactOptional(),
-    reasoning: z.union([BetaReasoningSchema, z.null().nullable()]).exactOptional(),
+    reasoning: z.union([BetaReasoningSchema, z.null()]).exactOptional(),
     input: BetaInputParamSchema.exactOptional(),
     include: z
       .union([
@@ -57811,7 +60235,7 @@ export const BetaCreateResponseSchema = z.intersection(
             description:
               'Specify additional output data to include in the model response. Currently supported values are:\n- `web_search_call.action.sources`: Include the sources of the web search tool call.\n- `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.\n- `computer_call_output.output.image_url`: Include image urls from the computer call output.\n- `file_search_call.results`: Include the search results of the file search tool call.\n- `message.input_image.image_url`: Include image urls from the input message.\n- `message.output_text.logprobs`: Include logprobs with assistant messages.\n- `reasoning.encrypted_content`: Includes an encrypted version of reasoning tokens in reasoning item outputs. This enables reasoning items to be used in multi-turn conversations when using the Responses API statelessly (like when the `store` parameter is set to `false`, or when an organization is enrolled in the zero data retention program).',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     parallel_tool_calls: z
@@ -57820,7 +60244,7 @@ export const BetaCreateResponseSchema = z.intersection(
           .boolean()
           .default(true)
           .meta({ description: 'Whether to allow the model to run tool calls in parallel.\n' }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     store: z
@@ -57832,7 +60256,7 @@ export const BetaCreateResponseSchema = z.intersection(
             description:
               'Whether to store the generated model response for later retrieval via\nAPI.\nDefaults to true when omitted.\nIf set to true, response data will be stored for at least 30 days, subject to the [data retention exceptions](https://developers.openai.com/api/docs/guides/your-data#v1responses).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     instructions: z
@@ -57843,7 +60267,7 @@ export const BetaCreateResponseSchema = z.intersection(
             description:
               "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     moderation: z
@@ -57852,7 +60276,7 @@ export const BetaCreateResponseSchema = z.intersection(
           description:
             'Configuration for running moderation on the input and output of this response.\n',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     background_options: BetaBackgroundOptionsParamSchema.meta({
@@ -57868,11 +60292,11 @@ export const BetaCreateResponseSchema = z.intersection(
             description:
               'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](https://developers.openai.com/api/reference/resources/responses/streaming-events)\nfor more information.\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     stream_options: BetaResponseStreamOptionsSchema.exactOptional(),
-    conversation: z.union([BetaConversationParamSchema, z.null().nullable()]).exactOptional(),
+    conversation: z.union([BetaConversationParamSchema, z.null()]).exactOptional(),
     context_management: z
       .union([
         z
@@ -57882,7 +60306,7 @@ export const BetaCreateResponseSchema = z.intersection(
             description: 'Context management configuration for this request.\n',
             examples: [[{ type: 'compaction', compact_threshold: 1000 }]],
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     max_output_tokens: z
@@ -57894,7 +60318,7 @@ export const BetaCreateResponseSchema = z.intersection(
             description:
               'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
           }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
     multi_agent: z
@@ -57902,7 +60326,7 @@ export const BetaCreateResponseSchema = z.intersection(
         BetaMultiAgentParamSchema.meta({
           description: 'Configuration for server-hosted multi-agent execution.',
         }),
-        z.null().nullable(),
+        z.null(),
       ])
       .exactOptional(),
   }),

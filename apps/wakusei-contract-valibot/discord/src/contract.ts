@@ -223,13 +223,13 @@ export const contract = {
         ),
         icon: v.optional(v.nullable(v.string())),
         cover_image: v.optional(v.nullable(v.string())),
-        team_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        team_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
         interactions_endpoint_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
         ),
         explicit_content_filter: v.optional(
-          v.union([v.nullable(v.null()), ApplicationExplicitContentFilterTypesSchema]),
+          v.union([v.null(), ApplicationExplicitContentFilterTypesSchema]),
         ),
         max_participants: v.optional(
           v.nullable(
@@ -242,7 +242,7 @@ export const contract = {
             ),
           ),
         ),
-        type: v.optional(v.union([v.nullable(v.null()), ApplicationTypesSchema])),
+        type: v.optional(v.union([v.null(), ApplicationTypesSchema])),
         tags: v.optional(
           v.nullable(
             v.pipe(
@@ -255,9 +255,7 @@ export const contract = {
         custom_install_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
         ),
-        install_params: v.optional(
-          v.union([v.nullable(v.null()), ApplicationOAuth2InstallParamsSchema]),
-        ),
+        install_params: v.optional(v.union([v.null(), ApplicationOAuth2InstallParamsSchema])),
         role_connections_verification_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
         ),
@@ -265,12 +263,12 @@ export const contract = {
           v.nullable(
             v.record(
               v.string(),
-              v.union([v.nullable(v.null()), ApplicationIntegrationTypeConfigurationSchema]),
+              v.union([v.null(), ApplicationIntegrationTypeConfigurationSchema]),
             ),
           ),
         ),
         event_webhooks_status: v.optional(
-          v.union([v.nullable(v.null()), ApplicationEventWebhooksStatusSchema]),
+          v.union([v.null(), ApplicationEventWebhooksStatusSchema]),
         ),
         event_webhooks_url: v.optional(
           v.pipe(
@@ -396,13 +394,13 @@ export const contract = {
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),
           ),
         ),
-        type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
+        type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
       }),
     )
     .output(ApplicationCommandResponseSchema),
@@ -498,7 +496,7 @@ export const contract = {
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),
@@ -587,7 +585,7 @@ export const contract = {
                       v.pipe(
                         v.unknown(),
                         v.transform((input) => (input === 'null' ? null : input)),
-                        v.nullable(v.null()),
+                        v.null(),
                       ),
                       SnowflakeTypeSchema,
                     ]),
@@ -605,7 +603,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -763,13 +762,13 @@ export const contract = {
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),
           ),
         ),
-        type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
+        type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
       }),
     )
     .output(ApplicationCommandResponseSchema),
@@ -886,7 +885,7 @@ export const contract = {
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),
@@ -1009,7 +1008,7 @@ export const contract = {
             FriendInviteResponseSchema,
             GroupDMInviteResponseSchema,
             GuildInviteResponseSchema,
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       ),
@@ -1039,7 +1038,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1060,9 +1060,7 @@ export const contract = {
         channel_id: SnowflakeTypeSchema,
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         sticker_ids: v.optional(v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3)))),
         components: v.optional(
           v.nullable(
@@ -1086,13 +1084,9 @@ export const contract = {
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
-        shared_client_theme: v.optional(
-          v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
-        ),
-        message_reference: v.optional(
-          v.union([v.nullable(v.null()), MessageReferenceRequestSchema]),
-        ),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
+        shared_client_theme: v.optional(v.union([v.null(), CustomClientThemeShareRequestSchema])),
+        message_reference: v.optional(v.union([v.null(), MessageReferenceRequestSchema])),
         nonce: v.optional(
           v.union([
             v.pipe(
@@ -1104,11 +1098,11 @@ export const contract = {
               v.transform((input) => BigInt(input)),
               v.minValue(-9223372036854775808n),
               v.maxValue(9223372036854775807n),
-              v.minValue(-9223372036854776000n),
-              v.maxValue(9223372036854776000n),
+              v.minValue(-9223372036854775808n),
+              v.maxValue(9223372036854775808n),
             ),
             v.pipe(v.string(), v.maxCodePoints(25)),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         enforce_nonce: v.optional(v.nullable(v.boolean())),
@@ -1154,7 +1148,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1209,9 +1204,7 @@ export const contract = {
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         sticker_ids: v.optional(
           v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(1521))),
         ),
@@ -1270,7 +1263,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1350,9 +1344,7 @@ export const contract = {
         channel_id: SnowflakeTypeSchema,
         message_id: SnowflakeTypeSchema,
         name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
-        auto_archive_duration: v.optional(
-          v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
-        ),
+        auto_archive_duration: v.optional(v.union([v.null(), ThreadAutoArchiveDurationSchema])),
         rate_limit_per_user: v.optional(
           v.nullable(
             v.pipe(
@@ -1423,7 +1415,7 @@ export const contract = {
       v.object({
         channel_id: SnowflakeTypeSchema,
         overwrite_id: SnowflakeTypeSchema,
-        type: v.optional(v.union([v.nullable(v.null()), ChannelPermissionOverwritesSchema])),
+        type: v.optional(v.union([v.null(), ChannelPermissionOverwritesSchema])),
         allow: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
         deny: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       }),
@@ -1472,7 +1464,8 @@ export const contract = {
         message_id: SnowflakeTypeSchema,
         answer_id: v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(-2147483648),
@@ -1484,7 +1477,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1537,7 +1531,7 @@ export const contract = {
       v.object({
         channel_id: SnowflakeTypeSchema,
         sound_id: SnowflakeTypeSchema,
-        source_guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        source_guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     ),
   getChannelsChannelIdThreadMembers: oc
@@ -1559,7 +1553,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1651,7 +1646,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(2),
@@ -1681,7 +1677,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(2),
@@ -1704,7 +1701,8 @@ export const contract = {
         slop: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -1740,7 +1738,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1750,7 +1749,8 @@ export const contract = {
         offset: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -1781,7 +1781,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(2),
@@ -1894,17 +1895,17 @@ export const contract = {
         ),
         region: v.optional(v.nullable(v.string())),
         icon: v.optional(v.nullable(v.string())),
-        verification_level: v.optional(v.union([v.nullable(v.null()), VerificationLevelsSchema])),
+        verification_level: v.optional(v.union([v.null(), VerificationLevelsSchema])),
         default_message_notifications: v.optional(
-          v.union([v.nullable(v.null()), UserNotificationSettingsSchema]),
+          v.union([v.null(), UserNotificationSettingsSchema]),
         ),
         explicit_content_filter: v.optional(
-          v.union([v.nullable(v.null()), GuildExplicitContentFilterTypesSchema]),
+          v.union([v.null(), GuildExplicitContentFilterTypesSchema]),
         ),
-        preferred_locale: v.optional(v.union([v.nullable(v.null()), AvailableLocalesEnumSchema])),
-        afk_timeout: v.optional(v.union([v.nullable(v.null()), AfkTimeoutsSchema])),
-        afk_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-        system_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        preferred_locale: v.optional(v.union([v.null(), AvailableLocalesEnumSchema])),
+        afk_timeout: v.optional(v.union([v.null(), AfkTimeoutsSchema])),
+        afk_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+        system_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         splash: v.optional(v.nullable(v.string())),
         banner: v.optional(v.nullable(v.string())),
         system_channel_flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
@@ -1919,9 +1920,9 @@ export const contract = {
         ),
         discovery_splash: v.optional(v.nullable(v.string())),
         home_header: v.optional(v.nullable(v.string())),
-        rules_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-        safety_alerts_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-        public_updates_channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        rules_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+        safety_alerts_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+        public_updates_channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         premium_progress_bar_enabled: v.optional(v.nullable(v.boolean())),
       }),
     )
@@ -1943,7 +1944,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -1969,7 +1971,7 @@ export const contract = {
             MLSpamRuleResponseSchema,
             MentionSpamRuleResponseSchema,
             UserProfileRuleResponseSchema,
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       ),
@@ -2042,7 +2044,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -2138,7 +2141,7 @@ export const contract = {
     .input(
       v.object({
         guild_id: SnowflakeTypeSchema,
-        type: v.optional(v.union([v.nullable(v.null()), ChannelTypesSchema])),
+        type: v.optional(v.union([v.null(), ChannelTypesSchema])),
         name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
         position: v.optional(
           v.nullable(
@@ -2180,30 +2183,28 @@ export const contract = {
         rate_limit_per_user: v.optional(
           v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600))),
         ),
-        parent_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        parent_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         permission_overwrites: v.optional(
           v.nullable(v.pipe(v.array(ChannelPermissionOverwriteRequestSchema), v.maxLength(100))),
         ),
         rtc_region: v.optional(v.nullable(v.string())),
-        video_quality_mode: v.optional(v.union([v.nullable(v.null()), VideoQualityModesSchema])),
+        video_quality_mode: v.optional(v.union([v.null(), VideoQualityModesSchema])),
         default_auto_archive_duration: v.optional(
-          v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
+          v.union([v.null(), ThreadAutoArchiveDurationSchema]),
         ),
         default_reaction_emoji: v.optional(
-          v.union([v.nullable(v.null()), UpdateDefaultReactionEmojiRequestSchema]),
+          v.union([v.null(), UpdateDefaultReactionEmojiRequestSchema]),
         ),
         default_thread_rate_limit_per_user: v.optional(
           v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600))),
         ),
-        default_sort_order: v.optional(v.union([v.nullable(v.null()), ThreadSortOrderSchema])),
-        default_forum_layout: v.optional(v.union([v.nullable(v.null()), ForumLayoutSchema])),
-        default_tag_setting: v.optional(
-          v.union([v.nullable(v.null()), ThreadSearchTagSettingSchema]),
-        ),
+        default_sort_order: v.optional(v.union([v.null(), ThreadSortOrderSchema])),
+        default_forum_layout: v.optional(v.union([v.null(), ForumLayoutSchema])),
+        default_tag_setting: v.optional(v.union([v.null(), ThreadSearchTagSettingSchema])),
         available_tags: v.optional(
           v.nullable(
             v.pipe(
-              v.array(v.union([v.nullable(v.null()), CreateOrUpdateThreadTagRequestSchema])),
+              v.array(v.union([v.null(), CreateOrUpdateThreadTagRequestSchema])),
               v.maxLength(20),
             ),
           ),
@@ -2242,7 +2243,7 @@ export const contract = {
         roles: v.optional(
           v.nullable(
             v.pipe(
-              v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+              v.array(v.union([v.null(), SnowflakeTypeSchema])),
               v.maxLength(1521),
               v.check((input) => new Set(input).size === input.length),
             ),
@@ -2281,7 +2282,7 @@ export const contract = {
         roles: v.optional(
           v.nullable(
             v.pipe(
-              v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+              v.array(v.union([v.null(), SnowflakeTypeSchema])),
               v.maxLength(1521),
               v.check((input) => new Set(input).size === input.length),
             ),
@@ -2369,7 +2370,7 @@ export const contract = {
             FriendInviteResponseSchema,
             GroupDMInviteResponseSchema,
             GuildInviteResponseSchema,
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       ),
@@ -2386,7 +2387,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -2425,7 +2427,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -2494,7 +2497,7 @@ export const contract = {
         roles: v.optional(
           v.nullable(
             v.pipe(
-              v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+              v.array(v.union([v.null(), SnowflakeTypeSchema])),
               v.maxLength(350),
               v.check((input) => new Set(input).size === input.length),
             ),
@@ -2502,7 +2505,7 @@ export const contract = {
         ),
         mute: v.optional(v.nullable(v.boolean())),
         deaf: v.optional(v.nullable(v.boolean())),
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         communication_disabled_until: v.optional(
           v.nullable(
             v.pipe(
@@ -2560,7 +2563,8 @@ export const contract = {
         slop: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -2633,7 +2637,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -2643,7 +2648,8 @@ export const contract = {
         offset: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -2768,7 +2774,7 @@ export const contract = {
             ),
           ),
         ),
-        mode: v.optional(v.union([v.nullable(v.null()), GuildOnboardingModeSchema])),
+        mode: v.optional(v.union([v.null(), GuildOnboardingModeSchema])),
       }),
     )
     .output(GuildOnboardingResponseSchema),
@@ -2812,7 +2818,8 @@ export const contract = {
         days: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -2836,7 +2843,7 @@ export const contract = {
                       v.pipe(
                         v.unknown(),
                         v.transform((input) => (input === 'null' ? null : input)),
-                        v.nullable(v.null()),
+                        v.null(),
                       ),
                       SnowflakeTypeSchema,
                     ]),
@@ -2872,7 +2879,7 @@ export const contract = {
               v.maxLength(100),
               v.check((input) => new Set(input).size === input.length),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -2900,7 +2907,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -2960,7 +2968,7 @@ export const contract = {
         color: v.optional(
           v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(16777215))),
         ),
-        colors: v.optional(v.union([v.nullable(v.null()), RoleColorsSchema])),
+        colors: v.optional(v.union([v.null(), RoleColorsSchema])),
         hoist: v.optional(v.nullable(v.boolean())),
         mentionable: v.optional(v.nullable(v.boolean())),
         icon: v.optional(v.nullable(v.string())),
@@ -3020,7 +3028,7 @@ export const contract = {
         color: v.optional(
           v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(16777215))),
         ),
-        colors: v.optional(v.union([v.nullable(v.null()), RoleColorsSchema])),
+        colors: v.optional(v.union([v.null(), RoleColorsSchema])),
         hoist: v.optional(v.nullable(v.boolean())),
         mentionable: v.optional(v.nullable(v.boolean())),
         icon: v.optional(v.nullable(v.string())),
@@ -3254,7 +3262,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -3310,7 +3319,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -3342,7 +3352,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         name: v.pipe(v.string(), v.minCodePoints(2), v.maxCodePoints(32)),
         volume: v.optional(v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))),
-        emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         emoji_name: v.optional(
           v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32))),
         ),
@@ -3378,7 +3388,7 @@ export const contract = {
         sound_id: SnowflakeTypeSchema,
         name: v.optional(v.pipe(v.string(), v.minCodePoints(2), v.maxCodePoints(32))),
         volume: v.optional(v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))),
-        emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         emoji_name: v.optional(
           v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32))),
         ),
@@ -3542,7 +3552,7 @@ export const contract = {
           ),
         ),
         suppress: v.optional(v.nullable(v.boolean())),
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     ),
   getGuildsGuildIdVoiceStatesUserId: oc
@@ -3565,7 +3575,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         user_id: SnowflakeTypeSchema,
         suppress: v.optional(v.nullable(v.boolean())),
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     ),
   getGuildsGuildIdWebhooks: oc
@@ -3628,7 +3638,7 @@ export const contract = {
     .input(
       v.object({
         guild_id: SnowflakeTypeSchema,
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         enabled: v.optional(v.nullable(v.boolean())),
       }),
     )
@@ -3806,7 +3816,7 @@ export const contract = {
           ),
           members: v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25))),
           metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
-          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          flags: v.union([v.null(), v.literal(1)]),
           override_event_webhooks_url: v.nullable(
             v.pipe(v.string(), v.url(), v.maxCodePoints(512)),
           ),
@@ -3842,7 +3852,7 @@ export const contract = {
           v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
         ),
         secret: v.pipe(v.string(), v.maxCodePoints(250)),
-        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        flags: v.optional(v.union([v.null(), v.literal(1)])),
         name: v.optional(v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)))),
       }),
     )
@@ -3890,7 +3900,7 @@ export const contract = {
           v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
         ),
         members: v.optional(v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25)))),
-        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        flags: v.optional(v.union([v.null(), v.literal(1)])),
         override_event_webhooks_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(512))),
         ),
@@ -3907,7 +3917,7 @@ export const contract = {
     .input(
       v.object({
         lobby_id: SnowflakeTypeSchema,
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     )
     .output(LobbyResponseSchema),
@@ -3948,7 +3958,7 @@ export const contract = {
         metadata: v.optional(
           v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
         ),
-        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        flags: v.optional(v.union([v.null(), v.literal(1)])),
         additional_name: v.optional(
           v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
         ),
@@ -3983,7 +3993,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -4005,9 +4016,7 @@ export const contract = {
         lobby_id: SnowflakeTypeSchema,
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         sticker_ids: v.optional(v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3)))),
         components: v.optional(
           v.nullable(
@@ -4031,13 +4040,9 @@ export const contract = {
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
-        shared_client_theme: v.optional(
-          v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
-        ),
-        message_reference: v.optional(
-          v.union([v.nullable(v.null()), MessageReferenceRequestSchema]),
-        ),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
+        shared_client_theme: v.optional(v.union([v.null(), CustomClientThemeShareRequestSchema])),
+        message_reference: v.optional(v.union([v.null(), MessageReferenceRequestSchema])),
         nonce: v.optional(
           v.union([
             v.pipe(
@@ -4049,11 +4054,11 @@ export const contract = {
               v.transform((input) => BigInt(input)),
               v.minValue(-9223372036854775808n),
               v.maxValue(9223372036854775807n),
-              v.minValue(-9223372036854776000n),
-              v.maxValue(9223372036854776000n),
+              v.minValue(-9223372036854775808n),
+              v.maxValue(9223372036854775808n),
             ),
             v.pipe(v.string(), v.maxCodePoints(25)),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         enforce_nonce: v.optional(v.nullable(v.boolean())),
@@ -4161,7 +4166,7 @@ export const contract = {
     })
     .input(
       v.object({
-        provisional_user_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        provisional_user_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         external_user_id: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(1024)),
         preferred_global_name: v.optional(
           v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32))),
@@ -4184,7 +4189,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -4227,10 +4233,8 @@ export const contract = {
       v.object({
         topic: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(120)),
         channel_id: SnowflakeTypeSchema,
-        privacy_level: v.optional(
-          v.union([v.nullable(v.null()), StageInstancesPrivacyLevelsSchema]),
-        ),
-        guild_scheduled_event_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        privacy_level: v.optional(v.union([v.null(), StageInstancesPrivacyLevelsSchema])),
+        guild_scheduled_event_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         send_start_notification: v.optional(v.nullable(v.boolean())),
       }),
     )
@@ -4329,7 +4333,7 @@ export const contract = {
                       v.pipe(
                         v.unknown(),
                         v.transform((input) => (input === 'null' ? null : input)),
-                        v.nullable(v.null()),
+                        v.null(),
                       ),
                       SnowflakeTypeSchema,
                     ]),
@@ -4414,7 +4418,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -4422,7 +4427,14 @@ export const contract = {
           ),
         ),
         shard: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger(), v.minValue(0)),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+            v.minValue(0),
+          ),
         ),
         with_counts: v.optional(
           v.pipe(
@@ -4498,7 +4510,7 @@ export const contract = {
         webhook_id: SnowflakeTypeSchema,
         name: v.optional(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
         avatar: v.optional(v.nullable(v.string())),
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     )
     .output(
@@ -4611,23 +4623,23 @@ export const contract = {
         action: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
         ref: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
         ref_type: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
-        comment: v.optional(v.union([v.nullable(v.null()), GithubCommentSchema])),
-        issue: v.optional(v.union([v.nullable(v.null()), GithubIssueSchema])),
-        pull_request: v.optional(v.union([v.nullable(v.null()), GithubIssueSchema])),
-        repository: v.optional(v.union([v.nullable(v.null()), GithubRepositorySchema])),
-        forkee: v.optional(v.union([v.nullable(v.null()), GithubRepositorySchema])),
+        comment: v.optional(v.union([v.null(), GithubCommentSchema])),
+        issue: v.optional(v.union([v.null(), GithubIssueSchema])),
+        pull_request: v.optional(v.union([v.null(), GithubIssueSchema])),
+        repository: v.optional(v.union([v.null(), GithubRepositorySchema])),
+        forkee: v.optional(v.union([v.null(), GithubRepositorySchema])),
         sender: GithubUserSchema,
-        member: v.optional(v.union([v.nullable(v.null()), GithubUserSchema])),
-        release: v.optional(v.union([v.nullable(v.null()), GithubReleaseSchema])),
-        head_commit: v.optional(v.union([v.nullable(v.null()), GithubCommitSchema])),
+        member: v.optional(v.union([v.null(), GithubUserSchema])),
+        release: v.optional(v.union([v.null(), GithubReleaseSchema])),
+        head_commit: v.optional(v.union([v.null(), GithubCommitSchema])),
         commits: v.optional(v.nullable(v.pipe(v.array(GithubCommitSchema), v.maxLength(1521)))),
         forced: v.optional(v.nullable(v.boolean())),
         compare: v.optional(v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048)))),
-        review: v.optional(v.union([v.nullable(v.null()), GithubReviewSchema])),
-        check_run: v.optional(v.union([v.nullable(v.null()), GithubCheckRunSchema])),
-        check_suite: v.optional(v.union([v.nullable(v.null()), GithubCheckSuiteSchema])),
-        discussion: v.optional(v.union([v.nullable(v.null()), GithubDiscussionSchema])),
-        answer: v.optional(v.union([v.nullable(v.null()), GithubCommentSchema])),
+        review: v.optional(v.union([v.null(), GithubReviewSchema])),
+        check_run: v.optional(v.union([v.null(), GithubCheckRunSchema])),
+        check_suite: v.optional(v.union([v.null(), GithubCheckSuiteSchema])),
+        discussion: v.optional(v.union([v.null(), GithubDiscussionSchema])),
+        answer: v.optional(v.union([v.null(), GithubCommentSchema])),
       }),
     ),
   getWebhooksWebhookIdWebhookTokenMessagesOriginal: oc
@@ -4678,9 +4690,7 @@ export const contract = {
         ),
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(2000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         components: v.optional(
           v.nullable(
             v.pipe(
@@ -4702,7 +4712,7 @@ export const contract = {
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       }),
     )
@@ -4758,9 +4768,7 @@ export const contract = {
         ),
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(2000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         components: v.optional(
           v.nullable(
             v.pipe(
@@ -4782,7 +4790,7 @@ export const contract = {
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       }),
     )

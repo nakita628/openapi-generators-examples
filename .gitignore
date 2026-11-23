@@ -3,3 +3,6 @@ bazel-*
 user.bazelrc
 # GitHub Actions workflows are kept out of this repository.
 .github/
+
+# scripts/generate.ts keeps the previous output here while a generator runs (removed when it finishes)
+.src-previous/

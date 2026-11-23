@@ -15,7 +15,16 @@ export const getBatches = os
     v.object({
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
     }),
   )

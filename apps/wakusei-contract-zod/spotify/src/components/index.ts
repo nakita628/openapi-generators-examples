@@ -712,11 +712,17 @@ export const PlaylistTrackObjectSchema = z.object({
     })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'Information about the track or episode.' })
     .exactOptional(),
   track: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({
       description: '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
       deprecated: true,
@@ -728,11 +734,19 @@ export type PlaylistTrackObjectSchema = z.infer<typeof PlaylistTrackObjectSchema
 
 export const QueueObjectSchema = z.object({
   currently_playing: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   queue: z
-    .array(z.xor([TrackObjectSchema, EpisodeObjectSchema]))
+    .array(
+      z.xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ]),
+    )
     .meta({ description: 'The tracks or episodes in the queue. Can be empty.' })
     .exactOptional(),
 })
@@ -859,7 +873,10 @@ export const CurrentlyPlayingContextObjectSchema = z.object({
     .meta({ description: 'If something is currently playing, return `true`.' })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   currently_playing_type: z
@@ -1786,44 +1803,46 @@ export type CursorPagingSimplifiedArtistObjectSchema = z.infer<
   typeof CursorPagingSimplifiedArtistObjectSchema
 >
 
-export const PagingObjectSchema = z.object({
-  href: z
-    .string()
-    .meta({
-      description: 'A link to the Web API endpoint returning the full result of the request\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
-    }),
-  limit: z
-    .int()
-    .meta({
-      description:
-        'The maximum number of items in the response (as set in the query or by default).\n',
-      examples: [20],
-    }),
-  next: z
-    .string()
-    .nullable()
-    .meta({
-      description: 'URL to the next page of items. ( `null` if none)\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-    }),
-  offset: z
-    .int()
-    .meta({
-      description: 'The offset of the items returned (as set in the query or by default)\n',
-      examples: [0],
-    }),
-  previous: z
-    .string()
-    .nullable()
-    .meta({
-      description: 'URL to the previous page of items. ( `null` if none)\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-    }),
-  total: z
-    .int()
-    .meta({ description: 'The total number of items available to return.\n', examples: [4] }),
-})
+export const PagingObjectSchema = z
+  .looseObject({
+    href: z
+      .string()
+      .meta({
+        description: 'A link to the Web API endpoint returning the full result of the request\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
+      }),
+    limit: z
+      .int()
+      .meta({
+        description:
+          'The maximum number of items in the response (as set in the query or by default).\n',
+        examples: [20],
+      }),
+    next: z
+      .string()
+      .nullable()
+      .meta({
+        description: 'URL to the next page of items. ( `null` if none)\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+      }),
+    offset: z
+      .int()
+      .meta({
+        description: 'The offset of the items returned (as set in the query or by default)\n',
+        examples: [0],
+      }),
+    previous: z
+      .string()
+      .nullable()
+      .meta({
+        description: 'URL to the previous page of items. ( `null` if none)\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+      }),
+    total: z
+      .int()
+      .meta({ description: 'The total number of items available to return.\n', examples: [4] }),
+  })
+  .refine((val) => ['items'].every((key) => key in val))
 
 export type PagingObjectSchema = z.infer<typeof PagingObjectSchema>
 
@@ -2580,7 +2599,10 @@ export const CurrentlyPlayingObjectSchema = z.object({
     .meta({ description: 'If something is currently playing, return `true`.' })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   currently_playing_type: z

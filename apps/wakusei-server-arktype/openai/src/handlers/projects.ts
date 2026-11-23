@@ -26,7 +26,7 @@ export const getProjectsProjectIdGroupsGroupIdRoles = os
       group_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),
@@ -96,7 +96,7 @@ export const getProjectsProjectIdRoles = os
       project_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),
@@ -121,7 +121,7 @@ export const postProjectsProjectIdRoles = os
       project_id: type('string'),
       role_name: type('string').describe('Unique name for the role.'),
       permissions: type('string[]').describe('Permissions to grant to the role.'),
-      'description?': type('string | null | null').describe('Optional description of the role.'),
+      'description?': type('string | null').describe('Optional description of the role.'),
     }),
   )
   .output(RoleSchema)
@@ -153,11 +153,9 @@ export const postProjectsProjectIdRolesRoleId = os
     type({
       project_id: type('string'),
       role_id: type('string'),
-      'permissions?': type('string[] | null | null').describe(
-        'Updated set of permissions for the role.',
-      ),
-      'description?': type('string | null | null').describe('New description for the role.'),
-      'role_name?': type('string | null | null').describe('New name for the role.'),
+      'permissions?': type('string[] | null').describe('Updated set of permissions for the role.'),
+      'description?': type('string | null').describe('New description for the role.'),
+      'role_name?': type('string | null').describe('New name for the role.'),
     }),
   )
   .output(RoleSchema)
@@ -191,7 +189,7 @@ export const getProjectsProjectIdUsersUserIdRoles = os
       user_id: type('string'),
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 0 & number.integer <= 1000'),

@@ -19,7 +19,16 @@ export const getContainers = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
       after: v.optional(v.string()),
@@ -78,7 +87,16 @@ export const getContainersContainerIdFiles = os
     v.object({
       container_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
       after: v.optional(v.string()),

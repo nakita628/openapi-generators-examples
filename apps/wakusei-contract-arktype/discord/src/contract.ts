@@ -227,20 +227,18 @@ export const contract = {
         ).or('null'),
         'icon?': type('string | null'),
         'cover_image?': type('string | null'),
-        'team_id?': type('null | null').or(SnowflakeTypeSchema),
+        'team_id?': type('null').or(SnowflakeTypeSchema),
         'flags?': type('number.integer | null'),
         'interactions_endpoint_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
           ),
         ).or('null'),
-        'explicit_content_filter?': type('null | null').or(
-          ApplicationExplicitContentFilterTypesSchema,
-        ),
+        'explicit_content_filter?': type('null').or(ApplicationExplicitContentFilterTypesSchema),
         'max_participants?': type(
           'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= -1 | null',
         ),
-        'type?': type('null | null').or(ApplicationTypesSchema),
+        'type?': type('null').or(ApplicationTypesSchema),
         'tags?': type(
           type(
             type(
@@ -257,18 +255,16 @@ export const contract = {
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
           ),
         ).or('null'),
-        'install_params?': type('null | null').or(ApplicationOAuth2InstallParamsSchema),
+        'install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
         'role_connections_verification_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
           ),
         ).or('null'),
         'integration_types_config?': type(
-          type({
-            '[string]': type('null | null').or(ApplicationIntegrationTypeConfigurationSchema),
-          }),
+          type({ '[string]': type('null').or(ApplicationIntegrationTypeConfigurationSchema) }),
         ).or('null'),
-        'event_webhooks_status?': type('null | null').or(ApplicationEventWebhooksStatusSchema),
+        'event_webhooks_status?': type('null').or(ApplicationEventWebhooksStatusSchema),
         'event_webhooks_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
@@ -396,12 +392,12 @@ export const contract = {
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),
-        'type?': type('null | null').or(ApplicationCommandTypeSchema),
+        'type?': type('null').or(ApplicationCommandTypeSchema),
       }),
     )
     .output(ApplicationCommandResponseSchema),
@@ -504,7 +500,7 @@ export const contract = {
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -593,7 +589,7 @@ export const contract = {
                         for (const branch of [
                           type('unknown')
                             .pipe((data) => (data === 'null' ? null : data))
-                            .to('null | null'),
+                            .to('null'),
                           SnowflakeTypeSchema,
                         ]) {
                           const out = branch(data)
@@ -619,7 +615,7 @@ export const contract = {
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -765,12 +761,12 @@ export const contract = {
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),
-        'type?': type('null | null').or(ApplicationCommandTypeSchema),
+        'type?': type('null').or(ApplicationCommandTypeSchema),
       }),
     )
     .output(ApplicationCommandResponseSchema),
@@ -894,7 +890,7 @@ export const contract = {
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -1013,7 +1009,7 @@ export const contract = {
             type(type(FriendInviteResponseSchema).or(GroupDMInviteResponseSchema)).or(
               GuildInviteResponseSchema,
             ),
-          ).or('null | null'),
+          ).or('null'),
         ).array(),
       ).or('null'),
     ),
@@ -1043,7 +1039,7 @@ export const contract = {
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1067,7 +1063,7 @@ export const contract = {
         'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or(
           'null',
         ),
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'sticker_ids?': type(
           type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 3')),
         ).or('null'),
@@ -1094,9 +1090,9 @@ export const contract = {
         'attachments?': type(
           type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
         ).or('null'),
-        'poll?': type('null | null').or(PollCreateRequestSchema),
-        'shared_client_theme?': type('null | null').or(CustomClientThemeShareRequestSchema),
-        'message_reference?': type('null | null').or(MessageReferenceRequestSchema),
+        'poll?': type('null').or(PollCreateRequestSchema),
+        'shared_client_theme?': type('null').or(CustomClientThemeShareRequestSchema),
+        'message_reference?': type('null').or(MessageReferenceRequestSchema),
         'nonce?': type(
           type(
             type('bigint | number.integer')
@@ -1109,18 +1105,18 @@ export const contract = {
               )
               .narrow(
                 (data, ctx) =>
-                  data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+                  data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
               )
               .narrow(
                 (data, ctx) =>
-                  data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+                  data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
               ),
           ).or(
             type('string').narrow(
               (data, ctx) => [...data].length <= 25 || ctx.mustBe('at most 25 characters'),
             ),
           ),
-        ).or('null | null'),
+        ).or('null'),
         'enforce_nonce?': type('boolean | null'),
         'tts?': type('boolean | null'),
       }),
@@ -1155,7 +1151,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50'),
@@ -1213,7 +1209,7 @@ export const contract = {
           'null',
         ),
         'flags?': type('number.integer | null'),
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'sticker_ids?': type(
           type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 1521')),
         ).or('null'),
@@ -1274,7 +1270,7 @@ export const contract = {
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1361,7 +1357,7 @@ export const contract = {
         name: type('string')
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
-        'auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
+        'auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
         'rate_limit_per_user?': type(
           'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 21600 | null',
         ),
@@ -1415,7 +1411,7 @@ export const contract = {
       type({
         channel_id: SnowflakeTypeSchema,
         overwrite_id: SnowflakeTypeSchema,
-        'type?': type('null | null').or(ChannelPermissionOverwritesSchema),
+        'type?': type('null').or(ChannelPermissionOverwritesSchema),
         'allow?': type('number.integer | null'),
         'deny?': type('number.integer | null'),
       }),
@@ -1464,7 +1460,7 @@ export const contract = {
         message_id: SnowflakeTypeSchema,
         answer_id: type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to(
@@ -1473,7 +1469,7 @@ export const contract = {
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1531,7 +1527,7 @@ export const contract = {
       type({
         channel_id: SnowflakeTypeSchema,
         sound_id: SnowflakeTypeSchema,
-        'source_guild_id?': type('null | null').or(SnowflakeTypeSchema),
+        'source_guild_id?': type('null').or(SnowflakeTypeSchema),
       }),
     ),
   getChannelsChannelIdThreadMembers: oc
@@ -1548,7 +1544,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1627,7 +1623,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 2 & number.integer <= 100'),
@@ -1648,7 +1644,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 2 & number.integer <= 100'),
@@ -1669,7 +1665,7 @@ export const contract = {
         ),
         'slop?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -1698,13 +1694,13 @@ export const contract = {
         'sort_order?': SortingOrderSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 25'),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 9975'),
@@ -1731,7 +1727,7 @@ export const contract = {
         'before?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 2 & number.integer <= 100'),
@@ -1848,13 +1844,13 @@ export const contract = {
         ).or('null'),
         'region?': type('string | null'),
         'icon?': type('string | null'),
-        'verification_level?': type('null | null').or(VerificationLevelsSchema),
-        'default_message_notifications?': type('null | null').or(UserNotificationSettingsSchema),
-        'explicit_content_filter?': type('null | null').or(GuildExplicitContentFilterTypesSchema),
-        'preferred_locale?': type('null | null').or(AvailableLocalesEnumSchema),
-        'afk_timeout?': type('null | null').or(AfkTimeoutsSchema),
-        'afk_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-        'system_channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'verification_level?': type('null').or(VerificationLevelsSchema),
+        'default_message_notifications?': type('null').or(UserNotificationSettingsSchema),
+        'explicit_content_filter?': type('null').or(GuildExplicitContentFilterTypesSchema),
+        'preferred_locale?': type('null').or(AvailableLocalesEnumSchema),
+        'afk_timeout?': type('null').or(AfkTimeoutsSchema),
+        'afk_channel_id?': type('null').or(SnowflakeTypeSchema),
+        'system_channel_id?': type('null').or(SnowflakeTypeSchema),
         'splash?': type('string | null'),
         'banner?': type('string | null'),
         'system_channel_flags?': type('number.integer | null'),
@@ -1874,9 +1870,9 @@ export const contract = {
         ).or('null'),
         'discovery_splash?': type('string | null'),
         'home_header?': type('string | null'),
-        'rules_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-        'safety_alerts_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-        'public_updates_channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'rules_channel_id?': type('null').or(SnowflakeTypeSchema),
+        'safety_alerts_channel_id?': type('null').or(SnowflakeTypeSchema),
+        'public_updates_channel_id?': type('null').or(SnowflakeTypeSchema),
         'premium_progress_bar_enabled?': type('boolean | null'),
       }),
     )
@@ -1897,7 +1893,7 @@ export const contract = {
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1922,7 +1918,7 @@ export const contract = {
                 ),
               ).or(MentionSpamRuleResponseSchema),
             ).or(UserProfileRuleResponseSchema),
-          ).or('null | null'),
+          ).or('null'),
         ).array(),
       ).or('null'),
     ),
@@ -1993,7 +1989,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 1000'),
@@ -2077,7 +2073,7 @@ export const contract = {
     .input(
       type({
         guild_id: SnowflakeTypeSchema,
-        'type?': type('null | null').or(ChannelTypesSchema),
+        'type?': type('null').or(ChannelTypesSchema),
         name: type('string')
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
@@ -2099,22 +2095,22 @@ export const contract = {
         ),
         'nsfw?': type('boolean | null'),
         'rate_limit_per_user?': type('number.integer >= 0 & number.integer <= 21600 | null'),
-        'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+        'parent_id?': type('null').or(SnowflakeTypeSchema),
         'permission_overwrites?': type(
           type(type(ChannelPermissionOverwriteRequestSchema).array()).and(type('unknown[] <= 100')),
         ).or('null'),
         'rtc_region?': type('string | null'),
-        'video_quality_mode?': type('null | null').or(VideoQualityModesSchema),
-        'default_auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
-        'default_reaction_emoji?': type('null | null').or(UpdateDefaultReactionEmojiRequestSchema),
+        'video_quality_mode?': type('null').or(VideoQualityModesSchema),
+        'default_auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
+        'default_reaction_emoji?': type('null').or(UpdateDefaultReactionEmojiRequestSchema),
         'default_thread_rate_limit_per_user?': type(
           'number.integer >= 0 & number.integer <= 21600 | null',
         ),
-        'default_sort_order?': type('null | null').or(ThreadSortOrderSchema),
-        'default_forum_layout?': type('null | null').or(ForumLayoutSchema),
-        'default_tag_setting?': type('null | null').or(ThreadSearchTagSettingSchema),
+        'default_sort_order?': type('null').or(ThreadSortOrderSchema),
+        'default_forum_layout?': type('null').or(ForumLayoutSchema),
+        'default_tag_setting?': type('null').or(ThreadSearchTagSettingSchema),
         'available_tags?': type(
-          type(type(type('null | null').or(CreateOrUpdateThreadTagRequestSchema)).array()).and(
+          type(type(type('null').or(CreateOrUpdateThreadTagRequestSchema)).array()).and(
             type('unknown[] <= 20'),
           ),
         ).or('null'),
@@ -2152,7 +2148,7 @@ export const contract = {
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         image: type('string'),
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 1521'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
@@ -2189,7 +2185,7 @@ export const contract = {
           .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 1521'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
@@ -2261,7 +2257,7 @@ export const contract = {
             type(type(FriendInviteResponseSchema).or(GroupDMInviteResponseSchema)).or(
               GuildInviteResponseSchema,
             ),
-          ).or('null | null'),
+          ).or('null'),
         ).array(),
       ).or('null'),
     ),
@@ -2276,7 +2272,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 1000'),
@@ -2319,7 +2315,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 1000'),
@@ -2391,13 +2387,13 @@ export const contract = {
           ),
         ).or('null'),
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 350'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
         'mute?': type('boolean | null'),
         'deaf?': type('boolean | null'),
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
         'communication_disabled_until?': type(
           type(
             /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -2451,7 +2447,7 @@ export const contract = {
         ),
         'slop?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -2498,13 +2494,13 @@ export const contract = {
         'max_id?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 25'),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 9975'),
@@ -2617,7 +2613,7 @@ export const contract = {
             .and(type('unknown[] <= 500'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'mode?': type('null | null').or(GuildOnboardingModeSchema),
+        'mode?': type('null').or(GuildOnboardingModeSchema),
       }),
     )
     .output(GuildOnboardingResponseSchema),
@@ -2660,7 +2656,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         'days?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 30'),
@@ -2678,7 +2674,7 @@ export const contract = {
                         for (const branch of [
                           type('unknown')
                             .pipe((data) => (data === 'null' ? null : data))
-                            .to('null | null'),
+                            .to('null'),
                           SnowflakeTypeSchema,
                         ]) {
                           const out = branch(data)
@@ -2719,7 +2715,7 @@ export const contract = {
               .and(type('unknown[] <= 100'))
               .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
           ),
-        ).or('null | null'),
+        ).or('null'),
       }),
     )
     .output(GuildPruneResponseSchema),
@@ -2744,7 +2740,7 @@ export const contract = {
         'status?': GuildJoinRequestApplicationStatusSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -2801,7 +2797,7 @@ export const contract = {
         ).or('null'),
         'permissions?': type('number.integer | null'),
         'color?': type('number.integer >= 0 & number.integer <= 16777215 | null'),
-        'colors?': type('null | null').or(RoleColorsSchema),
+        'colors?': type('null').or(RoleColorsSchema),
         'hoist?': type('boolean | null'),
         'mentionable?': type('boolean | null'),
         'icon?': type('string | null'),
@@ -2862,7 +2858,7 @@ export const contract = {
         ).or('null'),
         'permissions?': type('number.integer | null'),
         'color?': type('number.integer >= 0 & number.integer <= 16777215 | null'),
-        'colors?': type('null | null').or(RoleColorsSchema),
+        'colors?': type('null').or(RoleColorsSchema),
         'hoist?': type('boolean | null'),
         'mentionable?': type('boolean | null'),
         'icon?': type('string | null'),
@@ -3041,7 +3037,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -3085,7 +3081,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -3116,7 +3112,7 @@ export const contract = {
           .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         'volume?': type('number >= 0 & number <= 1 | null'),
-        'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+        'emoji_id?': type('null').or(SnowflakeTypeSchema),
         'emoji_name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -3156,7 +3152,7 @@ export const contract = {
           .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         'volume?': type('number >= 0 & number <= 1 | null'),
-        'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+        'emoji_id?': type('null').or(SnowflakeTypeSchema),
         'emoji_name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -3343,7 +3339,7 @@ export const contract = {
           ),
         ).or('null'),
         'suppress?': type('boolean | null'),
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
       }),
     ),
   getGuildsGuildIdVoiceStatesUserId: oc
@@ -3366,7 +3362,7 @@ export const contract = {
         guild_id: SnowflakeTypeSchema,
         user_id: SnowflakeTypeSchema,
         'suppress?': type('boolean | null'),
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
       }),
     ),
   getGuildsGuildIdWebhooks: oc
@@ -3431,7 +3427,7 @@ export const contract = {
     .input(
       type({
         guild_id: SnowflakeTypeSchema,
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
         'enabled?': type('boolean | null'),
       }),
     )
@@ -3644,7 +3640,7 @@ export const contract = {
             ),
           }),
         ).or('null'),
-        'flags?': 'null | null | 1',
+        'flags?': 'null | 1',
         'override_event_webhooks_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'),
@@ -3685,7 +3681,7 @@ export const contract = {
         secret: type('string').narrow(
           (data, ctx) => [...data].length <= 250 || ctx.mustBe('at most 250 characters'),
         ),
-        'flags?': 'null | null | 1',
+        'flags?': 'null | 1',
         'name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -3734,7 +3730,7 @@ export const contract = {
         'members?': type(
           type(type(LobbyMemberRequestSchema).array()).and(type('unknown[] <= 25')),
         ).or('null'),
-        'flags?': type('null | null | 1'),
+        'flags?': type('null | 1'),
         'override_event_webhooks_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'),
@@ -3755,10 +3751,7 @@ export const contract = {
       successDescription: '200 response for edit_lobby_channel_link',
     })
     .input(
-      type({
-        lobby_id: SnowflakeTypeSchema,
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-      }),
+      type({ lobby_id: SnowflakeTypeSchema, 'channel_id?': type('null').or(SnowflakeTypeSchema) }),
     )
     .output(LobbyResponseSchema),
   deleteLobbiesLobbyIdMembersMe: oc
@@ -3802,7 +3795,7 @@ export const contract = {
             ),
           }),
         ).or('null'),
-        'flags?': type('null | null | 1'),
+        'flags?': type('null | 1'),
         'additional_name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -3838,7 +3831,7 @@ export const contract = {
         lobby_id: SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 200'),
@@ -3863,7 +3856,7 @@ export const contract = {
         'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or(
           'null',
         ),
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'sticker_ids?': type(
           type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 3')),
         ).or('null'),
@@ -3890,9 +3883,9 @@ export const contract = {
         'attachments?': type(
           type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
         ).or('null'),
-        'poll?': type('null | null').or(PollCreateRequestSchema),
-        'shared_client_theme?': type('null | null').or(CustomClientThemeShareRequestSchema),
-        'message_reference?': type('null | null').or(MessageReferenceRequestSchema),
+        'poll?': type('null').or(PollCreateRequestSchema),
+        'shared_client_theme?': type('null').or(CustomClientThemeShareRequestSchema),
+        'message_reference?': type('null').or(MessageReferenceRequestSchema),
         'nonce?': type(
           type(
             type('bigint | number.integer')
@@ -3905,18 +3898,18 @@ export const contract = {
               )
               .narrow(
                 (data, ctx) =>
-                  data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+                  data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
               )
               .narrow(
                 (data, ctx) =>
-                  data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+                  data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
               ),
           ).or(
             type('string').narrow(
               (data, ctx) => [...data].length <= 25 || ctx.mustBe('at most 25 characters'),
             ),
           ),
-        ).or('null | null'),
+        ).or('null'),
         'enforce_nonce?': type('boolean | null'),
         'tts?': type('boolean | null'),
       }),
@@ -4042,7 +4035,7 @@ export const contract = {
     })
     .input(
       type({
-        'provisional_user_id?': type('null | null').or(SnowflakeTypeSchema),
+        'provisional_user_id?': type('null').or(SnowflakeTypeSchema),
         external_user_id: type('string')
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 1024 || ctx.mustBe('at most 1024 characters')),
@@ -4068,7 +4061,7 @@ export const contract = {
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -4110,8 +4103,8 @@ export const contract = {
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 120 || ctx.mustBe('at most 120 characters')),
         channel_id: SnowflakeTypeSchema,
-        'privacy_level?': type('null | null').or(StageInstancesPrivacyLevelsSchema),
-        'guild_scheduled_event_id?': type('null | null').or(SnowflakeTypeSchema),
+        'privacy_level?': type('null').or(StageInstancesPrivacyLevelsSchema),
+        'guild_scheduled_event_id?': type('null').or(SnowflakeTypeSchema),
         'send_start_notification?': 'boolean | null',
       }),
     )
@@ -4209,7 +4202,7 @@ export const contract = {
                         for (const branch of [
                           type('unknown')
                             .pipe((data) => (data === 'null' ? null : data))
-                            .to('null | null'),
+                            .to('null'),
                           SnowflakeTypeSchema,
                         ]) {
                           const out = branch(data)
@@ -4310,13 +4303,13 @@ export const contract = {
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 200'),
         'shard?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0'),
@@ -4390,7 +4383,7 @@ export const contract = {
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 80 || ctx.mustBe('at most 80 characters')),
         'avatar?': type('string | null'),
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
       }),
     )
     .output(
@@ -4509,15 +4502,15 @@ export const contract = {
             (data, ctx) => [...data].length <= 152133 || ctx.mustBe('at most 152133 characters'),
           ),
         ).or('null'),
-        'comment?': type('null | null').or(GithubCommentSchema),
-        'issue?': type('null | null').or(GithubIssueSchema),
-        'pull_request?': type('null | null').or(GithubIssueSchema),
-        'repository?': type('null | null').or(GithubRepositorySchema),
-        'forkee?': type('null | null').or(GithubRepositorySchema),
+        'comment?': type('null').or(GithubCommentSchema),
+        'issue?': type('null').or(GithubIssueSchema),
+        'pull_request?': type('null').or(GithubIssueSchema),
+        'repository?': type('null').or(GithubRepositorySchema),
+        'forkee?': type('null').or(GithubRepositorySchema),
         sender: GithubUserSchema,
-        'member?': type('null | null').or(GithubUserSchema),
-        'release?': type('null | null').or(GithubReleaseSchema),
-        'head_commit?': type('null | null').or(GithubCommitSchema),
+        'member?': type('null').or(GithubUserSchema),
+        'release?': type('null').or(GithubReleaseSchema),
+        'head_commit?': type('null').or(GithubCommitSchema),
         'commits?': type(type(type(GithubCommitSchema).array()).and(type('unknown[] <= 1521'))).or(
           'null',
         ),
@@ -4527,11 +4520,11 @@ export const contract = {
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
           ),
         ).or('null'),
-        'review?': type('null | null').or(GithubReviewSchema),
-        'check_run?': type('null | null').or(GithubCheckRunSchema),
-        'check_suite?': type('null | null').or(GithubCheckSuiteSchema),
-        'discussion?': type('null | null').or(GithubDiscussionSchema),
-        'answer?': type('null | null').or(GithubCommentSchema),
+        'review?': type('null').or(GithubReviewSchema),
+        'check_run?': type('null').or(GithubCheckRunSchema),
+        'check_suite?': type('null').or(GithubCheckSuiteSchema),
+        'discussion?': type('null').or(GithubDiscussionSchema),
+        'answer?': type('null').or(GithubCommentSchema),
       }),
     ),
   getWebhooksWebhookIdWebhookTokenMessagesOriginal: oc
@@ -4590,7 +4583,7 @@ export const contract = {
         'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or(
           'null',
         ),
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'components?': type(
           type(
             type(
@@ -4613,7 +4606,7 @@ export const contract = {
         'attachments?': type(
           type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
         ).or('null'),
-        'poll?': type('null | null').or(PollCreateRequestSchema),
+        'poll?': type('null').or(PollCreateRequestSchema),
         'flags?': type('number.integer | null'),
       }),
     )
@@ -4677,7 +4670,7 @@ export const contract = {
         'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or(
           'null',
         ),
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'components?': type(
           type(
             type(
@@ -4700,7 +4693,7 @@ export const contract = {
         'attachments?': type(
           type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
         ).or('null'),
-        'poll?': type('null | null').or(PollCreateRequestSchema),
+        'poll?': type('null').or(PollCreateRequestSchema),
         'flags?': type('number.integer | null'),
       }),
     )

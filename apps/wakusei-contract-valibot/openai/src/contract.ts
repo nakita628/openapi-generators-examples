@@ -412,7 +412,16 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -469,7 +478,7 @@ export const contract = {
               v.pipe(v.string(), v.maxCodePoints(256)),
               v.description('The name of the assistant. The maximum length is 256 characters.\n'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         description: v.optional(
@@ -480,7 +489,7 @@ export const contract = {
                 'The description of the assistant. The maximum length is 512 characters.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         instructions: v.optional(
@@ -491,7 +500,7 @@ export const contract = {
                 'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         tools: v.optional(
@@ -543,7 +552,7 @@ export const contract = {
                 "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         metadata: v.optional(MetadataSchema),
@@ -556,7 +565,7 @@ export const contract = {
               ),
               v.metadata({ examples: [1] }),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         top_p: v.optional(
@@ -568,12 +577,10 @@ export const contract = {
               ),
               v.metadata({ examples: [1] }),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
-        response_format: v.optional(
-          v.union([AssistantsApiResponseFormatOptionSchema, v.nullable(v.null())]),
-        ),
+        response_format: v.optional(v.union([AssistantsApiResponseFormatOptionSchema, v.null()])),
       }),
     )
     .output(AssistantObjectSchema),
@@ -639,7 +646,16 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
       }),
     )
@@ -723,7 +739,16 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
       }),
     )
@@ -778,7 +803,16 @@ export const contract = {
         metadata: v.optional(MetadataSchema),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
       }),
@@ -848,7 +882,16 @@ export const contract = {
         completion_id: v.string(),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
       }),
@@ -876,7 +919,16 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -927,7 +979,16 @@ export const contract = {
       v.object({
         container_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -999,7 +1060,16 @@ export const contract = {
       v.object({
         conversation_id: v.pipe(v.string(), v.metadata({ examples: ['conv_123'] })),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),
         after: v.optional(v.string()),
@@ -1100,7 +1170,16 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
         order_by: v.optional(v.optional(v.picklist(['created_at', 'updated_at']), 'created_at')),
@@ -1178,7 +1257,16 @@ export const contract = {
         eval_id: v.string(),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
         status: v.optional(
@@ -1273,7 +1361,16 @@ export const contract = {
         run_id: v.string(),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         status: v.optional(v.picklist(['fail', 'pass'])),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
@@ -1303,7 +1400,16 @@ export const contract = {
       v.object({
         purpose: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '10000'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '10000',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -1387,7 +1493,16 @@ export const contract = {
         project_id: v.optional(v.string()),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '10'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '10',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['ascending', 'descending']), 'descending')),
       }),
@@ -1449,7 +1564,16 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         metadata: v.optional(
           v.pipe(
@@ -1535,7 +1659,16 @@ export const contract = {
         ),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '10'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '10',
+          ),
         ),
       }),
     )
@@ -1556,7 +1689,16 @@ export const contract = {
         ),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
       }),
     )
@@ -1786,7 +1928,16 @@ export const contract = {
         ),
         limit: v.optional(
           v.pipe(
-            v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
+            ),
             v.description('Maximum number of keys to return.'),
           ),
         ),
@@ -1864,25 +2015,49 @@ export const contract = {
           v.partial(
             v.object({
               gt: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
                 ),
               ),
               gte: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
                 ),
               ),
               lt: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is less than this value.',
                 ),
               ),
               lte: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
                 ),
@@ -1936,7 +2111,16 @@ export const contract = {
           ),
         ),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
         before: v.optional(v.string()),
@@ -1955,7 +2139,16 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -2060,8 +2253,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.literal('1d'), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -2092,7 +2299,16 @@ export const contract = {
           ),
         ),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '7'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '7',
+          ),
         ),
         page: v.optional(v.string()),
       }),
@@ -2134,7 +2350,8 @@ export const contract = {
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -2215,7 +2432,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -2281,7 +2499,8 @@ export const contract = {
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -2345,7 +2564,16 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
       }),
@@ -2398,7 +2626,16 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
         include_archived: v.optional(
@@ -2451,19 +2688,19 @@ export const contract = {
         project_id: v.string(),
         name: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description('The updated name of the project, this name appears in reports.'),
           ),
         ),
         external_key_id: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description('External key ID to associate with the project.'),
           ),
         ),
         geography: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description(
               'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
             ),
@@ -2486,7 +2723,16 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
         owner_project_access: v.optional(v.picklist(['active', 'inactive', 'any'])),
@@ -2574,7 +2820,16 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -2676,7 +2931,8 @@ export const contract = {
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -2766,31 +3022,31 @@ export const contract = {
         project_id: v.string(),
         file_search: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The file search permission update.'),
           ),
         ),
         web_search: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The web search permission update.'),
           ),
         ),
         image_generation: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The image generation permission update.'),
           ),
         ),
         mcp: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The MCP permission update.'),
           ),
         ),
         code_interpreter: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The code interpreter permission update.'),
           ),
         ),
@@ -2855,7 +3111,16 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '100'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '100',
+          ),
         ),
         after: v.optional(v.string()),
         before: v.optional(v.string()),
@@ -2928,7 +3193,16 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
       }),
@@ -2954,14 +3228,14 @@ export const contract = {
               v.boolean(),
               v.description('Create the service account without default roles or an API key.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         expires_in_seconds: v.optional(
           v.pipe(
             v.union([
               v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
-              v.nullable(v.null()),
+              v.null(),
             ]),
             v.description(
               'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
@@ -3032,7 +3306,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -3131,7 +3406,16 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
       }),
@@ -3151,13 +3435,10 @@ export const contract = {
       v.object({
         project_id: v.string(),
         user_id: v.optional(
-          v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('The ID of the user.')),
+          v.pipe(v.union([v.string(), v.null()]), v.description('The ID of the user.')),
         ),
         email: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Email of the user to add.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Email of the user to add.')),
         ),
         role: v.pipe(v.string(), v.description('`owner` or `member`')),
       }),
@@ -3188,7 +3469,7 @@ export const contract = {
         project_id: v.string(),
         user_id: v.string(),
         role: v.optional(
-          v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `member`')),
+          v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `member`')),
         ),
       }),
     )
@@ -3220,7 +3501,8 @@ export const contract = {
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -3270,21 +3552,15 @@ export const contract = {
         role_id: v.string(),
         permissions: v.optional(
           v.pipe(
-            v.union([v.array(v.string()), v.nullable(v.null())]),
+            v.union([v.array(v.string()), v.null()]),
             v.description('Updated set of permissions for the role.'),
           ),
         ),
         description: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New description for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New description for the role.')),
         ),
         role_name: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New name for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New name for the role.')),
         ),
       }),
     )
@@ -3314,7 +3590,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -3396,8 +3673,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3434,7 +3725,15 @@ export const contract = {
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3450,8 +3749,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3488,7 +3801,15 @@ export const contract = {
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3504,8 +3825,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3521,7 +3856,15 @@ export const contract = {
             v.array(v.literal('project_id')),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3537,8 +3880,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3592,7 +3949,15 @@ export const contract = {
             ),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3608,8 +3973,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3646,7 +4025,15 @@ export const contract = {
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3662,8 +4049,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3700,7 +4101,15 @@ export const contract = {
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'vector_store_id'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3716,8 +4125,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         sources: v.optional(
           v.pipe(
@@ -3768,7 +4191,15 @@ export const contract = {
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3784,8 +4215,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3822,7 +4267,15 @@ export const contract = {
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3838,8 +4291,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3855,7 +4322,15 @@ export const contract = {
             v.array(v.literal('project_id')),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3871,8 +4346,22 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
         project_ids: v.optional(
           v.pipe(
@@ -3925,7 +4414,15 @@ export const contract = {
             ),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     )
@@ -3942,7 +4439,16 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         after: v.optional(v.string()),
         emails: v.optional(
@@ -3979,25 +4485,16 @@ export const contract = {
       v.object({
         user_id: v.string(),
         role: v.optional(
-          v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `reader`')),
+          v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `reader`')),
         ),
         role_id: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Role ID to assign to the user.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Role ID to assign to the user.')),
         ),
         technical_level: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Technical level metadata.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Technical level metadata.')),
         ),
         developer_persona: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Developer persona metadata.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Developer persona metadata.')),
         ),
       }),
     )
@@ -4028,7 +4525,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -4094,7 +4592,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -4161,7 +4660,8 @@ export const contract = {
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -4194,7 +4694,7 @@ export const contract = {
         ),
         description: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description('Optional description of the role.'),
           ),
         ),
@@ -4227,21 +4727,15 @@ export const contract = {
         role_id: v.string(),
         permissions: v.optional(
           v.pipe(
-            v.union([v.array(v.string()), v.nullable(v.null())]),
+            v.union([v.array(v.string()), v.null()]),
             v.description('Updated set of permissions for the role.'),
           ),
         ),
         description: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New description for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New description for the role.')),
         ),
         role_name: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New name for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New name for the role.')),
         ),
       }),
     )
@@ -4273,7 +4767,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -4463,40 +4958,43 @@ export const contract = {
         ),
         tracing: v.optional(
           v.pipe(
-            v.union([
-              v.pipe(
-                v.optional(v.literal('auto'), 'auto'),
-                v.description(
-                  'Enables tracing and sets default values for tracing configuration options. Always `auto`.\n',
+            v.optional(
+              v.union([
+                v.pipe(
+                  v.optional(v.literal('auto'), 'auto'),
+                  v.description(
+                    'Enables tracing and sets default values for tracing configuration options. Always `auto`.\n',
+                  ),
                 ),
-              ),
-              v.pipe(
-                v.partial(
-                  v.object({
-                    workflow_name: v.pipe(
-                      v.string(),
-                      v.description(
-                        'The name of the workflow to attach to this trace. This is used to\nname the trace in the Traces Dashboard.\n',
+                v.pipe(
+                  v.partial(
+                    v.object({
+                      workflow_name: v.pipe(
+                        v.string(),
+                        v.description(
+                          'The name of the workflow to attach to this trace. This is used to\nname the trace in the Traces Dashboard.\n',
+                        ),
                       ),
-                    ),
-                    group_id: v.pipe(
-                      v.string(),
-                      v.description(
-                        'The group id to attach to this trace to enable filtering and\ngrouping in the Traces Dashboard.\n',
+                      group_id: v.pipe(
+                        v.string(),
+                        v.description(
+                          'The group id to attach to this trace to enable filtering and\ngrouping in the Traces Dashboard.\n',
+                        ),
                       ),
-                    ),
-                    metadata: v.pipe(
-                      v.object({}),
-                      v.description(
-                        'The arbitrary metadata to attach to this trace to enable\nfiltering in the Traces Dashboard.\n',
+                      metadata: v.pipe(
+                        v.object({}),
+                        v.description(
+                          'The arbitrary metadata to attach to this trace to enable\nfiltering in the Traces Dashboard.\n',
+                        ),
                       ),
-                    ),
-                  }),
+                    }),
+                  ),
+                  v.description('Granular configuration for tracing.\n'),
                 ),
-                v.description('Granular configuration for tracing.\n'),
-              ),
-              v.nullable(v.null()),
-            ]),
+                v.null(),
+              ]),
+              null,
+            ),
             v.description(
               'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
             ),
@@ -4682,7 +5180,13 @@ export const contract = {
           ),
         ),
         starting_after: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
         ),
         include_obfuscation: v.optional(
           v.pipe(
@@ -4747,7 +5251,16 @@ export const contract = {
       v.object({
         response_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),
         after: v.optional(v.string()),
@@ -4831,7 +5344,7 @@ export const contract = {
                 "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         metadata: v.optional(MetadataSchema),
@@ -4860,7 +5373,16 @@ export const contract = {
       v.object({
         thread_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -4927,7 +5449,7 @@ export const contract = {
                 'A list of files attached to the message, and the tools they should be added to.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         metadata: v.optional(MetadataSchema),
@@ -4982,7 +5504,16 @@ export const contract = {
       v.object({
         thread_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -5016,7 +5547,7 @@ export const contract = {
         ),
         model: v.optional(
           v.pipe(
-            v.union([v.string(), AssistantSupportedModelsSchema, v.nullable(v.null())]),
+            v.union([v.string(), AssistantSupportedModelsSchema, v.null()]),
             v.description(
               'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
             ),
@@ -5160,7 +5691,16 @@ export const contract = {
         thread_id: v.string(),
         run_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -5238,7 +5778,7 @@ export const contract = {
                 'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -5312,7 +5852,16 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -5440,7 +5989,16 @@ export const contract = {
         vector_store_id: v.string(),
         batch_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -5461,7 +6019,16 @@ export const contract = {
       v.object({
         vector_store_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
         after: v.optional(v.string()),
@@ -5703,7 +6270,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -5717,7 +6285,7 @@ export const contract = {
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -5798,7 +6366,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -5849,7 +6418,7 @@ export const contract = {
         verification: v.optional(
           v.union([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema]),
         ),
-        description: v.optional(v.union([v.string(), v.nullable(v.null())])),
+        description: v.optional(v.union([v.string(), v.null()])),
         attribute_transformations: v.optional(
           v.pipe(v.array(TransformationParamSchema), v.maxLength(20)),
         ),
@@ -5881,7 +6450,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -5956,8 +6526,8 @@ export const contract = {
         v.object({
           workload_identity_provider_id: v.pipe(v.string(), v.minCodePoints(1)),
           workload_identity_federation_rule_id: v.pipe(v.string(), v.minCodePoints(1)),
-          name: v.optional(v.union([v.string(), v.nullable(v.null())])),
-          description: v.optional(v.union([v.string(), v.nullable(v.null())])),
+          name: v.optional(v.union([v.string(), v.null()])),
+          description: v.optional(v.union([v.string(), v.null()])),
           attribute_matchers: v.optional(
             v.record(
               v.string(),
@@ -6001,18 +6571,30 @@ export const contract = {
     })
     .input(
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         end_time: v.optional(
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
             v.nullable(
               v.union([
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6033,7 +6615,7 @@ export const contract = {
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6045,11 +6627,17 @@ export const contract = {
             v.transform((input) => (input === 'null' ? null : input)),
             v.nullable(
               v.union([
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6066,7 +6654,7 @@ export const contract = {
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -6091,7 +6679,7 @@ export const contract = {
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6120,7 +6708,7 @@ export const contract = {
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6147,7 +6735,7 @@ export const contract = {
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6174,7 +6762,7 @@ export const contract = {
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6201,7 +6789,7 @@ export const contract = {
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6221,7 +6809,7 @@ export const contract = {
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -6246,7 +6834,7 @@ export const contract = {
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -6259,7 +6847,7 @@ export const contract = {
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -6267,7 +6855,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -6403,7 +6992,7 @@ export const contract = {
                 'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -6481,7 +7070,7 @@ export const contract = {
               v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
               v.description('Number of seconds until the API key expires.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -6512,7 +7101,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -6689,7 +7279,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -6784,7 +7375,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -6904,7 +7496,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -6964,7 +7557,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -7671,7 +8265,7 @@ export const contract = {
         ),
         reasoning: v.optional(
           v.pipe(
-            v.union([ReasoningParamSchema, v.nullable(v.null())]),
+            v.union([ReasoningParamSchema, v.null()]),
             v.description(
               "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
             ),
@@ -7679,13 +8273,13 @@ export const contract = {
         ),
         text: v.optional(
           v.pipe(
-            v.union([TextParamSchema, v.nullable(v.null())]),
+            v.union([TextParamSchema, v.null()]),
             v.description('Configuration for text generated by the agent.'),
           ),
         ),
         service_tier: v.optional(
           v.pipe(
-            v.union([ServiceTierParamSchema, v.nullable(v.null())]),
+            v.union([ServiceTierParamSchema, v.null()]),
             v.description('The service tier used for model requests.'),
           ),
         ),
@@ -7699,13 +8293,13 @@ export const contract = {
         ),
         multi_agent: v.optional(
           v.pipe(
-            v.union([MultiAgentConfigCurrentParamSchema, v.nullable(v.null())]),
+            v.union([MultiAgentConfigCurrentParamSchema, v.null()]),
             v.description('Configuration for creating and coordinating subagents.'),
           ),
         ),
         compaction: v.optional(
           v.pipe(
-            v.union([CompactionParamSchema, v.nullable(v.null())]),
+            v.union([CompactionParamSchema, v.null()]),
             v.description(
               'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
             ),
@@ -7839,7 +8433,7 @@ export const contract = {
         ),
         packages: v.optional(
           v.pipe(
-            v.union([EnvironmentPackagesParamSchema, v.nullable(v.null())]),
+            v.union([EnvironmentPackagesParamSchema, v.null()]),
             v.description('Packages installed before the runtime network policy applies.'),
           ),
         ),
@@ -7853,7 +8447,7 @@ export const contract = {
         ),
         network: v.optional(
           v.pipe(
-            v.union([NetworkPolicyParamSchema, v.nullable(v.null())]),
+            v.union([NetworkPolicyParamSchema, v.null()]),
             v.description(
               'Network access available after setup completes. Omit to preserve the current policy, or pass `null` to reset to the default policy.',
             ),
@@ -7861,7 +8455,7 @@ export const contract = {
         ),
         desktop: v.optional(
           v.pipe(
-            v.union([DesktopParamSchema, v.nullable(v.null())]),
+            v.union([DesktopParamSchema, v.null()]),
             v.description('Replacement desktop configuration, or null to disable the desktop.'),
           ),
         ),
@@ -8018,7 +8612,7 @@ export const contract = {
         session_id: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
         prompt_cache_options: v.optional(
           v.pipe(
-            v.union([PromptCacheOptionsParam2Schema, v.nullable(v.null())]),
+            v.union([PromptCacheOptionsParam2Schema, v.null()]),
             v.description(
               'Default prompt cache lifetime for future turns. Send null to clear the session default.',
             ),
@@ -8041,7 +8635,7 @@ export const contract = {
         review: v.optional(SessionReviewParamSchema),
         spend_control: v.optional(
           v.pipe(
-            v.union([SessionBudgetControlParamsSchema, v.nullable(v.null())]),
+            v.union([SessionBudgetControlParamsSchema, v.null()]),
             v.description(
               'Omit to retain the limit; null or a null limit removes it without resetting spend.',
             ),
@@ -8624,7 +9218,8 @@ export const contract = {
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -8637,7 +9232,7 @@ export const contract = {
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -8797,7 +9392,13 @@ export const contract = {
           ),
         ),
         starting_after: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
         ),
         include_obfuscation: v.optional(
           v.pipe(
@@ -8874,7 +9475,16 @@ export const contract = {
       v.object({
         response_id: v.string(),
         limit: v.optional(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),
         after: v.optional(v.string()),

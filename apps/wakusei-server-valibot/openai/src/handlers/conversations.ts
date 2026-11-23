@@ -23,7 +23,16 @@ export const getConversationsConversationIdItems = os
     v.object({
       conversation_id: v.pipe(v.string(), v.metadata({ examples: ['conv_123'] })),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.picklist(['asc', 'desc'])),
       after: v.optional(v.string()),

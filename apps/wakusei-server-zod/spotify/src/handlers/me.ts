@@ -31,11 +31,11 @@ export const getMeAudiobooks = os
   })
   .input(
     z.object({
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -43,9 +43,11 @@ export const getMeAudiobooks = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -155,11 +157,11 @@ export const getMePlaylists = os
   })
   .input(
     z.object({
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -167,9 +169,11 @@ export const getMePlaylists = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -317,11 +321,11 @@ export const getMeAlbums = os
   })
   .input(
     z.object({
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -329,9 +333,11 @@ export const getMeAlbums = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -445,11 +451,11 @@ export const getMeTracks = os
           examples: ['ES'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -457,9 +463,11 @@ export const getMeTracks = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -585,11 +593,11 @@ export const getMeEpisodes = os
           examples: ['ES'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -597,9 +605,11 @@ export const getMeEpisodes = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -697,11 +707,11 @@ export const getMeShows = os
   })
   .input(
     z.object({
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -709,9 +719,11 @@ export const getMeShows = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -829,11 +841,11 @@ export const getMeFollowing = os
           examples: ['0I2XqVXqHScXjHhk6AYYRe'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -1179,9 +1191,11 @@ export const putMePlayerSeek = os
   })
   .input(
     z.object({
-      position_ms: z.coerce
-        .number()
-        .int()
+      position_ms: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .meta({
           description:
             'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
@@ -1244,9 +1258,11 @@ export const putMePlayerVolume = os
   })
   .input(
     z.object({
-      volume_percent: z.coerce
-        .number()
-        .int()
+      volume_percent: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .meta({
           description: 'The volume to set. Must be a value from 0 to 100 inclusive.\n',
           examples: [50],
@@ -1307,11 +1323,11 @@ export const getMePlayerRecentlyPlayed = os
   })
   .input(
     z.object({
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -1319,18 +1335,22 @@ export const getMePlayerRecentlyPlayed = os
           examples: [10],
         })
         .exactOptional(),
-      after: z.coerce
-        .number()
-        .int()
+      after: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .meta({
           description:
             'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
           examples: [1484811043508],
         })
         .exactOptional(),
-      before: z.coerce
-        .number()
-        .int()
+      before: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .meta({
           description:
             'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
@@ -1405,11 +1425,11 @@ export const getMeTopArtists = os
           examples: ['medium_term'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -1417,9 +1437,11 @@ export const getMeTopArtists = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:
@@ -1452,11 +1474,11 @@ export const getMeTopTracks = os
           examples: ['medium_term'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -1464,9 +1486,11 @@ export const getMeTopTracks = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:

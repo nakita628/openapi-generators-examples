@@ -1,5 +1,5 @@
 import { os } from '@orpc/server'
-import * as z from 'zod'
+import { type } from 'arktype'
 import {
   CreateFineTuningJobRequestSchema,
   DeleteFineTuningCheckpointPermissionResponseSchema,
@@ -48,12 +48,15 @@ export const getFineTuningCheckpointsFineTunedModelCheckpointPermissions = os
       '**NOTE:** This endpoint requires an [admin API key](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/admin_api_keys).\n\nOrganization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.\n',
   })
   .input(
-    z.object({
-      fine_tuned_model_checkpoint: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
-      project_id: z.string().exactOptional(),
-      after: z.string().exactOptional(),
-      limit: z.coerce.number().int().default(10).exactOptional(),
-      order: z.enum(['ascending', 'descending']).default('descending').exactOptional(),
+    type({
+      fine_tuned_model_checkpoint: type('string'),
+      'project_id?': type('string'),
+      'after?': type('string'),
+      'limit?': type('string').pipe((data, ctx) => {
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+        return Number.isSafeInteger(value) ? value : ctx.error('an integer')
+      }),
+      'order?': type("'ascending' | 'descending'"),
     }),
   )
   .output(ListFineTuningCheckpointPermissionResponseSchema)
@@ -69,13 +72,9 @@ export const postFineTuningCheckpointsFineTunedModelCheckpointPermissions = os
       '**NOTE:** Calling this endpoint requires an [admin API key](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/admin_api_keys).\n\nThis enables organization owners to share fine-tuned models with other projects in their organization.\n',
   })
   .input(
-    z.object({
-      fine_tuned_model_checkpoint: z
-        .string()
-        .meta({ examples: ['ft:gpt-4.1-mini-2025-04-14:org:weather:B7R9VjQd'] }),
-      project_ids: z
-        .array(z.string())
-        .meta({ description: 'The project identifiers to grant access to.' }),
+    type({
+      fine_tuned_model_checkpoint: type('string'),
+      project_ids: type('string[]').describe('The project identifiers to grant access to.'),
     }),
   )
   .output(ListFineTuningCheckpointPermissionResponseSchema)
@@ -90,14 +89,7 @@ export const deleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermi
     description:
       '**NOTE:** This endpoint requires an [admin API key](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/admin_api_keys).\n\nOrganization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.\n',
   })
-  .input(
-    z.object({
-      fine_tuned_model_checkpoint: z
-        .string()
-        .meta({ examples: ['ft:gpt-4.1-mini-2025-04-14:org:weather:B7R9VjQd'] }),
-      permission_id: z.string().meta({ examples: ['cp_zc4Q7MP6XxulcVzj4MZdwsAB'] }),
-    }),
-  )
+  .input(type({ fine_tuned_model_checkpoint: type('string'), permission_id: type('string') }))
   .output(DeleteFineTuningCheckpointPermissionResponseSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -110,28 +102,26 @@ export const getFineTuningJobs = os
     description: "List your organization's fine-tuning jobs\n",
   })
   .input(
-    z.object({
-      after: z.string().exactOptional(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
-      metadata: z
-        .preprocess(
-          (val) => {
-            if (typeof val !== 'object' || val === null || Array.isArray(val)) return val
-            const out = Object.entries(val).reduce<{ [k: string]: unknown }>(
-              (acc, [key, value]) => {
-                const name = /^[^[\]]+\[([^\]]+)\]$/u.exec(key)?.[1]
-                return name === undefined ? acc : { ...acc, [name]: value }
-              },
-              {},
-            )
-            return Object.keys(out).length > 0 ? out : val
-          },
-          z.preprocess(
-            (val) => (val === 'null' ? null : val),
-            z.record(z.string(), z.string()).nullable(),
-          ),
-        )
-        .exactOptional(),
+    type({
+      'after?': type('string'),
+      'limit?': type('string').pipe((data, ctx) => {
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+        return Number.isSafeInteger(value) ? value : ctx.error('an integer')
+      }),
+      'metadata?': type('unknown').pipe(
+        (data) => {
+          if (typeof data !== 'object' || data === null || Array.isArray(data)) return data
+          const out = Object.entries(data).reduce<{ [k: string]: unknown }>((acc, [key, value]) => {
+            const name = /^[^[\]]+\[([^\]]+)\]$/u.exec(key)?.[1]
+            return name === undefined ? acc : { ...acc, [name]: value }
+          }, {})
+          return Object.keys(out).length > 0 ? out : data
+        },
+        type('unknown').pipe(
+          (data) => (data === 'null' ? null : data),
+          type(type({ '[string]': 'string' })).or('null'),
+        ),
+      ),
     }),
   )
   .output(ListPaginatedFineTuningJobsResponseSchema)
@@ -159,11 +149,7 @@ export const getFineTuningJobsFineTuningJobId = os
     description:
       'Get info about a fine-tuning job.\n\n[Learn more about fine-tuning](https://developers.openai.com/api/docs/guides/model-optimization)\n',
   })
-  .input(
-    z.object({
-      fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
-    }),
-  )
+  .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -175,11 +161,7 @@ export const postFineTuningJobsFineTuningJobIdCancel = os
     summary: 'Cancel fine-tuning',
     description: 'Immediately cancel a fine-tune job.\n',
   })
-  .input(
-    z.object({
-      fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
-    }),
-  )
+  .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -192,10 +174,13 @@ export const getFineTuningJobsFineTuningJobIdCheckpoints = os
     description: 'List checkpoints for a fine-tuning job.\n',
   })
   .input(
-    z.object({
-      fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
-      after: z.string().exactOptional(),
-      limit: z.coerce.number().int().default(10).exactOptional(),
+    type({
+      fine_tuning_job_id: type('string'),
+      'after?': type('string'),
+      'limit?': type('string').pipe((data, ctx) => {
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+        return Number.isSafeInteger(value) ? value : ctx.error('an integer')
+      }),
     }),
   )
   .output(ListFineTuningJobCheckpointsResponseSchema)
@@ -210,10 +195,13 @@ export const getFineTuningJobsFineTuningJobIdEvents = os
     description: 'Get status updates for a fine-tuning job.\n',
   })
   .input(
-    z.object({
-      fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
-      after: z.string().exactOptional(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+    type({
+      fine_tuning_job_id: type('string'),
+      'after?': type('string'),
+      'limit?': type('string').pipe((data, ctx) => {
+        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+        return Number.isSafeInteger(value) ? value : ctx.error('an integer')
+      }),
     }),
   )
   .output(ListFineTuningJobEventsResponseSchema)
@@ -227,11 +215,7 @@ export const postFineTuningJobsFineTuningJobIdPause = os
     summary: 'Pause fine-tuning',
     description: 'Pause a fine-tune job.\n',
   })
-  .input(
-    z.object({
-      fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
-    }),
-  )
+  .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -243,10 +227,6 @@ export const postFineTuningJobsFineTuningJobIdResume = os
     summary: 'Resume fine-tuning',
     description: 'Resume a fine-tune job.\n',
   })
-  .input(
-    z.object({
-      fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
-    }),
-  )
+  .input(type({ fine_tuning_job_id: type('string') }))
   .output(FineTuningJobSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })

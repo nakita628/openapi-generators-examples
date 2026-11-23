@@ -84,14 +84,14 @@ export const patchApplicationsApplicationId = os
         .exactOptional(),
       icon: z.string().nullable().exactOptional(),
       cover_image: z.string().nullable().exactOptional(),
-      team_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      team_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       flags: z.int().nullable().exactOptional(),
       interactions_endpoint_url: z.url().max(2048).nullable().exactOptional(),
       explicit_content_filter: z
-        .xor([z.null().nullable(), ApplicationExplicitContentFilterTypesSchema])
+        .xor([z.null(), ApplicationExplicitContentFilterTypesSchema])
         .exactOptional(),
       max_participants: z.int32().min(-1).nullable().exactOptional(),
-      type: z.xor([z.null().nullable(), ApplicationTypesSchema]).exactOptional(),
+      type: z.xor([z.null(), ApplicationTypesSchema]).exactOptional(),
       tags: z
         .array(z.string().max(20))
         .max(5)
@@ -99,19 +99,14 @@ export const patchApplicationsApplicationId = os
         .nullable()
         .exactOptional(),
       custom_install_url: z.url().max(2048).nullable().exactOptional(),
-      install_params: z
-        .xor([z.null().nullable(), ApplicationOAuth2InstallParamsSchema])
-        .exactOptional(),
+      install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
       role_connections_verification_url: z.url().max(2048).nullable().exactOptional(),
       integration_types_config: z
-        .record(
-          z.string(),
-          z.xor([z.null().nullable(), ApplicationIntegrationTypeConfigurationSchema]),
-        )
+        .record(z.string(), z.xor([z.null(), ApplicationIntegrationTypeConfigurationSchema]))
         .nullable()
         .exactOptional(),
       event_webhooks_status: z
-        .xor([z.null().nullable(), ApplicationEventWebhooksStatusSchema])
+        .xor([z.null(), ApplicationEventWebhooksStatusSchema])
         .exactOptional(),
       event_webhooks_url: z
         .url()
@@ -217,13 +212,13 @@ export const postApplicationsApplicationIdCommands = os
         .nullable()
         .exactOptional(),
       handler: z
-        .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+        .xor([z.null(), ApplicationCommandHandlerSchema])
         .meta({
           description:
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
         })
         .exactOptional(),
-      type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
+      type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
     }),
   )
   .output(ApplicationCommandResponseSchema)
@@ -313,7 +308,7 @@ export const patchApplicationsApplicationIdCommandsCommandId = os
         .nullable()
         .exactOptional(),
       handler: z
-        .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+        .xor([z.null(), ApplicationCommandHandlerSchema])
         .meta({
           description:
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -408,7 +403,7 @@ export const getApplicationsApplicationIdEntitlements = os
                   (val) => (val === 'null' ? null : val),
                   z
                     .union([
-                      z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                      z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                       SnowflakeTypeSchema,
                     ])
                     .nullable(),
@@ -422,7 +417,12 @@ export const getApplicationsApplicationIdEntitlements = os
       guild_id: SnowflakeTypeSchema.exactOptional(),
       before: SnowflakeTypeSchema.exactOptional(),
       after: SnowflakeTypeSchema.exactOptional(),
-      limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
       exclude_ended: z.stringbool().exactOptional(),
       exclude_deleted: z.stringbool().exactOptional(),
       only_active: z.stringbool().exactOptional(),
@@ -548,13 +548,13 @@ export const postApplicationsApplicationIdGuildsGuildIdCommands = os
         .nullable()
         .exactOptional(),
       handler: z
-        .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+        .xor([z.null(), ApplicationCommandHandlerSchema])
         .meta({
           description:
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
         })
         .exactOptional(),
-      type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
+      type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
     }),
   )
   .output(ApplicationCommandResponseSchema)
@@ -667,7 +667,7 @@ export const patchApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
         .nullable()
         .exactOptional(),
       handler: z
-        .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+        .xor([z.null(), ApplicationCommandHandlerSchema])
         .meta({
           description:
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",

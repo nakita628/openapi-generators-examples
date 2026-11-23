@@ -36,7 +36,8 @@ export const getMeAudiobooks = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -52,7 +53,16 @@ export const getMeAudiobooks = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -172,7 +182,8 @@ export const getMePlaylists = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -188,7 +199,16 @@ export const getMePlaylists = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             "'The index of the first playlist to return. Default:\n0 (the first object). Maximum offset: 100.000\\. Use with `limit` to get the\nnext set of playlists.'\n",
           ),
@@ -350,7 +370,8 @@ export const getMeAlbums = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -366,7 +387,16 @@ export const getMeAlbums = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -492,7 +522,8 @@ export const getMeTracks = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -508,7 +539,16 @@ export const getMeTracks = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -649,7 +689,8 @@ export const getMeEpisodes = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -665,7 +706,16 @@ export const getMeEpisodes = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -769,7 +819,8 @@ export const getMeShows = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -785,7 +836,16 @@ export const getMeShows = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -907,7 +967,8 @@ export const getMeFollowing = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1286,7 +1347,13 @@ export const putMePlayerSeek = os
   .input(
     v.object({
       position_ms: v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
         ),
@@ -1352,7 +1419,13 @@ export const putMePlayerVolume = os
   .input(
     v.object({
       volume_percent: v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description('The volume to set. Must be a value from 0 to 100 inclusive.\n'),
         v.metadata({ examples: [50] }),
       ),
@@ -1423,7 +1496,8 @@ export const getMePlayerRecentlyPlayed = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1439,7 +1513,13 @@ export const getMePlayerRecentlyPlayed = os
       ),
       after: v.optional(
         v.pipe(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           v.description(
             'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
           ),
@@ -1448,7 +1528,13 @@ export const getMePlayerRecentlyPlayed = os
       ),
       before: v.optional(
         v.pipe(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           v.description(
             'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
           ),
@@ -1529,7 +1615,8 @@ export const getMeTopArtists = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1545,7 +1632,16 @@ export const getMeTopArtists = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -1582,7 +1678,8 @@ export const getMeTopTracks = os
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1598,7 +1695,16 @@ export const getMeTopTracks = os
       ),
       offset: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),

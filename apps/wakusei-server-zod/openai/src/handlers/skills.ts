@@ -22,7 +22,12 @@ export const getSkills = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(100),
+        )
+        .exactOptional(),
       order: OrderEnumSchema.exactOptional(),
       after: z
         .string()
@@ -117,7 +122,12 @@ export const getSkillsSkillIdVersions = os
   .input(
     z.object({
       skill_id: z.string().meta({ examples: ['skill_123'] }),
-      limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(100),
+        )
+        .exactOptional(),
       order: OrderEnumSchema.exactOptional(),
       after: z
         .string()

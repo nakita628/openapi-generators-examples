@@ -56,7 +56,16 @@ export const getFineTuningCheckpointsFineTunedModelCheckpointPermissions = os
       project_id: v.optional(v.string()),
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '10'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '10',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['ascending', 'descending']), 'descending')),
     }),
@@ -121,7 +130,16 @@ export const getFineTuningJobs = os
     v.object({
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       metadata: v.optional(
         v.pipe(
@@ -215,7 +233,16 @@ export const getFineTuningJobsFineTuningJobIdCheckpoints = os
       ),
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '10'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '10',
+        ),
       ),
     }),
   )
@@ -238,7 +265,16 @@ export const getFineTuningJobsFineTuningJobIdEvents = os
       ),
       after: v.optional(v.string()),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
     }),
   )

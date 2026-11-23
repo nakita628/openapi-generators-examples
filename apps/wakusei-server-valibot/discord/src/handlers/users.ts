@@ -54,7 +54,7 @@ export const getUsersMeApplicationsApplicationIdEntitlements = os
                     v.pipe(
                       v.unknown(),
                       v.transform((input) => (input === 'null' ? null : input)),
-                      v.nullable(v.null()),
+                      v.null(),
                     ),
                     SnowflakeTypeSchema,
                   ]),
@@ -151,7 +151,8 @@ export const getUsersMeGuilds = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -159,7 +160,14 @@ export const getUsersMeGuilds = os
         ),
       ),
       shard: v.optional(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger(), v.minValue(0)),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+          v.minValue(0),
+        ),
       ),
       with_counts: v.optional(
         v.pipe(

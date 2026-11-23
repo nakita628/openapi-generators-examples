@@ -137,7 +137,16 @@ export const getOrganizationAdminApiKeys = os
       ),
       limit: v.optional(
         v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
           v.description('Maximum number of keys to return.'),
         ),
       ),
@@ -221,25 +230,49 @@ export const getOrganizationAuditLogs = os
         v.partial(
           v.object({
             gt: v.pipe(
-              v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
               v.description(
                 'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
               ),
             ),
             gte: v.pipe(
-              v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
               v.description(
                 'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
               ),
             ),
             lt: v.pipe(
-              v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
               v.description(
                 'Return only events whose `effective_at` (Unix seconds) is less than this value.',
               ),
             ),
             lte: v.pipe(
-              v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
               v.description(
                 'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
               ),
@@ -293,7 +326,16 @@ export const getOrganizationAuditLogs = os
         ),
       ),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
       before: v.optional(v.string()),
@@ -314,7 +356,16 @@ export const getOrganizationCertificates = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -433,8 +484,22 @@ export const getOrganizationCosts = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.literal('1d'), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -465,7 +530,16 @@ export const getOrganizationCosts = os
         ),
       ),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '7'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '7',
+        ),
       ),
       page: v.optional(v.string()),
     }),
@@ -513,7 +587,8 @@ export const getOrganizationGroups = os
         v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -604,7 +679,8 @@ export const getOrganizationGroupsGroupIdRoles = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -678,7 +754,8 @@ export const getOrganizationGroupsGroupIdUsers = os
         v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -750,7 +827,16 @@ export const getOrganizationInvites = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
     }),
@@ -810,7 +896,16 @@ export const getOrganizationProjects = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
       include_archived: v.optional(
@@ -869,19 +964,19 @@ export const postOrganizationProjectsProjectId = os
       project_id: v.string(),
       name: v.optional(
         v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
+          v.union([v.string(), v.null()]),
           v.description('The updated name of the project, this name appears in reports.'),
         ),
       ),
       external_key_id: v.optional(
         v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
+          v.union([v.string(), v.null()]),
           v.description('External key ID to associate with the project.'),
         ),
       ),
       geography: v.optional(
         v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
+          v.union([v.string(), v.null()]),
           v.description(
             'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
           ),
@@ -906,7 +1001,16 @@ export const getOrganizationProjectsProjectIdApiKeys = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
       owner_project_access: v.optional(v.picklist(['active', 'inactive', 'any'])),
@@ -1004,7 +1108,16 @@ export const getOrganizationProjectsProjectIdCertificates = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -1116,7 +1229,8 @@ export const getOrganizationProjectsProjectIdGroups = os
         v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -1213,31 +1327,31 @@ export const postOrganizationProjectsProjectIdHostedToolPermissions = os
       project_id: v.string(),
       file_search: v.optional(
         v.pipe(
-          v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+          v.union([HostedToolPermissionUpdateSchema, v.null()]),
           v.description('The file search permission update.'),
         ),
       ),
       web_search: v.optional(
         v.pipe(
-          v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+          v.union([HostedToolPermissionUpdateSchema, v.null()]),
           v.description('The web search permission update.'),
         ),
       ),
       image_generation: v.optional(
         v.pipe(
-          v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+          v.union([HostedToolPermissionUpdateSchema, v.null()]),
           v.description('The image generation permission update.'),
         ),
       ),
       mcp: v.optional(
         v.pipe(
-          v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+          v.union([HostedToolPermissionUpdateSchema, v.null()]),
           v.description('The MCP permission update.'),
         ),
       ),
       code_interpreter: v.optional(
         v.pipe(
-          v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+          v.union([HostedToolPermissionUpdateSchema, v.null()]),
           v.description('The code interpreter permission update.'),
         ),
       ),
@@ -1310,7 +1424,16 @@ export const getOrganizationProjectsProjectIdRateLimits = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '100'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '100',
+        ),
       ),
       after: v.optional(v.string()),
       before: v.optional(v.string()),
@@ -1384,7 +1507,16 @@ export const getOrganizationProjectsProjectIdServiceAccounts = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
     }),
@@ -1412,15 +1544,12 @@ export const postOrganizationProjectsProjectIdServiceAccounts = os
             v.boolean(),
             v.description('Create the service account without default roles or an API key.'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       expires_in_seconds: v.optional(
         v.pipe(
-          v.union([
-            v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
-            v.nullable(v.null()),
-          ]),
+          v.union([v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)), v.null()]),
           v.description(
             'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
           ),
@@ -1495,7 +1624,8 @@ export const getOrganizationProjectsProjectIdSpendAlerts = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -1604,7 +1734,16 @@ export const getOrganizationProjectsProjectIdUsers = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
     }),
@@ -1626,13 +1765,10 @@ export const postOrganizationProjectsProjectIdUsers = os
     v.object({
       project_id: v.string(),
       user_id: v.optional(
-        v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('The ID of the user.')),
+        v.pipe(v.union([v.string(), v.null()]), v.description('The ID of the user.')),
       ),
       email: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('Email of the user to add.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('Email of the user to add.')),
       ),
       role: v.pipe(v.string(), v.description('`owner` or `member`')),
     }),
@@ -1667,7 +1803,7 @@ export const postOrganizationProjectsProjectIdUsersUserId = os
       project_id: v.string(),
       user_id: v.string(),
       role: v.optional(
-        v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `member`')),
+        v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `member`')),
       ),
     }),
   )
@@ -1703,7 +1839,8 @@ export const getOrganizationRoles = os
         v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -1759,21 +1896,15 @@ export const postOrganizationRolesRoleId = os
       role_id: v.string(),
       permissions: v.optional(
         v.pipe(
-          v.union([v.array(v.string()), v.nullable(v.null())]),
+          v.union([v.array(v.string()), v.null()]),
           v.description('Updated set of permissions for the role.'),
         ),
       ),
       description: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('New description for the role.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('New description for the role.')),
       ),
       role_name: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('New name for the role.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('New name for the role.')),
       ),
     }),
   )
@@ -1807,7 +1938,8 @@ export const getOrganizationSpendAlerts = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -1899,8 +2031,22 @@ export const getOrganizationUsageAudioSpeeches = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -1937,7 +2083,15 @@ export const getOrganizationUsageAudioSpeeches = os
           v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -1955,8 +2109,22 @@ export const getOrganizationUsageAudioTranscriptions = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -1993,7 +2161,15 @@ export const getOrganizationUsageAudioTranscriptions = os
           v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2011,8 +2187,22 @@ export const getOrganizationUsageCodeInterpreterSessions = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -2028,7 +2218,15 @@ export const getOrganizationUsageCodeInterpreterSessions = os
           v.array(v.literal('project_id')),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2046,8 +2244,22 @@ export const getOrganizationUsageCompletions = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -2101,7 +2313,15 @@ export const getOrganizationUsageCompletions = os
           ),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2119,8 +2339,22 @@ export const getOrganizationUsageEmbeddings = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -2157,7 +2391,15 @@ export const getOrganizationUsageEmbeddings = os
           v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2175,8 +2417,22 @@ export const getOrganizationUsageFileSearchCalls = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -2213,7 +2469,15 @@ export const getOrganizationUsageFileSearchCalls = os
           v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'vector_store_id'])),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2231,8 +2495,22 @@ export const getOrganizationUsageImages = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       sources: v.optional(
         v.pipe(
@@ -2283,7 +2561,15 @@ export const getOrganizationUsageImages = os
           v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source'])),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2301,8 +2587,22 @@ export const getOrganizationUsageModerations = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -2339,7 +2639,15 @@ export const getOrganizationUsageModerations = os
           v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2357,8 +2665,22 @@ export const getOrganizationUsageVectorStores = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -2374,7 +2696,15 @@ export const getOrganizationUsageVectorStores = os
           v.array(v.literal('project_id')),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2392,8 +2722,22 @@ export const getOrganizationUsageWebSearchCalls = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-      end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      end_time: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       bucket_width: v.optional(v.optional(v.picklist(['1m', '1h', '1d']), '1d')),
       project_ids: v.optional(
         v.pipe(
@@ -2446,7 +2790,15 @@ export const getOrganizationUsageWebSearchCalls = os
           ),
         ),
       ),
-      limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+      limit: v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+      ),
       page: v.optional(v.string()),
     }),
   )
@@ -2465,7 +2817,16 @@ export const getOrganizationUsers = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       after: v.optional(v.string()),
       emails: v.optional(
@@ -2506,25 +2867,16 @@ export const postOrganizationUsersUserId = os
     v.object({
       user_id: v.string(),
       role: v.optional(
-        v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `reader`')),
+        v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `reader`')),
       ),
       role_id: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('Role ID to assign to the user.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('Role ID to assign to the user.')),
       ),
       technical_level: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('Technical level metadata.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('Technical level metadata.')),
       ),
       developer_persona: v.optional(
-        v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
-          v.description('Developer persona metadata.'),
-        ),
+        v.pipe(v.union([v.string(), v.null()]), v.description('Developer persona metadata.')),
       ),
     }),
   )
@@ -2559,7 +2911,8 @@ export const getOrganizationUsersUserIdRoles = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -2630,7 +2983,8 @@ export const getOrganizationExternalKeys = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -2644,7 +2998,7 @@ export const getOrganizationExternalKeys = os
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
       ),
@@ -2715,7 +3069,8 @@ export const getOrganizationWorkloadIdentityProviders = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -2772,7 +3127,7 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
       verification: v.optional(
         v.union([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema]),
       ),
-      description: v.optional(v.union([v.string(), v.nullable(v.null())])),
+      description: v.optional(v.union([v.string(), v.null()])),
       attribute_transformations: v.optional(
         v.pipe(v.array(TransformationParamSchema), v.maxLength(20)),
       ),
@@ -2808,7 +3163,8 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -2885,8 +3241,8 @@ export const postOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderId
       v.object({
         workload_identity_provider_id: v.pipe(v.string(), v.minCodePoints(1)),
         workload_identity_federation_rule_id: v.pipe(v.string(), v.minCodePoints(1)),
-        name: v.optional(v.union([v.string(), v.nullable(v.null())])),
-        description: v.optional(v.union([v.string(), v.nullable(v.null())])),
+        name: v.optional(v.union([v.string(), v.null()])),
+        description: v.optional(v.union([v.string(), v.null()])),
         attribute_matchers: v.optional(
           v.record(
             v.string(),
@@ -2934,18 +3290,30 @@ export const getOrganizationUsageDecisions = os
   })
   .input(
     v.object({
-      start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+      start_time: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
       end_time: v.optional(
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
           v.nullable(
             v.union([
-              v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -2966,7 +3334,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -2978,11 +3346,17 @@ export const getOrganizationUsageDecisions = os
           v.transform((input) => (input === 'null' ? null : input)),
           v.nullable(
             v.union([
-              v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -2999,7 +3373,7 @@ export const getOrganizationUsageDecisions = os
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
       ),
@@ -3024,7 +3398,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -3053,7 +3427,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -3080,7 +3454,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -3107,7 +3481,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -3134,7 +3508,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -3154,7 +3528,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -3181,7 +3555,7 @@ export const getOrganizationExternalStorage = os
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
       ),
@@ -3194,7 +3568,7 @@ export const getOrganizationExternalStorage = os
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
       ),
@@ -3202,7 +3576,8 @@ export const getOrganizationExternalStorage = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3354,7 +3729,7 @@ export const postOrganizationProjectsProjectIdSpendLimit = os
               'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     }),
@@ -3437,7 +3812,7 @@ export const postOrganizationProjectsProjectIdServiceAccountsServiceAccountIdApi
             v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
             v.description('Number of seconds until the API key expires.'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     }),

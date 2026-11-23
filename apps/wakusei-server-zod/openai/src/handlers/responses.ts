@@ -49,7 +49,12 @@ export const getResponsesResponseId = os
         )
         .exactOptional(),
       stream: z.stringbool().exactOptional(),
-      starting_after: z.coerce.number().int().exactOptional(),
+      starting_after: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       include_obfuscation: z.stringbool().exactOptional(),
     }),
   )
@@ -106,7 +111,13 @@ export const getResponsesResponseIdInputItems = os
   .input(
     z.object({
       response_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).exactOptional(),
       after: z.string().exactOptional(),
       include: z
@@ -166,7 +177,12 @@ export const getResponsesResponseIdBetaTrue = os
         )
         .exactOptional(),
       stream: z.stringbool().exactOptional(),
-      starting_after: z.coerce.number().int().exactOptional(),
+      starting_after: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .exactOptional(),
       include_obfuscation: z.stringbool().exactOptional(),
     }),
   )
@@ -237,7 +253,13 @@ export const getResponsesResponseIdInputItemsBetaTrue = os
   .input(
     z.object({
       response_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).exactOptional(),
       after: z.string().exactOptional(),
       include: z

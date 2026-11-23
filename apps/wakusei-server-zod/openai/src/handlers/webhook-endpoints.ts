@@ -1,5 +1,5 @@
 import { os } from '@orpc/server'
-import { type } from 'arktype'
+import * as z from 'zod'
 import {
   DeletedWebhookEndpointResourceSchema,
   ProjectEventTypeEnumSchema,
@@ -19,25 +19,19 @@ export const getWebhookEndpoints = os
     successDescription: 'Success',
   })
   .input(
-    type({
-      'limit?': type('string')
-        .pipe((data, ctx) => {
-          const value = Number(data)
-          return Number.isSafeInteger(value) ? value : ctx.error('an integer')
-        })
-        .to('number.integer >= 1 & number.integer <= 100'),
-      'after?': type('unknown').pipe((data, ctx) => {
-        for (const branch of [
-          type('string'),
-          type('unknown')
-            .pipe((data) => (data === 'null' ? null : data))
-            .to('null | null'),
-        ]) {
-          const out = branch(data)
-          if (!(out instanceof type.errors)) return out
-        }
-        return ctx.error('one of the members')
-      }),
+    z.object({
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
+      after: z
+        .union([
+          z.string().meta({ examples: ['whe_123'] }),
+          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
+        ])
+        .exactOptional(),
     }),
   )
   .output(WebhookEndpointListResourceSchema)
@@ -63,7 +57,7 @@ export const getWebhookEndpointsWebhookEndpointId = os
     description: 'Retrieves a webhook endpoint for the authenticated project.',
     successDescription: 'Success',
   })
-  .input(type({ webhook_endpoint_id: type('string') }))
+  .input(z.object({ webhook_endpoint_id: z.string().meta({ examples: ['whe_123'] }) }))
   .output(WebhookEndpointBodySchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -76,19 +70,25 @@ export const postWebhookEndpointsWebhookEndpointId = os
     successDescription: 'Success',
   })
   .input(
-    type({
-      webhook_endpoint_id: type('string'),
-      'name?': type('string')
-        .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
-        .narrow((data, ctx) => [...data].length <= 256 || ctx.mustBe('at most 256 characters'))
-        .describe('A new human-readable name for the webhook endpoint.'),
-      'url?': type('string')
-        .and(/^https:\/\//)
-        .narrow((data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'))
-        .describe('A new HTTPS URL that receives webhook deliveries.'),
-      'event_types?': type(type(ProjectEventTypeEnumSchema).array())
-        .and(type('unknown[] >= 1'))
-        .describe('The complete set of event types that should trigger deliveries.'),
+    z.object({
+      webhook_endpoint_id: z.string().meta({ examples: ['whe_123'] }),
+      name: z
+        .string()
+        .min(1)
+        .max(256)
+        .meta({ description: 'A new human-readable name for the webhook endpoint.' })
+        .exactOptional(),
+      url: z
+        .string()
+        .regex(/^https:\/\//)
+        .max(2048)
+        .meta({ description: 'A new HTTPS URL that receives webhook deliveries.' })
+        .exactOptional(),
+      event_types: z
+        .array(ProjectEventTypeEnumSchema)
+        .min(1)
+        .meta({ description: 'The complete set of event types that should trigger deliveries.' })
+        .exactOptional(),
     }),
   )
   .output(WebhookEndpointBodySchema)
@@ -102,7 +102,7 @@ export const deleteWebhookEndpointsWebhookEndpointId = os
     description: 'Deletes a webhook endpoint for the authenticated project.',
     successDescription: 'Success',
   })
-  .input(type({ webhook_endpoint_id: type('string') }))
+  .input(z.object({ webhook_endpoint_id: z.string().meta({ examples: ['whe_123'] }) }))
   .output(DeletedWebhookEndpointResourceSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 
@@ -115,11 +115,15 @@ export const postWebhookEndpointsWebhookEndpointIdRotateSecret = os
     successDescription: 'Success',
   })
   .input(
-    type({
-      webhook_endpoint_id: type('string'),
-      'keep_old_secret_active_for_24_hours?': type('boolean').describe(
-        'Whether to keep the previous signing secret valid for 24 hours after rotation. Defaults to false, which invalidates the previous secret immediately.',
-      ),
+    z.object({
+      webhook_endpoint_id: z.string().meta({ examples: ['whe_123'] }),
+      keep_old_secret_active_for_24_hours: z
+        .boolean()
+        .meta({
+          description:
+            'Whether to keep the previous signing secret valid for 24 hours after rotation. Defaults to false, which invalidates the previous secret immediately.',
+        })
+        .exactOptional(),
     }),
   )
   .output(WebhookEndpointWithSecretResourceSchema)
@@ -133,6 +137,11 @@ export const postWebhookEndpointsWebhookEndpointIdTest = os
     description: 'Sends a sample event to a webhook endpoint for the authenticated project.',
     successDescription: 'Success',
   })
-  .input(type({ webhook_endpoint_id: type('string'), event_type: ProjectEventTypeEnumSchema }))
+  .input(
+    z.object({
+      webhook_endpoint_id: z.string().meta({ examples: ['whe_123'] }),
+      event_type: ProjectEventTypeEnumSchema,
+    }),
+  )
   .output(WebhookEndpointTestResultResourceSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })

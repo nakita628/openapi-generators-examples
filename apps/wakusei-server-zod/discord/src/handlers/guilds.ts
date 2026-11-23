@@ -117,17 +117,17 @@ export const patchGuildsGuildId = os
       description: z.string().min(0).max(300).nullable().exactOptional(),
       region: z.string().nullable().exactOptional(),
       icon: z.string().nullable().exactOptional(),
-      verification_level: z.xor([z.null().nullable(), VerificationLevelsSchema]).exactOptional(),
+      verification_level: z.xor([z.null(), VerificationLevelsSchema]).exactOptional(),
       default_message_notifications: z
-        .xor([z.null().nullable(), UserNotificationSettingsSchema])
+        .xor([z.null(), UserNotificationSettingsSchema])
         .exactOptional(),
       explicit_content_filter: z
-        .xor([z.null().nullable(), GuildExplicitContentFilterTypesSchema])
+        .xor([z.null(), GuildExplicitContentFilterTypesSchema])
         .exactOptional(),
-      preferred_locale: z.xor([z.null().nullable(), AvailableLocalesEnumSchema]).exactOptional(),
-      afk_timeout: z.xor([z.null().nullable(), AfkTimeoutsSchema]).exactOptional(),
-      afk_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-      system_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      preferred_locale: z.xor([z.null(), AvailableLocalesEnumSchema]).exactOptional(),
+      afk_timeout: z.xor([z.null(), AfkTimeoutsSchema]).exactOptional(),
+      afk_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+      system_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       splash: z.string().nullable().exactOptional(),
       banner: z.string().nullable().exactOptional(),
       system_channel_flags: z.int().nullable().exactOptional(),
@@ -139,9 +139,9 @@ export const patchGuildsGuildId = os
         .exactOptional(),
       discovery_splash: z.string().nullable().exactOptional(),
       home_header: z.string().nullable().exactOptional(),
-      rules_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-      safety_alerts_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-      public_updates_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      rules_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+      safety_alerts_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+      public_updates_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       premium_progress_bar_enabled: z.boolean().nullable().exactOptional(),
     }),
   )
@@ -162,7 +162,12 @@ export const getGuildsGuildIdAuditLogs = os
       action_type: AuditLogActionTypesSchema.exactOptional(),
       before: SnowflakeTypeSchema.exactOptional(),
       after: SnowflakeTypeSchema.exactOptional(),
-      limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
     }),
   )
   .output(GuildAuditLogResponseSchema)
@@ -184,7 +189,7 @@ export const getGuildsGuildIdAutoModerationRules = os
           MLSpamRuleResponseSchema,
           MentionSpamRuleResponseSchema,
           UserProfileRuleResponseSchema,
-          z.null().nullable(),
+          z.null(),
         ]),
       )
       .nullable(),
@@ -264,7 +269,12 @@ export const getGuildsGuildIdBans = os
   .input(
     z.object({
       guild_id: SnowflakeTypeSchema,
-      limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(1000),
+        )
+        .exactOptional(),
       before: SnowflakeTypeSchema.exactOptional(),
       after: SnowflakeTypeSchema.exactOptional(),
     }),
@@ -359,7 +369,7 @@ export const postGuildsGuildIdChannels = os
   .input(
     z.object({
       guild_id: SnowflakeTypeSchema,
-      type: z.xor([z.null().nullable(), ChannelTypesSchema]).exactOptional(),
+      type: z.xor([z.null(), ChannelTypesSchema]).exactOptional(),
       name: z.string().min(1).max(100),
       position: z.int32().min(0).nullable().exactOptional(),
       topic: z.string().min(0).max(4096).nullable().exactOptional(),
@@ -367,28 +377,26 @@ export const postGuildsGuildIdChannels = os
       user_limit: z.int32().min(0).nullable().exactOptional(),
       nsfw: z.boolean().nullable().exactOptional(),
       rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-      parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       permission_overwrites: z
         .array(ChannelPermissionOverwriteRequestSchema)
         .max(100)
         .nullable()
         .exactOptional(),
       rtc_region: z.string().nullable().exactOptional(),
-      video_quality_mode: z.xor([z.null().nullable(), VideoQualityModesSchema]).exactOptional(),
+      video_quality_mode: z.xor([z.null(), VideoQualityModesSchema]).exactOptional(),
       default_auto_archive_duration: z
-        .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
+        .xor([z.null(), ThreadAutoArchiveDurationSchema])
         .exactOptional(),
       default_reaction_emoji: z
-        .xor([z.null().nullable(), UpdateDefaultReactionEmojiRequestSchema])
+        .xor([z.null(), UpdateDefaultReactionEmojiRequestSchema])
         .exactOptional(),
       default_thread_rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-      default_sort_order: z.xor([z.null().nullable(), ThreadSortOrderSchema]).exactOptional(),
-      default_forum_layout: z.xor([z.null().nullable(), ForumLayoutSchema]).exactOptional(),
-      default_tag_setting: z
-        .xor([z.null().nullable(), ThreadSearchTagSettingSchema])
-        .exactOptional(),
+      default_sort_order: z.xor([z.null(), ThreadSortOrderSchema]).exactOptional(),
+      default_forum_layout: z.xor([z.null(), ForumLayoutSchema]).exactOptional(),
+      default_tag_setting: z.xor([z.null(), ThreadSearchTagSettingSchema]).exactOptional(),
       available_tags: z
-        .array(z.xor([z.null().nullable(), CreateOrUpdateThreadTagRequestSchema]))
+        .array(z.xor([z.null(), CreateOrUpdateThreadTagRequestSchema]))
         .max(20)
         .nullable()
         .exactOptional(),
@@ -430,7 +438,7 @@ export const postGuildsGuildIdEmojis = os
       name: z.string().min(2).max(32),
       image: z.string(),
       roles: z
-        .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+        .array(z.xor([z.null(), SnowflakeTypeSchema]))
         .max(1521)
         .refine((val) => new Set(val).size === val.length)
         .nullable()
@@ -472,7 +480,7 @@ export const patchGuildsGuildIdEmojisEmojiId = os
       emoji_id: SnowflakeTypeSchema,
       name: z.string().min(2).max(32).exactOptional(),
       roles: z
-        .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+        .array(z.xor([z.null(), SnowflakeTypeSchema]))
         .max(1521)
         .refine((val) => new Set(val).size === val.length)
         .nullable()
@@ -551,7 +559,7 @@ export const getGuildsGuildIdInvites = os
           FriendInviteResponseSchema,
           GroupDMInviteResponseSchema,
           GuildInviteResponseSchema,
-          z.null().nullable(),
+          z.null(),
         ]),
       )
       .nullable(),
@@ -567,7 +575,12 @@ export const getGuildsGuildIdMembers = os
   .input(
     z.object({
       guild_id: SnowflakeTypeSchema,
-      limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(1000),
+        )
+        .exactOptional(),
       after: SnowflakeTypeSchema.exactOptional(),
     }),
   )
@@ -601,7 +614,12 @@ export const getGuildsGuildIdMembersSearch = os
   .input(
     z.object({
       guild_id: SnowflakeTypeSchema,
-      limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(1000),
+        )
+        .exactOptional(),
       query: z.string().min(1).max(100),
     }),
   )
@@ -667,14 +685,14 @@ export const patchGuildsGuildIdMembersUserId = os
       user_id: SnowflakeTypeSchema,
       nick: z.string().max(32).nullable().exactOptional(),
       roles: z
-        .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+        .array(z.xor([z.null(), SnowflakeTypeSchema]))
         .max(350)
         .refine((val) => new Set(val).size === val.length)
         .nullable()
         .exactOptional(),
       mute: z.boolean().nullable().exactOptional(),
       deaf: z.boolean().nullable().exactOptional(),
-      channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       communication_disabled_until: z.iso.datetime({ offset: true }).nullable().exactOptional(),
       flags: z.int().nullable().exactOptional(),
     }),
@@ -726,7 +744,12 @@ export const getGuildsGuildIdMessagesSearch = os
       sort_by: SortingModeSchema.exactOptional(),
       sort_order: SortingOrderSchema.exactOptional(),
       content: z.string().max(1024).exactOptional(),
-      slop: z.coerce.number().int().min(0).max(100).exactOptional(),
+      slop: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(100),
+        )
+        .exactOptional(),
       author_id: z
         .preprocess(
           (val) => (val === undefined || Array.isArray(val) ? val : [val]),
@@ -784,8 +807,18 @@ export const getGuildsGuildIdMessagesSearch = os
       mention_everyone: z.stringbool().exactOptional(),
       min_id: SnowflakeTypeSchema.exactOptional(),
       max_id: SnowflakeTypeSchema.exactOptional(),
-      limit: z.coerce.number().int().min(1).max(25).exactOptional(),
-      offset: z.coerce.number().int().min(0).max(9975).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(25),
+        )
+        .exactOptional(),
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(9975),
+        )
+        .exactOptional(),
       has: z
         .preprocess(
           (val) => (val === undefined || Array.isArray(val) ? val : [val]),
@@ -893,7 +926,7 @@ export const putGuildsGuildIdOnboarding = os
         .refine((val) => new Set(val).size === val.length)
         .nullable()
         .exactOptional(),
-      mode: z.xor([z.null().nullable(), GuildOnboardingModeSchema]).exactOptional(),
+      mode: z.xor([z.null(), GuildOnboardingModeSchema]).exactOptional(),
     }),
   )
   .output(GuildOnboardingResponseSchema)
@@ -942,7 +975,12 @@ export const getGuildsGuildIdPrune = os
   .input(
     z.object({
       guild_id: SnowflakeTypeSchema,
-      days: z.coerce.number().int().min(1).max(30).exactOptional(),
+      days: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(30),
+        )
+        .exactOptional(),
       include_roles: z
         .union([
           z.string(),
@@ -954,7 +992,7 @@ export const getGuildsGuildIdPrune = os
                   (val) => (val === 'null' ? null : val),
                   z
                     .union([
-                      z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                      z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                       SnowflakeTypeSchema,
                     ])
                     .nullable(),
@@ -988,7 +1026,7 @@ export const postGuildsGuildIdPrune = os
             .array(SnowflakeTypeSchema)
             .max(100)
             .refine((val) => new Set(val).size === val.length),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
     }),
@@ -1017,7 +1055,12 @@ export const getGuildsGuildIdRequests = os
     z.object({
       guild_id: SnowflakeTypeSchema,
       status: GuildJoinRequestApplicationStatusSchema.exactOptional(),
-      limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
       before: SnowflakeTypeSchema.exactOptional(),
       after: SnowflakeTypeSchema.exactOptional(),
     }),
@@ -1072,7 +1115,7 @@ export const postGuildsGuildIdRoles = os
       name: z.string().min(1).max(100).nullable().exactOptional(),
       permissions: z.int().nullable().exactOptional(),
       color: z.int().min(0).max(16777215).nullable().exactOptional(),
-      colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+      colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
       hoist: z.boolean().nullable().exactOptional(),
       mentionable: z.boolean().nullable().exactOptional(),
       icon: z.string().nullable().exactOptional(),
@@ -1135,7 +1178,7 @@ export const patchGuildsGuildIdRolesRoleId = os
       name: z.string().min(1).max(100).nullable().exactOptional(),
       permissions: z.int().nullable().exactOptional(),
       color: z.int().min(0).max(16777215).nullable().exactOptional(),
-      colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+      colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
       hoist: z.boolean().nullable().exactOptional(),
       mentionable: z.boolean().nullable().exactOptional(),
       icon: z.string().nullable().exactOptional(),
@@ -1327,7 +1370,12 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsers = os
       guild_id: SnowflakeTypeSchema,
       guild_scheduled_event_id: SnowflakeTypeSchema,
       with_member: z.stringbool().exactOptional(),
-      limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(100),
+        )
+        .exactOptional(),
       before: SnowflakeTypeSchema.exactOptional(),
       after: SnowflakeTypeSchema.exactOptional(),
     }),
@@ -1371,7 +1419,13 @@ export const getGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildScheduledE
         guild_scheduled_event_id: SnowflakeTypeSchema,
         guild_scheduled_event_exception_id: SnowflakeTypeSchema,
         with_member: z.stringbool().exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -1401,7 +1455,7 @@ export const postGuildsGuildIdSoundboardSounds = os
       guild_id: SnowflakeTypeSchema,
       name: z.string().min(2).max(32),
       volume: z.number().min(0).max(1).nullable().exactOptional(),
-      emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
       sound: z.string(),
     }),
@@ -1441,7 +1495,7 @@ export const patchGuildsGuildIdSoundboardSoundsSoundId = os
       sound_id: SnowflakeTypeSchema,
       name: z.string().min(2).max(32).exactOptional(),
       volume: z.number().min(0).max(1).nullable().exactOptional(),
-      emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
     }),
   )
@@ -1612,7 +1666,7 @@ export const patchGuildsGuildIdVoiceStatesMe = os
       guild_id: SnowflakeTypeSchema,
       request_to_speak_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
       suppress: z.boolean().nullable().exactOptional(),
-      channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
     }),
   )
   .handler(async ({ input }) => { throw new Error('Not implemented') })
@@ -1639,7 +1693,7 @@ export const patchGuildsGuildIdVoiceStatesUserId = os
       guild_id: SnowflakeTypeSchema,
       user_id: SnowflakeTypeSchema,
       suppress: z.boolean().nullable().exactOptional(),
-      channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
     }),
   )
   .handler(async ({ input }) => { throw new Error('Not implemented') })
@@ -1710,7 +1764,7 @@ export const patchGuildsGuildIdWidget = os
   .input(
     z.object({
       guild_id: SnowflakeTypeSchema,
-      channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+      channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       enabled: z.boolean().nullable().exactOptional(),
     }),
   )

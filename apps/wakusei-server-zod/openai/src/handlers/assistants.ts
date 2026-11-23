@@ -25,7 +25,13 @@ export const getAssistants = os
   })
   .input(
     z.object({
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
@@ -88,7 +94,7 @@ export const postAssistantsAssistantId = os
             .meta({
               description: 'The name of the assistant. The maximum length is 256 characters.\n',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       description: z
@@ -100,7 +106,7 @@ export const postAssistantsAssistantId = os
               description:
                 'The description of the assistant. The maximum length is 512 characters.\n',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       instructions: z
@@ -112,7 +118,7 @@ export const postAssistantsAssistantId = os
               description:
                 'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       tools: z
@@ -164,7 +170,7 @@ export const postAssistantsAssistantId = os
               description:
                 "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       metadata: MetadataSchema.exactOptional(),
@@ -180,7 +186,7 @@ export const postAssistantsAssistantId = os
                 'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
               examples: [1],
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       top_p: z
@@ -195,12 +201,10 @@ export const postAssistantsAssistantId = os
                 'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
               examples: [1],
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
-      response_format: z
-        .union([AssistantsApiResponseFormatOptionSchema, z.null().nullable()])
-        .exactOptional(),
+      response_format: z.union([AssistantsApiResponseFormatOptionSchema, z.null()]).exactOptional(),
     }),
   )
   .output(AssistantObjectSchema)

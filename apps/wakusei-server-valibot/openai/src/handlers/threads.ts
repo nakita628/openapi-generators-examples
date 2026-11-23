@@ -105,7 +105,7 @@ export const postThreadsThreadId = os
               "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       metadata: v.optional(MetadataSchema),
@@ -138,7 +138,16 @@ export const getThreadsThreadIdMessages = os
     v.object({
       thread_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
       after: v.optional(v.string()),
@@ -207,7 +216,7 @@ export const postThreadsThreadIdMessages = os
               'A list of files attached to the message, and the tools they should be added to.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       metadata: v.optional(MetadataSchema),
@@ -270,7 +279,16 @@ export const getThreadsThreadIdRuns = os
     v.object({
       thread_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
       after: v.optional(v.string()),
@@ -306,7 +324,7 @@ export const postThreadsThreadIdRuns = os
       ),
       model: v.optional(
         v.pipe(
-          v.union([v.string(), AssistantSupportedModelsSchema, v.nullable(v.null())]),
+          v.union([v.string(), AssistantSupportedModelsSchema, v.null()]),
           v.description(
             'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
           ),
@@ -458,7 +476,16 @@ export const getThreadsThreadIdRunsRunIdSteps = os
       thread_id: v.string(),
       run_id: v.string(),
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
       after: v.optional(v.string()),
@@ -540,7 +567,7 @@ export const postThreadsThreadIdRunsRunIdSubmitToolOutputs = os
               'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     }),

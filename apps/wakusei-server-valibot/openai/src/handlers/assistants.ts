@@ -26,7 +26,16 @@ export const getAssistants = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+        v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+          '20',
+        ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
       after: v.optional(v.string()),
@@ -89,7 +98,7 @@ export const postAssistantsAssistantId = os
             v.pipe(v.string(), v.maxCodePoints(256)),
             v.description('The name of the assistant. The maximum length is 256 characters.\n'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       description: v.optional(
@@ -100,7 +109,7 @@ export const postAssistantsAssistantId = os
               'The description of the assistant. The maximum length is 512 characters.\n',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       instructions: v.optional(
@@ -111,7 +120,7 @@ export const postAssistantsAssistantId = os
               'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       tools: v.optional(
@@ -163,7 +172,7 @@ export const postAssistantsAssistantId = os
               "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       metadata: v.optional(MetadataSchema),
@@ -176,7 +185,7 @@ export const postAssistantsAssistantId = os
             ),
             v.metadata({ examples: [1] }),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       top_p: v.optional(
@@ -188,12 +197,10 @@ export const postAssistantsAssistantId = os
             ),
             v.metadata({ examples: [1] }),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
-      response_format: v.optional(
-        v.union([AssistantsApiResponseFormatOptionSchema, v.nullable(v.null())]),
-      ),
+      response_format: v.optional(v.union([AssistantsApiResponseFormatOptionSchema, v.null()])),
     }),
   )
   .output(AssistantObjectSchema)

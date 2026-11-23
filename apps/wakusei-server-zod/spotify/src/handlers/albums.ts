@@ -93,11 +93,11 @@ export const getAlbumsIdTracks = os
           examples: ['ES'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(50)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(50),
+        )
         .default(20)
         .meta({
           description:
@@ -105,9 +105,11 @@ export const getAlbumsIdTracks = os
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
         .default(0)
         .meta({
           description:

@@ -165,40 +165,43 @@ export const postRealtimeCallsCallIdAccept = os
       ),
       tracing: v.optional(
         v.pipe(
-          v.union([
-            v.pipe(
-              v.optional(v.literal('auto'), 'auto'),
-              v.description(
-                'Enables tracing and sets default values for tracing configuration options. Always `auto`.\n',
+          v.optional(
+            v.union([
+              v.pipe(
+                v.optional(v.literal('auto'), 'auto'),
+                v.description(
+                  'Enables tracing and sets default values for tracing configuration options. Always `auto`.\n',
+                ),
               ),
-            ),
-            v.pipe(
-              v.partial(
-                v.object({
-                  workflow_name: v.pipe(
-                    v.string(),
-                    v.description(
-                      'The name of the workflow to attach to this trace. This is used to\nname the trace in the Traces Dashboard.\n',
+              v.pipe(
+                v.partial(
+                  v.object({
+                    workflow_name: v.pipe(
+                      v.string(),
+                      v.description(
+                        'The name of the workflow to attach to this trace. This is used to\nname the trace in the Traces Dashboard.\n',
+                      ),
                     ),
-                  ),
-                  group_id: v.pipe(
-                    v.string(),
-                    v.description(
-                      'The group id to attach to this trace to enable filtering and\ngrouping in the Traces Dashboard.\n',
+                    group_id: v.pipe(
+                      v.string(),
+                      v.description(
+                        'The group id to attach to this trace to enable filtering and\ngrouping in the Traces Dashboard.\n',
+                      ),
                     ),
-                  ),
-                  metadata: v.pipe(
-                    v.object({}),
-                    v.description(
-                      'The arbitrary metadata to attach to this trace to enable\nfiltering in the Traces Dashboard.\n',
+                    metadata: v.pipe(
+                      v.object({}),
+                      v.description(
+                        'The arbitrary metadata to attach to this trace to enable\nfiltering in the Traces Dashboard.\n',
+                      ),
                     ),
-                  ),
-                }),
+                  }),
+                ),
+                v.description('Granular configuration for tracing.\n'),
               ),
-              v.description('Granular configuration for tracing.\n'),
-            ),
-            v.nullable(v.null()),
-          ]),
+              v.null(),
+            ]),
+            null,
+          ),
           v.description(
             'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
           ),

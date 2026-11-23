@@ -67,7 +67,7 @@ export const patchWebhooksWebhookId = os
         .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
         .narrow((data, ctx) => [...data].length <= 80 || ctx.mustBe('at most 80 characters')),
       'avatar?': type('string | null'),
-      'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+      'channel_id?': type('null').or(SnowflakeTypeSchema),
     }),
   )
   .output(
@@ -196,15 +196,15 @@ export const postWebhooksWebhookIdWebhookTokenGithub = os
           (data, ctx) => [...data].length <= 152133 || ctx.mustBe('at most 152133 characters'),
         ),
       ).or('null'),
-      'comment?': type('null | null').or(GithubCommentSchema),
-      'issue?': type('null | null').or(GithubIssueSchema),
-      'pull_request?': type('null | null').or(GithubIssueSchema),
-      'repository?': type('null | null').or(GithubRepositorySchema),
-      'forkee?': type('null | null').or(GithubRepositorySchema),
+      'comment?': type('null').or(GithubCommentSchema),
+      'issue?': type('null').or(GithubIssueSchema),
+      'pull_request?': type('null').or(GithubIssueSchema),
+      'repository?': type('null').or(GithubRepositorySchema),
+      'forkee?': type('null').or(GithubRepositorySchema),
       sender: GithubUserSchema,
-      'member?': type('null | null').or(GithubUserSchema),
-      'release?': type('null | null').or(GithubReleaseSchema),
-      'head_commit?': type('null | null').or(GithubCommitSchema),
+      'member?': type('null').or(GithubUserSchema),
+      'release?': type('null').or(GithubReleaseSchema),
+      'head_commit?': type('null').or(GithubCommitSchema),
       'commits?': type(type(type(GithubCommitSchema).array()).and(type('unknown[] <= 1521'))).or(
         'null',
       ),
@@ -214,11 +214,11 @@ export const postWebhooksWebhookIdWebhookTokenGithub = os
           (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
         ),
       ).or('null'),
-      'review?': type('null | null').or(GithubReviewSchema),
-      'check_run?': type('null | null').or(GithubCheckRunSchema),
-      'check_suite?': type('null | null').or(GithubCheckSuiteSchema),
-      'discussion?': type('null | null').or(GithubDiscussionSchema),
-      'answer?': type('null | null').or(GithubCommentSchema),
+      'review?': type('null').or(GithubReviewSchema),
+      'check_run?': type('null').or(GithubCheckRunSchema),
+      'check_suite?': type('null').or(GithubCheckSuiteSchema),
+      'discussion?': type('null').or(GithubDiscussionSchema),
+      'answer?': type('null').or(GithubCommentSchema),
     }),
   )
   .handler(async ({ input }) => { throw new Error('Not implemented') })
@@ -281,7 +281,7 @@ export const patchWebhooksWebhookIdWebhookTokenMessagesOriginal = os
         ),
       ).or('null'),
       'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-      'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+      'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
       'components?': type(
         type(
           type(
@@ -304,7 +304,7 @@ export const patchWebhooksWebhookIdWebhookTokenMessagesOriginal = os
       'attachments?': type(
         type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
       ).or('null'),
-      'poll?': type('null | null').or(PollCreateRequestSchema),
+      'poll?': type('null').or(PollCreateRequestSchema),
       'flags?': type('number.integer | null'),
     }),
   )
@@ -372,7 +372,7 @@ export const patchWebhooksWebhookIdWebhookTokenMessagesMessageId = os
         ),
       ).or('null'),
       'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-      'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+      'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
       'components?': type(
         type(
           type(
@@ -395,7 +395,7 @@ export const patchWebhooksWebhookIdWebhookTokenMessagesMessageId = os
       'attachments?': type(
         type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
       ).or('null'),
-      'poll?': type('null | null').or(PollCreateRequestSchema),
+      'poll?': type('null').or(PollCreateRequestSchema),
       'flags?': type('number.integer | null'),
     }),
   )

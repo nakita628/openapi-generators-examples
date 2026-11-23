@@ -119,7 +119,7 @@ export const getChannelsChannelIdInvites = os
           FriendInviteResponseSchema,
           GroupDMInviteResponseSchema,
           GuildInviteResponseSchema,
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     ),
@@ -153,7 +153,8 @@ export const getChannelsChannelIdMessages = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -176,9 +177,7 @@ export const postChannelsChannelIdMessages = os
       channel_id: SnowflakeTypeSchema,
       content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
       embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-      allowed_mentions: v.optional(
-        v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-      ),
+      allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
       sticker_ids: v.optional(v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3)))),
       components: v.optional(
         v.nullable(
@@ -202,11 +201,9 @@ export const postChannelsChannelIdMessages = os
       attachments: v.optional(
         v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
       ),
-      poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
-      shared_client_theme: v.optional(
-        v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
-      ),
-      message_reference: v.optional(v.union([v.nullable(v.null()), MessageReferenceRequestSchema])),
+      poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
+      shared_client_theme: v.optional(v.union([v.null(), CustomClientThemeShareRequestSchema])),
+      message_reference: v.optional(v.union([v.null(), MessageReferenceRequestSchema])),
       nonce: v.optional(
         v.union([
           v.pipe(
@@ -218,11 +215,11 @@ export const postChannelsChannelIdMessages = os
             v.transform((input) => BigInt(input)),
             v.minValue(-9223372036854775808n),
             v.maxValue(9223372036854775807n),
-            v.minValue(-9223372036854776000n),
-            v.maxValue(9223372036854776000n),
+            v.minValue(-9223372036854775808n),
+            v.maxValue(9223372036854775808n),
           ),
           v.pipe(v.string(), v.maxCodePoints(25)),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       enforce_nonce: v.optional(v.nullable(v.boolean())),
@@ -272,7 +269,8 @@ export const getChannelsChannelIdMessagesPins = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -337,9 +335,7 @@ export const patchChannelsChannelIdMessagesMessageId = os
       content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
       embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
       flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
-      allowed_mentions: v.optional(
-        v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-      ),
+      allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
       sticker_ids: v.optional(v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(1521)))),
       components: v.optional(
         v.nullable(
@@ -402,7 +398,8 @@ export const getChannelsChannelIdMessagesMessageIdReactionsEmojiName = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -492,9 +489,7 @@ export const postChannelsChannelIdMessagesMessageIdThreads = os
       channel_id: SnowflakeTypeSchema,
       message_id: SnowflakeTypeSchema,
       name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
-      auto_archive_duration: v.optional(
-        v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
-      ),
+      auto_archive_duration: v.optional(v.union([v.null(), ThreadAutoArchiveDurationSchema])),
       rate_limit_per_user: v.optional(
         v.nullable(
           v.pipe(
@@ -571,7 +566,7 @@ export const putChannelsChannelIdPermissionsOverwriteId = os
     v.object({
       channel_id: SnowflakeTypeSchema,
       overwrite_id: SnowflakeTypeSchema,
-      type: v.optional(v.union([v.nullable(v.null()), ChannelPermissionOverwritesSchema])),
+      type: v.optional(v.union([v.null(), ChannelPermissionOverwritesSchema])),
       allow: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       deny: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
     }),
@@ -630,7 +625,8 @@ export const getChannelsChannelIdPollsMessageIdAnswersAnswerId = os
       message_id: SnowflakeTypeSchema,
       answer_id: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(-2147483648),
@@ -642,7 +638,8 @@ export const getChannelsChannelIdPollsMessageIdAnswersAnswerId = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -703,7 +700,7 @@ export const postChannelsChannelIdSendSoundboardSound = os
     v.object({
       channel_id: SnowflakeTypeSchema,
       sound_id: SnowflakeTypeSchema,
-      source_guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      source_guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     }),
   )
   .handler(async ({ input }) => { throw new Error('Not implemented') })
@@ -727,7 +724,8 @@ export const getChannelsChannelIdThreadMembers = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -833,7 +831,8 @@ export const getChannelsChannelIdThreadsArchivedPrivate = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(2),
@@ -865,7 +864,8 @@ export const getChannelsChannelIdThreadsArchivedPublic = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(2),
@@ -890,7 +890,8 @@ export const getChannelsChannelIdThreadsSearch = os
       slop: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -924,7 +925,8 @@ export const getChannelsChannelIdThreadsSearch = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -934,7 +936,8 @@ export const getChannelsChannelIdThreadsSearch = os
       offset: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -969,7 +972,8 @@ export const getChannelsChannelIdUsersMeThreadsArchivedPrivate = os
       limit: v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(2),

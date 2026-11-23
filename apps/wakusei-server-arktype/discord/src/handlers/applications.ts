@@ -91,20 +91,18 @@ export const patchApplicationsApplicationId = os
       ).or('null'),
       'icon?': type('string | null'),
       'cover_image?': type('string | null'),
-      'team_id?': type('null | null').or(SnowflakeTypeSchema),
+      'team_id?': type('null').or(SnowflakeTypeSchema),
       'flags?': type('number.integer | null'),
       'interactions_endpoint_url?': type(
         type('string.url').narrow(
           (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
         ),
       ).or('null'),
-      'explicit_content_filter?': type('null | null').or(
-        ApplicationExplicitContentFilterTypesSchema,
-      ),
+      'explicit_content_filter?': type('null').or(ApplicationExplicitContentFilterTypesSchema),
       'max_participants?': type(
         'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= -1 | null',
       ),
-      'type?': type('null | null').or(ApplicationTypesSchema),
+      'type?': type('null').or(ApplicationTypesSchema),
       'tags?': type(
         type(
           type(
@@ -121,16 +119,16 @@ export const patchApplicationsApplicationId = os
           (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
         ),
       ).or('null'),
-      'install_params?': type('null | null').or(ApplicationOAuth2InstallParamsSchema),
+      'install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
       'role_connections_verification_url?': type(
         type('string.url').narrow(
           (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
         ),
       ).or('null'),
       'integration_types_config?': type(
-        type({ '[string]': type('null | null').or(ApplicationIntegrationTypeConfigurationSchema) }),
+        type({ '[string]': type('null').or(ApplicationIntegrationTypeConfigurationSchema) }),
       ).or('null'),
-      'event_webhooks_status?': type('null | null').or(ApplicationEventWebhooksStatusSchema),
+      'event_webhooks_status?': type('null').or(ApplicationEventWebhooksStatusSchema),
       'event_webhooks_url?': type(
         type('string.url').narrow(
           (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
@@ -264,12 +262,12 @@ export const postApplicationsApplicationIdCommands = os
           .and(type('unknown[] >= 1'))
           .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
       ).or('null'),
-      'handler?': type('null | null')
+      'handler?': type('null')
         .or(ApplicationCommandHandlerSchema)
         .describe(
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
         ),
-      'type?': type('null | null').or(ApplicationCommandTypeSchema),
+      'type?': type('null').or(ApplicationCommandTypeSchema),
     }),
   )
   .output(ApplicationCommandResponseSchema)
@@ -378,7 +376,7 @@ export const patchApplicationsApplicationIdCommandsCommandId = os
           .and(type('unknown[] >= 1'))
           .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
       ).or('null'),
-      'handler?': type('null | null')
+      'handler?': type('null')
         .or(ApplicationCommandHandlerSchema)
         .describe(
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -479,7 +477,7 @@ export const getApplicationsApplicationIdEntitlements = os
                       for (const branch of [
                         type('unknown')
                           .pipe((data) => (data === 'null' ? null : data))
-                          .to('null | null'),
+                          .to('null'),
                         SnowflakeTypeSchema,
                       ]) {
                         const out = branch(data)
@@ -505,7 +503,7 @@ export const getApplicationsApplicationIdEntitlements = os
       'after?': SnowflakeTypeSchema,
       'limit?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= 1 & number.integer <= 100'),
@@ -661,12 +659,12 @@ export const postApplicationsApplicationIdGuildsGuildIdCommands = os
           .and(type('unknown[] >= 1'))
           .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
       ).or('null'),
-      'handler?': type('null | null')
+      'handler?': type('null')
         .or(ApplicationCommandHandlerSchema)
         .describe(
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
         ),
-      'type?': type('null | null').or(ApplicationCommandTypeSchema),
+      'type?': type('null').or(ApplicationCommandTypeSchema),
     }),
   )
   .output(ApplicationCommandResponseSchema)
@@ -798,7 +796,7 @@ export const patchApplicationsApplicationIdGuildsGuildIdCommandsCommandId = os
           .and(type('unknown[] >= 1'))
           .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
       ).or('null'),
-      'handler?': type('null | null')
+      'handler?': type('null')
         .or(ApplicationCommandHandlerSchema)
         .describe(
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",

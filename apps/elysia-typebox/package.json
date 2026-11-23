@@ -7,12 +7,29 @@
     "typecheck": "bun ../../scripts/typecheck.ts elysia-typebox"
   },
   "dependencies": {
+    "@angular/common": "catalog:",
+    "@angular/core": "catalog:",
+    "@elysiajs/eden": "catalog:",
     "@sinclair/typebox": "catalog:",
-    "elysia": "catalog:"
+    "@tanstack/angular-query-experimental": "catalog:",
+    "@tanstack/preact-query": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/solid-query": "catalog:",
+    "@tanstack/svelte-query": "catalog:",
+    "@tanstack/vue-query": "catalog:",
+    "elysia": "catalog:",
+    "preact": "catalog:",
+    "react": "catalog:",
+    "rxjs": "catalog:",
+    "solid-js": "catalog:",
+    "svelte": "catalog:",
+    "swr": "catalog:",
+    "vue": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
     "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
     "typescript": "catalog:"
   }
 }

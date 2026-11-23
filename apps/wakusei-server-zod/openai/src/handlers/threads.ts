@@ -110,7 +110,7 @@ export const postThreadsThreadId = os
               description:
                 "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       metadata: MetadataSchema.exactOptional(),
@@ -142,7 +142,13 @@ export const getThreadsThreadIdMessages = os
   .input(
     z.object({
       thread_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
@@ -204,7 +210,7 @@ export const postThreadsThreadIdMessages = os
               description:
                 'A list of files attached to the message, and the tools they should be added to.',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
       metadata: MetadataSchema.exactOptional(),
@@ -266,7 +272,13 @@ export const getThreadsThreadIdRuns = os
   .input(
     z.object({
       thread_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
@@ -299,7 +311,7 @@ export const postThreadsThreadIdRuns = os
             'The ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) to use to execute this run.',
         }),
       model: z
-        .union([z.string(), AssistantSupportedModelsSchema, z.null().nullable()])
+        .union([z.string(), AssistantSupportedModelsSchema, z.null()])
         .meta({
           description:
             'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
@@ -457,7 +469,13 @@ export const getThreadsThreadIdRunsRunIdSteps = os
     z.object({
       thread_id: z.string(),
       run_id: z.string(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
       order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       after: z.string().exactOptional(),
       before: z.string().exactOptional(),
@@ -536,7 +554,7 @@ export const postThreadsThreadIdRunsRunIdSubmitToolOutputs = os
               description:
                 'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
             }),
-          z.null().nullable(),
+          z.null(),
         ])
         .exactOptional(),
     }),

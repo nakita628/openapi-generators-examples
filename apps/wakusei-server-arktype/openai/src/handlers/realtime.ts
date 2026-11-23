@@ -55,9 +55,31 @@ export const postRealtimeCallsCallIdAccept = os
       'output_modalities?': type("'text' | 'audio'[]").describe(
         'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
       ),
-      'model?': type(
-        "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2' | 'gpt-realtime-2.1' | 'gpt-realtime-2.1-mini' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15'",
-      ).describe('The Realtime model used for this session.\n'),
+      'model?': type('string')
+        .or(
+          type.enumerated(
+            'gpt-realtime',
+            'gpt-realtime-1.5',
+            'gpt-realtime-2',
+            'gpt-realtime-2.1',
+            'gpt-realtime-2.1-mini',
+            'gpt-realtime-2025-08-28',
+            'gpt-4o-realtime-preview',
+            'gpt-4o-realtime-preview-2024-10-01',
+            'gpt-4o-realtime-preview-2024-12-17',
+            'gpt-4o-realtime-preview-2025-06-03',
+            'gpt-4o-mini-realtime-preview',
+            'gpt-4o-mini-realtime-preview-2024-12-17',
+            'gpt-realtime-mini',
+            'gpt-realtime-mini-2025-10-06',
+            'gpt-realtime-mini-2025-12-15',
+            'gpt-audio-1.5',
+            'gpt-audio-mini',
+            'gpt-audio-mini-2025-10-06',
+            'gpt-audio-mini-2025-12-15',
+          ),
+        )
+        .describe('The Realtime model used for this session.\n'),
       'instructions?': type('string').describe(
         'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\n\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
       ),
@@ -112,7 +134,7 @@ export const postRealtimeCallsCallIdAccept = os
           }).describe('Granular configuration for tracing.\n'),
         ),
       )
-        .or('null | null')
+        .or('null')
         .describe(
           'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
         ),

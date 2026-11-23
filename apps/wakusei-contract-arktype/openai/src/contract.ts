@@ -412,7 +412,7 @@ export const contract = {
     .input(
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -465,12 +465,12 @@ export const contract = {
           type('string')
             .narrow((data, ctx) => [...data].length <= 256 || ctx.mustBe('at most 256 characters'))
             .describe('The name of the assistant. The maximum length is 256 characters.\n'),
-        ).or('null | null'),
+        ).or('null'),
         'description?': type(
           type('string')
             .narrow((data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'))
             .describe('The description of the assistant. The maximum length is 512 characters.\n'),
-        ).or('null | null'),
+        ).or('null'),
         'instructions?': type(
           type('string')
             .narrow(
@@ -479,7 +479,7 @@ export const contract = {
             .describe(
               'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
             ),
-        ).or('null | null'),
+        ).or('null'),
         'tools?': type(
           type(
             type(type(AssistantToolsCodeSchema).or(AssistantToolsFileSearchSchema)).or(
@@ -510,19 +510,19 @@ export const contract = {
           }).describe(
             "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
           ),
-        ).or('null | null'),
+        ).or('null'),
         'metadata?': MetadataSchema,
         'temperature?': type(
           type('number >= 0 & number <= 2').describe(
             'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
           ),
-        ).or('null | null'),
+        ).or('null'),
         'top_p?': type(
           type('number >= 0 & number <= 1').describe(
             'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
           ),
-        ).or('null | null'),
-        'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null | null'),
+        ).or('null'),
+        'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null'),
       }),
     )
     .output(AssistantObjectSchema),
@@ -588,7 +588,7 @@ export const contract = {
       type({
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
       }),
@@ -673,7 +673,7 @@ export const contract = {
       type({
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
       }),
@@ -729,7 +729,7 @@ export const contract = {
         'metadata?': MetadataSchema,
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -800,7 +800,7 @@ export const contract = {
         completion_id: type('string'),
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -829,7 +829,7 @@ export const contract = {
     .input(
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -879,7 +879,7 @@ export const contract = {
       type({
         container_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -944,7 +944,7 @@ export const contract = {
       type({
         conversation_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -1031,7 +1031,7 @@ export const contract = {
       type({
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -1104,7 +1104,7 @@ export const contract = {
         eval_id: type('string'),
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -1184,7 +1184,7 @@ export const contract = {
         run_id: type('string'),
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'status?': type("'fail' | 'pass'"),
@@ -1217,7 +1217,7 @@ export const contract = {
       type({
         'purpose?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -1299,7 +1299,7 @@ export const contract = {
         'project_id?': type('string'),
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'ascending' | 'descending'"),
@@ -1345,7 +1345,7 @@ export const contract = {
       type({
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'metadata?': type('unknown').pipe(
@@ -1413,7 +1413,7 @@ export const contract = {
         fine_tuning_job_id: type('string'),
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
       }),
@@ -1432,7 +1432,7 @@ export const contract = {
         fine_tuning_job_id: type('string'),
         'after?': type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
       }),
@@ -1634,7 +1634,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe('Maximum number of keys to return.'),
@@ -1694,7 +1694,7 @@ export const contract = {
         'effective_at?': type({
           'gt?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -1702,7 +1702,7 @@ export const contract = {
             ),
           'gte?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -1710,7 +1710,7 @@ export const contract = {
             ),
           'lt?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -1718,7 +1718,7 @@ export const contract = {
             ),
           'lte?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -1745,7 +1745,7 @@ export const contract = {
           (data) => /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -1765,7 +1765,7 @@ export const contract = {
     .input(
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -1868,11 +1868,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1d'"),
@@ -1889,7 +1889,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'line_item' | 'api_key_id' | 'api_source'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -1930,7 +1930,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -2005,7 +2005,7 @@ export const contract = {
         group_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -2066,7 +2066,7 @@ export const contract = {
         group_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -2125,7 +2125,7 @@ export const contract = {
     .input(
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -2179,7 +2179,7 @@ export const contract = {
     .input(
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -2224,13 +2224,13 @@ export const contract = {
     .input(
       type({
         project_id: type('string'),
-        'name?': type('string | null | null').describe(
+        'name?': type('string | null').describe(
           'The updated name of the project, this name appears in reports.',
         ),
-        'external_key_id?': type('string | null | null').describe(
+        'external_key_id?': type('string | null').describe(
           'External key ID to associate with the project.',
         ),
-        'geography?': type('string | null | null').describe(
+        'geography?': type('string | null').describe(
           'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
         ),
       }),
@@ -2249,7 +2249,7 @@ export const contract = {
       type({
         project_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -2328,7 +2328,7 @@ export const contract = {
       type({
         project_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -2413,7 +2413,7 @@ export const contract = {
         project_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -2491,19 +2491,19 @@ export const contract = {
       type({
         project_id: type('string'),
         'file_search?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The file search permission update.'),
         'web_search?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The web search permission update.'),
         'image_generation?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The image generation permission update.'),
         'mcp?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The MCP permission update.'),
         'code_interpreter?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The code interpreter permission update.'),
       }),
     )
@@ -2560,7 +2560,7 @@ export const contract = {
       type({
         project_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -2615,7 +2615,7 @@ export const contract = {
       type({
         project_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -2640,9 +2640,9 @@ export const contract = {
           type('boolean').describe(
             'Create the service account without default roles or an API key.',
           ),
-        ).or('null | null'),
+        ).or('null'),
         'expires_in_seconds?': type(
-          'number.integer >= 1 & number.integer <= 31536000 | null | null',
+          'number.integer >= 1 & number.integer <= 31536000 | null',
         ).describe(
           'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
         ),
@@ -2704,7 +2704,7 @@ export const contract = {
         project_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -2796,7 +2796,7 @@ export const contract = {
       type({
         project_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -2816,8 +2816,8 @@ export const contract = {
     .input(
       type({
         project_id: type('string'),
-        'user_id?': type('string | null | null').describe('The ID of the user.'),
-        'email?': type('string | null | null').describe('Email of the user to add.'),
+        'user_id?': type('string | null').describe('The ID of the user.'),
+        'email?': type('string | null').describe('Email of the user to add.'),
         role: type('string').describe('`owner` or `member`'),
       }),
     )
@@ -2846,7 +2846,7 @@ export const contract = {
       type({
         project_id: type('string'),
         user_id: type('string'),
-        'role?': type('string | null | null').describe('`owner` or `member`'),
+        'role?': type('string | null').describe('`owner` or `member`'),
       }),
     )
     .output(ProjectUserSchema),
@@ -2875,7 +2875,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -2918,11 +2918,11 @@ export const contract = {
     .input(
       type({
         role_id: type('string'),
-        'permissions?': type('string[] | null | null').describe(
+        'permissions?': type('string[] | null').describe(
           'Updated set of permissions for the role.',
         ),
-        'description?': type('string | null | null').describe('New description for the role.'),
-        'role_name?': type('string | null | null').describe('New name for the role.'),
+        'description?': type('string | null').describe('New description for the role.'),
+        'role_name?': type('string | null').describe('New name for the role.'),
       }),
     )
     .output(RoleSchema),
@@ -2950,7 +2950,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -3028,11 +3028,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3052,7 +3052,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3071,11 +3071,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3095,7 +3095,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3114,11 +3114,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3129,7 +3129,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3148,11 +3148,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3177,7 +3177,7 @@ export const contract = {
             "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'batch' | 'service_tier' | 'api_source'[]",
           ),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3196,11 +3196,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3220,7 +3220,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3239,11 +3239,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3263,7 +3263,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'vector_store_id'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3282,11 +3282,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3312,7 +3312,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'size' | 'source'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3331,11 +3331,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3355,7 +3355,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3374,11 +3374,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3389,7 +3389,7 @@ export const contract = {
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3408,11 +3408,11 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
@@ -3437,7 +3437,7 @@ export const contract = {
             "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'context_level' | 'api_source'[]",
           ),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': type('string'),
@@ -3456,7 +3456,7 @@ export const contract = {
     .input(
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': type('string'),
@@ -3489,10 +3489,10 @@ export const contract = {
     .input(
       type({
         user_id: type('string'),
-        'role?': type('string | null | null').describe('`owner` or `reader`'),
-        'role_id?': type('string | null | null').describe('Role ID to assign to the user.'),
-        'technical_level?': type('string | null | null').describe('Technical level metadata.'),
-        'developer_persona?': type('string | null | null').describe('Developer persona metadata.'),
+        'role?': type('string | null').describe('`owner` or `reader`'),
+        'role_id?': type('string | null').describe('Role ID to assign to the user.'),
+        'technical_level?': type('string | null').describe('Technical level metadata.'),
+        'developer_persona?': type('string | null').describe('Developer persona metadata.'),
       }),
     )
     .output(UserSchema),
@@ -3521,7 +3521,7 @@ export const contract = {
         user_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -3583,7 +3583,7 @@ export const contract = {
         group_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -3645,7 +3645,7 @@ export const contract = {
         project_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -3668,7 +3668,7 @@ export const contract = {
         project_id: type('string'),
         role_name: type('string').describe('Unique name for the role.'),
         permissions: type('string[]').describe('Permissions to grant to the role.'),
-        'description?': type('string | null | null').describe('Optional description of the role.'),
+        'description?': type('string | null').describe('Optional description of the role.'),
       }),
     )
     .output(RoleSchema),
@@ -3696,11 +3696,11 @@ export const contract = {
       type({
         project_id: type('string'),
         role_id: type('string'),
-        'permissions?': type('string[] | null | null').describe(
+        'permissions?': type('string[] | null').describe(
           'Updated set of permissions for the role.',
         ),
-        'description?': type('string | null | null').describe('New description for the role.'),
-        'role_name?': type('string | null | null').describe('New name for the role.'),
+        'description?': type('string | null').describe('New description for the role.'),
+        'role_name?': type('string | null').describe('New name for the role.'),
       }),
     )
     .output(RoleSchema),
@@ -3730,7 +3730,7 @@ export const contract = {
         user_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -3807,9 +3807,31 @@ export const contract = {
         'output_modalities?': type("'text' | 'audio'[]").describe(
           'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
         ),
-        'model?': type(
-          "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2' | 'gpt-realtime-2.1' | 'gpt-realtime-2.1-mini' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15'",
-        ).describe('The Realtime model used for this session.\n'),
+        'model?': type('string')
+          .or(
+            type.enumerated(
+              'gpt-realtime',
+              'gpt-realtime-1.5',
+              'gpt-realtime-2',
+              'gpt-realtime-2.1',
+              'gpt-realtime-2.1-mini',
+              'gpt-realtime-2025-08-28',
+              'gpt-4o-realtime-preview',
+              'gpt-4o-realtime-preview-2024-10-01',
+              'gpt-4o-realtime-preview-2024-12-17',
+              'gpt-4o-realtime-preview-2025-06-03',
+              'gpt-4o-mini-realtime-preview',
+              'gpt-4o-mini-realtime-preview-2024-12-17',
+              'gpt-realtime-mini',
+              'gpt-realtime-mini-2025-10-06',
+              'gpt-realtime-mini-2025-12-15',
+              'gpt-audio-1.5',
+              'gpt-audio-mini',
+              'gpt-audio-mini-2025-10-06',
+              'gpt-audio-mini-2025-12-15',
+            ),
+          )
+          .describe('The Realtime model used for this session.\n'),
         'instructions?': type('string').describe(
           'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\n\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
         ),
@@ -3864,7 +3886,7 @@ export const contract = {
             }).describe('Granular configuration for tracing.\n'),
           ),
         )
-          .or('null | null')
+          .or('null')
           .describe(
             'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
           ),
@@ -4009,7 +4031,7 @@ export const contract = {
           /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
         'starting_after?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'include_obfuscation?': type(
@@ -4051,7 +4073,7 @@ export const contract = {
       type({
         response_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -4123,7 +4145,7 @@ export const contract = {
           }).describe(
             "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
           ),
-        ).or('null | null'),
+        ).or('null'),
         'metadata?': MetadataSchema,
       }),
     )
@@ -4150,7 +4172,7 @@ export const contract = {
       type({
         thread_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -4202,7 +4224,7 @@ export const contract = {
             .describe(
               'A list of files attached to the message, and the tools they should be added to.',
             ),
-        ).or('null | null'),
+        ).or('null'),
         'metadata?': MetadataSchema,
       }),
     )
@@ -4251,7 +4273,7 @@ export const contract = {
       type({
         thread_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -4278,7 +4300,7 @@ export const contract = {
           'The ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) to use to execute this run.',
         ),
         'model?': type(type('string').or(AssistantSupportedModelsSchema))
-          .or('null | null')
+          .or('null')
           .describe(
             'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
           ),
@@ -4371,7 +4393,7 @@ export const contract = {
         thread_id: type('string'),
         run_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -4431,7 +4453,7 @@ export const contract = {
           type('boolean').describe(
             'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
           ),
-        ).or('null | null'),
+        ).or('null'),
       }),
     )
     .output(RunObjectSchema),
@@ -4498,7 +4520,7 @@ export const contract = {
     .input(
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -4614,7 +4636,7 @@ export const contract = {
         vector_store_id: type('string'),
         batch_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -4636,7 +4658,7 @@ export const contract = {
       type({
         vector_store_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),
@@ -4835,7 +4857,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -4845,7 +4867,7 @@ export const contract = {
             type('string'),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -4927,7 +4949,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -4989,7 +5011,7 @@ export const contract = {
         'verification?': type(DiscoveryVerificationParamSchema).or(
           UploadedJwksVerificationParamSchema,
         ),
-        'description?': type('string | null | null'),
+        'description?': type('string | null'),
         'attribute_transformations?': type(type(TransformationParamSchema).array()).and(
           type('unknown[] <= 20'),
         ),
@@ -5028,7 +5050,7 @@ export const contract = {
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -5107,8 +5129,8 @@ export const contract = {
           workload_identity_federation_rule_id: type('string').narrow(
             (data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'),
           ),
-          'name?': type('string | null | null'),
-          'description?': type('string | null | null'),
+          'name?': type('string | null'),
+          'description?': type('string | null'),
           'attribute_matchers?': type({ '[string]': 'string | boolean | number.integer | number' }),
           'permissions?': type(DefaultPermissionsParamSchema).or(RestrictedPermissionsParamSchema),
           'enabled?': type('boolean'),
@@ -5146,7 +5168,7 @@ export const contract = {
     .input(
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('unknown').pipe(
@@ -5155,12 +5177,12 @@ export const contract = {
             type('unknown').pipe((data, ctx) => {
               for (const branch of [
                 type('string').pipe((data, ctx) => {
-                  const value = Number(data)
+                  const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                   return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                 }),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5179,7 +5201,7 @@ export const contract = {
                 ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5194,12 +5216,12 @@ export const contract = {
             type('unknown').pipe((data, ctx) => {
               for (const branch of [
                 type('string').pipe((data, ctx) => {
-                  const value = Number(data)
+                  const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                   return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                 }),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5215,7 +5237,7 @@ export const contract = {
             ),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -5242,7 +5264,7 @@ export const contract = {
                   .describe('Return only usage for these projects.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5274,7 +5296,7 @@ export const contract = {
                   ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5303,7 +5325,7 @@ export const contract = {
                   .describe('Return only usage for these users.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5332,7 +5354,7 @@ export const contract = {
                   .describe('Return only usage for these API keys.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5361,7 +5383,7 @@ export const contract = {
                   .describe('Return only usage for these models.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5380,7 +5402,7 @@ export const contract = {
                 ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -5407,7 +5429,7 @@ export const contract = {
             type('string'),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -5419,7 +5441,7 @@ export const contract = {
             type('string').describe('Return external storage configurations after this ID.'),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -5429,7 +5451,7 @@ export const contract = {
         'order?': ExternalStorageOrderSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -5539,7 +5561,7 @@ export const contract = {
           SpendLimitEmailNotificationChannelParamsSchema.describe(
             'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
           ),
-        ).or('null | null'),
+        ).or('null'),
       }),
     )
     .output(ProjectSpendLimitResourceSchema),
@@ -5604,7 +5626,7 @@ export const contract = {
           type('number.integer >= 1 & number.integer <= 31536000').describe(
             'Number of seconds until the API key expires.',
           ),
-        ).or('null | null'),
+        ).or('null'),
       }),
     )
     .output(ServiceAccountApiKeyBodySchema),
@@ -5632,7 +5654,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -5799,7 +5821,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -5884,7 +5906,7 @@ export const contract = {
         skill_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -5996,7 +6018,7 @@ export const contract = {
         thread_id: type('string'),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -6042,7 +6064,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -6839,15 +6861,15 @@ export const contract = {
           )
           .describe('The model to use for the agent. The requested model name is preserved.'),
         'reasoning?': type(ReasoningParamSchema)
-          .or('null | null')
+          .or('null')
           .describe(
             "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
           ),
         'text?': type(TextParamSchema)
-          .or('null | null')
+          .or('null')
           .describe('Configuration for text generated by the agent.'),
         'service_tier?': type(ServiceTierParamSchema)
-          .or('null | null')
+          .or('null')
           .describe('The service tier used for model requests.'),
         'instructions?': type(
           type('string')
@@ -6862,10 +6884,10 @@ export const contract = {
             "Additional instructions appended to the agent's default base instructions. Omit to leave unchanged.",
           ),
         'multi_agent?': type(MultiAgentConfigCurrentParamSchema)
-          .or('null | null')
+          .or('null')
           .describe('Configuration for creating and coordinating subagents.'),
         'compaction?': type(CompactionParamSchema)
-          .or('null | null')
+          .or('null')
           .describe(
             'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
           ),
@@ -7009,7 +7031,7 @@ export const contract = {
           .or('null')
           .describe('A replacement human-readable display name, or `null` to clear the name.'),
         'packages?': type(EnvironmentPackagesParamSchema)
-          .or('null | null')
+          .or('null')
           .describe('Packages installed before the runtime network policy applies.'),
         'setup_commands?': type(
           type(type(SetupCommandParamSchema).array()).and(type('0 <= unknown[] <= 16')),
@@ -7019,12 +7041,12 @@ export const contract = {
             'Replacement confidential setup commands, never included in returned resources.',
           ),
         'network?': type(NetworkPolicyParamSchema)
-          .or('null | null')
+          .or('null')
           .describe(
             'Network access available after setup completes. Omit to preserve the current policy, or pass `null` to reset to the default policy.',
           ),
         'desktop?': type(DesktopParamSchema)
-          .or('null | null')
+          .or('null')
           .describe('Replacement desktop configuration, or null to disable the desktop.'),
         'env?': type(
           type({
@@ -7196,7 +7218,7 @@ export const contract = {
             (data, ctx) => [...data].length <= 1048576 || ctx.mustBe('at most 1048576 characters'),
           ),
         'prompt_cache_options?': type(PromptCacheOptionsParam2Schema)
-          .or('null | null')
+          .or('null')
           .describe(
             'Default prompt cache lifetime for future turns. Send null to clear the session default.',
           ),
@@ -7218,7 +7240,7 @@ export const contract = {
           ),
         'review?': SessionReviewParamSchema,
         'spend_control?': type(SessionBudgetControlParamsSchema)
-          .or('null | null')
+          .or('null')
           .describe(
             'Omit to retain the limit; null or a null limit removes it without resetting spend.',
           ),
@@ -7922,7 +7944,7 @@ export const contract = {
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -7931,7 +7953,7 @@ export const contract = {
             type('string'),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -8063,7 +8085,7 @@ export const contract = {
           /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
         'starting_after?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'include_obfuscation?': type(
@@ -8117,7 +8139,7 @@ export const contract = {
       type({
         response_id: type('string'),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': type("'asc' | 'desc'"),

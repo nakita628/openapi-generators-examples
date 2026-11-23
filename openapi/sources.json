@@ -1,0 +1,63 @@
+{
+  "discord": {
+    "url": "https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json",
+    "pinned": "https://github.com/discord/discord-api-spec/blob/3a21a01249a763cd47f1dfec3da91c5ba71bb974/specs/openapi.json",
+    "file": "discord.json",
+    "title": "Discord HTTP API (Preview)",
+    "version": "10",
+    "openapi": "3.1.0",
+    "operations": 250,
+    "added": "2026-11-21",
+    "etag": "W/\"19542bb6e57f68c5e4ef16055b22565d3a5c6a49836be5b62da33a6d65999330\"",
+    "sha256": "ef338088f4c6a73fdb9840acd1ce2bf8f16c1870f4437bfc563418c7e0de7278",
+    "canonical": "22c72cba9ed7461521d386f3a32f4fa400af39edc85e0b8dc9aacf0587384adf"
+  },
+  "openai": {
+    "url": "https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml",
+    "pinned": "https://github.com/openai/openai-openapi/blob/2a24deae6f89f84d0e88ce3c9d96c00304dca0b8/openapi.yaml",
+    "file": "openai.yaml",
+    "title": "OpenAI API",
+    "version": "2.3.0",
+    "openapi": "3.1.0",
+    "operations": 388,
+    "added": "2026-11-21",
+    "etag": "W/\"cfd5a566d6c6692619149f60ecd4b40f25d9363b28029578b5c6e1bd8caae55b\"",
+    "sha256": "fb196a60eef4125b6e4c6874488eed9022a6be8014aff5e874f74930daf5b559"
+  },
+  "petstore": {
+    "url": "https://petstore3.swagger.io/api/v3/openapi.json",
+    "file": "petstore.json",
+    "title": "Swagger Petstore - OpenAPI 3.0",
+    "version": "1.0.27",
+    "openapi": "3.0.4",
+    "operations": 19,
+    "added": "2026-11-21",
+    "sha256": "00441c05add60f28da55eb4563d3fb6bbda364ba8eb7b381e2e2c98613005c82",
+    "canonical": "f6b8e3d46655c7901a69c74632e3ed13f4615d2da31664dd72807d40cbc6993d"
+  },
+  "spotify": {
+    "url": "https://raw.githubusercontent.com/sonallux/spotify-web-api/main/fixed-spotify-open-api.yml",
+    "pinned": "https://github.com/sonallux/spotify-web-api/blob/f02c40936c591459617491c62fef0b555b8fd63e/fixed-spotify-open-api.yml",
+    "file": "spotify.yaml",
+    "title": "Spotify Web API with fixes and improvements from sonallux",
+    "version": "2026.5.31",
+    "openapi": "3.0.3",
+    "operations": 97,
+    "added": "2026-11-21",
+    "etag": "W/\"eee08d56ef2468961eec08d01ae6b078eb081c4459f85643fae5059e1bff1e2e\"",
+    "sha256": "ddeb078a50208d94c4538bd891bec0c9e67c9f3406617a2d887f0a482a4501f4"
+  },
+  "train-travel": {
+    "url": "https://raw.githubusercontent.com/readmeio/oas-examples/main/3.1/json/train-travel.json",
+    "pinned": "https://github.com/readmeio/oas-examples/blob/060d4ffbbe63003f923c8cd7268ee39a495cf21f/3.1/json/train-travel.json",
+    "file": "train-travel.json",
+    "title": "Train Travel API",
+    "version": "1.0.0",
+    "openapi": "3.1.0",
+    "operations": 7,
+    "added": "2026-11-21",
+    "etag": "W/\"7240ad91b84dc31001356e0e110de6c7edc5fa8c3a62b396e2a986599cfb6a4d\"",
+    "sha256": "213e8f751c0d41cb3770374c8199ba6c897ac146389e94d688001285d43b92d7",
+    "canonical": "e9710ed1bec9ea4692676bbbff8b0375a9e629962374bbc837f4c5058303588d"
+  }
+}

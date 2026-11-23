@@ -12,19 +12,19 @@ export const AdminApiKeySchema = type({
     'The object type, which is always `organization.admin_api_key`',
   ),
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
-  'name?': type('string | null | null').describe('The name of the API key'),
+  'name?': type('string | null').describe('The name of the API key'),
   redacted_value: type('string').describe('The redacted value of the API key'),
   created_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the API key was created',
   ),
   expires_at: type(
     type('number.integer').describe('The Unix timestamp (in seconds) of when the API key expires'),
-  ).or('null | null'),
+  ).or('null'),
   'last_used_at?': type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) of when the API key was last used',
     ),
-  ).or('null | null'),
+  ).or('null'),
   owner: type({
     'type?': type('string').describe('Always `user`'),
     'object?': type('string').describe('The object type, which is always organization.user'),
@@ -53,8 +53,8 @@ export const ApiKeyListSchema = type({
   object: "'list'",
   data: type(AdminApiKeySchema).array(),
   has_more: 'boolean',
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
 })
 
 export type ApiKeyListSchema = typeof ApiKeyListSchema.infer
@@ -65,18 +65,16 @@ export const AssignedRoleDetailsSchema = type({
   permissions: type('string[]').describe('Permissions associated with the role.'),
   resource_type: type('string').describe('Resource type the role applies to.'),
   predefined_role: type('boolean').describe('Whether the role is predefined by OpenAI.'),
-  description: type('string | null | null').describe('Description of the role.'),
-  created_at: type('number.integer | null | null').describe('When the role was created.'),
-  updated_at: type('number.integer | null | null').describe('When the role was last updated.'),
-  created_by: type('string | null | null').describe(
-    'Identifier of the actor who created the role.',
-  ),
-  created_by_user_obj: type('unknown | null | null').describe(
+  description: type('string | null').describe('Description of the role.'),
+  created_at: type('number.integer | null').describe('When the role was created.'),
+  updated_at: type('number.integer | null').describe('When the role was last updated.'),
+  created_by: type('string | null').describe('Identifier of the actor who created the role.'),
+  created_by_user_obj: type('unknown | null').describe(
     'User details for the actor that created the role, when available.',
   ),
-  metadata: type('unknown | null | null').describe('Arbitrary metadata stored on the role.'),
+  metadata: type('unknown | null').describe('Arbitrary metadata stored on the role.'),
   assignment_sources: type(type(type({ principal_id: 'string', principal_type: 'string' })).array())
-    .or('null | null')
+    .or('null')
     .describe('Principals from which the role assignment is inherited, when available.'),
 }).describe('Detailed information about a role assignment entry returned when listing assignments.')
 
@@ -135,7 +133,7 @@ export const FunctionObjectSchema = type({
     type('boolean').describe(
       'Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](https://developers.openai.com/api/docs/guides/function-calling).',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type FunctionObjectSchema = typeof FunctionObjectSchema.infer
@@ -151,7 +149,7 @@ export const MetadataSchema = type(
   type({ '[string]': 'string' }).describe(
     'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type MetadataSchema = typeof MetadataSchema.infer
 
@@ -193,7 +191,7 @@ export const ResponseFormatJsonSchemaSchema = type({
       type('boolean').describe(
         'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }).describe('Structured Outputs configuration options, including a JSON Schema.\n'),
 }).describe(
   'JSON Schema response format. Used to generate structured JSON responses.\nLearn more about [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
@@ -224,12 +222,12 @@ export const AssistantObjectSchema = type({
     type('string')
       .narrow((data, ctx) => [...data].length <= 256 || ctx.mustBe('at most 256 characters'))
       .describe('The name of the assistant. The maximum length is 256 characters.\n'),
-  ).or('null | null'),
+  ).or('null'),
   description: type(
     type('string')
       .narrow((data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'))
       .describe('The description of the assistant. The maximum length is 512 characters.\n'),
-  ).or('null | null'),
+  ).or('null'),
   model: type('string').describe(
     'ID of the model to use. You can use the [List models](https://developers.openai.com/api/reference/resources/models/methods/list) API to see all of your available models, or see our [Model overview](https://developers.openai.com/api/docs/models) for descriptions of them.\n',
   ),
@@ -239,7 +237,7 @@ export const AssistantObjectSchema = type({
       .describe(
         'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
       ),
-  ).or('null | null'),
+  ).or('null'),
   tools: type(
     type(
       type(type(AssistantToolsCodeSchema).or(AssistantToolsFileSearchSchema)).or(
@@ -270,19 +268,19 @@ export const AssistantObjectSchema = type({
     }).describe(
       "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   metadata: MetadataSchema,
   'temperature?': type(
     type('number >= 0 & number <= 2').describe(
       'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'top_p?': type(
     type('number >= 0 & number <= 1').describe(
       'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
     ),
-  ).or('null | null'),
-  'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null | null'),
+  ).or('null'),
+  'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null'),
 }).describe('Represents an `assistant` that can call the model and use tools.')
 
 export type AssistantObjectSchema = typeof AssistantObjectSchema.infer
@@ -312,7 +310,7 @@ export const ThreadObjectSchema = type({
     }).describe(
       "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   metadata: MetadataSchema,
 }).describe(
   'Represents a thread that contains [messages](https://developers.openai.com/api/docs/assistants/migration).',
@@ -361,7 +359,7 @@ export const RunCompletionUsageSchema = type(
   }).describe(
     'Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).',
   ),
-).or('null | null')
+).or('null')
 
 export type RunCompletionUsageSchema = typeof RunCompletionUsageSchema.infer
 
@@ -373,7 +371,7 @@ export const TruncationObjectSchema = type({
     type('number.integer >= 1').describe(
       'The number of most recent messages from the thread when constructing the context for the run.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Controls for how a thread will be truncated prior to the run. Use this to control the initial context window of the run.',
 )
@@ -507,10 +505,10 @@ export const RunObjectSchema = type({
   max_completion_tokens: type('number.integer >= 256 | null').describe(
     'The maximum number of completion tokens specified to have been used over the course of the run.\n',
   ),
-  truncation_strategy: type(TruncationObjectSchema).or('null | null'),
-  tool_choice: type(AssistantsApiToolChoiceOptionSchema).or('null | null'),
+  truncation_strategy: type(TruncationObjectSchema).or('null'),
+  tool_choice: type(AssistantsApiToolChoiceOptionSchema).or('null'),
   parallel_tool_calls: ParallelToolCallsSchema,
-  response_format: type(AssistantsApiResponseFormatOptionSchema).or('null | null'),
+  response_format: type(AssistantsApiResponseFormatOptionSchema).or('null'),
 }).describe(
   'Represents an execution run on a [thread](https://developers.openai.com/api/docs/assistants/migration).',
 )
@@ -688,7 +686,7 @@ export const RunStepDetailsToolCallsFunctionObjectSchema = type({
       type('string').describe(
         'The output of the function. This will be `null` if the outputs have not been [submitted](https://developers.openai.com/api/docs/assistants/migration) yet.',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }).describe('The definition of the function that was called.'),
 })
 
@@ -726,7 +724,7 @@ export const RunStepCompletionUsageSchema = type(
   }).describe(
     "Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.",
   ),
-).or('null | null')
+).or('null')
 
 export type RunStepCompletionUsageSchema = typeof RunStepCompletionUsageSchema.infer
 
@@ -765,27 +763,27 @@ export const RunStepObjectSchema = type({
     }).describe(
       'The last error associated with this run step. Will be `null` if there are no errors.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   expired_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   cancelled_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the run step was cancelled.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   failed_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the run step failed.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   completed_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the run step completed.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   metadata: MetadataSchema,
   usage: RunStepCompletionUsageSchema,
 }).describe('Represents a step in execution of a run.\n')
@@ -874,7 +872,7 @@ export const RunStepDeltaStepDetailsToolCallsFunctionObjectSchema = type({
       type('string').describe(
         'The output of the function. This will be `null` if the outputs have not been [submitted](https://developers.openai.com/api/docs/assistants/migration) yet.',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }).describe('The definition of the function that was called.'),
 })
 
@@ -1061,17 +1059,17 @@ export const MessageObjectSchema = type({
         "'content_filter' | 'max_tokens' | 'run_cancelled' | 'run_expired' | 'run_failed'",
       ).describe('The reason the message is incomplete.'),
     }).describe('On an incomplete message, details about why the message is incomplete.'),
-  ).or('null | null'),
+  ).or('null'),
   completed_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the message was completed.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   incomplete_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the message was marked as incomplete.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   role: type("'user' | 'assistant'").describe(
     'The entity that produced the message. One of `user` or `assistant`.',
   ),
@@ -1088,12 +1086,12 @@ export const MessageObjectSchema = type({
     type('string').describe(
       'If applicable, the ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) that authored this message.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   run_id: type(
     type('string').describe(
       'The ID of the [run](https://developers.openai.com/api/docs/assistants/migration) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   attachments: type(
     type(
       type({
@@ -1105,7 +1103,7 @@ export const MessageObjectSchema = type({
     )
       .array()
       .describe('A list of files attached to the message, and the tools they were added to.'),
-  ).or('null | null'),
+  ).or('null'),
   metadata: MetadataSchema,
 }).describe(
   'Represents a message within a [thread](https://developers.openai.com/api/docs/assistants/migration).',
@@ -1280,7 +1278,7 @@ export const MisalignmentErrorDetailsResourceSchema = type({
       .describe(
         'An opaque target for explicitly continuing this review, or null when unavailable.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'error_type?': MisalignmentErrorTypeSchema.describe(
     'An optional classification; clients must accept additional values.',
   ),
@@ -1292,9 +1290,9 @@ export type MisalignmentErrorDetailsResourceSchema =
   typeof MisalignmentErrorDetailsResourceSchema.infer
 
 export const ErrorSchema = type({
-  code: 'string | null | null',
+  code: 'string | null',
   message: 'string',
-  param: 'string | null | null',
+  param: 'string | null',
   type: 'string',
   'misalignment?': MisalignmentErrorDetailsResourceSchema,
 })
@@ -1327,8 +1325,49 @@ export const AssistantStreamEventSchema = type(
 
 export type AssistantStreamEventSchema = typeof AssistantStreamEventSchema.infer
 
-export const AssistantSupportedModelsSchema = type(
-  "'gpt-5' | 'gpt-5-mini' | 'gpt-5-nano' | 'gpt-5-2025-08-07' | 'gpt-5-mini-2025-08-07' | 'gpt-5-nano-2025-08-07' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-4.1-2025-04-14' | 'gpt-4.1-mini-2025-04-14' | 'gpt-4.1-nano-2025-04-14' | 'o3-mini' | 'o3-mini-2025-01-31' | 'o1' | 'o1-2024-12-17' | 'gpt-4o' | 'gpt-4o-2024-11-20' | 'gpt-4o-2024-08-06' | 'gpt-4o-2024-05-13' | 'gpt-4o-mini' | 'gpt-4o-mini-2024-07-18' | 'gpt-4.5-preview' | 'gpt-4.5-preview-2025-02-27' | 'gpt-4-turbo' | 'gpt-4-turbo-2024-04-09' | 'gpt-4-0125-preview' | 'gpt-4-turbo-preview' | 'gpt-4-1106-preview' | 'gpt-4-vision-preview' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-0613' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'gpt-4-32k-0613' | 'gpt-3.5-turbo' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-1106' | 'gpt-3.5-turbo-0125' | 'gpt-3.5-turbo-16k-0613'",
+export const AssistantSupportedModelsSchema = type.enumerated(
+  'gpt-5',
+  'gpt-5-mini',
+  'gpt-5-nano',
+  'gpt-5-2025-08-07',
+  'gpt-5-mini-2025-08-07',
+  'gpt-5-nano-2025-08-07',
+  'gpt-4.1',
+  'gpt-4.1-mini',
+  'gpt-4.1-nano',
+  'gpt-4.1-2025-04-14',
+  'gpt-4.1-mini-2025-04-14',
+  'gpt-4.1-nano-2025-04-14',
+  'o3-mini',
+  'o3-mini-2025-01-31',
+  'o1',
+  'o1-2024-12-17',
+  'gpt-4o',
+  'gpt-4o-2024-11-20',
+  'gpt-4o-2024-08-06',
+  'gpt-4o-2024-05-13',
+  'gpt-4o-mini',
+  'gpt-4o-mini-2024-07-18',
+  'gpt-4.5-preview',
+  'gpt-4.5-preview-2025-02-27',
+  'gpt-4-turbo',
+  'gpt-4-turbo-2024-04-09',
+  'gpt-4-0125-preview',
+  'gpt-4-turbo-preview',
+  'gpt-4-1106-preview',
+  'gpt-4-vision-preview',
+  'gpt-4',
+  'gpt-4-0314',
+  'gpt-4-0613',
+  'gpt-4-32k',
+  'gpt-4-32k-0314',
+  'gpt-4-32k-0613',
+  'gpt-3.5-turbo',
+  'gpt-3.5-turbo-16k',
+  'gpt-3.5-turbo-0613',
+  'gpt-3.5-turbo-1106',
+  'gpt-3.5-turbo-0125',
+  'gpt-3.5-turbo-16k-0613',
 )
 
 export type AssistantSupportedModelsSchema = typeof AssistantSupportedModelsSchema.infer
@@ -1390,9 +1429,159 @@ export const AudioTranscriptionResponseSchema = type({
 
 export type AudioTranscriptionResponseSchema = typeof AudioTranscriptionResponseSchema.infer
 
-export const AuditLogEventTypeSchema = type(
-  "'api_key.created' | 'api_key.updated' | 'api_key.deleted' | 'certificate.created' | 'certificate.updated' | 'certificate.deleted' | 'certificates.activated' | 'certificates.deactivated' | 'checkpoint.permission.created' | 'checkpoint.permission.deleted' | 'external_key.registered' | 'external_key.removed' | 'external_storage.registered' | 'external_storage.removed' | 'group.created' | 'group.updated' | 'group.deleted' | 'invite.sent' | 'invite.accepted' | 'invite.deleted' | 'ip_allowlist.created' | 'ip_allowlist.updated' | 'ip_allowlist.deleted' | 'ip_allowlist.config.activated' | 'ip_allowlist.config.deactivated' | 'login.succeeded' | 'login.failed' | 'logout.succeeded' | 'logout.failed' | 'organization.updated' | 'project.created' | 'project.updated' | 'project.archived' | 'project.deleted' | 'rate_limit.updated' | 'rate_limit.deleted' | 'resource.deleted' | 'tunnel.created' | 'tunnel.updated' | 'tunnel.deleted' | 'workload_identity_provider.created' | 'workload_identity_provider.updated' | 'workload_identity_provider.deleted' | 'workload_identity_provider_mapping.created' | 'workload_identity_provider_mapping.updated' | 'workload_identity_provider_mapping.deleted' | 'role.created' | 'role.updated' | 'role.deleted' | 'role.assignment.created' | 'role.assignment.deleted' | 'role.bound_to_resource' | 'role.unbound_from_resource' | 'scim.enabled' | 'scim.disabled' | 'service_account.created' | 'service_account.updated' | 'service_account.deleted' | 'user.added' | 'user.updated' | 'user.deleted' | 'tenant.metadata.updated' | 'tenant.microsoft_entra_mapping.upserted' | 'tenant.microsoft_entra_mapping.deleted' | 'tenant.workload_identity.provider.created' | 'tenant.workload_identity.provider.updated' | 'tenant.workload_identity.provider.archived' | 'tenant.workload_identity.mapping.created' | 'tenant.workload_identity.mapping.updated' | 'tenant.workload_identity.mapping.archived' | 'tenant.workload_identity.binding.created' | 'tenant.workload_identity.principal.provisioned' | 'tenant.workload_identity.access_token.issued' | 'tenant.admin_api_key.created' | 'tenant.admin_api_key.updated' | 'tenant.admin_api_key.deleted' | 'tenant.project_api_key.created' | 'tenant.trusted_access.business_verification.started' | 'tenant.trusted_access.application.submitted' | 'tenant.chatgpt_access_token.revoked' | 'tenant.migration.completed' | 'tenant.sso.migrated' | 'tenant.domains.migrated' | 'tenant.sso_connection.created' | 'tenant.sso_connection.updated' | 'tenant.sso_connection.deleted' | 'tenant.sso_connection.setup.started' | 'tenant.policy.created' | 'tenant.policy.updated' | 'tenant.policy.deleted' | 'tenant.policy.attached' | 'tenant.policy.detached' | 'tenant.principal_authentication_policy.resolved' | 'tenant.scim.setup.started' | 'tenant.scim.deletion.requested' | 'tenant.scim.directory.created' | 'tenant.product_access_policy.updated' | 'tenant.resource_share_grant.created' | 'tenant.resource_share_grant.updated' | 'tenant.resource_share_grant.accepted' | 'tenant.resource_share_grant.declined' | 'tenant.resource_share_grant.revoked' | 'tenant.resource_share_grant.deleted' | 'tenant.service_account.updated' | 'tenant.service_account.deleted' | 'tenant.service_account.token.revoked' | 'tenant.billing.overage_limit.updated' | 'tenant.billing.alerts.updated' | 'tenant.billing.info.updated' | 'tenant.usage_limit.workspace.updated' | 'tenant.usage_limit.group.updated' | 'tenant.usage_limit.user.updated' | 'tenant.usage_limit.increase_request.updated' | 'tenant.usage_limit.increase_request.resolved' | 'tenant.group.created' | 'tenant.group.updated' | 'tenant.group.deleted' | 'tenant.group.member.added' | 'tenant.group.member.removed' | 'tenant.migration_rollout.status.updated' | 'tenant.migration_rollout.tier.updated' | 'tenant.role.metadata.updated' | 'tenant.custom_role.created' | 'tenant.custom_role.updated' | 'tenant.custom_role.deleted' | 'tenant.role_assignment.created' | 'tenant.role_assignment.deleted' | 'tenant.resource_role_assignment.created' | 'tenant.resource_role_assignment.deleted' | 'tenant.resource_access.updated' | 'tenant.resource_access.deleted' | 'tenant.ads_account.onboarding.redemption' | 'tenant.session_policy.created' | 'tenant.session_policy.updated' | 'tenant.session_policy.deleted' | 'tenant.session_revocation.started' | 'tenant.third_party_app_policy.updated' | 'tenant.user.added' | 'tenant.user.updated' | 'tenant.user.removed' | 'tenant.user.looked_up' | 'tenant.user.invited' | 'tenant.membership.revoked' | 'tenant.api_organization_invite.upserted' | 'tenant.api_organization_invite.deleted' | 'tenant.chatgpt_workspace_invite.upserted' | 'tenant.membership.accepted' | 'tenant.membership.declined' | 'tenant.workspace_invite_email_settings.updated'",
-).describe('The event type.')
+export const AuditLogEventTypeSchema = type
+  .enumerated(
+    'api_key.created',
+    'api_key.updated',
+    'api_key.deleted',
+    'certificate.created',
+    'certificate.updated',
+    'certificate.deleted',
+    'certificates.activated',
+    'certificates.deactivated',
+    'checkpoint.permission.created',
+    'checkpoint.permission.deleted',
+    'external_key.registered',
+    'external_key.removed',
+    'external_storage.registered',
+    'external_storage.removed',
+    'group.created',
+    'group.updated',
+    'group.deleted',
+    'invite.sent',
+    'invite.accepted',
+    'invite.deleted',
+    'ip_allowlist.created',
+    'ip_allowlist.updated',
+    'ip_allowlist.deleted',
+    'ip_allowlist.config.activated',
+    'ip_allowlist.config.deactivated',
+    'login.succeeded',
+    'login.failed',
+    'logout.succeeded',
+    'logout.failed',
+    'organization.updated',
+    'project.created',
+    'project.updated',
+    'project.archived',
+    'project.deleted',
+    'rate_limit.updated',
+    'rate_limit.deleted',
+    'resource.deleted',
+    'tunnel.created',
+    'tunnel.updated',
+    'tunnel.deleted',
+    'workload_identity_provider.created',
+    'workload_identity_provider.updated',
+    'workload_identity_provider.deleted',
+    'workload_identity_provider_mapping.created',
+    'workload_identity_provider_mapping.updated',
+    'workload_identity_provider_mapping.deleted',
+    'role.created',
+    'role.updated',
+    'role.deleted',
+    'role.assignment.created',
+    'role.assignment.deleted',
+    'role.bound_to_resource',
+    'role.unbound_from_resource',
+    'scim.enabled',
+    'scim.disabled',
+    'service_account.created',
+    'service_account.updated',
+    'service_account.deleted',
+    'user.added',
+    'user.updated',
+    'user.deleted',
+    'tenant.metadata.updated',
+    'tenant.microsoft_entra_mapping.upserted',
+    'tenant.microsoft_entra_mapping.deleted',
+    'tenant.workload_identity.provider.created',
+    'tenant.workload_identity.provider.updated',
+    'tenant.workload_identity.provider.archived',
+    'tenant.workload_identity.mapping.created',
+    'tenant.workload_identity.mapping.updated',
+    'tenant.workload_identity.mapping.archived',
+    'tenant.workload_identity.binding.created',
+    'tenant.workload_identity.principal.provisioned',
+    'tenant.workload_identity.access_token.issued',
+    'tenant.admin_api_key.created',
+    'tenant.admin_api_key.updated',
+    'tenant.admin_api_key.deleted',
+    'tenant.project_api_key.created',
+    'tenant.trusted_access.business_verification.started',
+    'tenant.trusted_access.application.submitted',
+    'tenant.chatgpt_access_token.revoked',
+    'tenant.migration.completed',
+    'tenant.sso.migrated',
+    'tenant.domains.migrated',
+    'tenant.sso_connection.created',
+    'tenant.sso_connection.updated',
+    'tenant.sso_connection.deleted',
+    'tenant.sso_connection.setup.started',
+    'tenant.policy.created',
+    'tenant.policy.updated',
+    'tenant.policy.deleted',
+    'tenant.policy.attached',
+    'tenant.policy.detached',
+    'tenant.principal_authentication_policy.resolved',
+    'tenant.scim.setup.started',
+    'tenant.scim.deletion.requested',
+    'tenant.scim.directory.created',
+    'tenant.product_access_policy.updated',
+    'tenant.resource_share_grant.created',
+    'tenant.resource_share_grant.updated',
+    'tenant.resource_share_grant.accepted',
+    'tenant.resource_share_grant.declined',
+    'tenant.resource_share_grant.revoked',
+    'tenant.resource_share_grant.deleted',
+    'tenant.service_account.updated',
+    'tenant.service_account.deleted',
+    'tenant.service_account.token.revoked',
+    'tenant.billing.overage_limit.updated',
+    'tenant.billing.alerts.updated',
+    'tenant.billing.info.updated',
+    'tenant.usage_limit.workspace.updated',
+    'tenant.usage_limit.group.updated',
+    'tenant.usage_limit.user.updated',
+    'tenant.usage_limit.increase_request.updated',
+    'tenant.usage_limit.increase_request.resolved',
+    'tenant.group.created',
+    'tenant.group.updated',
+    'tenant.group.deleted',
+    'tenant.group.member.added',
+    'tenant.group.member.removed',
+    'tenant.migration_rollout.status.updated',
+    'tenant.migration_rollout.tier.updated',
+    'tenant.role.metadata.updated',
+    'tenant.custom_role.created',
+    'tenant.custom_role.updated',
+    'tenant.custom_role.deleted',
+    'tenant.role_assignment.created',
+    'tenant.role_assignment.deleted',
+    'tenant.resource_role_assignment.created',
+    'tenant.resource_role_assignment.deleted',
+    'tenant.resource_access.updated',
+    'tenant.resource_access.deleted',
+    'tenant.ads_account.onboarding.redemption',
+    'tenant.session_policy.created',
+    'tenant.session_policy.updated',
+    'tenant.session_policy.deleted',
+    'tenant.session_revocation.started',
+    'tenant.third_party_app_policy.updated',
+    'tenant.user.added',
+    'tenant.user.updated',
+    'tenant.user.removed',
+    'tenant.user.looked_up',
+    'tenant.user.invited',
+    'tenant.membership.revoked',
+    'tenant.api_organization_invite.upserted',
+    'tenant.api_organization_invite.deleted',
+    'tenant.chatgpt_workspace_invite.upserted',
+    'tenant.membership.accepted',
+    'tenant.membership.declined',
+    'tenant.workspace_invite_email_settings.updated',
+  )
+  .describe('The event type.')
 
 export type AuditLogEventTypeSchema = typeof AuditLogEventTypeSchema.infer
 
@@ -1487,9 +1676,25 @@ export type OciExternalStorageProviderResponseSchema =
 
 export const ProviderSchema = type(
   type(
-    type(AwsExternalStorageProviderResponseSchema).or(AzureExternalStorageProviderResponseSchema),
-  ).or(GcpExternalStorageProviderResponseSchema),
-).or(OciExternalStorageProviderResponseSchema)
+    type(
+      type(AwsExternalStorageProviderResponseSchema).and({
+        type: "'AwsExternalStorageProviderResponse'",
+      }),
+    ).or(
+      type(AzureExternalStorageProviderResponseSchema).and({
+        type: "'AzureExternalStorageProviderResponse'",
+      }),
+    ),
+  ).or(
+    type(GcpExternalStorageProviderResponseSchema).and({
+      type: "'GcpExternalStorageProviderResponse'",
+    }),
+  ),
+).or(
+  type(OciExternalStorageProviderResponseSchema).and({
+    type: "'OciExternalStorageProviderResponse'",
+  }),
+)
 
 export type ProviderSchema = typeof ProviderSchema.infer
 
@@ -1503,7 +1708,7 @@ export const AuditLogSchema = type({
   }).describe(
     'The project that the action was scoped to. Absent for actions not scoped to projects. Note that any admin actions taken via Admin API keys are associated with the default project.',
   ),
-  'actor?': type(AuditLogActorSchema).or('null | null'),
+  'actor?': type(AuditLogActorSchema).or('null'),
   'api_key.created?': type({
     'id?': type('string').describe('The tracking ID of the API key.'),
     'data?': type({
@@ -1928,12 +2133,12 @@ export const BatchErrorSchema = type({
   ),
   'param?': type(
     type('string').describe('The name of the parameter that caused the error, if applicable.'),
-  ).or('null | null'),
+  ).or('null'),
   'line?': type(
     type('number.integer').describe(
       'The line number of the input file where the error occurred, if applicable.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BatchErrorSchema = typeof BatchErrorSchema.infer
@@ -2051,7 +2256,7 @@ export const CertificateSchema = type({
     'The object type.\n\n- If creating, updating, or getting a specific certificate, the object type is `certificate`.\n- If listing, activating, or deactivating certificates for the organization, the object type is `organization.certificate`.\n- If listing, activating, or deactivating certificates for a project, the object type is `organization.project.certificate`.\n',
   ),
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
-  name: type('string | null | null').describe('The name of the certificate.'),
+  name: type('string | null').describe('The name of the certificate.'),
   created_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the certificate was uploaded.',
   ),
@@ -2153,7 +2358,13 @@ export type ChatCompletionMessageCustomToolCallSchema =
   typeof ChatCompletionMessageCustomToolCallSchema.infer
 
 export const ChatCompletionMessageToolCallsSchema = type(
-  type(ChatCompletionMessageToolCallSchema).or(ChatCompletionMessageCustomToolCallSchema),
+  type(
+    type(ChatCompletionMessageToolCallSchema).and({ type: "'ChatCompletionMessageToolCall'" }),
+  ).or(
+    type(ChatCompletionMessageCustomToolCallSchema).and({
+      type: "'ChatCompletionMessageCustomToolCall'",
+    }),
+  ),
 )
   .array()
   .describe('The tool calls generated by the model, such as function calls.')
@@ -2161,11 +2372,11 @@ export const ChatCompletionMessageToolCallsSchema = type(
 export type ChatCompletionMessageToolCallsSchema = typeof ChatCompletionMessageToolCallsSchema.infer
 
 export const ChatCompletionResponseMessageSchema = type({
-  content: type(type('string').describe('The contents of the message.')).or('null | null'),
+  content: type(type('string').describe('The contents of the message.')).or('null'),
   'refusal?': type(type('string').describe('The refusal message generated by the model.')).or(
-    'null | null',
+    'null',
   ),
-  'tool_calls?': type(ChatCompletionMessageToolCallsSchema).or('null | null'),
+  'tool_calls?': type(ChatCompletionMessageToolCallsSchema).or('null'),
   'annotations?': type(
     type({
       type: type("'url_citation'").describe('The type of the URL citation. Always `url_citation`.'),
@@ -2211,7 +2422,7 @@ export const ChatCompletionResponseMessageSchema = type({
     }).describe(
       'If the audio output modality is requested, this object contains data\nabout the audio response from the model. [Learn more](https://developers.openai.com/api/docs/guides/audio).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A chat completion message generated by the model.')
 
 export type ChatCompletionResponseMessageSchema = typeof ChatCompletionResponseMessageSchema.infer
@@ -2225,7 +2436,7 @@ export const ChatCompletionTokenLogprobSchema = type({
     type('number.integer[]').describe(
       'A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   top_logprobs: type(
     type({
       token: type('string').describe('The token.'),
@@ -2236,7 +2447,7 @@ export const ChatCompletionTokenLogprobSchema = type({
         type('number.integer[]').describe(
           'A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.',
         ),
-      ).or('null | null'),
+      ).or('null'),
     }),
   )
     .array()
@@ -2251,7 +2462,7 @@ export const ServiceTierSchema = type(
   type("'auto' | 'default' | 'flex' | 'scale' | 'priority' | 'fast'").describe(
     "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
   ),
-).or('null | null')
+).or('null')
 
 export type ServiceTierSchema = typeof ServiceTierSchema.infer
 
@@ -2334,11 +2545,15 @@ export const ChatCompletionModerationErrorSchema = type({
 export type ChatCompletionModerationErrorSchema = typeof ChatCompletionModerationErrorSchema.infer
 
 export const ChatCompletionModerationSchema = type({
-  input: type(ChatCompletionModerationResultsSchema)
-    .or(ChatCompletionModerationErrorSchema)
+  input: type(
+    type(ChatCompletionModerationResultsSchema).and({ type: "'ChatCompletionModerationResults'" }),
+  )
+    .or(type(ChatCompletionModerationErrorSchema).and({ type: "'ChatCompletionModerationError'" }))
     .describe('Moderation for the request input.'),
-  output: type(ChatCompletionModerationResultsSchema)
-    .or(ChatCompletionModerationErrorSchema)
+  output: type(
+    type(ChatCompletionModerationResultsSchema).and({ type: "'ChatCompletionModerationResults'" }),
+  )
+    .or(type(ChatCompletionModerationErrorSchema).and({ type: "'ChatCompletionModerationError'" }))
     .describe('Moderation for the generated output.'),
 }).describe('Moderation results or errors for the request input and generated output.')
 
@@ -2361,14 +2576,14 @@ export const CreateChatCompletionResponseSchema = type({
             type(ChatCompletionTokenLogprobSchema)
               .array()
               .describe('A list of message content tokens with log probability information.'),
-          ).or('null | null'),
+          ).or('null'),
           refusal: type(
             type(ChatCompletionTokenLogprobSchema)
               .array()
               .describe('A list of message refusal tokens with log probability information.'),
-          ).or('null | null'),
+          ).or('null'),
         }).describe('Log probability information for the choice.'),
-      ).or('null | null'),
+      ).or('null'),
     }),
   )
     .array()
@@ -2388,7 +2603,7 @@ export const CreateChatCompletionResponseSchema = type({
     ChatCompletionModerationSchema.describe(
       'Moderation results for the request input and generated output, if moderated\ncompletions were requested.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Represents a chat completion response returned by model, based on the provided input.')
 
 export type CreateChatCompletionResponseSchema = typeof CreateChatCompletionResponseSchema.infer
@@ -2417,27 +2632,25 @@ export const ChatCompletionMessageListSchema = type({
     type({
       id: 'string',
       role: "'user' | 'assistant' | 'tool' | 'system' | 'function' | 'developer'",
-      content: 'string | null | null',
+      content: 'string | null',
       content_parts: type(
         type(
           type({
             type: "'text' | 'image_url' | 'input_audio' | 'file'",
-            'text?': 'string | null | null',
-            'image_url?': type(type({ url: 'string', 'detail?': 'string | null | null' })).or(
-              'null | null',
-            ),
-            'input_audio?': type(type({ data: 'string', format: 'string' })).or('null | null'),
+            'text?': 'string | null',
+            'image_url?': type(type({ url: 'string', 'detail?': 'string | null' })).or('null'),
+            'input_audio?': type(type({ data: 'string', format: 'string' })).or('null'),
             'file?': type(
               type({
-                'file_data?': 'string | null | null',
-                'filename?': 'string | null | null',
-                'file_id?': 'string | null | null',
+                'file_data?': 'string | null',
+                'filename?': 'string | null',
+                'file_id?': 'string | null',
               }),
-            ).or('null | null'),
+            ).or('null'),
           }),
         ).array(),
-      ).or('null | null'),
-      'name?': 'string | null | null',
+      ).or('null'),
+      'name?': 'string | null',
     }),
   )
     .array()
@@ -2474,7 +2687,7 @@ export const ChatCompletionModalitiesSchema = type(
   type("'text' | 'audio'[]").describe(
     'Output types that you would like the model to generate for this request.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to [generate audio](https://developers.openai.com/api/docs/guides/audio). To\nrequest that this model generate both text and audio responses, you can\nuse:\n\n`["text", "audio"]`\n',
   ),
-).or('null | null')
+).or('null')
 
 export type ChatCompletionModalitiesSchema = typeof ChatCompletionModalitiesSchema.infer
 
@@ -2526,8 +2739,14 @@ export type ChatCompletionRequestMessageContentPartRefusalSchema =
   typeof ChatCompletionRequestMessageContentPartRefusalSchema.infer
 
 export const ChatCompletionRequestAssistantMessageContentPartSchema = type(
-  ChatCompletionRequestMessageContentPartTextSchema,
-).or(ChatCompletionRequestMessageContentPartRefusalSchema)
+  type(ChatCompletionRequestMessageContentPartTextSchema).and({
+    type: "'ChatCompletionRequestMessageContentPartText'",
+  }),
+).or(
+  type(ChatCompletionRequestMessageContentPartRefusalSchema).and({
+    type: "'ChatCompletionRequestMessageContentPartRefusal'",
+  }),
+)
 
 export type ChatCompletionRequestAssistantMessageContentPartSchema =
   typeof ChatCompletionRequestAssistantMessageContentPartSchema.infer
@@ -2545,10 +2764,8 @@ export const ChatCompletionRequestAssistantMessageSchema = type({
       .describe(
         'The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.\n',
       ),
-  ).or('null | null'),
-  'refusal?': type(type('string').describe('The refusal message by the assistant.')).or(
-    'null | null',
-  ),
+  ).or('null'),
+  'refusal?': type(type('string').describe('The refusal message by the assistant.')).or('null'),
   role: type("'assistant'").describe('The role of the messages author, in this case `assistant`.'),
   'name?': type('string').describe(
     'An optional name for the participant. Provides the model information to differentiate between participants of the same role.',
@@ -2561,7 +2778,7 @@ export const ChatCompletionRequestAssistantMessageSchema = type({
     }).describe(
       'Data about a previous audio response from the model.\n[Learn more](https://developers.openai.com/api/docs/guides/audio).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'tool_calls?': ChatCompletionMessageToolCallsSchema,
   'function_call?': type(
     type({
@@ -2572,7 +2789,7 @@ export const ChatCompletionRequestAssistantMessageSchema = type({
     }).describe(
       'Deprecated and replaced by `tool_calls`. The name and arguments of a function that should be called, as generated by the model.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Messages sent by the model in response to user messages.\n')
 
 export type ChatCompletionRequestAssistantMessageSchema =
@@ -2601,7 +2818,7 @@ export type ChatCompletionRequestDeveloperMessageSchema =
 
 export const ChatCompletionRequestFunctionMessageSchema = type({
   role: type("'function'").describe('The role of the messages author, in this case `function`.'),
-  content: type(type('string').describe('The contents of the function message.')).or('null | null'),
+  content: type(type('string').describe('The contents of the function message.')).or('null'),
   name: type('string').describe('The name of the function to call.'),
 })
 
@@ -2743,13 +2960,35 @@ export const ChatCompletionRequestMessageSchema = type(
   type(
     type(
       type(
-        type(ChatCompletionRequestDeveloperMessageSchema).or(
-          ChatCompletionRequestSystemMessageSchema,
+        type(
+          type(ChatCompletionRequestDeveloperMessageSchema).and({
+            role: "'ChatCompletionRequestDeveloperMessage'",
+          }),
+        ).or(
+          type(ChatCompletionRequestSystemMessageSchema).and({
+            role: "'ChatCompletionRequestSystemMessage'",
+          }),
         ),
-      ).or(ChatCompletionRequestUserMessageSchema),
-    ).or(ChatCompletionRequestAssistantMessageSchema),
-  ).or(ChatCompletionRequestToolMessageSchema),
-).or(ChatCompletionRequestFunctionMessageSchema)
+      ).or(
+        type(ChatCompletionRequestUserMessageSchema).and({
+          role: "'ChatCompletionRequestUserMessage'",
+        }),
+      ),
+    ).or(
+      type(ChatCompletionRequestAssistantMessageSchema).and({
+        role: "'ChatCompletionRequestAssistantMessage'",
+      }),
+    ),
+  ).or(
+    type(ChatCompletionRequestToolMessageSchema).and({
+      role: "'ChatCompletionRequestToolMessage'",
+    }),
+  ),
+).or(
+  type(ChatCompletionRequestFunctionMessageSchema).and({
+    role: "'ChatCompletionRequestFunctionMessage'",
+  }),
+)
 
 export type ChatCompletionRequestMessageSchema = typeof ChatCompletionRequestMessageSchema.infer
 
@@ -2768,7 +3007,7 @@ export const ChatCompletionStreamOptionsSchema = type(
       'When true, stream obfuscation will be enabled. Stream obfuscation adds\nrandom characters to an `obfuscation` field on streaming delta events to\nnormalize payload sizes as a mitigation to certain side-channel attacks.\nThese obfuscation fields are included by default, but add a small amount\nof overhead to the data stream. You can set `include_obfuscation` to\nfalse to optimize for bandwidth if you trust the network links between\nyour application and the OpenAI API.\n',
     ),
   }).describe('Options for streaming response. Only set this when you set `stream: true`.\n'),
-).or('null | null')
+).or('null')
 
 export type ChatCompletionStreamOptionsSchema = typeof ChatCompletionStreamOptionsSchema.infer
 
@@ -2785,7 +3024,7 @@ export const ChatCompletionStreamResponseDeltaSchema = type({
   }).describe(
     'A partial audio response. Audio chunks may carry an ID, base64 data, or\ntranscript text; the final audio update contains only its expiry timestamp.\n',
   ),
-  'content?': type(type('string').describe('The contents of the chunk message.')).or('null | null'),
+  'content?': type(type('string').describe('The contents of the chunk message.')).or('null'),
   'function_call?': type({
     'arguments?': type('string').describe(
       'The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function.',
@@ -2799,7 +3038,7 @@ export const ChatCompletionStreamResponseDeltaSchema = type({
     'The role of the author of this message.',
   ),
   'refusal?': type(type('string').describe('The refusal message generated by the model.')).or(
-    'null | null',
+    'null',
   ),
 }).describe(
   'A chat completion delta generated by streamed model responses.\nStreamed audio can arrive in partial updates with an ID, base64 data, or\ntranscript text. The final audio update contains only its expiry timestamp.\n',
@@ -2854,8 +3093,14 @@ export const StaticChunkingStrategyRequestParamSchema = type({
 export type StaticChunkingStrategyRequestParamSchema =
   typeof StaticChunkingStrategyRequestParamSchema.infer
 
-export const ChunkingStrategyRequestParamSchema = type(AutoChunkingStrategyRequestParamSchema)
-  .or(StaticChunkingStrategyRequestParamSchema)
+export const ChunkingStrategyRequestParamSchema = type(
+  type(AutoChunkingStrategyRequestParamSchema).and({ type: "'AutoChunkingStrategyRequestParam'" }),
+)
+  .or(
+    type(StaticChunkingStrategyRequestParamSchema).and({
+      type: "'StaticChunkingStrategyRequestParam'",
+    }),
+  )
   .describe(
     'The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.',
   )
@@ -2932,9 +3177,17 @@ export const AutoCodeInterpreterToolParamSchema = type({
     .describe('An optional list of uploaded files to make available to your code.'),
   'memory_limit?': type(
     ContainerMemoryLimitSchema.describe('The memory limit for the code interpreter container.'),
-  ).or('null | null'),
-  'network_policy?': type(ContainerNetworkPolicyDisabledParamSchema)
-    .or(ContainerNetworkPolicyAllowlistParamSchema)
+  ).or('null'),
+  'network_policy?': type(
+    type(ContainerNetworkPolicyDisabledParamSchema).and({
+      type: "'ContainerNetworkPolicyDisabledParam'",
+    }),
+  )
+    .or(
+      type(ContainerNetworkPolicyAllowlistParamSchema).and({
+        type: "'ContainerNetworkPolicyAllowlistParam'",
+      }),
+    )
     .describe('Network access policy for the container.'),
 }).describe(
   'Configuration for a code interpreter container. Optionally specify the IDs of the files to run the code on.',
@@ -2959,7 +3212,7 @@ export const CodeInterpreterToolSchema = type({
     type(type(CallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool that runs Python code to help generate a response to a prompt.\n')
 
 export type CodeInterpreterToolSchema = typeof CodeInterpreterToolSchema.infer
@@ -2987,16 +3240,18 @@ export const CodeInterpreterToolCallSchema = type({
     'The status of the code interpreter tool call. Valid values are `in_progress`, `completed`, `incomplete`, `interpreting`, and `failed`.\n',
   ),
   container_id: type('string').describe('The ID of the container used to run the code.\n'),
-  code: type(type('string').describe('The code to run, or null if not available.\n')).or(
-    'null | null',
-  ),
+  code: type(type('string').describe('The code to run, or null if not available.\n')).or('null'),
   outputs: type(
-    type(type(CodeInterpreterOutputLogsSchema).or(CodeInterpreterOutputImageSchema))
+    type(
+      type(type(CodeInterpreterOutputLogsSchema).and({ type: "'CodeInterpreterOutputLogs'" })).or(
+        type(CodeInterpreterOutputImageSchema).and({ type: "'CodeInterpreterOutputImage'" }),
+      ),
+    )
       .array()
       .describe(
         'The outputs generated by the code interpreter, such as logs or images.\nCan be null if no outputs are available.\n',
       ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool call to run code.\n')
 
 export type CodeInterpreterToolCallSchema = typeof CodeInterpreterToolCallSchema.infer
@@ -3031,11 +3286,15 @@ export const CompoundFilterSchema = scope({
   CompoundFilterSchema: [
     {
       type: ["'and' | 'or'", '@', 'Type of operation: `and` or `or`.'],
-      filters: [
-        'ComparisonFilterSchema | CompoundFilterSchema[]',
-        '@',
-        'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
-      ],
+      filters: type([
+        ['ComparisonFilterSchema', '&', { type: "'ComparisonFilter'" }],
+        '|',
+        ['CompoundFilterSchema', '&', { type: "'CompoundFilterSchema'" }],
+      ])
+        .array()
+        .describe(
+          'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
+        ),
       '+': 'reject',
     },
     '@',
@@ -3058,7 +3317,7 @@ export const ClickParamSchema = type({
   ),
   x: type('number.integer').describe('The x-coordinate where the click occurred.'),
   y: type('number.integer').describe('The y-coordinate where the click occurred.'),
-  'keys?': type(type('string[]').describe('The keys being held while clicking.')).or('null | null'),
+  'keys?': type(type('string[]').describe('The keys being held while clicking.')).or('null'),
 }).describe('A click action.')
 
 export type ClickParamSchema = typeof ClickParamSchema.infer
@@ -3069,9 +3328,7 @@ export const DoubleClickActionSchema = type({
   ),
   x: type('number.integer').describe('The x-coordinate where the double click occurred.'),
   y: type('number.integer').describe('The y-coordinate where the double click occurred.'),
-  keys: type(type('string[]').describe('The keys being held while double-clicking.')).or(
-    'null | null',
-  ),
+  keys: type(type('string[]').describe('The keys being held while double-clicking.')).or('null'),
 }).describe('A double click action.')
 
 export type DoubleClickActionSchema = typeof DoubleClickActionSchema.infer
@@ -3093,7 +3350,7 @@ export const DragParamSchema = type({
       'An array of coordinates representing the path of the drag action. Coordinates will appear as an array of objects, eg\n```\n[\n  { x: 100, y: 200 },\n  { x: 200, y: 300 }\n]\n```',
     ),
   'keys?': type(type('string[]').describe('The keys being held while dragging the mouse.')).or(
-    'null | null',
+    'null',
   ),
 }).describe('A drag action.')
 
@@ -3119,7 +3376,7 @@ export const MoveParamSchema = type({
   x: type('number.integer').describe('The x-coordinate to move to.'),
   y: type('number.integer').describe('The y-coordinate to move to.'),
   'keys?': type(type('string[]').describe('The keys being held while moving the mouse.')).or(
-    'null | null',
+    'null',
   ),
 }).describe('A mouse move action.')
 
@@ -3141,9 +3398,7 @@ export const ScrollParamSchema = type({
   y: type('number.integer').describe('The y-coordinate where the scroll occurred.'),
   scroll_x: type('number.integer').describe('The horizontal scroll distance.'),
   scroll_y: type('number.integer').describe('The vertical scroll distance.'),
-  'keys?': type(type('string[]').describe('The keys being held while scrolling.')).or(
-    'null | null',
-  ),
+  'keys?': type(type('string[]').describe('The keys being held while scrolling.')).or('null'),
 }).describe('A scroll action.')
 
 export type ScrollParamSchema = typeof ScrollParamSchema.infer
@@ -3170,14 +3425,18 @@ export const ComputerActionSchema = type(
     type(
       type(
         type(
-          type(type(type(ClickParamSchema).or(DoubleClickActionSchema)).or(DragParamSchema)).or(
-            KeyPressActionSchema,
-          ),
-        ).or(MoveParamSchema),
-      ).or(ScreenshotParamSchema),
-    ).or(ScrollParamSchema),
-  ).or(TypeParamSchema),
-).or(WaitParamSchema)
+          type(
+            type(
+              type(type(ClickParamSchema).and({ type: "'ClickParam'" })).or(
+                type(DoubleClickActionSchema).and({ type: "'DoubleClickAction'" }),
+              ),
+            ).or(type(DragParamSchema).and({ type: "'DragParam'" })),
+          ).or(type(KeyPressActionSchema).and({ type: "'KeyPressAction'" })),
+        ).or(type(MoveParamSchema).and({ type: "'MoveParam'" })),
+      ).or(type(ScreenshotParamSchema).and({ type: "'ScreenshotParam'" })),
+    ).or(type(ScrollParamSchema).and({ type: "'ScrollParam'" })),
+  ).or(type(TypeParamSchema).and({ type: "'TypeParam'" })),
+).or(type(WaitParamSchema).and({ type: "'WaitParam'" }))
 
 export type ComputerActionSchema = typeof ComputerActionSchema.infer
 
@@ -3203,10 +3462,8 @@ export type ComputerScreenshotImageSchema = typeof ComputerScreenshotImageSchema
 
 export const ComputerCallSafetyCheckParamSchema = type({
   id: type('string').describe('The ID of the pending safety check.'),
-  'code?': type(type('string').describe('The type of the pending safety check.')).or('null | null'),
-  'message?': type(type('string').describe('Details about the pending safety check.')).or(
-    'null | null',
-  ),
+  'code?': type(type('string').describe('The type of the pending safety check.')).or('null'),
+  'message?': type(type('string').describe('Details about the pending safety check.')).or('null'),
 }).describe('A pending safety check for the computer call.')
 
 export type ComputerCallSafetyCheckParamSchema = typeof ComputerCallSafetyCheckParamSchema.infer
@@ -3260,6 +3517,7 @@ export const ComputerToolCallOutputResourceSchema = type(ComputerToolCallOutputS
       'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
     ),
     'created_by?': type('string').describe('The identifier of the actor that created the item.\n'),
+    id: 'unknown',
   }),
 )
 
@@ -3360,9 +3618,9 @@ export const InputImageContentSchema = type({
     type('string.url').describe(
       'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   detail: ImageDetailSchema.describe(
     'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
@@ -3381,7 +3639,7 @@ export type FileInputDetailSchema = typeof FileInputDetailSchema.infer
 export const InputFileContentSchema = type({
   type: type("'input_file'").describe('The type of the input item. Always `input_file`.'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'filename?': type('string').describe('The name of the file to be sent to the model.'),
   'file_data?': type('string').describe('The content of the file to be sent to the model.\n'),
@@ -3394,9 +3652,11 @@ export const InputFileContentSchema = type({
 
 export type InputFileContentSchema = typeof InputFileContentSchema.infer
 
-export const InputContentSchema = type(type(InputTextContentSchema).or(InputImageContentSchema)).or(
-  InputFileContentSchema,
-)
+export const InputContentSchema = type(
+  type(type(InputTextContentSchema).and({ type: "'InputTextContent'" })).or(
+    type(InputImageContentSchema).and({ type: "'InputImageContent'" }),
+  ),
+).or(type(InputFileContentSchema).and({ type: "'InputFileContent'" }))
 
 export type InputContentSchema = typeof InputContentSchema.infer
 
@@ -3451,9 +3711,13 @@ export const FilePathSchema = type({
 export type FilePathSchema = typeof FilePathSchema.infer
 
 export const AnnotationSchema = type(
-  type(type(FileCitationBodySchema).or(UrlCitationBodySchema)).or(ContainerFileCitationBodySchema),
+  type(
+    type(type(FileCitationBodySchema).and({ type: "'FileCitationBody'" })).or(
+      type(UrlCitationBodySchema).and({ type: "'UrlCitationBody'" }),
+    ),
+  ).or(type(ContainerFileCitationBodySchema).and({ type: "'ContainerFileCitationBody'" })),
 )
-  .or(FilePathSchema)
+  .or(type(FilePathSchema).and({ type: "'FilePath'" }))
   .describe('An annotation that applies to a span of output text.')
 
 export type AnnotationSchema = typeof AnnotationSchema.infer
@@ -3500,9 +3764,11 @@ export const ReasoningTextContentSchema = type({
 
 export type ReasoningTextContentSchema = typeof ReasoningTextContentSchema.infer
 
-export const OutputContentSchema = type(type(OutputTextContentSchema).or(RefusalContentSchema)).or(
-  ReasoningTextContentSchema,
-)
+export const OutputContentSchema = type(
+  type(type(OutputTextContentSchema).and({ type: "'OutputTextContent'" })).or(
+    type(RefusalContentSchema).and({ type: "'RefusalContent'" }),
+  ),
+).or(type(ReasoningTextContentSchema).and({ type: "'ReasoningTextContent'" }))
 
 export type OutputContentSchema = typeof OutputContentSchema.infer
 
@@ -3539,12 +3805,10 @@ export const ComputerScreenshotContentSchema = type({
   type: type("'computer_screenshot'").describe(
     'Specifies the event type. For a computer screenshot, this property is always set to `computer_screenshot`.',
   ),
-  image_url: type(type('string.url').describe('The URL of the screenshot image.')).or(
-    'null | null',
-  ),
+  image_url: type(type('string.url').describe('The URL of the screenshot image.')).or('null'),
   file_id: type(
     type('string').describe('The identifier of an uploaded file that contains the screenshot.'),
-  ).or('null | null'),
+  ).or('null'),
   detail: ImageDetailSchema.describe(
     'The detail level of the screenshot image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
   ),
@@ -3573,16 +3837,18 @@ export const MessageSchema = type({
           type(
             type(
               type(
-                type(type(InputTextContentSchema).or(OutputTextContentSchema)).or(
-                  TextContentSchema,
-                ),
-              ).or(SummaryTextContentSchema),
-            ).or(ReasoningTextContentSchema),
-          ).or(RefusalContentSchema),
-        ).or(InputImageContentSchema),
-      ).or(ComputerScreenshotContentSchema),
+                type(
+                  type(type(InputTextContentSchema).and({ type: "'InputTextContent'" })).or(
+                    type(OutputTextContentSchema).and({ type: "'OutputTextContent'" }),
+                  ),
+                ).or(type(TextContentSchema).and({ type: "'TextContent'" })),
+              ).or(type(SummaryTextContentSchema).and({ type: "'SummaryTextContent'" })),
+            ).or(type(ReasoningTextContentSchema).and({ type: "'ReasoningTextContent'" })),
+          ).or(type(RefusalContentSchema).and({ type: "'RefusalContent'" })),
+        ).or(type(InputImageContentSchema).and({ type: "'InputImageContent'" })),
+      ).or(type(ComputerScreenshotContentSchema).and({ type: "'ComputerScreenshotContent'" })),
     )
-      .or(InputFileContentSchema)
+      .or(type(InputFileContentSchema).and({ type: "'InputFileContent'" }))
       .describe('A content part that makes up an input or output item.'),
   )
     .array()
@@ -3591,7 +3857,7 @@ export const MessageSchema = type({
     MessagePhase2Schema.describe(
       'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A message to or from the model.')
 
 export type MessageSchema = typeof MessageSchema.infer
@@ -3609,8 +3875,10 @@ export const ProgramToolCallCallerSchema = type({
 
 export type ProgramToolCallCallerSchema = typeof ProgramToolCallCallerSchema.infer
 
-export const ToolCallCallerSchema = type(DirectToolCallCallerSchema)
-  .or(ProgramToolCallCallerSchema)
+export const ToolCallCallerSchema = type(
+  type(DirectToolCallCallerSchema).and({ type: "'DirectToolCallCaller'" }),
+)
+  .or(type(ProgramToolCallCallerSchema).and({ type: "'ProgramToolCallCaller'" }))
   .describe('The execution context that produced this tool call.')
 
 export type ToolCallCallerSchema = typeof ToolCallCallerSchema.infer
@@ -3623,7 +3891,7 @@ export const FunctionToolCallSchema = type({
   call_id: type('string').describe(
     'The unique ID of the function tool call generated by the model.\n',
   ),
-  'caller?': type(ToolCallCallerSchema).or('null | null'),
+  'caller?': type(ToolCallCallerSchema).or('null'),
   'namespace?': type('string').describe('The namespace of the function to run.\n'),
   name: type('string').describe('The name of the function to run.\n'),
   arguments: type('string').describe('A JSON string of the arguments to pass to the function.\n'),
@@ -3669,15 +3937,19 @@ export const ProgramToolCallCallerParamSchema = type({
 
 export type ProgramToolCallCallerParamSchema = typeof ProgramToolCallCallerParamSchema.infer
 
-export const ToolCallCallerParamSchema = type(DirectToolCallCallerParamSchema)
-  .or(ProgramToolCallCallerParamSchema)
+export const ToolCallCallerParamSchema = type(
+  type(DirectToolCallCallerParamSchema).and({ type: "'DirectToolCallCallerParam'" }),
+)
+  .or(type(ProgramToolCallCallerParamSchema).and({ type: "'ProgramToolCallCallerParam'" }))
   .describe('The execution context that produced this tool call.')
 
 export type ToolCallCallerParamSchema = typeof ToolCallCallerParamSchema.infer
 
 export const FunctionAndCustomToolCallOutputSchema = type(
-  type(InputTextContentSchema).or(InputImageContentSchema),
-).or(InputFileContentSchema)
+  type(type(InputTextContentSchema).and({ type: "'InputTextContent'" })).or(
+    type(InputImageContentSchema).and({ type: "'InputImageContent'" }),
+  ),
+).or(type(InputFileContentSchema).and({ type: "'InputFileContent'" }))
 
 export type FunctionAndCustomToolCallOutputSchema =
   typeof FunctionAndCustomToolCallOutputSchema.infer
@@ -3694,7 +3966,7 @@ export const FunctionToolCallOutputSchema = type({
   ),
   'name?': type('string').describe('The name of the tool that produced the output.\n'),
   'namespace?': type('string').describe('The namespace of the tool that produced the output.\n'),
-  'caller?': type(ToolCallCallerParamSchema).or('null | null'),
+  'caller?': type(ToolCallCallerParamSchema).or('null'),
   output: type(type('string').describe('A string of the output of the function call.\n'))
     .or(
       type(FunctionAndCustomToolCallOutputSchema)
@@ -3739,7 +4011,7 @@ export const VectorStoreFileAttributesSchema = type(
   }).describe(
     'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard. Keys are strings\nwith a maximum length of 64 characters. Values are strings with a maximum\nlength of 512 characters, booleans, or numbers.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type VectorStoreFileAttributesSchema = typeof VectorStoreFileAttributesSchema.infer
 
@@ -3759,14 +4031,15 @@ export const FileSearchToolCallSchema = type({
         'text?': type('string').describe('The text that was retrieved from the file.\n'),
         'filename?': type('string').describe('The name of the file.\n'),
         'attributes?': VectorStoreFileAttributesSchema,
-        'score?': type(
-          'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-        ).describe('The relevance score of the file - a value between 0 and 1.\n'),
+        'score?': type('number')
+          .atLeast(-3.4028234663852886e38)
+          .atMost(3.4028234663852886e38)
+          .describe('The relevance score of the file - a value between 0 and 1.\n'),
       }),
     )
       .array()
       .describe('The results of the file search tool call.\n'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'The results of a file search tool call. See the\n[file search guide](https://developers.openai.com/api/docs/guides/tools-file-search) for more information.\n',
 )
@@ -3799,14 +4072,14 @@ export type WebSearchActionSearchSchema = typeof WebSearchActionSearchSchema.inf
 
 export const WebSearchActionOpenPageSchema = type({
   type: type("'open_page'").describe('The action type.\n'),
-  'url?': type('string.url | null | null').describe('The URL opened by the model.\n'),
+  'url?': type('string.url | null').describe('The URL opened by the model.\n'),
 }).describe('Action type "open_page" - Opens a specific URL from search results.\n')
 
 export type WebSearchActionOpenPageSchema = typeof WebSearchActionOpenPageSchema.infer
 
 export const WebSearchActionFindSchema = type({
   type: type("'find_in_page'").describe('The action type.\n'),
-  'url?': type('string.url | null | null').describe(
+  'url?': type('string.url | null').describe(
     'The URL of the page searched for the pattern, when available.\n',
   ),
   pattern: type('string').describe('The pattern or text to search for within the page.\n'),
@@ -3820,8 +4093,12 @@ export const WebSearchToolCallSchema = type({
     'The type of the web search tool call. Always `web_search_call`.\n',
   ),
   status: WebSearchCallStatusSchema.describe('The status of the web search tool call.\n'),
-  'action?': type(type(WebSearchActionSearchSchema).or(WebSearchActionOpenPageSchema))
-    .or(WebSearchActionFindSchema)
+  'action?': type(
+    type(type(WebSearchActionSearchSchema).and({ type: "'WebSearchActionSearch'" })).or(
+      type(WebSearchActionOpenPageSchema).and({ type: "'WebSearchActionOpenPage'" }),
+    ),
+  )
+    .or(type(WebSearchActionFindSchema).and({ type: "'WebSearchActionFind'" }))
     .describe(
       'An object describing the specific action taken in this web search call.\nIncludes details on how the model used the web (search, open_page, find_in_page).\n',
     ),
@@ -3844,10 +4121,10 @@ export type ImageGenToolCallModerationDetailsSchema =
   typeof ImageGenToolCallModerationDetailsSchema.infer
 
 export const ImageGenToolCallErrorSchema = type({
-  code: type(type('string').describe('The error code.')).or('null | null'),
+  code: type(type('string').describe('The error code.')).or('null'),
   type: type('string').describe('The error type.'),
   message: type('string').describe('A description of the error.'),
-  param: type(type('string').describe('The related request parameter.')).or('null | null'),
+  param: type(type('string').describe('The related request parameter.')).or('null'),
   'moderation_details?': ImageGenToolCallModerationDetailsSchema.describe(
     'Public details for a `moderation_blocked` error, when available.',
   ),
@@ -3885,7 +4162,7 @@ export const ImageGenToolCallSchema = type({
   status: type("'in_progress' | 'completed' | 'generating' | 'failed'").describe(
     'The status of the image generation call.',
   ),
-  result: type(type('string').describe('The generated image encoded in base64.')).or('null | null'),
+  result: type(type('string').describe('The generated image encoded in base64.')).or('null'),
   'error?': ImageGenToolCallErrorSchema.describe(
     'Details of a moderation failure, when available.',
   ),
@@ -3893,25 +4170,25 @@ export const ImageGenToolCallSchema = type({
     type("string | '1024x1024' | '1024x1536' | '1536x1024'").describe(
       'The image dimensions as a `WIDTHxHEIGHT` string, for example `1536x864`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'quality?': type(
     type("'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto'").describe(
       'The quality of the image generated by the image generation tool call. One of `low`, `medium`, `high`, `xhigh`, `max`, or `auto`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'action?': type(ImageGenActionEnumSchema.describe('The action used for image generation.')).or(
-    'null | null',
+    'null',
   ),
   'background?': type(
     ImageBackgroundSchema.describe('The background setting used for generation.'),
-  ).or('null | null'),
+  ).or('null'),
   'output_format?': type(
     ImageOutputFormatSchema.describe('The output format used for generation.'),
-  ).or('null | null'),
+  ).or('null'),
   'svg_usage?': SvgUsageSchema,
   'revised_prompt?': type(
     type('string').describe('The prompt that was used after any model prompt rewriting.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('An image generation request made by the model.')
 
 export type ImageGenToolCallSchema = typeof ImageGenToolCallSchema.infer
@@ -3925,7 +4202,7 @@ export const ToolSearchCallSchema = type({
   id: type('string').describe('The unique ID of the tool search call item.'),
   call_id: type(
     type('string').describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   execution: ToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
   ),
@@ -3946,28 +4223,28 @@ export const FunctionToolSchema = type({
     type('string').describe(
       'A description of the function. Used by the model to determine whether or not to call the function.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   parameters: type(
     type({ '[string]': 'unknown' }).describe(
       'A JSON schema object describing the parameters of the function.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'output_schema?': type(
     type({ '[string]': 'unknown' }).describe(
       'A JSON schema object describing the JSON value encoded in string outputs for this function.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   strict: type(
     type('boolean').describe(
       'Whether strict parameter validation is enforced for this function tool.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this function is deferred and loaded via tool search.',
   ),
   'allowed_callers?': type(
     type(CallableToolAllowedCallerSchema).array().describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Defines a function in your own code the model can choose to call. Learn more about [function calling](https://developers.openai.com/api/docs/guides/function-calling).',
 )
@@ -4010,7 +4287,7 @@ export const FileSearchToolSchema = type({
     'The maximum number of results to return. This number should be between 1 and 50 inclusive.',
   ),
   'ranking_options?': RankingOptionsSchema.describe('Ranking options for search.'),
-  'filters?': type(FiltersSchema.describe('A filter to apply.')).or('null | null'),
+  'filters?': type(FiltersSchema.describe('A filter to apply.')).or('null'),
 }).describe(
   'A tool that searches for relevant content from uploaded files. Learn more about the [file search tool](https://developers.openai.com/api/docs/guides/tools-file-search).',
 )
@@ -4051,20 +4328,20 @@ export const WebSearchApproximateLocationSchema = type(
       type('string').describe(
         'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'region?': type(
       type('string').describe('Free text input for the region of the user, e.g. `California`.'),
-    ).or('null | null'),
+    ).or('null'),
     'city?': type(
       type('string').describe('Free text input for the city of the user, e.g. `San Francisco`.'),
-    ).or('null | null'),
+    ).or('null'),
     'timezone?': type(
       type('string').describe(
         'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }).describe('The approximate location of the user.\n'),
-).or('null | null')
+).or('null')
 
 export type WebSearchApproximateLocationSchema = typeof WebSearchApproximateLocationSchema.infer
 
@@ -4083,9 +4360,9 @@ export const WebSearchToolSchema = type({
           .describe(
             'Allowed domains for the search. If not provided, all domains are allowed.\nSubdomains of the provided domains are allowed as well.\n\nExample: `["pubmed.ncbi.nlm.nih.gov"]`\n',
           ),
-      ).or('null | null'),
+      ).or('null'),
     }).describe('Filters for the search.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'user_location?': WebSearchApproximateLocationSchema.describe(
     'The approximate location of the user. If omitted or null, defaults to the\nUnited States. To avoid this fallback, pass `{"type": "approximate"}` without\nlocation fields. To localize results, provide the relevant location fields.\n',
   ),
@@ -4136,17 +4413,17 @@ export const MCPToolSchema = type({
     type({ '[string]': 'string' }).describe(
       'Optional HTTP headers to send to the MCP server. Use for authentication\nor other purposes.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'allowed_tools?': type(
     type(type('string[]').describe('A string array of allowed tool names'))
       .or(MCPToolFilterSchema)
       .describe('List of allowed tool names or a filter object.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'allowed_callers?': type(
     type(type(CallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
   'require_approval?': type(
     type(
       type({
@@ -4163,7 +4440,7 @@ export const MCPToolSchema = type({
         ),
       )
       .describe("Specify which of the MCP server's tools require approval."),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this MCP tool is deferred and discovered via tool search.\n',
   ),
@@ -4205,7 +4482,7 @@ export const SvgParamSchema = type({
     SvgReasoningParamSchema.describe(
       "Reasoning effort for SVG authoring. When omitted, uses the author model's default in both Images and Responses.",
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type SvgParamSchema = typeof SvgParamSchema.infer
@@ -4257,7 +4534,7 @@ export const ImageGenToolSchema = type({
   'background?': type("'transparent' | 'opaque' | 'auto'").describe(
     'Set the background of the generated image. One of `transparent`, `opaque`,\nor `auto`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including\ntheir `2026-09-08` snapshots, support `opaque` and `transparent`\nbackgrounds. Transparent backgrounds are available for supported GPT Image\nmodels. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in\npreview. When using `transparent`, set the output format to `png` or `webp`.\nDefault: `auto`.\n',
   ),
-  'input_fidelity?': type(InputFidelitySchema).or('null | null'),
+  'input_fidelity?': type(InputFidelitySchema).or('null'),
   'input_image_mask?': type({
     'image_url?': type('string').describe('Base64-encoded mask image.\n'),
     'file_id?': type('string').describe('File ID for the mask image.\n'),
@@ -4327,11 +4604,25 @@ export const ContainerAutoParamSchema = type({
     .describe('An optional list of uploaded files to make available to your code.'),
   'memory_limit?': type(
     ContainerMemoryLimitSchema.describe('The memory limit for the container.'),
-  ).or('null | null'),
-  'network_policy?': type(ContainerNetworkPolicyDisabledParamSchema)
-    .or(ContainerNetworkPolicyAllowlistParamSchema)
+  ).or('null'),
+  'network_policy?': type(
+    type(ContainerNetworkPolicyDisabledParamSchema).and({
+      type: "'ContainerNetworkPolicyDisabledParam'",
+    }),
+  )
+    .or(
+      type(ContainerNetworkPolicyAllowlistParamSchema).and({
+        type: "'ContainerNetworkPolicyAllowlistParam'",
+      }),
+    )
     .describe('Network access policy for the container.'),
-  'skills?': type(type(type(SkillReferenceParamSchema).or(InlineSkillParamSchema)).array())
+  'skills?': type(
+    type(
+      type(type(SkillReferenceParamSchema).and({ type: "'SkillReferenceParam'" })).or(
+        type(InlineSkillParamSchema).and({ type: "'InlineSkillParam'" }),
+      ),
+    ).array(),
+  )
     .and(type('unknown[] <= 200'))
     .describe(
       'An optional list of skills referenced by id or inline data. Across all inline skills in this list, decoded ZIP data must total at most 50 MiB and Base64 text must total at most 70,254,592 characters, including line breaks. Skill references do not count toward these limits.',
@@ -4369,15 +4660,17 @@ export type ContainerReferenceParamSchema = typeof ContainerReferenceParamSchema
 export const FunctionShellToolParamSchema = type({
   type: type("'shell'").describe('The type of the shell tool. Always `shell`.'),
   'environment?': type(
-    type(type(ContainerAutoParamSchema).or(LocalEnvironmentParamSchema)).or(
-      ContainerReferenceParamSchema,
-    ),
-  ).or('null | null'),
+    type(
+      type(type(ContainerAutoParamSchema).and({ type: "'ContainerAutoParam'" })).or(
+        type(LocalEnvironmentParamSchema).and({ type: "'LocalEnvironmentParam'" }),
+      ),
+    ).or(type(ContainerReferenceParamSchema).and({ type: "'ContainerReferenceParam'" })),
+  ).or('null'),
   'allowed_callers?': type(
     type(type(CallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool that allows the model to execute shell commands.')
 
 export type FunctionShellToolParamSchema = typeof FunctionShellToolParamSchema.infer
@@ -4411,8 +4704,8 @@ export const CustomToolParamSchema = type({
   'description?': type('string').describe(
     'Optional description of the custom tool, used to provide more context.',
   ),
-  'format?': type(CustomTextFormatParamSchema)
-    .or(CustomGrammarFormatParamSchema)
+  'format?': type(type(CustomTextFormatParamSchema).and({ type: "'CustomTextFormatParam'" }))
+    .or(type(CustomGrammarFormatParamSchema).and({ type: "'CustomGrammarFormatParam'" }))
     .describe('The input format for the custom tool. Default is unconstrained text.'),
   'defer_loading?': type('boolean').describe(
     'Whether this tool should be deferred and discovered via tool search.',
@@ -4421,7 +4714,7 @@ export const CustomToolParamSchema = type({
     type(type(CallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'A custom tool that processes input using a specified format. Learn more about   [custom tools](https://developers.openai.com/api/docs/guides/function-calling#custom-tools)',
 )
@@ -4437,13 +4730,13 @@ export const FunctionToolParamSchema = type({
     .and(/^[a-zA-Z0-9_-]+$/)
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters')),
-  'description?': 'string | null | null',
-  'parameters?': type(EmptyModelParamSchema).or('null | null'),
+  'description?': 'string | null',
+  'parameters?': type(EmptyModelParamSchema).or('null'),
   'strict?': type(
     type('boolean').describe(
       'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'function'",
   'async?': type('boolean').describe(
     'Whether the tool response can be returned asynchronously versus immediately returned on next response creation.',
@@ -4452,7 +4745,7 @@ export const FunctionToolParamSchema = type({
     type({ '[string]': 'unknown' }).describe(
       'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this function should be deferred and discovered via tool search.',
   ),
@@ -4460,7 +4753,7 @@ export const FunctionToolParamSchema = type({
     type(type(CallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type FunctionToolParamSchema = typeof FunctionToolParamSchema.infer
@@ -4473,8 +4766,8 @@ export const NamespaceToolParamSchema = type({
   description: type('string').describe('A description of the namespace shown to the model.'),
   tools: type(
     type(
-      type(FunctionToolParamSchema)
-        .or(CustomToolParamSchema)
+      type(type(FunctionToolParamSchema).and({ type: "'FunctionToolParam'" }))
+        .or(type(CustomToolParamSchema).and({ type: "'CustomToolParam'" }))
         .describe('A function or custom tool that belongs to a namespace.'),
     ).array(),
   )
@@ -4493,10 +4786,10 @@ export const ToolSearchToolParamSchema = type({
     type('string').describe(
       'Description shown to the model for a client-executed tool search tool.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'parameters?': type(
     EmptyModelParamSchema.describe('Parameter schema for a client-executed tool search tool.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Hosted or BYOT tool search configuration for deferred tools.')
 
 export type ToolSearchToolParamSchema = typeof ToolSearchToolParamSchema.infer
@@ -4507,18 +4800,18 @@ export const ApproximateLocationSchema = type({
     type('string').describe(
       'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'region?': type(
     type('string').describe('Free text input for the region of the user, e.g. `California`.'),
-  ).or('null | null'),
+  ).or('null'),
   'city?': type(
     type('string').describe('Free text input for the city of the user, e.g. `San Francisco`.'),
-  ).or('null | null'),
+  ).or('null'),
   'timezone?': type(
     type('string').describe(
       'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type ApproximateLocationSchema = typeof ApproximateLocationSchema.infer
@@ -4539,7 +4832,7 @@ export const WebSearchPreviewToolSchema = type({
     ApproximateLocationSchema.describe(
       'The approximate location of the user. If omitted or null, defaults to the United States. To avoid this fallback, pass `{"type": "approximate"}` without location fields. To localize results, provide the relevant location fields.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'search_context_size?': SearchContextSizeSchema.describe(
     'High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.',
   ),
@@ -4556,7 +4849,7 @@ export const ApplyPatchToolParamSchema = type({
     type(type(CallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Allows the assistant to create, delete, or update files using unified diffs.')
 
 export type ApplyPatchToolParamSchema = typeof ApplyPatchToolParamSchema.infer
@@ -4574,23 +4867,33 @@ export const ToolSchema = type(
                     type(
                       type(
                         type(
-                          type(type(FunctionToolSchema).or(FileSearchToolSchema)).or(
-                            ComputerToolSchema,
-                          ),
-                        ).or(ComputerUsePreviewToolSchema),
-                      ).or(WebSearchToolSchema),
-                    ).or(MCPToolSchema),
-                  ).or(CodeInterpreterToolSchema),
-                ).or(ProgrammaticToolCallingParamSchema),
-              ).or(ImageGenToolSchema),
-            ).or(LocalShellToolParamSchema),
-          ).or(FunctionShellToolParamSchema),
-        ).or(CustomToolParamSchema),
-      ).or(NamespaceToolParamSchema),
-    ).or(ToolSearchToolParamSchema),
-  ).or(WebSearchPreviewToolSchema),
+                          type(
+                            type(type(FunctionToolSchema).and({ type: "'FunctionTool'" })).or(
+                              type(FileSearchToolSchema).and({ type: "'FileSearchTool'" }),
+                            ),
+                          ).or(type(ComputerToolSchema).and({ type: "'ComputerTool'" })),
+                        ).or(
+                          type(ComputerUsePreviewToolSchema).and({
+                            type: "'ComputerUsePreviewTool'",
+                          }),
+                        ),
+                      ).or(type(WebSearchToolSchema).and({ type: "'WebSearchTool'" })),
+                    ).or(type(MCPToolSchema).and({ type: "'MCPTool'" })),
+                  ).or(type(CodeInterpreterToolSchema).and({ type: "'CodeInterpreterTool'" })),
+                ).or(
+                  type(ProgrammaticToolCallingParamSchema).and({
+                    type: "'ProgrammaticToolCallingParam'",
+                  }),
+                ),
+              ).or(type(ImageGenToolSchema).and({ type: "'ImageGenTool'" })),
+            ).or(type(LocalShellToolParamSchema).and({ type: "'LocalShellToolParam'" })),
+          ).or(type(FunctionShellToolParamSchema).and({ type: "'FunctionShellToolParam'" })),
+        ).or(type(CustomToolParamSchema).and({ type: "'CustomToolParam'" })),
+      ).or(type(NamespaceToolParamSchema).and({ type: "'NamespaceToolParam'" })),
+    ).or(type(ToolSearchToolParamSchema).and({ type: "'ToolSearchToolParam'" })),
+  ).or(type(WebSearchPreviewToolSchema).and({ type: "'WebSearchPreviewTool'" })),
 )
-  .or(ApplyPatchToolParamSchema)
+  .or(type(ApplyPatchToolParamSchema).and({ type: "'ApplyPatchToolParam'" }))
   .describe('A tool that can be used to generate a response.\n')
 
 export type ToolSchema = typeof ToolSchema.infer
@@ -4600,7 +4903,7 @@ export const ToolSearchOutputSchema = type({
   id: type('string').describe('The unique ID of the tool search output item.'),
   call_id: type(
     type('string').describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   execution: ToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
   ),
@@ -4628,7 +4931,7 @@ export const ReasoningEffortSchema = type(
   type("'none' | 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'").describe(
     'Constrains effort on reasoning for reasoning models. Currently supported\nvalues are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.\nReducing reasoning effort can result in faster responses and fewer tokens\nused on reasoning in a response. Not all reasoning models support every\nvalue. See the\n[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning)\nfor model-specific support.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type ReasoningEffortSchema = typeof ReasoningEffortSchema.infer
 
@@ -4647,7 +4950,7 @@ export const TextResponseFormatJsonSchemaSchema = type({
     type('boolean').describe(
       'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'JSON Schema response format. Used to generate structured JSON responses.\nLearn more about [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
 )
@@ -4663,8 +4966,8 @@ export const ResponseConfigurationUpdateSchema = type({
     ),
   }).describe('The reasoning configuration applied by this update.'),
   'text?': type({
-    format: type(ResponseFormatTextSchema)
-      .or(TextResponseFormatJsonSchemaSchema)
+    format: type(type(ResponseFormatTextSchema).and({ type: "'ResponseFormatText'" }))
+      .or(type(TextResponseFormatJsonSchemaSchema).and({ type: "'TextResponseFormatJsonSchema'" }))
       .describe('Use a JSON schema for structured output or text to return to plain text.'),
   }).describe('The text output configuration for subsequent responses.'),
 }).describe(
@@ -4680,7 +4983,7 @@ export const ReasoningItemSchema = type({
     type('string').describe(
       'The encrypted content of the reasoning item. This is populated by default\nfor reasoning items returned by `POST /v1/responses` and WebSocket\n`response.create` requests.\n\nWhen streaming, use the completed reasoning item and its\n`encrypted_content` from the `response.output_item.done` event in\nsubsequent requests. The `encrypted_content` in\n`response.output_item.added` may be incomplete. This is especially\nimportant when `store` is `false` or when using Zero Data Retention.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   summary: type(SummaryTextContentSchema).array().describe('Reasoning summary content.\n'),
   'content?': type(ReasoningTextContentSchema).array().describe('Reasoning text content.\n'),
   'status?': type("'in_progress' | 'completed' | 'incomplete'").describe(
@@ -4736,12 +5039,12 @@ export const LocalShellExecActionSchema = type({
   command: type('string[]').describe('The command to run.'),
   'timeout_ms?': type(
     type('number.integer').describe('Optional timeout in milliseconds for the command.'),
-  ).or('null | null'),
+  ).or('null'),
   'working_directory?': type(
     type('string').describe('Optional working directory to run the command in.'),
-  ).or('null | null'),
+  ).or('null'),
   env: type({ '[string]': 'string' }).describe('Environment variables to set for the command.'),
-  'user?': type(type('string').describe('Optional user to run the command as.')).or('null | null'),
+  'user?': type(type('string').describe('Optional user to run the command as.')).or('null'),
 }).describe('Execute a shell command on the server.')
 
 export type LocalShellExecActionSchema = typeof LocalShellExecActionSchema.infer
@@ -4774,7 +5077,8 @@ export const LocalShellToolCallOutputSchema = type({
     type("'in_progress' | 'completed' | 'incomplete'").describe(
       'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
+  call_id: 'unknown',
 }).describe('The output of a local shell tool call.\n')
 
 export type LocalShellToolCallOutputSchema = typeof LocalShellToolCallOutputSchema.infer
@@ -4783,12 +5087,12 @@ export const FunctionShellActionSchema = type({
   commands: type(type('string').describe('A list of commands to run.')).array(),
   timeout_ms: type(
     type('number.integer').describe('Optional timeout in milliseconds for the commands.'),
-  ).or('null | null'),
+  ).or('null'),
   max_output_length: type(
     type('number.integer').describe(
       'Optional maximum number of characters to return from each command.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Execute a shell command.')
 
 export type FunctionShellActionSchema = typeof FunctionShellActionSchema.infer
@@ -4820,16 +5124,18 @@ export const FunctionShellCallSchema = type({
   call_id: type('string').describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     ToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   action: FunctionShellActionSchema.describe(
     'The shell commands and limits that describe how to run the tool call.',
   ),
   status: FunctionShellCallStatusSchema.describe(
     'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
   ),
-  environment: type(type(LocalEnvironmentResourceSchema).or(ContainerReferenceResourceSchema)).or(
-    'null | null',
-  ),
+  environment: type(
+    type(type(LocalEnvironmentResourceSchema).and({ type: "'LocalEnvironmentResource'" })).or(
+      type(ContainerReferenceResourceSchema).and({ type: "'ContainerReferenceResource'" }),
+    ),
+  ).or('null'),
   'created_by?': type('string').describe('The ID of the entity that created this tool call.'),
 }).describe('A tool call that executes one or more shell commands in a managed environment.')
 
@@ -4860,8 +5166,16 @@ export type FunctionShellCallOutputExitOutcomeSchema =
 export const FunctionShellCallOutputContentSchema = type({
   stdout: type('string').describe('The standard output that was captured.'),
   stderr: type('string').describe('The standard error output that was captured.'),
-  outcome: type(FunctionShellCallOutputTimeoutOutcomeSchema)
-    .or(FunctionShellCallOutputExitOutcomeSchema)
+  outcome: type(
+    type(FunctionShellCallOutputTimeoutOutcomeSchema).and({
+      type: "'FunctionShellCallOutputTimeoutOutcome'",
+    }),
+  )
+    .or(
+      type(FunctionShellCallOutputExitOutcomeSchema).and({
+        type: "'FunctionShellCallOutputExitOutcome'",
+      }),
+    )
     .describe(
       'Represents either an exit outcome (with an exit code) or a timeout outcome for a shell call output chunk.',
     ),
@@ -4880,7 +5194,7 @@ export const FunctionShellCallOutputSchema = type({
   call_id: type('string').describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     ToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: FunctionShellCallOutputStatusEnumSchema.describe(
     'The status of the shell call output. One of `in_progress`, `completed`, or `incomplete`.',
   ),
@@ -4891,7 +5205,7 @@ export const FunctionShellCallOutputSchema = type({
     type('number.integer').describe(
       'The maximum length of the shell command output. This is generated by the model and should be passed back with the raw output.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'created_by?': type('string').describe('The identifier of the actor that created the item.'),
 }).describe('The output of a shell tool call that was emitted.')
 
@@ -4934,12 +5248,18 @@ export const ApplyPatchToolCallSchema = type({
   ),
   'caller?': type(
     ToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: ApplyPatchCallStatusSchema.describe(
     'The status of the apply patch tool call. One of `in_progress` or `completed`.',
   ),
-  operation: type(type(ApplyPatchCreateFileOperationSchema).or(ApplyPatchDeleteFileOperationSchema))
-    .or(ApplyPatchUpdateFileOperationSchema)
+  operation: type(
+    type(
+      type(ApplyPatchCreateFileOperationSchema).and({ type: "'ApplyPatchCreateFileOperation'" }),
+    ).or(
+      type(ApplyPatchDeleteFileOperationSchema).and({ type: "'ApplyPatchDeleteFileOperation'" }),
+    ),
+  )
+    .or(type(ApplyPatchUpdateFileOperationSchema).and({ type: "'ApplyPatchUpdateFileOperation'" }))
     .describe(
       'One of the create_file, delete_file, or update_file operations applied via apply_patch.',
     ),
@@ -4964,13 +5284,13 @@ export const ApplyPatchToolCallOutputSchema = type({
   ),
   'caller?': type(
     ToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: ApplyPatchCallOutputStatusSchema.describe(
     'The status of the apply patch tool call output. One of `completed` or `failed`.',
   ),
   'output?': type(
     type('string').describe('Optional textual output returned by the apply patch tool.'),
-  ).or('null | null'),
+  ).or('null'),
   'created_by?': type('string').describe(
     'The ID of the entity that created this tool call output.',
   ),
@@ -4980,11 +5300,9 @@ export type ApplyPatchToolCallOutputSchema = typeof ApplyPatchToolCallOutputSche
 
 export const MCPListToolsToolSchema = type({
   name: type('string').describe('The name of the tool.\n'),
-  'description?': type(type('string').describe('The description of the tool.\n')).or('null | null'),
+  'description?': type(type('string').describe('The description of the tool.\n')).or('null'),
   input_schema: type({}).describe("The JSON schema describing the tool's input.\n"),
-  'annotations?': type(type({}).describe('Additional annotations about the tool.\n')).or(
-    'null | null',
-  ),
+  'annotations?': type(type({}).describe('Additional annotations about the tool.\n')).or('null'),
 }).describe('A tool available on an MCP server.\n')
 
 export type MCPListToolsToolSchema = typeof MCPListToolsToolSchema.infer
@@ -4995,7 +5313,7 @@ export const MCPListToolsSchema = type({
   server_label: type('string').describe('The label of the MCP server.\n'),
   tools: type(MCPListToolsToolSchema).array().describe('The tools available on the server.\n'),
   'error?': type(type('string').describe('Error message if the server could not list tools.\n')).or(
-    'null | null',
+    'null',
   ),
 }).describe('A list of tools available on an MCP server.\n')
 
@@ -5020,7 +5338,8 @@ export const MCPApprovalResponseResourceSchema = type({
   id: type('string').describe('The unique ID of the approval response\n'),
   approval_request_id: type('string').describe('The ID of the approval request being answered.\n'),
   approve: type('boolean').describe('Whether the request was approved.\n'),
-  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null | null'),
+  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null'),
+  request_id: 'unknown',
 }).describe('A response to an MCP approval request.\n')
 
 export type MCPApprovalResponseResourceSchema = typeof MCPApprovalResponseResourceSchema.infer
@@ -5049,8 +5368,10 @@ export const HTTPErrorSchema = type({
 export type HTTPErrorSchema = typeof HTTPErrorSchema.infer
 
 export const MCPToolCallErrorSchema = type(
-  type(MCPProtocolErrorSchema).or(MCPToolExecutionErrorSchema),
-).or(HTTPErrorSchema)
+  type(type(MCPProtocolErrorSchema).and({ type: "'MCPProtocolError'" })).or(
+    type(MCPToolExecutionErrorSchema).and({ type: "'MCPToolExecutionError'" }),
+  ),
+).or(type(HTTPErrorSchema).and({ type: "'HTTPError'" }))
 
 export type MCPToolCallErrorSchema = typeof MCPToolCallErrorSchema.infer
 
@@ -5066,9 +5387,9 @@ export const MCPToolCallSchema = type({
   server_label: type('string').describe('The label of the MCP server running the tool.\n'),
   name: type('string').describe('The name of the tool that was run.\n'),
   arguments: type('string').describe('A JSON string of the arguments passed to the tool.\n'),
-  'output?': type(type('string').describe('The output from the tool call.\n')).or('null | null'),
+  'output?': type(type('string').describe('The output from the tool call.\n')).or('null'),
   'error?': type(MCPToolCallErrorSchema)
-    .or('null | null')
+    .or('null')
     .describe('The error from the tool call, if any.'),
   'status?': MCPToolCallStatusSchema.describe(
     'The status of the tool call. One of `in_progress`, `completed`, `incomplete`, `calling`, or `failed`.\n',
@@ -5077,7 +5398,7 @@ export const MCPToolCallSchema = type({
     type('string').describe(
       'Unique identifier for the MCP tool call approval request.\nInclude this value in a subsequent `mcp_approval_response` input to approve or reject the corresponding tool call.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('An invocation of a tool on an MCP server.\n')
 
 export type MCPToolCallSchema = typeof MCPToolCallSchema.infer
@@ -5090,7 +5411,7 @@ export const CustomToolCallSchema = type({
   call_id: type('string').describe(
     'An identifier used to map this custom tool call to a tool call output.\n',
   ),
-  'caller?': type(ToolCallCallerSchema).or('null | null'),
+  'caller?': type(ToolCallCallerSchema).or('null'),
   'namespace?': type('string').describe('The namespace of the custom tool being called.\n'),
   name: type('string').describe('The name of the custom tool being called.\n'),
   input: type('string').describe('The input for the custom tool call generated by the model.\n'),
@@ -5109,7 +5430,7 @@ export const CustomToolCallOutputSchema = type({
   call_id: type('string').describe(
     'The call ID, used to map this custom tool call output to a custom tool call.\n',
   ),
-  'caller?': type(ToolCallCallerParamSchema).or('null | null'),
+  'caller?': type(ToolCallCallerParamSchema).or('null'),
   output: type(type('string').describe('A string of the output of the custom tool call.\n'))
     .or(
       type(FunctionAndCustomToolCallOutputSchema)
@@ -5150,37 +5471,95 @@ export const ConversationItemSchema = type(
                                                 type(
                                                   type(
                                                     type(
-                                                      type(MessageSchema).or(
-                                                        FunctionToolCallResourceSchema,
+                                                      type(
+                                                        type(MessageSchema).and({
+                                                          type: "'Message'",
+                                                        }),
+                                                      ).or(
+                                                        type(FunctionToolCallResourceSchema).and({
+                                                          type: "'FunctionToolCallResource'",
+                                                        }),
                                                       ),
-                                                    ).or(FunctionToolCallOutputResourceSchema),
-                                                  ).or(FileSearchToolCallSchema),
-                                                ).or(WebSearchToolCallSchema),
-                                              ).or(ImageGenToolCallSchema),
-                                            ).or(ComputerToolCallSchema),
-                                          ).or(ComputerToolCallOutputResourceSchema),
-                                        ).or(ToolSearchCallSchema),
-                                      ).or(ToolSearchOutputSchema),
-                                    ).or(AdditionalToolsSchema),
-                                  ).or(ResponseConfigurationUpdateSchema),
-                                ).or(ReasoningItemSchema),
-                              ).or(ProgramSchema),
-                            ).or(ProgramOutputSchema),
-                          ).or(CompactionBodySchema),
-                        ).or(CodeInterpreterToolCallSchema),
-                      ).or(LocalShellToolCallSchema),
-                    ).or(LocalShellToolCallOutputSchema),
-                  ).or(FunctionShellCallSchema),
-                ).or(FunctionShellCallOutputSchema),
-              ).or(ApplyPatchToolCallSchema),
-            ).or(ApplyPatchToolCallOutputSchema),
-          ).or(MCPListToolsSchema),
-        ).or(MCPApprovalRequestSchema),
-      ).or(MCPApprovalResponseResourceSchema),
-    ).or(MCPToolCallSchema),
-  ).or(CustomToolCallSchema),
+                                                    ).or(
+                                                      type(
+                                                        FunctionToolCallOutputResourceSchema,
+                                                      ).and({
+                                                        type: "'FunctionToolCallOutputResource'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(FileSearchToolCallSchema).and({
+                                                      type: "'FileSearchToolCall'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(WebSearchToolCallSchema).and({
+                                                    type: "'WebSearchToolCall'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(ImageGenToolCallSchema).and({
+                                                  type: "'ImageGenToolCall'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(ComputerToolCallSchema).and({
+                                                type: "'ComputerToolCall'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(ComputerToolCallOutputResourceSchema).and({
+                                              type: "'ComputerToolCallOutputResource'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(ToolSearchCallSchema).and({
+                                            type: "'ToolSearchCall'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(ToolSearchOutputSchema).and({
+                                          type: "'ToolSearchOutput'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(AdditionalToolsSchema).and({
+                                        type: "'AdditionalTools'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(ResponseConfigurationUpdateSchema).and({
+                                      type: "'ResponseConfigurationUpdate'",
+                                    }),
+                                  ),
+                                ).or(type(ReasoningItemSchema).and({ type: "'ReasoningItem'" })),
+                              ).or(type(ProgramSchema).and({ type: "'Program'" })),
+                            ).or(type(ProgramOutputSchema).and({ type: "'ProgramOutput'" })),
+                          ).or(type(CompactionBodySchema).and({ type: "'CompactionBody'" })),
+                        ).or(
+                          type(CodeInterpreterToolCallSchema).and({
+                            type: "'CodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(type(LocalShellToolCallSchema).and({ type: "'LocalShellToolCall'" })),
+                    ).or(
+                      type(LocalShellToolCallOutputSchema).and({
+                        type: "'LocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(type(FunctionShellCallSchema).and({ type: "'FunctionShellCall'" })),
+                ).or(
+                  type(FunctionShellCallOutputSchema).and({ type: "'FunctionShellCallOutput'" }),
+                ),
+              ).or(type(ApplyPatchToolCallSchema).and({ type: "'ApplyPatchToolCall'" })),
+            ).or(type(ApplyPatchToolCallOutputSchema).and({ type: "'ApplyPatchToolCallOutput'" })),
+          ).or(type(MCPListToolsSchema).and({ type: "'MCPListTools'" })),
+        ).or(type(MCPApprovalRequestSchema).and({ type: "'MCPApprovalRequest'" })),
+      ).or(type(MCPApprovalResponseResourceSchema).and({ type: "'MCPApprovalResponseResource'" })),
+    ).or(type(MCPToolCallSchema).and({ type: "'MCPToolCall'" })),
+  ).or(type(CustomToolCallSchema).and({ type: "'CustomToolCall'" })),
 )
-  .or(CustomToolCallOutputSchema)
+  .or(type(CustomToolCallOutputSchema).and({ type: "'CustomToolCallOutput'" }))
   .describe(
     'A single item within a conversation. The set of possible types are the same as the `output` type of a [Response object](https://developers.openai.com/api/reference/resources/responses#%28resource%29%20responses%20%3E%20%28model%29%20response%20%3E%20%28schema%29%20%3E%20%28property%29%20output).',
   )
@@ -5214,7 +5593,7 @@ export const ConversationParamSchema = type(
 export type ConversationParamSchema = typeof ConversationParamSchema.infer
 
 export const CostsResultSchema = type({
-  'api_source?': type("'agents_api' | 'unlabeled' | null | null").describe(
+  'api_source?': type("'agents_api' | 'unlabeled' | null").describe(
     'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
   ),
   object: "'organization.costs.result'",
@@ -5226,29 +5605,29 @@ export const CostsResultSchema = type({
     type('string').describe(
       'When `group_by=line_item`, this field provides the line item of the grouped costs result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'project_id?': type(
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped costs result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped costs result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API Key ID of the grouped costs result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'quantity?': type(
     type('number').describe(
       'When `group_by=line_item`, this field provides the quantity of the grouped costs result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'quantity_unit?': type(
-    "string | 'tokens' | '1000_tokens' | 'duration_seconds' | 'duration_minutes' | 'duration_hours' | 'gibibyte_hours' | 'images' | 'characters' | null | null",
+    "string | 'tokens' | '1000_tokens' | 'duration_seconds' | 'duration_minutes' | 'duration_hours' | 'gibibyte_hours' | 'images' | 'characters' | null",
   ).describe(
     'The unit of the `quantity` value. If no single supported unit applies to the result, this field is `null`.',
   ),
@@ -5266,19 +5645,19 @@ export const CreateAssistantRequestSchema = type({
     type('string')
       .narrow((data, ctx) => [...data].length <= 256 || ctx.mustBe('at most 256 characters'))
       .describe('The name of the assistant. The maximum length is 256 characters.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'description?': type(
     type('string')
       .narrow((data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'))
       .describe('The description of the assistant. The maximum length is 512 characters.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'instructions?': type(
     type('string')
       .narrow((data, ctx) => [...data].length <= 256000 || ctx.mustBe('at most 256000 characters'))
       .describe(
         'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'reasoning_effort?': ReasoningEffortSchema,
   'tools?': type(
     type(
@@ -5304,19 +5683,19 @@ export const CreateAssistantRequestSchema = type({
     }).describe(
       "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'metadata?': MetadataSchema,
   'temperature?': type(
     type('number >= 0 & number <= 2').describe(
       'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'top_p?': type(
     type('number >= 0 & number <= 1').describe(
       'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
     ),
-  ).or('null | null'),
-  'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null | null'),
+  ).or('null'),
+  'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null'),
   '+': 'reject',
 })
 
@@ -5346,17 +5725,17 @@ export const ModelResponsePropertiesSchema = type({
     type('number.integer >= 0 & number.integer <= 20').describe(
       'An integer between 0 and 20 specifying the maximum number of most likely\ntokens to return at each token position, each with an associated log\nprobability. In some cases, the number of returned tokens may be fewer than\nrequested.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'temperature?': type(
     type('number >= 0 & number <= 2').describe(
       'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\nWe generally recommend altering this or `top_p` but not both.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'top_p?': type(
     type('number >= 0 & number <= 1').describe(
       'An alternative to sampling with temperature, called nucleus sampling,\nwhere the model considers the results of the tokens with top_p probability\nmass. So 0.1 means only the tokens comprising the top 10% probability mass\nare considered.\n\nWe generally recommend altering this or `temperature` but not both.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user?': type('string | null').describe(
     'This field is being replaced by `safety_identifier` and `prompt_cache_key`. Use `prompt_cache_key` instead to maintain caching optimizations.\nA stable identifier for your end-users.\nUsed to boost cache hit rates by better bucketing similar requests and  to help OpenAI detect and prevent abuse. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).\n',
   ),
@@ -5366,17 +5745,17 @@ export const ModelResponsePropertiesSchema = type({
       .describe(
         "A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.\nThe IDs should be a string that uniquely identifies each user, with a maximum length of 128 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).\n",
       ),
-  ).or('null | null'),
+  ).or('null'),
   'prompt_cache_key?': type(
     type('string').describe(
       'Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'prompt_cache_retention?': type(
     type("'in_memory' | '24h'").describe(
       "Deprecated. Use `prompt_cache_options.ttl` instead.\n\nThe retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching#prompt-cache-retention).\nThis field expresses a maximum retention policy, while\n`prompt_cache_options.ttl` expresses a minimum cache lifetime. The two\nfields are independent and do not interact.\nFor `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.\n\nFor older models that support both `in_memory` and `24h`, the default depends on your organization's data retention policy:\n  - Organizations without ZDR enabled default to `24h`.\n  - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is not specified.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type ModelResponsePropertiesSchema = typeof ModelResponsePropertiesSchema.infer
@@ -5412,8 +5791,101 @@ export const PromptCacheOptionsParamSchema = type({
 
 export type PromptCacheOptionsParamSchema = typeof PromptCacheOptionsParamSchema.infer
 
-export const ModelIdsSharedSchema = type(
-  "string | 'gpt-6-astra' | 'gpt-6.2-astra' | 'gpt-6.1-sol' | 'gpt-6.2-sol' | 'gpt-6.1-terra' | 'gpt-6-sol' | 'gpt-6-luna' | 'gpt-5.6-sol' | 'gpt-5.6-terra' | 'gpt-5.6-luna' | 'gpt-5.5' | 'gpt-5.5-2026-04-23' | 'gpt-5.4' | 'gpt-5.4-mini' | 'gpt-5.4-nano' | 'gpt-5.4-mini-2026-03-17' | 'gpt-5.4-nano-2026-03-17' | 'gpt-5.3-chat-latest' | 'gpt-5.2' | 'gpt-5.2-2025-12-11' | 'gpt-5.2-chat-latest' | 'gpt-5.2-pro' | 'gpt-5.2-pro-2025-12-11' | 'gpt-5.1' | 'gpt-5.1-2025-11-13' | 'gpt-5.1-codex' | 'gpt-5.1-mini' | 'gpt-5.1-chat-latest' | 'gpt-5' | 'gpt-5-mini' | 'gpt-5-nano' | 'gpt-5-2025-08-07' | 'gpt-5-mini-2025-08-07' | 'gpt-5-nano-2025-08-07' | 'gpt-5-chat-latest' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-4.1-2025-04-14' | 'gpt-4.1-mini-2025-04-14' | 'gpt-4.1-nano-2025-04-14' | 'o4-mini' | 'o4-mini-2025-04-16' | 'o3' | 'o3-2025-04-16' | 'o3-mini' | 'o3-mini-2025-01-31' | 'o1' | 'o1-2024-12-17' | 'o1-preview' | 'o1-preview-2024-09-12' | 'o1-mini' | 'o1-mini-2024-09-12' | 'gpt-4o' | 'gpt-4o-2024-11-20' | 'gpt-4o-2024-08-06' | 'gpt-4o-2024-05-13' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-12-15' | 'gpt-4o-audio-preview' | 'gpt-4o-audio-preview-2024-10-01' | 'gpt-4o-audio-preview-2024-12-17' | 'gpt-4o-audio-preview-2025-06-03' | 'gpt-4o-mini-audio-preview' | 'gpt-4o-mini-audio-preview-2024-12-17' | 'gpt-4o-search-preview' | 'gpt-4o-mini-search-preview' | 'gpt-4o-search-preview-2025-03-11' | 'gpt-4o-mini-search-preview-2025-03-11' | 'chatgpt-4o-latest' | 'codex-mini-latest' | 'gpt-4o-mini' | 'gpt-4o-mini-2024-07-18' | 'gpt-4-turbo' | 'gpt-4-turbo-2024-04-09' | 'gpt-4-0125-preview' | 'gpt-4-turbo-preview' | 'gpt-4-1106-preview' | 'gpt-4-vision-preview' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-0613' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'gpt-4-32k-0613' | 'gpt-3.5-turbo' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-0301' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-1106' | 'gpt-3.5-turbo-0125' | 'gpt-3.5-turbo-16k-0613'",
+export const ModelIdsSharedSchema = type('string').or(
+  type.enumerated(
+    'gpt-6-astra',
+    'gpt-6.2-astra',
+    'gpt-6.1-sol',
+    'gpt-6.2-sol',
+    'gpt-6.1-terra',
+    'gpt-6-sol',
+    'gpt-6-luna',
+    'gpt-5.6-sol',
+    'gpt-5.6-terra',
+    'gpt-5.6-luna',
+    'gpt-5.5',
+    'gpt-5.5-2026-04-23',
+    'gpt-5.4',
+    'gpt-5.4-mini',
+    'gpt-5.4-nano',
+    'gpt-5.4-mini-2026-03-17',
+    'gpt-5.4-nano-2026-03-17',
+    'gpt-5.3-chat-latest',
+    'gpt-5.2',
+    'gpt-5.2-2025-12-11',
+    'gpt-5.2-chat-latest',
+    'gpt-5.2-pro',
+    'gpt-5.2-pro-2025-12-11',
+    'gpt-5.1',
+    'gpt-5.1-2025-11-13',
+    'gpt-5.1-codex',
+    'gpt-5.1-mini',
+    'gpt-5.1-chat-latest',
+    'gpt-5',
+    'gpt-5-mini',
+    'gpt-5-nano',
+    'gpt-5-2025-08-07',
+    'gpt-5-mini-2025-08-07',
+    'gpt-5-nano-2025-08-07',
+    'gpt-5-chat-latest',
+    'gpt-4.1',
+    'gpt-4.1-mini',
+    'gpt-4.1-nano',
+    'gpt-4.1-2025-04-14',
+    'gpt-4.1-mini-2025-04-14',
+    'gpt-4.1-nano-2025-04-14',
+    'o4-mini',
+    'o4-mini-2025-04-16',
+    'o3',
+    'o3-2025-04-16',
+    'o3-mini',
+    'o3-mini-2025-01-31',
+    'o1',
+    'o1-2024-12-17',
+    'o1-preview',
+    'o1-preview-2024-09-12',
+    'o1-mini',
+    'o1-mini-2024-09-12',
+    'gpt-4o',
+    'gpt-4o-2024-11-20',
+    'gpt-4o-2024-08-06',
+    'gpt-4o-2024-05-13',
+    'gpt-audio-mini',
+    'gpt-audio-mini-2025-12-15',
+    'gpt-4o-audio-preview',
+    'gpt-4o-audio-preview-2024-10-01',
+    'gpt-4o-audio-preview-2024-12-17',
+    'gpt-4o-audio-preview-2025-06-03',
+    'gpt-4o-mini-audio-preview',
+    'gpt-4o-mini-audio-preview-2024-12-17',
+    'gpt-4o-search-preview',
+    'gpt-4o-mini-search-preview',
+    'gpt-4o-search-preview-2025-03-11',
+    'gpt-4o-mini-search-preview-2025-03-11',
+    'chatgpt-4o-latest',
+    'codex-mini-latest',
+    'gpt-4o-mini',
+    'gpt-4o-mini-2024-07-18',
+    'gpt-4-turbo',
+    'gpt-4-turbo-2024-04-09',
+    'gpt-4-0125-preview',
+    'gpt-4-turbo-preview',
+    'gpt-4-1106-preview',
+    'gpt-4-vision-preview',
+    'gpt-4',
+    'gpt-4-0314',
+    'gpt-4-0613',
+    'gpt-4-32k',
+    'gpt-4-32k-0314',
+    'gpt-4-32k-0613',
+    'gpt-3.5-turbo',
+    'gpt-3.5-turbo-16k',
+    'gpt-3.5-turbo-0301',
+    'gpt-3.5-turbo-0613',
+    'gpt-3.5-turbo-1106',
+    'gpt-3.5-turbo-0125',
+    'gpt-3.5-turbo-16k-0613',
+  ),
 )
 
 export type ModelIdsSharedSchema = typeof ModelIdsSharedSchema.infer
@@ -5422,7 +5894,7 @@ export const ResponseModalitiesSchema = type(
   type("'text' | 'audio'[]").describe(
     'Output types that you would like the model to generate.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to\n[generate audio](https://developers.openai.com/api/docs/guides/audio). To request that this model generate\nboth text and audio responses, you can use:\n\n`["text", "audio"]`\n',
   ),
-).or('null | null')
+).or('null')
 
 export type ResponseModalitiesSchema = typeof ResponseModalitiesSchema.infer
 
@@ -5430,7 +5902,7 @@ export const VerbositySchema = type(
   type("'low' | 'medium' | 'high'").describe(
     "Constrains the verbosity of the model's response. Lower values will result in\nmore concise responses, while higher values will result in more verbose responses.\nCurrently supported values are `low`, `medium`, and `high`. The default is\n`medium`.\n",
   ),
-).or('null | null')
+).or('null')
 
 export type VerbositySchema = typeof VerbositySchema.infer
 
@@ -5487,10 +5959,10 @@ export type ModerationConfigParamSchema = typeof ModerationConfigParamSchema.inf
 export const ModerationPolicyParamSchema = type({
   'input?': type(
     ModerationConfigParamSchema.describe('The moderation policy for the response input.'),
-  ).or('null | null'),
+  ).or('null'),
   'output?': type(
     ModerationConfigParamSchema.describe('The moderation policy for the response output.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The policy to apply to moderated response input and output.')
 
 export type ModerationPolicyParamSchema = typeof ModerationPolicyParamSchema.infer
@@ -5503,7 +5975,7 @@ export const ModerationParamSchema = type({
     ModerationPolicyParamSchema.describe(
       'The policy to apply to moderated response input and output.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Configuration for running moderation on the input and output of this response.')
 
 export type ModerationParamSchema = typeof ModerationParamSchema.infer
@@ -5511,7 +5983,7 @@ export type ModerationParamSchema = typeof ModerationParamSchema.infer
 export const StopConfigurationSchema = type(
   type('string').or(type('string[]').and(type('1 <= unknown[] <= 4'))),
 )
-  .or('null | null')
+  .or('null')
   .describe(
     'Not supported with reasoning models `o3` and `o4-mini`.\n\nUp to 4 sequences where the API will stop generating further tokens. The\nreturned text will not contain the stop sequence.\n',
   )
@@ -5618,8 +6090,12 @@ export const CreateChatCompletionRequestSchema = type(CreateModelResponsePropert
     'top_logprobs?': type('number.integer >= 0 & number.integer <= 20 | null').describe(
       'An integer between 0 and 20 specifying the maximum number of most likely\ntokens to return at each token position, each with an associated log\nprobability. In some cases, the number of returned tokens may be fewer than\nrequested.\n`logprobs` must be set to `true` if this parameter is used.\n',
     ),
-    'response_format?': type(type(ResponseFormatTextSchema).or(ResponseFormatJsonSchemaSchema))
-      .or(ResponseFormatJsonObjectSchema)
+    'response_format?': type(
+      type(type(ResponseFormatTextSchema).and({ type: "'ResponseFormatText'" })).or(
+        type(ResponseFormatJsonSchemaSchema).and({ type: "'ResponseFormatJsonSchema'" }),
+      ),
+    )
+      .or(type(ResponseFormatJsonObjectSchema).and({ type: "'ResponseFormatJsonObject'" }))
       .describe(
         'An object specifying the format that the model must output.\n\nSetting to `{ "type": "json_schema", "json_schema": {...} }` enables\nStructured Outputs which ensures the model will match your supplied JSON\nschema. Learn more in the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n\nSetting to `{ "type": "json_object" }` enables the older JSON mode, which\nensures the message the model generates is valid JSON. Using `json_schema`\nis preferred for models that support it.\n',
       ),
@@ -5644,7 +6120,7 @@ export const CreateChatCompletionRequestSchema = type(CreateModelResponsePropert
       ModerationParamSchema.describe(
         'Configuration for running moderation on the request input and generated output.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'stream?': type('boolean | null').describe(
       'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events)\nfor more information, along with the [streaming responses](https://developers.openai.com/api/docs/guides/streaming-responses)\nguide for more information on how to handle the streaming events.\n',
     ),
@@ -5664,7 +6140,7 @@ export const CreateChatCompletionRequestSchema = type(CreateModelResponsePropert
       'How many chat completion choices to generate for each input message. Omit `n` to generate one choice. Newer models reject an explicit `n`, even `n=1`. When requesting multiple choices, you are billed for generated tokens across all choices.',
     ),
     'prediction?': type(PredictionContentSchema)
-      .or('null | null')
+      .or('null')
       .describe(
         'Configuration for a [Predicted Output](https://developers.openai.com/api/docs/guides/predicted-outputs),\nwhich can greatly improve response times when large parts of the model\nresponse are known ahead of time. This is most common when you are\nregenerating a file with only minor changes to most of the content.\n',
       ),
@@ -5679,10 +6155,10 @@ export const CreateChatCompletionRequestSchema = type(CreateModelResponsePropert
         )
         .narrow(
           (data, ctx) =>
-            data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+            data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
         )
         .narrow(
-          (data, ctx) => data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+          (data, ctx) => data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
         ),
     )
       .or('null')
@@ -5736,7 +6212,7 @@ export const CreateChatCompletionStreamResponseSchema = type({
         .or('null')
         .describe('Log probability information for the choice.'),
       'finish_reason?': type(
-        "'stop' | 'length' | 'tool_calls' | 'content_filter' | 'function_call' | null | null",
+        "'stop' | 'length' | 'tool_calls' | 'content_filter' | 'function_call' | null",
       ).describe(
         'The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\n`content_filter` if content was omitted due to a flag from our content filters,\n`tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.\nOmitted from the final audio update containing only `delta.audio.expires_at`.\n',
       ),
@@ -5762,7 +6238,7 @@ export const CreateChatCompletionStreamResponseSchema = type({
     'The object type, which is always `chat.completion.chunk`.',
   ),
   'usage?': type(CompletionUsageSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'An optional field that will only be present when you set\n`stream_options: {"include_usage": true}` in your request. When present, it\ncontains a null value **except for the last chunk** which contains the\ntoken usage statistics for the entire request.\n\n**NOTE:** If the stream is interrupted or cancelled, you may not\nreceive the final usage chunk which contains the total token usage for\nthe request.\n',
     ),
@@ -5770,7 +6246,7 @@ export const CreateChatCompletionStreamResponseSchema = type({
     ChatCompletionModerationSchema.describe(
       'Moderation results for the request input and generated output. Present\non the moderation chunk when moderated completions are requested.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Represents a streamed chunk of a chat completion response returned\nby the model, based on the provided input.\n[Learn more](https://developers.openai.com/api/docs/guides/streaming-responses).\n',
 )
@@ -5791,7 +6267,7 @@ export const CreateCompletionRequestSchema = type({
       ),
     ),
   )
-    .or('null | null')
+    .or('null')
     .describe(
       'The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.\n\nNote that <|endoftext|> is the document separator that the model sees during training, so if a prompt is not specified the model will generate as if from the beginning of a new document.\n',
     ),
@@ -5857,7 +6333,7 @@ export const CreateCompletionResponseSchema = type({
   id: type('string').describe('A unique identifier for the completion.'),
   choices: type(
     type({
-      finish_reason: type("'stop' | 'length' | 'content_filter' | null | null").describe(
+      finish_reason: type("'stop' | 'length' | 'content_filter' | null").describe(
         'The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\nor `content_filter` if content was omitted due to a flag from our content filters. The value is null while a streamed completion is unfinished.\n',
       ),
       index: 'number.integer',
@@ -5868,7 +6344,7 @@ export const CreateCompletionResponseSchema = type({
           'tokens?': 'string[]',
           'top_logprobs?': type(type({ '[string]': 'number' })).array(),
         }),
-      ).or('null | null'),
+      ).or('null'),
       text: 'string',
     }),
   )
@@ -5898,14 +6374,26 @@ export const CreateContainerBodySchema = type({
     ),
     minutes: 'number.integer',
   }).describe("Container expiration time in seconds relative to the 'anchor' time."),
-  'skills?': type(type(SkillReferenceParamSchema).or(InlineSkillParamSchema))
+  'skills?': type(
+    type(type(SkillReferenceParamSchema).and({ type: "'SkillReferenceParam'" })).or(
+      type(InlineSkillParamSchema).and({ type: "'InlineSkillParam'" }),
+    ),
+  )
     .array()
     .describe('An optional list of skills referenced by id or inline data.'),
   'memory_limit?': type("'1g' | '4g' | '16g' | '64g'").describe(
     'Optional memory limit for the container. Defaults to "1g".',
   ),
-  'network_policy?': type(ContainerNetworkPolicyDisabledParamSchema)
-    .or(ContainerNetworkPolicyAllowlistParamSchema)
+  'network_policy?': type(
+    type(ContainerNetworkPolicyDisabledParamSchema).and({
+      type: "'ContainerNetworkPolicyDisabledParam'",
+    }),
+  )
+    .or(
+      type(ContainerNetworkPolicyAllowlistParamSchema).and({
+        type: "'ContainerNetworkPolicyAllowlistParam'",
+      }),
+    )
     .describe('Network access policy for the container.'),
 })
 
@@ -5962,10 +6450,12 @@ export type CreateEmbeddingRequestSchema = typeof CreateEmbeddingRequestSchema.i
 export const EmbeddingSchema = type({
   index: type('number.integer').describe('The index of the embedding in the list of embeddings.'),
   embedding: type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38[] | string',
-  ).describe(
-    'The embedding vector, returned as a list of floats when `encoding_format` is `float` (the default), or as a base64-encoded string when `encoding_format` is `base64`. The length of the vector depends on the model as listed in the [embedding guide](https://developers.openai.com/api/docs/guides/embeddings).\n',
-  ),
+    type(type('number').atLeast(-3.4028234663852886e38).atMost(3.4028234663852886e38)).array(),
+  )
+    .or('string')
+    .describe(
+      'The embedding vector, returned as a list of floats when `encoding_format` is `float` (the default), or as a base64-encoded string when `encoding_format` is `base64`. The length of the vector depends on the model as listed in the [embedding guide](https://developers.openai.com/api/docs/guides/embeddings).\n',
+    ),
   object: type("'embedding'").describe('The object type, which is always "embedding".'),
 }).describe('Represents an embedding vector returned by embedding endpoint.\n')
 
@@ -6008,7 +6498,7 @@ export const EasyInputMessageSchema = type({
     .describe(
       'Text, image, or audio input to the model, used to generate a response.\nCan also contain previous assistant responses.\n',
     ),
-  'phase?': type(MessagePhaseSchema).or('null | null'),
+  'phase?': type(MessagePhaseSchema).or('null'),
   'type?': type("'message'").describe('The type of the message input. Always `message`.\n'),
 }).describe(
   'A message input to the model with a role indicating instruction following\nhierarchy. Instructions given with the `developer` or `system` role take\nprecedence over instructions given with the `user` role. Messages with the\n`assistant` role are presumed to have been generated by the model in previous\ninteractions.\n',
@@ -6110,20 +6600,20 @@ export const EvalStoredCompletionsSourceSchema = type({
   'metadata?': MetadataSchema,
   'model?': type(
     type('string').describe("An optional model to filter by (e.g., 'gpt-4.1-mini-2025-04-14')."),
-  ).or('null | null'),
+  ).or('null'),
   'created_after?': type(
     type('number.integer').describe(
       'An optional Unix timestamp to filter items created after this time.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'created_before?': type(
     type('number.integer').describe(
       'An optional Unix timestamp to filter items created before this time.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'limit?': type(
     type('number.integer').describe('An optional maximum number of items to return.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A StoredCompletionsRunDataSource configuration describing a set of filters\n')
 
 export type EvalStoredCompletionsSourceSchema = typeof EvalStoredCompletionsSourceSchema.infer
@@ -6326,20 +6816,20 @@ export const GraderScoreModelSchema = type({
       type('number.integer').describe(
         'A seed value to initialize the randomness, during sampling.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'top_p?': type(
       type('number').describe(
         'An alternative to temperature for nucleus sampling; 1.0 includes all tokens.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'temperature?': type(
       type('number').describe('A higher temperature increases randomness in the outputs.\n'),
-    ).or('null | null'),
+    ).or('null'),
     'max_completions_tokens?': type(
       type('number.integer >= 1').describe(
         'The maximum number of tokens the grader model may generate in its response.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'reasoning_effort?': ReasoningEffortSchema,
   }).describe('The sampling parameters for the model.'),
   input: type(EvalItemSchema)
@@ -6388,9 +6878,11 @@ export const CreateEvalRequestSchema = type({
 export type CreateEvalRequestSchema = typeof CreateEvalRequestSchema.infer
 
 export const TextResponseFormatConfigurationSchema = type(
-  type(ResponseFormatTextSchema).or(TextResponseFormatJsonSchemaSchema),
+  type(type(ResponseFormatTextSchema).and({ type: "'ResponseFormatText'" })).or(
+    type(TextResponseFormatJsonSchemaSchema).and({ type: "'TextResponseFormatJsonSchema'" }),
+  ),
 )
-  .or(ResponseFormatJsonObjectSchema)
+  .or(type(ResponseFormatJsonObjectSchema).and({ type: "'ResponseFormatJsonObject'" }))
   .describe(
     'An object specifying the format that the model must output.\n\nConfiguring `{ "type": "json_schema" }` enables Structured Outputs,\nwhich ensures the model will match your supplied JSON schema. Learn more in the\n[Structured Outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs).\n\nThe default format is `{ "type": "text" }` with no additional options.\n\n**Not recommended for gpt-4o and newer models:**\n\nSetting to `{ "type": "json_object" }` enables the older JSON mode, which\nensures the message the model generates is valid JSON. Using `json_schema`\nis preferred for models that support it.\n',
   )
@@ -6404,52 +6896,52 @@ export const EvalResponsesSourceSchema = type({
     type({}).describe(
       'Metadata filter for the responses. This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'The name of the model to find responses for. This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'instructions_search?': type(
     type('string').describe(
       "Optional string to search the 'instructions' field. This is a query parameter used to select responses.",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'created_after?': type(
     type('number.integer >= 0').describe(
       'Only include items created after this timestamp (inclusive). This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'created_before?': type(
     type('number.integer >= 0').describe(
       'Only include items created before this timestamp (inclusive). This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'reasoning_effort?': type(
     ReasoningEffortSchema.describe(
       'Optional reasoning effort parameter. This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'temperature?': type(
     type('number').describe(
       'Sampling temperature. This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'top_p?': type(
     type('number').describe(
       'Nucleus sampling parameter. This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'users?': type(
     type('string[]').describe(
       'List of user identifiers. This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(
     type('string[]').describe(
       'List of tool names. This is a query parameter used to select responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A EvalResponsesSource object describing a run data source configuration.\n')
 
 export type EvalResponsesSourceSchema = typeof EvalResponsesSourceSchema.infer
@@ -6640,9 +7132,13 @@ export const GraderMultiSchema = type({
   graders: type({
     '[string]': type(
       type(
-        type(type(GraderStringCheckSchema).or(GraderTextSimilaritySchema)).or(GraderPythonSchema),
-      ).or(GraderScoreModelSchema),
-    ).or(GraderLabelModelSchema),
+        type(
+          type(type(GraderStringCheckSchema).and({ type: "'string_check'" })).or(
+            type(GraderTextSimilaritySchema).and({ type: "'text_similarity'" }),
+          ),
+        ).or(type(GraderPythonSchema).and({ type: "'python'" })),
+      ).or(type(GraderScoreModelSchema).and({ type: "'score_model'" })),
+    ).or(type(GraderLabelModelSchema).and({ type: "'label_model'" })),
   }),
   calculate_output: type('string').describe(
     'A formula to calculate the output based on grader results.',
@@ -6801,7 +7297,7 @@ export const FrameDurationMsSchema = type('number.integer >= 20 | null').describ
 
 export type FrameDurationMsSchema = typeof FrameDurationMsSchema.infer
 
-export const ComplexitySchema = type("'low' | 'medium' | 'high' | null | null").describe(
+export const ComplexitySchema = type("'low' | 'medium' | 'high' | null").describe(
   "Computation spent planning the image, independently of rendering quality. Uses the image model's configured default when omitted. For SVG output, controls the reference image, independently of the SVG author's reasoning.",
 )
 
@@ -6821,7 +7317,7 @@ export const PartialImagesSchema = type(
   type('number.integer >= 0 & number.integer <= 3').describe(
     'The number of partial images to generate. This parameter is used for\nstreaming responses that return partial images. Value must be between 0 and 3.\nWhen set to 0, the response will be a single image sent in one streaming event.\n\nNote that the final image may be sent before the full number of partial images\nare generated if the full image is generated more quickly.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type PartialImagesSchema = typeof PartialImagesSchema.infer
 
@@ -6843,7 +7339,7 @@ export const CreateImageEditRequestSchema = type({
   'markup?': MarkupSchema.describe(
     "A transparent PNG overlaid on the first image to guide the edit. Must match that image's dimensions after orientation and contain transparent pixels. Supports GPT Image 2.5. Cannot be combined with mask.",
   ),
-  'background?': type("'transparent' | 'opaque' | 'auto' | null | null").describe(
+  'background?': type("'transparent' | 'opaque' | 'auto' | null").describe(
     'Set the background of the generated image(s). This parameter is only supported for\nthe GPT image models. Must be one of `transparent`, `opaque`, or `auto` (default\nvalue). When `auto` is used, the model will automatically determine the best\nbackground for the image.\n\n`gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08`\nsnapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds\nare available for supported GPT Image models. For `gpt-image-2` and\n`gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`,\nset the output format to `png` or `webp`.\n',
   ),
   model: type(
@@ -6855,20 +7351,20 @@ export const CreateImageEditRequestSchema = type({
     'The number of images to generate. Must be between 1 and 10.',
   ),
   'size?': type(
-    "string | '1024x1024' | '1536x1024' | '1024x1536' | 'auto' | '256x256' | '512x512' | null | null",
+    "string | '1024x1024' | '1536x1024' | '1024x1536' | 'auto' | '256x256' | '512x512' | null",
   ).describe(
     "The size of the generated images. Defaults to `auto`. For `gpt-image-2`, `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`, `gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`, and `gpt-image-2.5-flare-2026-09-08`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing.",
   ),
-  'response_format?': type("'url' | 'b64_json' | null | null").describe(
+  'response_format?': type("'url' | 'b64_json' | null").describe(
     'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
   ),
   'output_format?': type(ImagesApiOutputFormatSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'The format in which the generated images are returned. This parameter is\nonly supported for the GPT image models.\nThe default value is `png`.\nSVG output requires a supported image model and project access.\n',
     ),
   'svg?': type(SvgParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Selects the author model and reasoning effort for `output_format=svg`. Supply `svg.model` when SVG model selection is enabled. Otherwise, omit this object. SVG output requires `n=1` and cannot use streaming, partial images, or output compression. Use multipart fields such as `svg[model]`.',
     ),
@@ -6887,13 +7383,13 @@ export const CreateImageEditRequestSchema = type({
   'user?': type('string').describe(
     'Deprecated: use `safety_identifier` instead. This parameter remains accepted for backward compatibility and is used when `safety_identifier` is omitted, null, or empty. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).',
   ),
-  'input_fidelity?': type(InputFidelitySchema).or('null | null'),
+  'input_fidelity?': type(InputFidelitySchema).or('null'),
   'stream?': type('boolean | null').describe(
     'Edit the image in streaming mode. Defaults to `false`. See the\n[Image generation guide](https://developers.openai.com/api/docs/guides/image-generation) for more information.\n',
   ),
   'partial_images?': PartialImagesSchema,
   'quality?': type(
-    "'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto' | 'standard' | null | null",
+    "'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto' | 'standard' | null",
   ).describe(
     'The quality of the image that will be generated for GPT image models. The GPT image models support `low`, `medium`, and `high`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08` snapshots, also support `xhigh` and `max`. Defaults to `auto`.\n',
   ),
@@ -6909,7 +7405,7 @@ export const SvgSchema = type(
     'reasoning?': type(
       type({
         'effort?': type(ReasoningEffortEnumSchema)
-          .or('null | null')
+          .or('null')
           .describe(
             "Controls how much effort the SVG author spends on reasoning. Uses the author model's default when omitted or null.",
           ),
@@ -6945,15 +7441,15 @@ export const CreateImageRequestSchema = type({
     'The number of images to generate. Must be between 1 and 10.',
   ),
   'quality?': type(
-    "'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto' | 'standard' | 'hd' | null | null",
+    "'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto' | 'standard' | 'hd' | null",
   ).describe(
     'The quality of the image that will be generated.\n\n- `auto` (default value) will automatically select the best quality for the given\n  model.\n- `high`, `medium` and `low` are supported for the GPT image models.\n- `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08`\n  snapshots, also support `xhigh` and `max`.\n',
   ),
-  'response_format?': type("'url' | 'b64_json' | null | null").describe(
+  'response_format?': type("'url' | 'b64_json' | null").describe(
     'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
   ),
   'output_format?': type(ImagesApiOutputFormatSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'The format in which the generated images are returned. This parameter is only supported for the GPT image models.',
     ),
@@ -6965,17 +7461,17 @@ export const CreateImageRequestSchema = type({
   ),
   'partial_images?': PartialImagesSchema,
   'size?': type(
-    "string | 'auto' | '1024x1024' | '1536x1024' | '1024x1536' | '256x256' | '512x512' | '1792x1024' | '1024x1792' | null | null",
+    "string | 'auto' | '1024x1024' | '1536x1024' | '1024x1536' | '256x256' | '512x512' | '1792x1024' | '1024x1792' | null",
   ).describe(
     "The size of the generated images. For `gpt-image-2`, `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`, `gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`, and `gpt-image-2.5-flare-2026-09-08`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing.",
   ),
-  'moderation?': type("'low' | 'auto' | null | null").describe(
+  'moderation?': type("'low' | 'auto' | null").describe(
     'Control the content-moderation level for images generated by the GPT image models. Must be either `low` for less restrictive filtering or `auto` (default value).',
   ),
-  'background?': type("'transparent' | 'opaque' | 'auto' | null | null").describe(
+  'background?': type("'transparent' | 'opaque' | 'auto' | null").describe(
     'Set the background of the generated image(s). This parameter is only supported for\nthe GPT image models. Must be one of `transparent`, `opaque`, or `auto` (default\nvalue). When `auto` is used, the model will automatically determine the best\nbackground for the image.\n\n`gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08`\nsnapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds\nare available for supported GPT Image models. For `gpt-image-2` and\n`gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`,\nset the output format to `png` or `webp`.\n',
   ),
-  'style?': type("'vivid' | 'natural' | null | null").describe(
+  'style?': type("'vivid' | 'natural' | null").describe(
     'Legacy style parameter for retired image models. Unsupported for GPT image models; describe the desired style in the prompt instead.',
   ),
   'safety_identifier?': type(
@@ -6998,16 +7494,16 @@ export const CreateImageVariationRequestSchema = type({
   image: type('File').describe(
     'The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square.',
   ),
-  'model?': type("string | 'dall-e-2' | null | null").describe(
+  'model?': type("string | 'dall-e-2' | null").describe(
     'The legacy model used by the retired image variations endpoint. This endpoint no longer accepts requests.',
   ),
   'n?': type('number.integer >= 1 & number.integer <= 10 | null').describe(
     'The number of images to generate. Must be between 1 and 10.',
   ),
-  'response_format?': type("'url' | 'b64_json' | null | null").describe(
+  'response_format?': type("'url' | 'b64_json' | null").describe(
     'The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated.',
   ),
-  'size?': type("'256x256' | '512x512' | '1024x1024' | null | null").describe(
+  'size?': type("'256x256' | '512x512' | '1024x1024' | null").describe(
     'The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.',
   ),
   'user?': type('string').describe(
@@ -7053,7 +7549,7 @@ export const CreateMessageRequestSchema = type({
     )
       .array()
       .describe('A list of files attached to the message, and the tools they should be added to.'),
-  ).or('null | null'),
+  ).or('null'),
   'metadata?': MetadataSchema,
   '+': 'reject',
 })
@@ -7122,12 +7618,12 @@ export const CreateModerationResponseSchema = type({
           type('boolean').describe(
             'Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.',
           ),
-        ).or('null | null'),
+        ).or('null'),
         'illicit/violent': type(
           type('boolean').describe(
             'Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon.',
           ),
-        ).or('null | null'),
+        ).or('null'),
         'self-harm': type('boolean').describe(
           'Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders.',
         ),
@@ -7223,7 +7719,31 @@ export const CreateModerationResponseSchema = type({
 export type CreateModerationResponseSchema = typeof CreateModerationResponseSchema.infer
 
 export const ModelIdsResponsesSchema = type(ModelIdsSharedSchema).or(
-  "'o1-pro' | 'o1-pro-2025-03-19' | 'o3-pro' | 'o3-pro-2025-06-10' | 'o3-deep-research' | 'o3-deep-research-2025-06-26' | 'o4-mini-deep-research' | 'o4-mini-deep-research-2025-06-26' | 'computer-use-preview' | 'computer-use-preview-2025-03-11' | 'gpt-5.5-pro' | 'gpt-5.5-pro-2026-04-23' | 'gpt-5-codex' | 'gpt-5-pro' | 'gpt-5-pro-2025-10-06' | 'gpt-5.1-codex-max' | 'gpt-daybreak-blue-latest' | 'gpt-daybreak-red-latest' | 'gpt-5.6-cyber' | 'gpt-6-cyber' | 'gpt-rosalind-research' | 'gpt-6-rosalind' | 'gpt-6.2-astra-law'",
+  type.enumerated(
+    'o1-pro',
+    'o1-pro-2025-03-19',
+    'o3-pro',
+    'o3-pro-2025-06-10',
+    'o3-deep-research',
+    'o3-deep-research-2025-06-26',
+    'o4-mini-deep-research',
+    'o4-mini-deep-research-2025-06-26',
+    'computer-use-preview',
+    'computer-use-preview-2025-03-11',
+    'gpt-5.5-pro',
+    'gpt-5.5-pro-2026-04-23',
+    'gpt-5-codex',
+    'gpt-5-pro',
+    'gpt-5-pro-2025-10-06',
+    'gpt-5.1-codex-max',
+    'gpt-daybreak-blue-latest',
+    'gpt-daybreak-red-latest',
+    'gpt-5.6-cyber',
+    'gpt-6-cyber',
+    'gpt-rosalind-research',
+    'gpt-6-rosalind',
+    'gpt-6.2-astra-law',
+  ),
 )
 
 export type ModelIdsResponsesSchema = typeof ModelIdsResponsesSchema.infer
@@ -7292,7 +7812,7 @@ export const ToolChoiceMCPSchema = type({
   type: type("'mcp'").describe('For MCP tools, the type is always `mcp`.'),
   server_label: type('string').describe('The label of the MCP server to use.\n'),
   'name?': type(type('string').describe('The name of the tool to call on the server.\n')).or(
-    'null | null',
+    'null',
   ),
 }).describe('Use this option to force the model to call a specific tool on a remote MCP server.\n')
 
@@ -7356,7 +7876,7 @@ export const ResponsePromptVariablesSchema = type(
   }).describe(
     'Optional map of values to substitute in for variables in your\nprompt. The substitution values can either be strings, or other\nResponse input types like images or files.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type ResponsePromptVariablesSchema = typeof ResponsePromptVariablesSchema.infer
 
@@ -7364,13 +7884,13 @@ export const PromptSchema = type(
   type({
     id: type('string').describe('The unique identifier of the prompt template to use.'),
     'version?': type(type('string').describe('Optional version of the prompt template.')).or(
-      'null | null',
+      'null',
     ),
     'variables?': ResponsePromptVariablesSchema,
   }).describe(
     'Reference to a prompt template and its variables.\n[Learn more](https://developers.openai.com/api/docs/guides/text?api-mode=responses#version-prompts-in-code).\n',
   ),
-).or('null | null')
+).or('null')
 
 export type PromptSchema = typeof PromptSchema.infer
 
@@ -7379,7 +7899,7 @@ export const ResponsePropertiesSchema = type({
     type('string').describe(
       'The unique ID of the previous response to the model. Use this to\ncreate multi-turn conversations. Learn more about\n[conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': ModelIdsResponsesSchema.describe(
     'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI\noffers a wide range of models with different capabilities, performance\ncharacteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models)\nto browse and compare available models.\n',
   ),
@@ -7387,12 +7907,12 @@ export const ResponsePropertiesSchema = type({
     type('boolean').describe(
       'Whether to run the model response in the background.\n[Learn more](https://developers.openai.com/api/docs/guides/background).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'max_tool_calls?': type(
     type('number.integer').describe(
       'The maximum number of total calls to built-in tools that can be processed in a response. This maximum number applies across all built-in tool calls, not per individual tool. Any further attempts to call a tool by the model will be ignored.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'text?': ResponseTextParamSchema,
   'tools?': ToolsArraySchema,
   'tool_choice?': ToolChoiceParamSchema,
@@ -7441,7 +7961,7 @@ export const ResponsePromptCacheOptionsParamSchema = type({
     type('string').describe(
       'The ID of a response to compare when diagnosing prompt cache reuse. Supplying this field requests prompt cache diagnostics when the feature is enabled.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Options for prompt caching. Supported for `gpt-5.6` and later models. By default, OpenAI automatically chooses one implicit cache breakpoint. You can add explicit breakpoints to content blocks with `prompt_cache_breakpoint`. Each request can write up to four breakpoints. For cache matching, OpenAI considers up to the latest 80 breakpoints in the conversation, without a content-block lookback limit. Set `mode` to `explicit` to disable the implicit breakpoint. The `ttl` defaults to `30m`. Supported lifetimes depend on the API. See the [prompt caching guide](https://developers.openai.com/api/docs/guides/prompt-caching) for current details.',
 )
@@ -7453,7 +7973,7 @@ export const ServiceTierResponsesSchema = type(
   type("'auto' | 'default' | 'flex' | 'scale' | 'priority' | 'fast' | 'ultrafast'").describe(
     "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - If set to 'ultrafast', then the request will be processed with the access-controlled Ultrafast Processing service tier. This tier is currently available for `gpt-5.6-sol`; a response served through it will show `service_tier=ultrafast`.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
   ),
-).or('null | null')
+).or('null')
 
 export type ServiceTierResponsesSchema = typeof ServiceTierResponsesSchema.infer
 
@@ -7470,17 +7990,17 @@ export const ReasoningSchema = type({
     type("'auto' | 'concise' | 'detailed'").describe(
       "A summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n\n`concise` is supported for `computer-use-preview` models and all reasoning models after `gpt-5`.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'context?': type(
     type("'auto' | 'current_turn' | 'all_turns'").describe(
       'Controls which reasoning items are rendered back to the model on later turns.\nIf omitted or set to `auto`, the model determines the context mode. The\n`gpt-5.6` model family defaults to `all_turns`; earlier models default to\n`current_turn`.\n\nWhen returned on a response, this is the effective reasoning context mode\nused for the response.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'generate_summary?': type(
     type("'auto' | 'concise' | 'detailed'").describe(
       "**Deprecated:** use `summary` instead.\n\nA summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Configuration options for\n[reasoning models](https://developers.openai.com/api/docs/guides/reasoning).\n',
 )
@@ -7502,7 +8022,9 @@ export const InputMessageSchema = type({
 
 export type InputMessageSchema = typeof InputMessageSchema.infer
 
-export const OutputMessageContentSchema = type(OutputTextContentSchema).or(RefusalContentSchema)
+export const OutputMessageContentSchema = type(
+  type(OutputTextContentSchema).and({ type: "'OutputTextContent'" }),
+).or(type(RefusalContentSchema).and({ type: "'RefusalContent'" }))
 
 export type OutputMessageContentSchema = typeof OutputMessageContentSchema.infer
 
@@ -7513,7 +8035,7 @@ export const OutputMessageSchema = type({
   content: type(OutputMessageContentSchema)
     .array()
     .describe('The content of the output message.\n'),
-  'phase?': type(MessagePhaseSchema).or('null | null'),
+  'phase?': type(MessagePhaseSchema).or('null'),
   status: type("'in_progress' | 'completed' | 'incomplete'").describe(
     'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
   ),
@@ -7526,9 +8048,7 @@ export const FunctionCallItemStatusSchema = type("'in_progress' | 'completed' | 
 export type FunctionCallItemStatusSchema = typeof FunctionCallItemStatusSchema.infer
 
 export const ComputerCallOutputItemParamSchema = type({
-  'id?': type(type('string').describe('The ID of the computer tool call output.')).or(
-    'null | null',
-  ),
+  'id?': type(type('string').describe('The ID of the computer tool call output.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
@@ -7543,12 +8063,12 @@ export const ComputerCallOutputItemParamSchema = type({
       .describe(
         'The safety checks reported by the API that have been acknowledged by the developer.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'status?': type(
     FunctionCallItemStatusSchema.describe(
       'The status of the message input. One of `in_progress`, `completed`, or `incomplete`. Populated when input items are returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The output of a computer tool call.')
 
 export type ComputerCallOutputItemParamSchema = typeof ComputerCallOutputItemParamSchema.infer
@@ -7560,7 +8080,7 @@ export const InputTextContentParamSchema = type({
       (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
     )
     .describe('The text input to the model.'),
-  'prompt_cache_breakpoint?': type(PromptCacheBreakpointParamSchema).or('null | null'),
+  'prompt_cache_breakpoint?': type(PromptCacheBreakpointParamSchema).or('null'),
 }).describe('A text input to the model.')
 
 export type InputTextContentParamSchema = typeof InputTextContentParamSchema.infer
@@ -7579,16 +8099,16 @@ export const InputImageContentParamAutoParamSchema = type({
       .describe(
         'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'detail?': type(
     DetailEnumSchema.describe(
       'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
     ),
-  ).or('null | null'),
-  'prompt_cache_breakpoint?': type(PromptCacheBreakpointParamSchema).or('null | null'),
+  ).or('null'),
+  'prompt_cache_breakpoint?': type(PromptCacheBreakpointParamSchema).or('null'),
 }).describe(
   'An image input to the model. Learn about [image inputs](https://developers.openai.com/api/docs/guides/images-vision)',
 )
@@ -7603,10 +8123,10 @@ export type FileDetailEnumSchema = typeof FileDetailEnumSchema.infer
 export const InputFileContentParamSchema = type({
   type: type("'input_file'").describe('The type of the input item. Always `input_file`.'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'filename?': type(type('string').describe('The name of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'file_data?': type(
     type('string')
@@ -7614,14 +8134,14 @@ export const InputFileContentParamSchema = type({
         (data, ctx) => [...data].length <= 73400320 || ctx.mustBe('at most 73400320 characters'),
       )
       .describe('The base64-encoded data of the file to be sent to the model.'),
-  ).or('null | null'),
+  ).or('null'),
   'file_url?': type(type('string.url').describe('The URL of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'detail?': FileDetailEnumSchema.describe(
     'The detail level of the file to be sent to the model. Use `auto` to let the system select the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which may increase input token usage. Use `low` for lower-cost rendering, or `high` to render the file at higher quality. Defaults to `auto`.',
   ),
-  'prompt_cache_breakpoint?': type(PromptCacheBreakpointParamSchema).or('null | null'),
+  'prompt_cache_breakpoint?': type(PromptCacheBreakpointParamSchema).or('null'),
 }).describe('A file input to the model.')
 
 export type InputFileContentParamSchema = typeof InputFileContentParamSchema.infer
@@ -7631,13 +8151,13 @@ export const FunctionCallOutputItemParamSchema = type({
     type('string').describe(
       'The unique ID of the function tool call output. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'call_id?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The unique ID of the function tool call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'function_call_output'").describe(
     'The type of the function tool call output. Always `function_call_output`.',
   ),
@@ -7650,8 +8170,14 @@ export const FunctionCallOutputItemParamSchema = type({
   )
     .or(
       type(
-        type(type(InputTextContentParamSchema).or(InputImageContentParamAutoParamSchema))
-          .or(InputFileContentParamSchema)
+        type(
+          type(type(InputTextContentParamSchema).and({ type: "'InputTextContentParam'" })).or(
+            type(InputImageContentParamAutoParamSchema).and({
+              type: "'InputImageContentParamAutoParam'",
+            }),
+          ),
+        )
+          .or(type(InputFileContentParamSchema).and({ type: "'InputFileContentParam'" }))
           .describe('A piece of message content, such as text, an image, or a file.'),
       )
         .array()
@@ -7663,41 +8189,41 @@ export const FunctionCallOutputItemParamSchema = type({
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
       .describe('The name of the tool that produced the output.'),
-  ).or('null | null'),
+  ).or('null'),
   'namespace?': type(
     type('string')
       .and(/^[a-zA-Z0-9_-]+$/)
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
       .describe('The namespace of the tool that produced the output.'),
-  ).or('null | null'),
+  ).or('null'),
   'caller?': type(
     ToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   'status?': type(
     FunctionCallItemStatusSchema.describe(
       'The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The output of a function tool call.')
 
 export type FunctionCallOutputItemParamSchema = typeof FunctionCallOutputItemParamSchema.infer
 
 export const ToolSearchCallItemParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this tool search call.')).or('null | null'),
+  'id?': type(type('string').describe('The unique ID of this tool search call.')).or('null'),
   'call_id?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'tool_search_call'").describe('The item type. Always `tool_search_call`.'),
   'execution?': ToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
   ),
   arguments: EmptyModelParamSchema.describe('The arguments supplied to the tool search call.'),
   'status?': type(FunctionCallItemStatusSchema.describe('The status of the tool search call.')).or(
-    'null | null',
+    'null',
   ),
 })
 
@@ -7709,13 +8235,13 @@ export const ToolSearchOutputFunctionToolParamSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
     .describe('The name of the loaded function tool.'),
-  'description?': 'string | null | null',
-  'parameters?': type(EmptyModelParamSchema).or('null | null'),
+  'description?': 'string | null',
+  'parameters?': type(EmptyModelParamSchema).or('null'),
   'strict?': type(
     type('boolean').describe(
       'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'function'",
   'async?': type('boolean').describe(
     'Whether the tool response can be returned asynchronously versus immediately returned on next response creation.',
@@ -7724,7 +8250,7 @@ export const ToolSearchOutputFunctionToolParamSchema = type({
     type({ '[string]': 'unknown' }).describe(
       'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this function should be deferred and discovered via tool search.',
   ),
@@ -7732,7 +8258,7 @@ export const ToolSearchOutputFunctionToolParamSchema = type({
     type(type(CallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type ToolSearchOutputFunctionToolParamSchema =
@@ -7746,8 +8272,12 @@ export const ToolSearchOutputNamespaceToolParamSchema = type({
   description: type('string').describe('A description of the namespace shown to the model.'),
   tools: type(
     type(
-      type(ToolSearchOutputFunctionToolParamSchema)
-        .or(CustomToolParamSchema)
+      type(
+        type(ToolSearchOutputFunctionToolParamSchema).and({
+          type: "'ToolSearchOutputFunctionToolParam'",
+        }),
+      )
+        .or(type(CustomToolParamSchema).and({ type: "'CustomToolParam'" }))
         .describe('A function or custom tool loaded into a namespace by tool search.'),
     ).array(),
   )
@@ -7771,37 +8301,49 @@ export const ToolSearchOutputToolSchema = type(
                     type(
                       type(
                         type(
-                          type(type(FunctionToolSchema).or(FileSearchToolSchema)).or(
-                            ComputerToolSchema,
-                          ),
-                        ).or(ComputerUsePreviewToolSchema),
-                      ).or(WebSearchToolSchema),
-                    ).or(MCPToolSchema),
-                  ).or(CodeInterpreterToolSchema),
-                ).or(ProgrammaticToolCallingParamSchema),
-              ).or(ImageGenToolSchema),
-            ).or(LocalShellToolParamSchema),
-          ).or(FunctionShellToolParamSchema),
-        ).or(CustomToolParamSchema),
-      ).or(ToolSearchOutputNamespaceToolParamSchema),
-    ).or(ToolSearchToolParamSchema),
-  ).or(WebSearchPreviewToolSchema),
+                          type(
+                            type(type(FunctionToolSchema).and({ type: "'FunctionTool'" })).or(
+                              type(FileSearchToolSchema).and({ type: "'FileSearchTool'" }),
+                            ),
+                          ).or(type(ComputerToolSchema).and({ type: "'ComputerTool'" })),
+                        ).or(
+                          type(ComputerUsePreviewToolSchema).and({
+                            type: "'ComputerUsePreviewTool'",
+                          }),
+                        ),
+                      ).or(type(WebSearchToolSchema).and({ type: "'WebSearchTool'" })),
+                    ).or(type(MCPToolSchema).and({ type: "'MCPTool'" })),
+                  ).or(type(CodeInterpreterToolSchema).and({ type: "'CodeInterpreterTool'" })),
+                ).or(
+                  type(ProgrammaticToolCallingParamSchema).and({
+                    type: "'ProgrammaticToolCallingParam'",
+                  }),
+                ),
+              ).or(type(ImageGenToolSchema).and({ type: "'ImageGenTool'" })),
+            ).or(type(LocalShellToolParamSchema).and({ type: "'LocalShellToolParam'" })),
+          ).or(type(FunctionShellToolParamSchema).and({ type: "'FunctionShellToolParam'" })),
+        ).or(type(CustomToolParamSchema).and({ type: "'CustomToolParam'" })),
+      ).or(
+        type(ToolSearchOutputNamespaceToolParamSchema).and({
+          type: "'ToolSearchOutputNamespaceToolParam'",
+        }),
+      ),
+    ).or(type(ToolSearchToolParamSchema).and({ type: "'ToolSearchToolParam'" })),
+  ).or(type(WebSearchPreviewToolSchema).and({ type: "'WebSearchPreviewTool'" })),
 )
-  .or(ApplyPatchToolParamSchema)
+  .or(type(ApplyPatchToolParamSchema).and({ type: "'ApplyPatchToolParam'" }))
   .describe('A tool definition returned by a tool search output.\n')
 
 export type ToolSearchOutputToolSchema = typeof ToolSearchOutputToolSchema.infer
 
 export const ToolSearchOutputItemParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this tool search output.')).or(
-    'null | null',
-  ),
+  'id?': type(type('string').describe('The unique ID of this tool search output.')).or('null'),
   'call_id?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'tool_search_output'").describe('The item type. Always `tool_search_output`.'),
   'execution?': ToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
@@ -7811,15 +8353,13 @@ export const ToolSearchOutputItemParamSchema = type({
     .describe('The loaded tool definitions returned by the tool search output.'),
   'status?': type(
     FunctionCallItemStatusSchema.describe('The status of the tool search output.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type ToolSearchOutputItemParamSchema = typeof ToolSearchOutputItemParamSchema.infer
 
 export const AdditionalToolsItemParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this additional tools item.')).or(
-    'null | null',
-  ),
+  'id?': type(type('string').describe('The unique ID of this additional tools item.')).or('null'),
   type: type("'additional_tools'").describe('The item type. Always `additional_tools`.'),
   role: type("'developer'").describe(
     'The role that provided the additional tools. Only `developer` is supported.',
@@ -7833,7 +8373,7 @@ export type AdditionalToolsItemParamSchema = typeof AdditionalToolsItemParamSche
 
 export const ResponseConfigurationUpdateItemParamSchema = type({
   'id?': type(type('string').describe('The unique ID of the configuration update item.')).or(
-    'null | null',
+    'null',
   ),
   type: type("'configuration_update'").describe('The item type. Always `configuration_update`.'),
   'reasoning?': type({
@@ -7842,8 +8382,8 @@ export const ResponseConfigurationUpdateItemParamSchema = type({
     ),
   }).describe('Updates to reasoning configuration. Only effort is supported.'),
   'text?': type({
-    format: type(ResponseFormatTextSchema)
-      .or(TextResponseFormatJsonSchemaSchema)
+    format: type(type(ResponseFormatTextSchema).and({ type: "'ResponseFormatText'" }))
+      .or(type(TextResponseFormatJsonSchemaSchema).and({ type: "'TextResponseFormatJsonSchema'" }))
       .describe('Use a JSON schema for structured output or text to return to plain text.'),
   }).describe('The text output configuration for subsequent responses.'),
 }).describe(
@@ -7854,7 +8394,7 @@ export type ResponseConfigurationUpdateItemParamSchema =
   typeof ResponseConfigurationUpdateItemParamSchema.infer
 
 export const CompactionSummaryItemParamSchema = type({
-  'id?': type(type('string').describe('The ID of the compaction item.')).or('null | null'),
+  'id?': type(type('string').describe('The ID of the compaction item.')).or('null'),
   type: type("'compaction'").describe('The type of the item. Always `compaction`.'),
   encrypted_content: type('string')
     .narrow(
@@ -7875,12 +8415,12 @@ export const FunctionShellActionParamSchema = type({
     type('number.integer').describe(
       'Maximum wall-clock time in milliseconds to allow the shell commands to run.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'max_output_length?': type(
     type('number.integer').describe(
       'Maximum number of UTF-8 characters to capture from combined stdout and stderr output.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Commands and limits describing how to run the shell tool call.')
 
 export type FunctionShellActionParamSchema = typeof FunctionShellActionParamSchema.infer
@@ -7896,14 +8436,14 @@ export const FunctionShellCallItemParamSchema = type({
     type('string').describe(
       'The unique ID of the shell tool call. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     ToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'shell_call'").describe('The type of the item. Always `shell_call`.'),
   action: FunctionShellActionParamSchema.describe(
     'The shell commands and limits that describe how to run the tool call.',
@@ -7912,12 +8452,12 @@ export const FunctionShellCallItemParamSchema = type({
     FunctionShellCallItemStatusSchema.describe(
       'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'environment?': type(
-    type(LocalEnvironmentParamSchema)
-      .or(ContainerReferenceParamSchema)
+    type(type(LocalEnvironmentParamSchema).and({ type: "'LocalEnvironmentParam'" }))
+      .or(type(ContainerReferenceParamSchema).and({ type: "'ContainerReferenceParam'" }))
       .describe('The environment to execute the shell commands in.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool representing a request to execute one or more shell commands.')
 
 export type FunctionShellCallItemParamSchema = typeof FunctionShellCallItemParamSchema.infer
@@ -7938,9 +8478,15 @@ export type FunctionShellCallOutputExitOutcomeParamSchema =
   typeof FunctionShellCallOutputExitOutcomeParamSchema.infer
 
 export const FunctionShellCallOutputOutcomeParamSchema = type(
-  FunctionShellCallOutputTimeoutOutcomeParamSchema,
+  type(FunctionShellCallOutputTimeoutOutcomeParamSchema).and({
+    type: "'FunctionShellCallOutputTimeoutOutcomeParam'",
+  }),
 )
-  .or(FunctionShellCallOutputExitOutcomeParamSchema)
+  .or(
+    type(FunctionShellCallOutputExitOutcomeParamSchema).and({
+      type: "'FunctionShellCallOutputExitOutcomeParam'",
+    }),
+  )
   .describe('The exit or timeout outcome associated with this shell call.')
 
 export type FunctionShellCallOutputOutcomeParamSchema =
@@ -7970,26 +8516,26 @@ export const FunctionShellCallOutputItemParamSchema = type({
     type('string').describe(
       'The unique ID of the shell tool call output. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     ToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'shell_call_output'").describe('The type of the item. Always `shell_call_output`.'),
   output: type(FunctionShellCallOutputContentParamSchema)
     .array()
     .describe('Captured chunks of stdout and stderr output, along with their associated outcomes.'),
   'status?': type(
     FunctionShellCallItemStatusSchema.describe('The status of the shell call output.'),
-  ).or('null | null'),
+  ).or('null'),
   'max_output_length?': type(
     type('number.integer').describe(
       "The maximum number of UTF-8 characters captured for this shell call's combined output.",
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The streamed output items emitted by a shell tool call.')
 
 export type FunctionShellCallOutputItemParamSchema =
@@ -8042,9 +8588,21 @@ export type ApplyPatchUpdateFileOperationParamSchema =
   typeof ApplyPatchUpdateFileOperationParamSchema.infer
 
 export const ApplyPatchOperationParamSchema = type(
-  type(ApplyPatchCreateFileOperationParamSchema).or(ApplyPatchDeleteFileOperationParamSchema),
+  type(
+    type(ApplyPatchCreateFileOperationParamSchema).and({
+      type: "'ApplyPatchCreateFileOperationParam'",
+    }),
+  ).or(
+    type(ApplyPatchDeleteFileOperationParamSchema).and({
+      type: "'ApplyPatchDeleteFileOperationParam'",
+    }),
+  ),
 )
-  .or(ApplyPatchUpdateFileOperationParamSchema)
+  .or(
+    type(ApplyPatchUpdateFileOperationParamSchema).and({
+      type: "'ApplyPatchUpdateFileOperationParam'",
+    }),
+  )
   .describe(
     'One of the create_file, delete_file, or update_file operations supplied to the apply_patch tool.',
   )
@@ -8057,14 +8615,14 @@ export const ApplyPatchToolCallItemParamSchema = type({
     type('string').describe(
       'The unique ID of the apply patch tool call. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the apply patch tool call generated by the model.'),
   'caller?': type(
     ToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: ApplyPatchCallStatusParamSchema.describe(
     'The status of the apply patch tool call. One of `in_progress` or `completed`.',
   ),
@@ -8092,14 +8650,14 @@ export const ApplyPatchToolCallOutputItemParamSchema = type({
     type('string').describe(
       'The unique ID of the apply patch tool call output. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the apply patch tool call generated by the model.'),
   'caller?': type(
     ToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: ApplyPatchCallOutputStatusParamSchema.describe(
     'The status of the apply patch tool call output. One of `completed` or `failed`.',
   ),
@@ -8111,7 +8669,7 @@ export const ApplyPatchToolCallOutputItemParamSchema = type({
       .describe(
         'Optional human-readable log text from the apply patch tool (e.g., patch results or errors).',
       ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The streamed output emitted by an apply patch tool call.')
 
 export type ApplyPatchToolCallOutputItemParamSchema =
@@ -8121,12 +8679,11 @@ export const MCPApprovalResponseSchema = type({
   type: type("'mcp_approval_response'").describe(
     'The type of the item. Always `mcp_approval_response`.\n',
   ),
-  'id?': type(type('string').describe('The unique ID of the approval response\n')).or(
-    'null | null',
-  ),
+  'id?': type(type('string').describe('The unique ID of the approval response\n')).or('null'),
   approval_request_id: type('string').describe('The ID of the approval request being answered.\n'),
   approve: type('boolean').describe('Whether the request was approved.\n'),
-  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null | null'),
+  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null'),
+  request_id: 'unknown',
 }).describe('A response to an MCP approval request.\n')
 
 export type MCPApprovalResponseSchema = typeof MCPApprovalResponseSchema.infer
@@ -8157,44 +8714,116 @@ export const ItemSchema = type(
                                               type(
                                                 type(
                                                   type(
-                                                    type(InputMessageSchema).or(
-                                                      OutputMessageSchema,
+                                                    type(
+                                                      type(InputMessageSchema).and({
+                                                        type: "'InputMessage'",
+                                                      }),
+                                                    ).or(
+                                                      type(OutputMessageSchema).and({
+                                                        type: "'OutputMessage'",
+                                                      }),
                                                     ),
-                                                  ).or(FileSearchToolCallSchema),
-                                                ).or(ComputerToolCallSchema),
-                                              ).or(ComputerCallOutputItemParamSchema),
-                                            ).or(WebSearchToolCallSchema),
-                                          ).or(FunctionToolCallSchema),
-                                        ).or(FunctionCallOutputItemParamSchema),
-                                      ).or(ToolSearchCallItemParamSchema),
-                                    ).or(ToolSearchOutputItemParamSchema),
-                                  ).or(AdditionalToolsItemParamSchema),
-                                ).or(ResponseConfigurationUpdateItemParamSchema),
-                              ).or(ReasoningItemSchema),
-                            ).or(CompactionSummaryItemParamSchema),
-                          ).or(ImageGenToolCallSchema),
-                        ).or(CodeInterpreterToolCallSchema),
-                      ).or(LocalShellToolCallSchema),
-                    ).or(LocalShellToolCallOutputSchema),
-                  ).or(FunctionShellCallItemParamSchema),
-                ).or(FunctionShellCallOutputItemParamSchema),
-              ).or(ApplyPatchToolCallItemParamSchema),
-            ).or(ApplyPatchToolCallOutputItemParamSchema),
-          ).or(MCPListToolsSchema),
-        ).or(MCPApprovalRequestSchema),
-      ).or(MCPApprovalResponseSchema),
-    ).or(MCPToolCallSchema),
-  ).or(CustomToolCallOutputSchema),
+                                                  ).or(
+                                                    type(FileSearchToolCallSchema).and({
+                                                      type: "'FileSearchToolCall'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(ComputerToolCallSchema).and({
+                                                    type: "'ComputerToolCall'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(ComputerCallOutputItemParamSchema).and({
+                                                  type: "'ComputerCallOutputItemParam'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(WebSearchToolCallSchema).and({
+                                                type: "'WebSearchToolCall'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(FunctionToolCallSchema).and({
+                                              type: "'FunctionToolCall'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(FunctionCallOutputItemParamSchema).and({
+                                            type: "'FunctionCallOutputItemParam'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(ToolSearchCallItemParamSchema).and({
+                                          type: "'ToolSearchCallItemParam'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(ToolSearchOutputItemParamSchema).and({
+                                        type: "'ToolSearchOutputItemParam'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(AdditionalToolsItemParamSchema).and({
+                                      type: "'AdditionalToolsItemParam'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(ResponseConfigurationUpdateItemParamSchema).and({
+                                    type: "'ResponseConfigurationUpdateItemParam'",
+                                  }),
+                                ),
+                              ).or(type(ReasoningItemSchema).and({ type: "'ReasoningItem'" })),
+                            ).or(
+                              type(CompactionSummaryItemParamSchema).and({
+                                type: "'CompactionSummaryItemParam'",
+                              }),
+                            ),
+                          ).or(type(ImageGenToolCallSchema).and({ type: "'ImageGenToolCall'" })),
+                        ).or(
+                          type(CodeInterpreterToolCallSchema).and({
+                            type: "'CodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(type(LocalShellToolCallSchema).and({ type: "'LocalShellToolCall'" })),
+                    ).or(
+                      type(LocalShellToolCallOutputSchema).and({
+                        type: "'LocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(
+                    type(FunctionShellCallItemParamSchema).and({
+                      type: "'FunctionShellCallItemParam'",
+                    }),
+                  ),
+                ).or(
+                  type(FunctionShellCallOutputItemParamSchema).and({
+                    type: "'FunctionShellCallOutputItemParam'",
+                  }),
+                ),
+              ).or(
+                type(ApplyPatchToolCallItemParamSchema).and({
+                  type: "'ApplyPatchToolCallItemParam'",
+                }),
+              ),
+            ).or(
+              type(ApplyPatchToolCallOutputItemParamSchema).and({
+                type: "'ApplyPatchToolCallOutputItemParam'",
+              }),
+            ),
+          ).or(type(MCPListToolsSchema).and({ type: "'MCPListTools'" })),
+        ).or(type(MCPApprovalRequestSchema).and({ type: "'MCPApprovalRequest'" })),
+      ).or(type(MCPApprovalResponseSchema).and({ type: "'MCPApprovalResponse'" })),
+    ).or(type(MCPToolCallSchema).and({ type: "'MCPToolCall'" })),
+  ).or(type(CustomToolCallOutputSchema).and({ type: "'CustomToolCallOutput'" })),
 )
-  .or(CustomToolCallSchema)
+  .or(type(CustomToolCallSchema).and({ type: "'CustomToolCall'" }))
   .describe('Content item used to generate a response.\n')
 
 export type ItemSchema = typeof ItemSchema.infer
 
 export const CompactionTriggerItemParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this compaction trigger.')).or(
-    'null | null',
-  ),
+  'id?': type(type('string').describe('The unique ID of this compaction trigger.')).or('null'),
   type: type("'compaction_trigger'").describe('The type of the item. Always `compaction_trigger`.'),
 }).describe('Compacts the current context. Must be the final input item.')
 
@@ -8203,7 +8832,7 @@ export type CompactionTriggerItemParamSchema = typeof CompactionTriggerItemParam
 export const ItemReferenceParamSchema = type({
   'type?': type(
     type("'item_reference'").describe('The type of item to reference. Always `item_reference`.'),
-  ).or('null | null'),
+  ).or('null'),
   id: type('string').describe('The ID of the item to reference.'),
 }).describe('An internal identifier for an item to reference.')
 
@@ -8255,15 +8884,17 @@ export const InputItemSchema = type(
   type(
     type(
       type(
-        type(EasyInputMessageSchema).or(
-          ItemSchema.describe(
-            'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
-          ),
+        type(type(EasyInputMessageSchema).and({ type: "'EasyInputMessage'" })).or(
+          type(
+            ItemSchema.describe(
+              'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+            ),
+          ).and({ type: "'Item'" }),
         ),
-      ).or(CompactionTriggerItemParamSchema),
-    ).or(ItemReferenceParamSchema),
-  ).or(ProgramItemParamSchema),
-).or(ProgramOutputItemParamSchema)
+      ).or(type(CompactionTriggerItemParamSchema).and({ type: "'CompactionTriggerItemParam'" })),
+    ).or(type(ItemReferenceParamSchema).and({ type: "'ItemReferenceParam'" })),
+  ).or(type(ProgramItemParamSchema).and({ type: "'ProgramItemParam'" })),
+).or(type(ProgramOutputItemParamSchema).and({ type: "'ProgramOutputItemParam'" }))
 
 export type InputItemSchema = typeof InputItemSchema.infer
 
@@ -8314,7 +8945,7 @@ export const ResponseStreamOptionsSchema = type(
       'When true, stream obfuscation will be enabled. Stream obfuscation adds\nrandom characters to an `obfuscation` field on streaming delta events to\nnormalize payload sizes as a mitigation to certain side-channel attacks.\nThese obfuscation fields are included by default, but add a small amount\nof overhead to the data stream. You can set `include_obfuscation` to\nfalse to optimize for bandwidth if you trust the network links between\nyour application and the OpenAI API.\n',
     ),
   }).describe('Options for streaming responses. Only set this when you set `stream: true`.\n'),
-).or('null | null')
+).or('null')
 
 export type ResponseStreamOptionsSchema = typeof ResponseStreamOptionsSchema.infer
 
@@ -8326,7 +8957,7 @@ export const ContextManagementParamSchema = type({
     type('number.integer >= 1000').describe(
       'Token threshold at which compaction should be triggered for this entry.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type ContextManagementParamSchema = typeof ContextManagementParamSchema.infer
@@ -8343,8 +8974,8 @@ export const CreateResponseSchema = type(
       type("'auto' | 'disabled'").describe(
         "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
       ),
-    ).or('null | null'),
-    'reasoning?': type(ReasoningSchema).or('null | null'),
+    ).or('null'),
+    'reasoning?': type(ReasoningSchema).or('null'),
     'input?': InputParamSchema,
     'include?': type(
       type(IncludeEnumSchema)
@@ -8352,25 +8983,25 @@ export const CreateResponseSchema = type(
         .describe(
           'Specify additional output data to include in the model response. Currently supported values are:\n- `web_search_call.action.sources`: Include the sources of the web search tool call.\n- `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.\n- `computer_call_output.output.image_url`: Include image urls from the computer call output.\n- `file_search_call.results`: Include the search results of the file search tool call.\n- `message.input_image.image_url`: Include image urls from the input message.\n- `message.output_text.logprobs`: Include logprobs with assistant messages.\n- `reasoning.encrypted_content`: Includes an encrypted version of reasoning tokens in reasoning item outputs. This enables reasoning items to be used in multi-turn conversations when using the Responses API statelessly (like when the `store` parameter is set to `false`, or when an organization is enrolled in the zero data retention program).',
         ),
-    ).or('null | null'),
+    ).or('null'),
     'parallel_tool_calls?': type(
       type('boolean').describe('Whether to allow the model to run tool calls in parallel.\n'),
-    ).or('null | null'),
+    ).or('null'),
     'store?': type(
       type('boolean').describe(
         'Whether to store the generated model response for later retrieval via\nAPI.\nDefaults to true when omitted.\nIf set to true, response data will be stored for at least 30 days, subject to the [data retention exceptions](https://developers.openai.com/api/docs/guides/your-data#v1responses).\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'instructions?': type(
       type('string').describe(
         "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
       ),
-    ).or('null | null'),
+    ).or('null'),
     'moderation?': type(
       ModerationParamSchema.describe(
         'Configuration for running moderation on the input and output of this response.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'background_options?': BackgroundOptionsParamSchema.describe(
       'Options for background execution on HTTP requests. The `2h` and `8h`\ncompletion windows require `background: true`, Standard processing,\nand `stream: false` or omitted.\n',
     ),
@@ -8378,19 +9009,19 @@ export const CreateResponseSchema = type(
       type('boolean').describe(
         'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](https://developers.openai.com/api/reference/resources/responses/streaming-events)\nfor more information.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'stream_options?': ResponseStreamOptionsSchema,
-    'conversation?': type(ConversationParamSchema).or('null | null'),
+    'conversation?': type(ConversationParamSchema).or('null'),
     'context_management?': type(
       type(type(ContextManagementParamSchema).array())
         .and(type('unknown[] >= 1'))
         .describe('Context management configuration for this request.\n'),
-    ).or('null | null'),
+    ).or('null'),
     'max_output_tokens?': type(
       type('number.integer >= 16').describe(
         'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }),
 )
 
@@ -8401,7 +9032,7 @@ export const CreateRunRequestSchema = type({
     'The ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) to use to execute this run.',
   ),
   'model?': type(type('string').or(AssistantSupportedModelsSchema))
-    .or('null | null')
+    .or('null')
     .describe(
       'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
     ),
@@ -8527,9 +9158,7 @@ export const SpendAlertNotificationChannelSchema = type({
   recipients: type('string[]').describe(
     'Email addresses that receive the spend alert notification.',
   ),
-  'subject_prefix?': type('string | null | null').describe(
-    'Optional subject prefix for alert emails.',
-  ),
+  'subject_prefix?': type('string | null').describe('Optional subject prefix for alert emails.'),
 }).describe('Email notification settings for a spend alert.')
 
 export type SpendAlertNotificationChannelSchema = typeof SpendAlertNotificationChannelSchema.infer
@@ -8564,7 +9193,7 @@ export const CreateThreadRequestSchema = type({
     }).describe(
       "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'metadata?': MetadataSchema,
   '+': 'reject',
 }).describe(
@@ -8579,10 +9208,53 @@ export const CreateThreadAndRunRequestSchema = type({
   ),
   'thread?': CreateThreadRequestSchema,
   'model?': type(
-    "string | 'gpt-5' | 'gpt-5-mini' | 'gpt-5-nano' | 'gpt-5-2025-08-07' | 'gpt-5-mini-2025-08-07' | 'gpt-5-nano-2025-08-07' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-4.1-2025-04-14' | 'gpt-4.1-mini-2025-04-14' | 'gpt-4.1-nano-2025-04-14' | 'gpt-4o' | 'gpt-4o-2024-11-20' | 'gpt-4o-2024-08-06' | 'gpt-4o-2024-05-13' | 'gpt-4o-mini' | 'gpt-4o-mini-2024-07-18' | 'gpt-4.5-preview' | 'gpt-4.5-preview-2025-02-27' | 'gpt-4-turbo' | 'gpt-4-turbo-2024-04-09' | 'gpt-4-0125-preview' | 'gpt-4-turbo-preview' | 'gpt-4-1106-preview' | 'gpt-4-vision-preview' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-0613' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'gpt-4-32k-0613' | 'gpt-3.5-turbo' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-1106' | 'gpt-3.5-turbo-0125' | 'gpt-3.5-turbo-16k-0613' | null | null",
-  ).describe(
-    'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
-  ),
+    type('string').or(
+      type.enumerated(
+        'gpt-5',
+        'gpt-5-mini',
+        'gpt-5-nano',
+        'gpt-5-2025-08-07',
+        'gpt-5-mini-2025-08-07',
+        'gpt-5-nano-2025-08-07',
+        'gpt-4.1',
+        'gpt-4.1-mini',
+        'gpt-4.1-nano',
+        'gpt-4.1-2025-04-14',
+        'gpt-4.1-mini-2025-04-14',
+        'gpt-4.1-nano-2025-04-14',
+        'gpt-4o',
+        'gpt-4o-2024-11-20',
+        'gpt-4o-2024-08-06',
+        'gpt-4o-2024-05-13',
+        'gpt-4o-mini',
+        'gpt-4o-mini-2024-07-18',
+        'gpt-4.5-preview',
+        'gpt-4.5-preview-2025-02-27',
+        'gpt-4-turbo',
+        'gpt-4-turbo-2024-04-09',
+        'gpt-4-0125-preview',
+        'gpt-4-turbo-preview',
+        'gpt-4-1106-preview',
+        'gpt-4-vision-preview',
+        'gpt-4',
+        'gpt-4-0314',
+        'gpt-4-0613',
+        'gpt-4-32k',
+        'gpt-4-32k-0314',
+        'gpt-4-32k-0613',
+        'gpt-3.5-turbo',
+        'gpt-3.5-turbo-16k',
+        'gpt-3.5-turbo-0613',
+        'gpt-3.5-turbo-1106',
+        'gpt-3.5-turbo-0125',
+        'gpt-3.5-turbo-16k-0613',
+      ),
+    ),
+  )
+    .or('null')
+    .describe(
+      'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
+    ),
   'instructions?': type('string | null').describe(
     'Override the default system message of the assistant. This is useful for modifying the behavior on a per-run basis.',
   ),
@@ -8707,7 +9379,7 @@ export const CreateTranscriptionRequestSchema = type({
     type('boolean').describe(
       'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section of the Speech-to-Text guide](https://developers.openai.com/api/docs/guides/speech-to-text?lang=curl#streaming)\nfor more information.\n\nNote: Streaming is not supported for the `whisper-1` model and will be ignored.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'chunking_strategy?': type(
     type(
       type("'auto'").describe(
@@ -8718,7 +9390,7 @@ export const CreateTranscriptionRequestSchema = type({
       .describe(
         'Controls how the audio is cut into chunks. When set to `"auto"`, the server first normalizes loudness and then uses voice activity detection (VAD) to choose boundaries. `server_vad` object can be provided to tweak VAD detection parameters manually. If unset, the audio is transcribed as a single block. Required when using `gpt-4o-transcribe-diarize` for inputs longer than 30 seconds. ',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'known_speaker_names?': type('string[]')
     .and(type('unknown[] <= 4'))
     .describe(
@@ -8784,8 +9456,8 @@ export const CreateTranscriptionResponseDiarizedJsonSchema = type({
   segments: type(TranscriptionDiarizedSegmentSchema)
     .array()
     .describe('Segments of the transcript annotated with timestamps and speaker labels.'),
-  'usage?': type(TranscriptTextUsageTokensSchema)
-    .or(TranscriptTextUsageDurationSchema)
+  'usage?': type(type(TranscriptTextUsageTokensSchema).and({ type: "'TranscriptTextUsageTokens'" }))
+    .or(type(TranscriptTextUsageDurationSchema).and({ type: "'TranscriptTextUsageDuration'" }))
     .describe('Token or duration usage statistics for the request.'),
 }).describe(
   'Represents a diarized transcription response returned by the model, including the combined transcript and speaker-segment annotations.\n',
@@ -8924,22 +9596,28 @@ export const TranscriptionSegmentSchema = type({
   end: type('number').describe('End time of the segment in seconds.'),
   text: type('string').describe('Text content of the segment.'),
   tokens: type('number.integer[]').describe('Array of token IDs for the text content.'),
-  temperature: type('number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38').describe(
-    'Temperature parameter used for generating the segment.',
-  ),
-  avg_logprob: type('number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38').describe(
-    'Average logprob of the segment. If the value is lower than -1, consider the logprobs failed.',
-  ),
-  compression_ratio: type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-  ).describe(
-    'Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed.',
-  ),
-  no_speech_prob: type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-  ).describe(
-    'Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent.',
-  ),
+  temperature: type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe('Temperature parameter used for generating the segment.'),
+  avg_logprob: type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Average logprob of the segment. If the value is lower than -1, consider the logprobs failed.',
+    ),
+  compression_ratio: type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Compression ratio of the segment. If the value is greater than 2.4, consider the compression failed.',
+    ),
+  no_speech_prob: type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Probability of no speech in the segment. If the value is higher than 1.0 and the `avg_logprob` is below -1, consider this segment silent.',
+    ),
 })
 
 export type TranscriptionSegmentSchema = typeof TranscriptionSegmentSchema.infer
@@ -9121,9 +9799,9 @@ export const CreateVoicePromptRequestSchema = type({
 
 export type CreateVoicePromptRequestSchema = typeof CreateVoicePromptRequestSchema.infer
 
-export const CreateVoiceRequestSchema = type(CreateVoiceFromConsentRequestSchema).or(
-  CreateVoicePromptRequestSchema,
-)
+export const CreateVoiceRequestSchema = type(
+  type(CreateVoiceFromConsentRequestSchema).and({ type: "'audio_sample'" }),
+).or(type(CreateVoicePromptRequestSchema).and({ type: "'prompt'" }))
 
 export type CreateVoiceRequestSchema = typeof CreateVoiceRequestSchema.infer
 
@@ -9257,7 +9935,7 @@ export const EditImageBodyJsonParamSchema = type({
   'frame_duration_ms?': FrameDurationMsSchema,
   'complexity?': ComplexitySchema,
   'model?': type(
-    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini' | 'chatgpt-image-latest' | null | null",
+    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini' | 'chatgpt-image-latest' | null",
   ).describe(
     'The GPT image model to use for image editing, including `gpt-image-2`, its dated\nsnapshot `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, and `gpt-image-2.6-flare`.\nDefaults to `gpt-image-2.6-sunburst`.\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
   ),
@@ -9274,16 +9952,16 @@ export const EditImageBodyJsonParamSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 32000 || ctx.mustBe('at most 32000 characters'))
     .describe('A text description of the desired image edit.'),
-  'n?': type('number.integer >= 1 & number.integer <= 10 | null | null').describe(
+  'n?': type('number.integer >= 1 & number.integer <= 10 | null').describe(
     'The number of edited images to generate.',
   ),
-  'quality?': type("'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto' | null | null").describe(
+  'quality?': type("'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto' | null").describe(
     'Output quality for GPT image models. The GPT image models support `low`, `medium`,\nand `high`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their\n`2026-09-08` snapshots, also support `xhigh` and `max`. Defaults to `auto`.\n',
   ),
-  'input_fidelity?': type("'high' | 'low' | null | null").describe(
+  'input_fidelity?': type("'high' | 'low' | null").describe(
     'Control how much effort the model will exert to match the style and features, especially facial features, of input images. Supports `high` and `low` on `gpt-image-1.5`; `gpt-image-1-mini` supports only `low`. For `gpt-image-2`, omit this parameter. Defaults to `low` on supported models.',
   ),
-  'size?': type("string | 'auto' | '1024x1024' | '1536x1024' | '1024x1536' | null | null").describe(
+  'size?': type("string | 'auto' | '1024x1024' | '1536x1024' | '1024x1536' | null").describe(
     "The size of the generated images. For `gpt-image-2`, `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`, `gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`, and `gpt-image-2.5-flare-2026-09-08`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing.",
   ),
   'safety_identifier?': type(
@@ -9299,25 +9977,23 @@ export const EditImageBodyJsonParamSchema = type({
     'Deprecated: use `safety_identifier` instead. This parameter remains accepted for backward compatibility and is used when `safety_identifier` is omitted, null, or empty. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).',
   ),
   'output_format?': type(ImagesApiOutputFormatSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Output image format. Supported for GPT image models. SVG output requires a supported image model and project access.',
     ),
   'svg?': type(SvgParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Selects the author model and reasoning effort for `output_format=svg`. Supply `svg.model` when SVG model selection is enabled. Otherwise, omit this object. SVG output requires `n=1` and cannot use streaming, partial images, or output compression.',
     ),
-  'output_compression?': type('number.integer >= 0 & number.integer <= 100 | null | null').describe(
+  'output_compression?': type('number.integer >= 0 & number.integer <= 100 | null').describe(
     'Compression level for `jpeg` or `webp` output.',
   ),
-  'moderation?': type("'low' | 'auto' | null | null").describe(
-    'Moderation level for GPT image models.',
-  ),
-  'background?': type("'transparent' | 'opaque' | 'auto' | null | null").describe(
+  'moderation?': type("'low' | 'auto' | null").describe('Moderation level for GPT image models.'),
+  'background?': type("'transparent' | 'opaque' | 'auto' | null").describe(
     'Set the background of the generated image output. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08` snapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds are available for supported GPT Image models. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`, set the output format to `png` or `webp`.',
   ),
-  'stream?': type('boolean | null | null').describe('Stream partial image results as events.'),
+  'stream?': type('boolean | null').describe('Stream partial image results as events.'),
   'partial_images?': PartialImagesSchema,
 }).describe(
   'JSON request body for image edits.\n\nUse `images` (array of `ImageRefParam`) instead of multipart `image` uploads.\nYou can reference images via external URLs, data URLs, or uploaded file IDs.\nJSON edits support GPT image models.\n',
@@ -9472,7 +10148,7 @@ export const EvalRunSchema = type({
     .or(CreateEvalResponsesRunDataSourceSchema)
     .describe("Information about the run's data source."),
   metadata: MetadataSchema,
-  error: type(EvalApiErrorSchema).or('null | null'),
+  error: type(EvalApiErrorSchema).or('null'),
 }).describe('A schema representing an evaluation run.\n')
 
 export type EvalRunSchema = typeof EvalRunSchema.infer
@@ -9492,7 +10168,7 @@ export const EvalRunOutputItemResultSchema = type({
   'type?': type('string').describe('The grader type (for example, "string-check-grader").'),
   score: type('number').describe('The numeric score produced by the grader.'),
   passed: type('boolean').describe('Whether the grader considered the output a pass.'),
-  'sample?': type('unknown | null | null').describe(
+  'sample?': type('unknown | null').describe(
     'Optional sample or intermediate data produced by the grader.',
   ),
   '+': 'delete',
@@ -9549,7 +10225,7 @@ export const EvalRunOutputItemSchema = type({
       prompt_tokens: type('number.integer').describe('The number of prompt tokens used.'),
       cached_tokens: type('number.integer').describe('The number of tokens retrieved from cache.'),
     }).describe('Token usage details for the sample.'),
-    error: type(EvalApiErrorSchema).or('null | null'),
+    error: type(EvalApiErrorSchema).or('null'),
     temperature: type('number').describe('The sampling temperature used.'),
     max_completion_tokens: type('number.integer').describe(
       'The maximum number of tokens allowed for completion.',
@@ -9619,12 +10295,12 @@ export const FineTuningIntegrationSchema = type({
       type('string').describe(
         'A display name to set for the run. If not set, we will use the Job ID as the name.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'entity?': type(
       type('string').describe(
         'The entity to use for the run. This allows you to set the team or username of the WandB user that you would\nlike associated with the run. If not set, the default entity for the registered WandB API key is used.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'tags?': type('string[]').describe(
       'A list of tags to be attached to the newly created run. These tags are passed through directly to WandB. Some\ndefault tags are generated by OpenAI: "openai/finetune", "openai/{base-model}", "openai/{ftjob-abcdef}".\n',
     ),
@@ -9651,29 +10327,29 @@ export const FineTuningJobSchema = type({
           type('string').describe(
             'The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific.',
           ),
-        ).or('null | null'),
+        ).or('null'),
       }).describe(
         'For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure.',
       ),
-    ).or('null | null'),
+    ).or('null'),
   ).or(type({})),
   fine_tuned_model: type(
     type('string').describe(
       'The name of the fine-tuned model that is being created. The value will be null if the fine-tuning job is still running.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   finished_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'hyperparameters?': type(
     type({
       'batch_size?': type(
         type("'auto' | number.integer >= 1 & number.integer <= 256").describe(
           'Number of examples in each batch. A larger batch size means that model parameters\nare updated less frequently, but with lower variance.\n',
         ),
-      ).or('null | null'),
+      ).or('null'),
       'learning_rate_multiplier?': type("'auto' | number > 0").describe(
         'Scaling factor for the learning rate. A smaller learning rate may be useful to avoid\noverfitting.\n',
       ),
@@ -9701,7 +10377,7 @@ export const FineTuningJobSchema = type({
     type('number.integer').describe(
       'The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   training_file: type('string').describe(
     'The file ID used for training. You can retrieve the training data with the [Files API](https://developers.openai.com/api/reference/resources/files/methods/content).',
   ),
@@ -9709,19 +10385,19 @@ export const FineTuningJobSchema = type({
     type('string').describe(
       'The file ID used for validation. You can retrieve the validation results with the [Files API](https://developers.openai.com/api/reference/resources/files/methods/content).',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'integrations?': type(
     type(type(FineTuningIntegrationSchema).array())
       .and(type('unknown[] <= 5'))
       .describe('A list of integrations to enable for this fine-tuning job.'),
-  ).or('null | null'),
+  ).or('null'),
   seed: type('number.integer | null').describe('The seed used for the fine-tuning job.'),
   'estimated_finish?': type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.',
     ),
-  ).or('null | null'),
-  'method?': type(FineTuneMethodSchema).or('null | null'),
+  ).or('null'),
+  'method?': type(FineTuneMethodSchema).or('null'),
   'metadata?': MetadataSchema,
 })
   .narrow(
@@ -9823,7 +10499,7 @@ export const GroupListResourceSchema = type({
   object: type("'list'").describe('Always `list`.'),
   data: type(GroupResponseSchema).array().describe('Groups returned in the current page.'),
   has_more: type('boolean').describe('Whether additional groups are available when paginating.'),
-  next: type('string | null | null').describe(
+  next: type('string | null').describe(
     'Cursor to fetch the next page of results, or `null` if there are no more results.',
   ),
 }).describe('Paginated list of organization groups.')
@@ -9833,15 +10509,11 @@ export type GroupListResourceSchema = typeof GroupListResourceSchema.infer
 export const GroupMemberUserSchema = type({
   id: type('string').describe('Identifier for the user.'),
   name: type('string').describe('Display name of the user.'),
-  email: type('string | null | null').describe(
+  email: type('string | null').describe(
     'Email address of the user, or `null` for users without an email.',
   ),
-  picture: type('string | null | null').describe(
-    "URL of the user's profile picture, if available.",
-  ),
-  is_service_account: type('boolean | null | null').describe(
-    'Whether the user is a service account.',
-  ),
+  picture: type('string | null').describe("URL of the user's profile picture, if available."),
+  is_service_account: type('boolean | null').describe('Whether the user is a service account.'),
   user_type: type("'user' | 'tenant_user'").describe('The type of user.'),
 }).describe('Details about a user returned from an organization group membership lookup.')
 
@@ -9864,7 +10536,7 @@ export const RoleSchema = type({
   object: type("'role'").describe('Always `role`.'),
   id: type('string').describe('Identifier for the role.'),
   name: type('string').describe('Unique name for the role.'),
-  description: type('string | null | null').describe('Optional description of the role.'),
+  description: type('string | null').describe('Optional description of the role.'),
   permissions: type('string[]').describe('Permissions granted by the role.'),
   resource_type: type('string').describe(
     'Resource type the role is bound to (for example `api.organization` or `api.project`).',
@@ -9887,7 +10559,7 @@ export type GroupRoleAssignmentSchema = typeof GroupRoleAssignmentSchema.infer
 export const GroupUserSchema = type({
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
   name: type('string').describe('The name of the user.'),
-  email: type('string | null | null').describe('The email address of the user.'),
+  email: type('string | null').describe('The email address of the user.'),
 }).describe('Represents an individual user returned when inspecting group membership.')
 
 export type GroupUserSchema = typeof GroupUserSchema.infer
@@ -10138,7 +10810,7 @@ export const ImagesResponseSchema = type({
 export type ImagesResponseSchema = typeof ImagesResponseSchema.infer
 
 export const InputMessageResourceSchema = type(InputMessageSchema).and(
-  type({ id: type('string').describe('The unique ID of the message input.\n') }),
+  type({ id: type('string').describe('The unique ID of the message input.\n'), type: 'unknown' }),
 )
 
 export type InputMessageResourceSchema = typeof InputMessageResourceSchema.infer
@@ -10154,10 +10826,10 @@ export const InviteSchema = type({
   created_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the invite was sent.',
   ),
-  'expires_at?': type('number.integer | null | null').describe(
+  'expires_at?': type('number.integer | null').describe(
     'The Unix timestamp (in seconds) of when the invite expires.',
   ),
-  'accepted_at?': type('number.integer | null | null').describe(
+  'accepted_at?': type('number.integer | null').describe(
     'The Unix timestamp (in seconds) of when the invite was accepted.',
   ),
   projects: type(
@@ -10185,10 +10857,8 @@ export type InviteDeleteResponseSchema = typeof InviteDeleteResponseSchema.infer
 export const InviteListResponseSchema = type({
   object: type("'list'").describe('The object type, which is always `list`'),
   data: type(InviteSchema).array(),
-  'first_id?': type('string | null | null').describe(
-    'The first `invite_id` in the retrieved `list`',
-  ),
-  'last_id?': type('string | null | null').describe('The last `invite_id` in the retrieved `list`'),
+  'first_id?': type('string | null').describe('The first `invite_id` in the retrieved `list`'),
+  'last_id?': type('string | null').describe('The last `invite_id` in the retrieved `list`'),
   has_more: type('boolean').describe(
     'The `has_more` property is used for pagination to indicate there are additional results.',
   ),
@@ -10248,38 +10918,94 @@ export const ItemResourceSchema = type(
                                                   type(
                                                     type(
                                                       type(
-                                                        type(InputMessageResourceSchema).or(
-                                                          OutputMessageSchema,
+                                                        type(
+                                                          type(InputMessageResourceSchema).and({
+                                                            type: "'InputMessageResource'",
+                                                          }),
+                                                        ).or(
+                                                          type(OutputMessageSchema).and({
+                                                            type: "'OutputMessage'",
+                                                          }),
                                                         ),
-                                                      ).or(FileSearchToolCallSchema),
-                                                    ).or(ComputerToolCallSchema),
-                                                  ).or(ComputerToolCallOutputResourceSchema),
-                                                ).or(WebSearchToolCallSchema),
-                                              ).or(FunctionToolCallResourceSchema),
-                                            ).or(FunctionToolCallOutputResourceSchema),
-                                          ).or(ToolSearchCallSchema),
-                                        ).or(ToolSearchOutputSchema),
-                                      ).or(AdditionalToolsSchema),
-                                    ).or(ResponseConfigurationUpdateSchema),
-                                  ).or(ReasoningItemSchema),
-                                ).or(ProgramSchema),
-                              ).or(ProgramOutputSchema),
-                            ).or(CompactionBodySchema),
-                          ).or(ImageGenToolCallSchema),
-                        ).or(CodeInterpreterToolCallSchema),
-                      ).or(LocalShellToolCallSchema),
-                    ).or(LocalShellToolCallOutputSchema),
-                  ).or(FunctionShellCallSchema),
-                ).or(FunctionShellCallOutputSchema),
-              ).or(ApplyPatchToolCallSchema),
-            ).or(ApplyPatchToolCallOutputSchema),
-          ).or(MCPListToolsSchema),
-        ).or(MCPApprovalRequestSchema),
-      ).or(MCPApprovalResponseResourceSchema),
-    ).or(MCPToolCallSchema),
-  ).or(CustomToolCallResourceSchema),
+                                                      ).or(
+                                                        type(FileSearchToolCallSchema).and({
+                                                          type: "'FileSearchToolCall'",
+                                                        }),
+                                                      ),
+                                                    ).or(
+                                                      type(ComputerToolCallSchema).and({
+                                                        type: "'ComputerToolCall'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(ComputerToolCallOutputResourceSchema).and({
+                                                      type: "'ComputerToolCallOutputResource'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(WebSearchToolCallSchema).and({
+                                                    type: "'WebSearchToolCall'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(FunctionToolCallResourceSchema).and({
+                                                  type: "'FunctionToolCallResource'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(FunctionToolCallOutputResourceSchema).and({
+                                                type: "'FunctionToolCallOutputResource'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(ToolSearchCallSchema).and({
+                                              type: "'ToolSearchCall'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(ToolSearchOutputSchema).and({
+                                            type: "'ToolSearchOutput'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(AdditionalToolsSchema).and({
+                                          type: "'AdditionalTools'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(ResponseConfigurationUpdateSchema).and({
+                                        type: "'ResponseConfigurationUpdate'",
+                                      }),
+                                    ),
+                                  ).or(type(ReasoningItemSchema).and({ type: "'ReasoningItem'" })),
+                                ).or(type(ProgramSchema).and({ type: "'Program'" })),
+                              ).or(type(ProgramOutputSchema).and({ type: "'ProgramOutput'" })),
+                            ).or(type(CompactionBodySchema).and({ type: "'CompactionBody'" })),
+                          ).or(type(ImageGenToolCallSchema).and({ type: "'ImageGenToolCall'" })),
+                        ).or(
+                          type(CodeInterpreterToolCallSchema).and({
+                            type: "'CodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(type(LocalShellToolCallSchema).and({ type: "'LocalShellToolCall'" })),
+                    ).or(
+                      type(LocalShellToolCallOutputSchema).and({
+                        type: "'LocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(type(FunctionShellCallSchema).and({ type: "'FunctionShellCall'" })),
+                ).or(
+                  type(FunctionShellCallOutputSchema).and({ type: "'FunctionShellCallOutput'" }),
+                ),
+              ).or(type(ApplyPatchToolCallSchema).and({ type: "'ApplyPatchToolCall'" })),
+            ).or(type(ApplyPatchToolCallOutputSchema).and({ type: "'ApplyPatchToolCallOutput'" })),
+          ).or(type(MCPListToolsSchema).and({ type: "'MCPListTools'" })),
+        ).or(type(MCPApprovalRequestSchema).and({ type: "'MCPApprovalRequest'" })),
+      ).or(type(MCPApprovalResponseResourceSchema).and({ type: "'MCPApprovalResponseResource'" })),
+    ).or(type(MCPToolCallSchema).and({ type: "'MCPToolCall'" })),
+  ).or(type(CustomToolCallResourceSchema).and({ type: "'CustomToolCallResource'" })),
 )
-  .or(CustomToolCallOutputResourceSchema)
+  .or(type(CustomToolCallOutputResourceSchema).and({ type: "'CustomToolCallOutputResource'" }))
   .describe('Content item used to generate a response.\n')
 
 export type ItemResourceSchema = typeof ItemResourceSchema.infer
@@ -10297,8 +11023,8 @@ export type ListAssistantsResponseSchema = typeof ListAssistantsResponseSchema.i
 export const ListAuditLogsResponseSchema = type({
   object: "'list'",
   data: type(AuditLogSchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -10319,7 +11045,7 @@ export const OrganizationCertificateSchema = type({
     'The object type, which is always `organization.certificate`.',
   ),
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
-  name: type('string | null | null').describe('The name of the certificate.'),
+  name: type('string | null').describe('The name of the certificate.'),
   created_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the certificate was uploaded.',
   ),
@@ -10340,8 +11066,8 @@ export type OrganizationCertificateSchema = typeof OrganizationCertificateSchema
 
 export const ListCertificatesResponseSchema = type({
   data: type(OrganizationCertificateSchema).array(),
-  first_id: 'string | null | null',
-  last_id: 'string | null | null',
+  first_id: 'string | null',
+  last_id: 'string | null',
   has_more: 'boolean',
   object: "'list'",
 })
@@ -10389,8 +11115,8 @@ export type ListFilesResponseSchema = typeof ListFilesResponseSchema.infer
 export const ListFineTuningCheckpointPermissionResponseSchema = type({
   data: type(FineTuningCheckpointPermissionSchema).array(),
   object: "'list'",
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -10400,8 +11126,8 @@ export type ListFineTuningCheckpointPermissionResponseSchema =
 export const ListFineTuningJobCheckpointsResponseSchema = type({
   data: type(FineTuningJobCheckpointSchema).array(),
   object: "'list'",
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -10441,7 +11167,7 @@ export const ModelSchema = type({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$/,
     ),
   )
-    .or('null | null')
+    .or('null')
     .describe('The date when the model will shut down, or null if not announced.'),
 }).describe('Describes an OpenAI model offering that can be used with the API.')
 
@@ -10465,7 +11191,7 @@ export const OrganizationProjectCertificateSchema = type({
     'The object type, which is always `organization.project.certificate`.',
   ),
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
-  name: type('string | null | null').describe('The name of the certificate.'),
+  name: type('string | null').describe('The name of the certificate.'),
   created_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the certificate was uploaded.',
   ),
@@ -10486,8 +11212,8 @@ export type OrganizationProjectCertificateSchema = typeof OrganizationProjectCer
 
 export const ListProjectCertificatesResponseSchema = type({
   data: type(OrganizationProjectCertificateSchema).array(),
-  first_id: 'string | null | null',
-  last_id: 'string | null | null',
+  first_id: 'string | null',
+  last_id: 'string | null',
   has_more: 'boolean',
   object: "'list'",
 })
@@ -10560,7 +11286,7 @@ export const VectorStoreFileObjectSchema = type({
     }).describe(
       'The last error associated with this vector store file. Will be `null` if there are no errors.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'chunking_strategy?': type(StaticChunkingStrategyResponseParamSchema)
     .or(OtherChunkingStrategyResponseParamSchema)
     .describe('The strategy used to chunk the file.'),
@@ -10608,12 +11334,12 @@ export const VectorStoreObjectSchema = type({
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the vector store will expire.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   last_active_at: type(
     type('number.integer').describe(
       'The Unix timestamp (in seconds) for when the vector store was last active.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   metadata: MetadataSchema,
 }).describe(
   'A vector store is a collection of processed files can be used by the `file_search` tool.',
@@ -10647,7 +11373,7 @@ export const SafetyIdentifierSchema = type(
     .describe(
       'A stable identifier for your end user, used for safety monitoring and abuse detection.',
     ),
-).or('null | null')
+).or('null')
 
 export type SafetyIdentifierSchema = typeof SafetyIdentifierSchema.infer
 
@@ -10655,7 +11381,7 @@ export const InstructionsSchema = type(
   type('string').describe(
     'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
   ),
-).or('null | null')
+).or('null')
 
 export type InstructionsSchema = typeof InstructionsSchema.infer
 
@@ -10669,7 +11395,48 @@ export type LiveCustomVoiceParamSchema = typeof LiveCustomVoiceParamSchema.infer
 
 export const LiveInitialSessionAudioOutputParamSchema = type({
   'voice?': type(
-    "string | 'alloy' | 'ash' | 'ballad' | 'beacon' | 'bossa' | 'brise' | 'calandria' | 'cedar' | 'cinder' | 'compas' | 'coral' | 'delta' | 'destello' | 'echo' | 'flitz' | 'gleam' | 'halo' | 'harema' | 'hornero' | 'juni' | 'luciernaga' | 'marin' | 'meridian' | 'nira' | 'noeul' | 'nuri' | 'pearl' | 'quartz' | 'ripple' | 'sage' | 'shida' | 'shimmer' | 'sillage' | 'stone' | 'tempo' | 'verse' | 'vesper' | 'willow'",
+    type('string').or(
+      type.enumerated(
+        'alloy',
+        'ash',
+        'ballad',
+        'beacon',
+        'bossa',
+        'brise',
+        'calandria',
+        'cedar',
+        'cinder',
+        'compas',
+        'coral',
+        'delta',
+        'destello',
+        'echo',
+        'flitz',
+        'gleam',
+        'halo',
+        'harema',
+        'hornero',
+        'juni',
+        'luciernaga',
+        'marin',
+        'meridian',
+        'nira',
+        'noeul',
+        'nuri',
+        'pearl',
+        'quartz',
+        'ripple',
+        'sage',
+        'shida',
+        'shimmer',
+        'sillage',
+        'stone',
+        'tempo',
+        'verse',
+        'vesper',
+        'willow',
+      ),
+    ),
   )
     .or(LiveCustomVoiceParamSchema)
     .describe(
@@ -10725,12 +11492,12 @@ export const LiveDelegationReasoningInputParamSchema = type({
     LiveReasoningEffortSchema.describe(
       'How much reasoning effort the delegated Responses model should use. Supported values depend on the backend model.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'summary?': type(
     LiveReasoningSummarySchema.describe(
       'The reasoning summary to request from the delegated Responses model, when supported.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Reasoning options for Responses requests made on behalf of the Live session.')
 
 export type LiveDelegationReasoningInputParamSchema =
@@ -10745,7 +11512,7 @@ export const LiveDelegationTextInputParamSchema = type({
     LiveTextVerbositySchema.describe(
       'The amount of detail in text generated by the Responses backend. This does not configure the Live model’s spoken delivery.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Text generation options for the Live session’s Responses backend.')
 
 export type LiveDelegationTextInputParamSchema = typeof LiveDelegationTextInputParamSchema.infer
@@ -10759,17 +11526,17 @@ export const LiveFunctionToolInputParamSchema = type({
     type('string').describe(
       'What the function does and when the delegated Responses model should call it.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'parameters?': type(
     type({ '[string]': 'unknown' }).describe(
       'A JSON Schema object describing the arguments accepted by the function.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'strict?': type(
     type('boolean').describe(
       'Whether the delegated Responses model must follow the function’s parameter schema exactly.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'A function tool available to the Responses backend when the Live model delegates a task.',
 )
@@ -10826,7 +11593,7 @@ export const LiveSkillReferenceParamSchema = type({
     type('string').describe(
       "Optional skill version. Use a positive integer or 'latest'. Omit for default.",
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveSkillReferenceParamSchema = typeof LiveSkillReferenceParamSchema.infer
@@ -10861,22 +11628,36 @@ export const LiveHostedShellContainerAutoParamSchema = type({
     type('string[]')
       .and(type('unknown[] <= 50'))
       .describe('An optional list of uploaded files to make available to your code.'),
-  ).or('null | null'),
+  ).or('null'),
   'memory_limit?': type(
     LiveContainerMemoryLimitSchema.describe('The memory limit for the container.'),
-  ).or('null | null'),
+  ).or('null'),
   'network_policy?': type(
-    type(LiveContainerNetworkPolicyDisabledParamSchema)
-      .or(LiveHostedShellNetworkPolicyAllowlistParamSchema)
+    type(
+      type(LiveContainerNetworkPolicyDisabledParamSchema).and({
+        type: "'LiveContainerNetworkPolicyDisabledParam'",
+      }),
+    )
+      .or(
+        type(LiveHostedShellNetworkPolicyAllowlistParamSchema).and({
+          type: "'LiveHostedShellNetworkPolicyAllowlistParam'",
+        }),
+      )
       .describe('Network access policy for the container.'),
-  ).or('null | null'),
+  ).or('null'),
   'skills?': type(
-    type(type(type(LiveSkillReferenceParamSchema).or(LiveInlineSkillParamSchema)).array())
+    type(
+      type(
+        type(type(LiveSkillReferenceParamSchema).and({ type: "'LiveSkillReferenceParam'" })).or(
+          type(LiveInlineSkillParamSchema).and({ type: "'LiveInlineSkillParam'" }),
+        ),
+      ).array(),
+    )
       .and(type('unknown[] <= 200'))
       .describe(
         'An optional list of skills referenced by id or inline data. Across all inline skills in this list, decoded ZIP data must total at most 50 MiB and Base64 text must total at most 70,254,592 characters, including line breaks. Skill references do not count toward these limits.',
       ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveHostedShellContainerAutoParamSchema =
@@ -10905,7 +11686,7 @@ export const LiveLocalEnvironmentParamSchema = type({
     type(type(LiveLocalSkillParamSchema).array())
       .and(type('unknown[] <= 200'))
       .describe('An optional list of skills.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveLocalEnvironmentParamSchema = typeof LiveLocalEnvironmentParamSchema.infer
@@ -10913,10 +11694,14 @@ export type LiveLocalEnvironmentParamSchema = typeof LiveLocalEnvironmentParamSc
 export const LiveHostedShellToolInputParamSchema = type({
   type: "'shell'",
   'environment?': type(
-    type(type(LiveHostedShellContainerAutoParamSchema).or(LiveContainerReferenceParamSchema)).or(
-      LiveLocalEnvironmentParamSchema,
-    ),
-  ).or('null | null'),
+    type(
+      type(
+        type(LiveHostedShellContainerAutoParamSchema).and({
+          type: "'LiveHostedShellContainerAutoParam'",
+        }),
+      ).or(type(LiveContainerReferenceParamSchema).and({ type: "'LiveContainerReferenceParam'" })),
+    ).or(type(LiveLocalEnvironmentParamSchema).and({ type: "'LiveLocalEnvironmentParam'" })),
+  ).or('null'),
 }).describe(
   'A Responses shell tool. Use a hosted container or return local shell results with response.item.create. Domain secrets are not supported.',
 )
@@ -10930,11 +11715,11 @@ export type LiveImageGenerationToolInputParamSchema =
 
 export const LiveMCPToolFilterParamSchema = type({
   'tool_names?': type(type('string[]').describe('A list of tool names to match against.')).or(
-    'null | null',
+    'null',
   ),
   'read_only?': type(
     type('boolean').describe('Whether to allow only read-only tools for matching entries.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveMCPToolFilterParamSchema = typeof LiveMCPToolFilterParamSchema.infer
@@ -10942,10 +11727,10 @@ export type LiveMCPToolFilterParamSchema = typeof LiveMCPToolFilterParamSchema.i
 export const LiveMCPRequireApprovalFilterParamSchema = type({
   'always?': type(
     LiveMCPToolFilterParamSchema.describe('A filter that forces approval for matching tools.'),
-  ).or('null | null'),
+  ).or('null'),
   'never?': type(
     LiveMCPToolFilterParamSchema.describe('A filter that skips approval for matching tools.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveMCPRequireApprovalFilterParamSchema =
@@ -10966,30 +11751,30 @@ export const LiveMCPToolInputParamSchema = type({
     .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
     .describe('A label used to identify the MCP server.'),
   'server_url?': type(type('string.url').describe('The URL of the MCP server to connect to.')).or(
-    'null | null',
+    'null',
   ),
   'server_description?': type(
     type('string').describe('An optional human-readable description of the MCP server.'),
-  ).or('null | null'),
+  ).or('null'),
   'authorization?': type(
     type('string').describe(
       'The authorization token to use when connecting to the MCP server or connector.',
     ),
   )
-    .or('null | null')
+    .or('null')
     .describe('This value is omitted from returned Live session data.'),
   'headers?': type(
     type({ '[string]': 'string' }).describe(
       'Optional HTTP headers to send when connecting to the MCP server.',
     ),
   )
-    .or('null | null')
+    .or('null')
     .describe('This value is omitted from returned Live session data.'),
   'allowed_tools?': type(
     type('string[]')
       .or(LiveMCPToolFilterParamSchema)
       .describe('A list of MCP tool names that are allowed for this server.'),
-  ).or('null | null'),
+  ).or('null'),
   'require_approval?': type(
     type(LiveMCPRequireApprovalFilterParamSchema)
       .or(
@@ -10998,27 +11783,27 @@ export const LiveMCPToolInputParamSchema = type({
         ),
       )
       .describe('Controls which MCP tools require explicit user approval before execution.'),
-  ).or('null | null'),
+  ).or('null'),
   'connector_id?': type(
     type('string').describe(
       'The ID of a built-in MCP connector. This field is deprecated for models released after September 1, 2026. Use `server_url` to connect to a remote MCP server, or `tunnel_id` to connect to a local MCP server.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'tunnel_id?': type(
     type('string')
       .and(/^tunnel_[a-z0-9]{32}$/)
       .describe('The Secure MCP Tunnel ID to use instead of a direct server URL.'),
-  ).or('null | null'),
+  ).or('null'),
   'allowed_callers?': type(
     type(type(LiveCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type(
     type('boolean').describe(
       'Whether this MCP tool should be deferred and discovered via tool search.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveMCPToolInputParamSchema = typeof LiveMCPToolInputParamSchema.infer
@@ -11065,7 +11850,7 @@ export const LiveMCPToolChoiceParamSchema = type({
     type('string').describe(
       'The name of the MCP tool to call. If omitted, the server may choose a default.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveMCPToolChoiceParamSchema = typeof LiveMCPToolChoiceParamSchema.infer
@@ -11154,24 +11939,66 @@ export const LiveAllowedToolsChoiceParamSchema = type({
                     type(
                       type(
                         type(
-                          type(LiveFunctionToolChoiceParamSchema).or(LiveMCPToolChoiceParamSchema),
-                        ).or(LiveSpecificFileSearchParamSchema),
-                      ).or(LiveSpecificWebSearchParamSchema),
-                    ).or(LiveSpecificWebSearchPreviewParamSchema),
-                  ).or(LiveSpecificImageGenParamSchema),
-                ).or(LiveSpecificComputerParamSchema),
-              ).or(LiveSpecificCodeInterpreterParamSchema),
-            ).or(LiveSpecificProgrammaticToolCallingParamSchema),
-          ).or(LiveSpecificFunctionShellParamSchema),
-        ).or(LiveSpecificCustomToolParamSchema),
-      ).or(LiveSpecificApplyPatchParamSchema),
+                          type(
+                            type(LiveFunctionToolChoiceParamSchema).and({
+                              type: "'LiveFunctionToolChoiceParam'",
+                            }),
+                          ).or(
+                            type(LiveMCPToolChoiceParamSchema).and({
+                              type: "'LiveMCPToolChoiceParam'",
+                            }),
+                          ),
+                        ).or(
+                          type(LiveSpecificFileSearchParamSchema).and({
+                            type: "'LiveSpecificFileSearchParam'",
+                          }),
+                        ),
+                      ).or(
+                        type(LiveSpecificWebSearchParamSchema).and({
+                          type: "'LiveSpecificWebSearchParam'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveSpecificWebSearchPreviewParamSchema).and({
+                        type: "'LiveSpecificWebSearchPreviewParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveSpecificImageGenParamSchema).and({
+                      type: "'LiveSpecificImageGenParam'",
+                    }),
+                  ),
+                ).or(
+                  type(LiveSpecificComputerParamSchema).and({
+                    type: "'LiveSpecificComputerParam'",
+                  }),
+                ),
+              ).or(
+                type(LiveSpecificCodeInterpreterParamSchema).and({
+                  type: "'LiveSpecificCodeInterpreterParam'",
+                }),
+              ),
+            ).or(
+              type(LiveSpecificProgrammaticToolCallingParamSchema).and({
+                type: "'LiveSpecificProgrammaticToolCallingParam'",
+              }),
+            ),
+          ).or(
+            type(LiveSpecificFunctionShellParamSchema).and({
+              type: "'LiveSpecificFunctionShellParam'",
+            }),
+          ),
+        ).or(
+          type(LiveSpecificCustomToolParamSchema).and({ type: "'LiveSpecificCustomToolParam'" }),
+        ),
+      ).or(type(LiveSpecificApplyPatchParamSchema).and({ type: "'LiveSpecificApplyPatchParam'" })),
     ).array(),
   )
     .and(type('1 <= unknown[] <= 128'))
     .describe('The tools that the delegated Responses model may call.'),
   'mode?': type(
     LiveToolChoiceValueEnumSchema.describe('How to select a tool from the allowed set.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveAllowedToolsChoiceParamSchema = typeof LiveAllowedToolsChoiceParamSchema.infer
@@ -11182,25 +12009,25 @@ export const LiveResponsesDelegationSettingsInputParamSchema = type({
     type('string').describe(
       'Instructions for the delegated Responses model, separate from Live instructions. See [backend prompting](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt).',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'max_output_tokens?': type(
     type('number.integer >= 16').describe(
       'Maximum number of output tokens for each delegated response.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'service_tier?': type(
     LiveResponsesServiceTierSchema.describe('Service tier for delegated Responses requests.'),
-  ).or('null | null'),
+  ).or('null'),
   'reasoning?': type(
     LiveDelegationReasoningInputParamSchema.describe(
       'Reasoning settings passed to each delegated Responses request.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'text?': type(
     LiveDelegationTextInputParamSchema.describe(
       'Text generation settings passed to each delegated Responses request.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(
     type(
       type(
@@ -11213,20 +12040,56 @@ export const LiveResponsesDelegationSettingsInputParamSchema = type({
                     type(
                       type(
                         type(
-                          type(LiveFunctionToolInputParamSchema).or(
-                            LiveWebSearchToolInputParamSchema,
+                          type(
+                            type(LiveFunctionToolInputParamSchema).and({
+                              type: "'LiveFunctionToolInputParam'",
+                            }),
+                          ).or(
+                            type(LiveWebSearchToolInputParamSchema).and({
+                              type: "'LiveWebSearchToolInputParam'",
+                            }),
                           ),
-                        ).or(LiveFileSearchToolInputParamSchema),
-                      ).or(LiveCodeInterpreterToolInputParamSchema),
-                    ).or(LiveHostedShellToolInputParamSchema),
-                  ).or(LiveImageGenerationToolInputParamSchema),
-                ).or(LiveMCPToolInputParamSchema),
-              ).or(LiveCustomToolInputParamSchema),
-            ).or(LiveNamespaceToolInputParamSchema),
-          ).or(LiveToolSearchToolInputParamSchema),
-        ).or(LiveProgrammaticToolInputParamSchema),
-      ).or(LiveComputerToolInputParamSchema),
-    ).or(LiveApplyPatchToolInputParamSchema),
+                        ).or(
+                          type(LiveFileSearchToolInputParamSchema).and({
+                            type: "'LiveFileSearchToolInputParam'",
+                          }),
+                        ),
+                      ).or(
+                        type(LiveCodeInterpreterToolInputParamSchema).and({
+                          type: "'LiveCodeInterpreterToolInputParam'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveHostedShellToolInputParamSchema).and({
+                        type: "'LiveHostedShellToolInputParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveImageGenerationToolInputParamSchema).and({
+                      type: "'LiveImageGenerationToolInputParam'",
+                    }),
+                  ),
+                ).or(type(LiveMCPToolInputParamSchema).and({ type: "'LiveMCPToolInputParam'" })),
+              ).or(
+                type(LiveCustomToolInputParamSchema).and({ type: "'LiveCustomToolInputParam'" }),
+              ),
+            ).or(
+              type(LiveNamespaceToolInputParamSchema).and({
+                type: "'LiveNamespaceToolInputParam'",
+              }),
+            ),
+          ).or(
+            type(LiveToolSearchToolInputParamSchema).and({
+              type: "'LiveToolSearchToolInputParam'",
+            }),
+          ),
+        ).or(
+          type(LiveProgrammaticToolInputParamSchema).and({
+            type: "'LiveProgrammaticToolInputParam'",
+          }),
+        ),
+      ).or(type(LiveComputerToolInputParamSchema).and({ type: "'LiveComputerToolInputParam'" })),
+    ).or(type(LiveApplyPatchToolInputParamSchema).and({ type: "'LiveApplyPatchToolInputParam'" })),
   )
     .array()
     .describe(
@@ -11244,17 +12107,59 @@ export const LiveResponsesDelegationSettingsInputParamSchema = type({
                     type(
                       type(
                         type(
-                          type(LiveFunctionToolChoiceParamSchema).or(LiveMCPToolChoiceParamSchema),
-                        ).or(LiveSpecificFileSearchParamSchema),
-                      ).or(LiveSpecificWebSearchParamSchema),
-                    ).or(LiveSpecificWebSearchPreviewParamSchema),
-                  ).or(LiveSpecificImageGenParamSchema),
-                ).or(LiveSpecificComputerParamSchema),
-              ).or(LiveSpecificCodeInterpreterParamSchema),
-            ).or(LiveSpecificProgrammaticToolCallingParamSchema),
-          ).or(LiveSpecificFunctionShellParamSchema),
-        ).or(LiveSpecificCustomToolParamSchema),
-      ).or(LiveSpecificApplyPatchParamSchema),
+                          type(
+                            type(LiveFunctionToolChoiceParamSchema).and({
+                              type: "'LiveFunctionToolChoiceParam'",
+                            }),
+                          ).or(
+                            type(LiveMCPToolChoiceParamSchema).and({
+                              type: "'LiveMCPToolChoiceParam'",
+                            }),
+                          ),
+                        ).or(
+                          type(LiveSpecificFileSearchParamSchema).and({
+                            type: "'LiveSpecificFileSearchParam'",
+                          }),
+                        ),
+                      ).or(
+                        type(LiveSpecificWebSearchParamSchema).and({
+                          type: "'LiveSpecificWebSearchParam'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveSpecificWebSearchPreviewParamSchema).and({
+                        type: "'LiveSpecificWebSearchPreviewParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveSpecificImageGenParamSchema).and({
+                      type: "'LiveSpecificImageGenParam'",
+                    }),
+                  ),
+                ).or(
+                  type(LiveSpecificComputerParamSchema).and({
+                    type: "'LiveSpecificComputerParam'",
+                  }),
+                ),
+              ).or(
+                type(LiveSpecificCodeInterpreterParamSchema).and({
+                  type: "'LiveSpecificCodeInterpreterParam'",
+                }),
+              ),
+            ).or(
+              type(LiveSpecificProgrammaticToolCallingParamSchema).and({
+                type: "'LiveSpecificProgrammaticToolCallingParam'",
+              }),
+            ),
+          ).or(
+            type(LiveSpecificFunctionShellParamSchema).and({
+              type: "'LiveSpecificFunctionShellParam'",
+            }),
+          ),
+        ).or(
+          type(LiveSpecificCustomToolParamSchema).and({ type: "'LiveSpecificCustomToolParam'" }),
+        ),
+      ).or(type(LiveSpecificApplyPatchParamSchema).and({ type: "'LiveSpecificApplyPatchParam'" })),
     ),
   )
     .or(LiveAllowedToolsChoiceParamSchema)
@@ -11265,7 +12170,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = type({
     type('boolean').describe(
       'Whether the delegated Responses model may request multiple tool calls in a single response.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Model, prompt, and tool settings for tasks delegated by the Live session to a Responses backend.',
 )
@@ -11314,7 +12219,7 @@ export const LiveDecisionInputImageParamSchema = type({
     LiveDetailEnumSchema.describe(
       'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveDecisionInputImageParamSchema = typeof LiveDecisionInputImageParamSchema.infer
@@ -11343,9 +12248,13 @@ export const LiveDecisionChoiceQuestionParamSchema = type({
   instructions: type('string').or(
     type(
       type(
-        type(type(LiveDecisionInputTextParamSchema).or(LiveDecisionInputImageParamSchema)).or(
-          LiveDecisionInputJsonParamSchema,
-        ),
+        type(
+          type(
+            type(LiveDecisionInputTextParamSchema).and({ type: "'LiveDecisionInputTextParam'" }),
+          ).or(
+            type(LiveDecisionInputImageParamSchema).and({ type: "'LiveDecisionInputImageParam'" }),
+          ),
+        ).or(type(LiveDecisionInputJsonParamSchema).and({ type: "'LiveDecisionInputJsonParam'" })),
       ).array(),
     ).and(type('unknown[] >= 1')),
   ),
@@ -11361,9 +12270,13 @@ export const LiveDecisionPredicateQuestionParamSchema = type({
   instructions: type('string').or(
     type(
       type(
-        type(type(LiveDecisionInputTextParamSchema).or(LiveDecisionInputImageParamSchema)).or(
-          LiveDecisionInputJsonParamSchema,
-        ),
+        type(
+          type(
+            type(LiveDecisionInputTextParamSchema).and({ type: "'LiveDecisionInputTextParam'" }),
+          ).or(
+            type(LiveDecisionInputImageParamSchema).and({ type: "'LiveDecisionInputImageParam'" }),
+          ),
+        ).or(type(LiveDecisionInputJsonParamSchema).and({ type: "'LiveDecisionInputJsonParam'" })),
       ).array(),
     ).and(type('unknown[] >= 1')),
   ),
@@ -11382,9 +12295,13 @@ export const LiveDecisionScoreQuestionParamSchema = type({
   instructions: type('string').or(
     type(
       type(
-        type(type(LiveDecisionInputTextParamSchema).or(LiveDecisionInputImageParamSchema)).or(
-          LiveDecisionInputJsonParamSchema,
-        ),
+        type(
+          type(
+            type(LiveDecisionInputTextParamSchema).and({ type: "'LiveDecisionInputTextParam'" }),
+          ).or(
+            type(LiveDecisionInputImageParamSchema).and({ type: "'LiveDecisionInputImageParam'" }),
+          ),
+        ).or(type(LiveDecisionInputJsonParamSchema).and({ type: "'LiveDecisionInputJsonParam'" })),
       ).array(),
     ).and(type('unknown[] >= 1')),
   ),
@@ -11394,8 +12311,14 @@ export const LiveDecisionScoreQuestionParamSchema = type({
 export type LiveDecisionScoreQuestionParamSchema = typeof LiveDecisionScoreQuestionParamSchema.infer
 
 export const LiveDecisionQuestionSchema = type(
-  type(LiveDecisionChoiceQuestionParamSchema).or(LiveDecisionPredicateQuestionParamSchema),
-).or(LiveDecisionScoreQuestionParamSchema)
+  type(
+    type(LiveDecisionChoiceQuestionParamSchema).and({ type: "'LiveDecisionChoiceQuestionParam'" }),
+  ).or(
+    type(LiveDecisionPredicateQuestionParamSchema).and({
+      type: "'LiveDecisionPredicateQuestionParam'",
+    }),
+  ),
+).or(type(LiveDecisionScoreQuestionParamSchema).and({ type: "'LiveDecisionScoreQuestionParam'" }))
 
 export type LiveDecisionQuestionSchema = typeof LiveDecisionQuestionSchema.infer
 
@@ -11422,12 +12345,16 @@ export const LiveDecisionsDelegationParamSchema = type({
 export type LiveDecisionsDelegationParamSchema = typeof LiveDecisionsDelegationParamSchema.infer
 
 export const DelegationSchema = type(
-  type(type(LiveClientDelegationParamSchema).or(LiveResponsesDelegationParamSchema))
-    .or(LiveDecisionsDelegationParamSchema)
+  type(
+    type(type(LiveClientDelegationParamSchema).and({ type: "'LiveClientDelegationParam'" })).or(
+      type(LiveResponsesDelegationParamSchema).and({ type: "'LiveResponsesDelegationParam'" }),
+    ),
+  )
+    .or(type(LiveDecisionsDelegationParamSchema).and({ type: "'LiveDecisionsDelegationParam'" }))
     .describe(
       'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
     ),
-).or('null | null')
+).or('null')
 
 export type DelegationSchema = typeof DelegationSchema.infer
 
@@ -11486,13 +12413,13 @@ export const LiveInitialDeveloperMessageItemParamSchema = type({
     type('string').describe(
       'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'type?': type("'message'").describe('The history item type. Always `message`.'),
   'status?': type(
     LiveInitialMessageStatusSchema.describe(
       'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   role: type("'developer'").describe('The author of this history message. Always `developer`.'),
   content: type(type(LiveInitialInputTextContentPartParamSchema).array())
     .and(type('unknown[] == 1'))
@@ -11509,13 +12436,13 @@ export const LiveInitialUserMessageItemParamSchema = type({
     type('string').describe(
       'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'type?': type("'message'").describe('The history item type. Always `message`.'),
   'status?': type(
     LiveInitialMessageStatusSchema.describe(
       'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   role: type("'user'").describe('The author of this history message. Always `user`.'),
   content: type(type(LiveInitialInputTextContentPartParamSchema).array())
     .and(type('unknown[] == 1'))
@@ -11552,17 +12479,25 @@ export const LiveInitialAssistantMessageItemParamSchema = type({
     type('string').describe(
       'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'type?': type("'message'").describe('The history item type. Always `message`.'),
   'status?': type(
     LiveInitialMessageStatusSchema.describe(
       'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   role: type("'assistant'").describe('The author of this history message. Always `assistant`.'),
   content: type(
     type(
-      type(LiveInitialTextContentPartParamSchema).or(LiveInitialOutputTextContentPartParamSchema),
+      type(
+        type(LiveInitialTextContentPartParamSchema).and({
+          type: "'LiveInitialTextContentPartParam'",
+        }),
+      ).or(
+        type(LiveInitialOutputTextContentPartParamSchema).and({
+          type: "'LiveInitialOutputTextContentPartParam'",
+        }),
+      ),
     ).array(),
   )
     .and(type('unknown[] == 1'))
@@ -11575,9 +12510,19 @@ export type LiveInitialAssistantMessageItemParamSchema =
   typeof LiveInitialAssistantMessageItemParamSchema.infer
 
 export const LiveInitialItemSchema = type(
-  type(LiveInitialDeveloperMessageItemParamSchema).or(LiveInitialUserMessageItemParamSchema),
+  type(
+    type(LiveInitialDeveloperMessageItemParamSchema).and({
+      role: "'LiveInitialDeveloperMessageItemParam'",
+    }),
+  ).or(
+    type(LiveInitialUserMessageItemParamSchema).and({ role: "'LiveInitialUserMessageItemParam'" }),
+  ),
 )
-  .or(LiveInitialAssistantMessageItemParamSchema)
+  .or(
+    type(LiveInitialAssistantMessageItemParamSchema).and({
+      role: "'LiveInitialAssistantMessageItemParam'",
+    }),
+  )
   .describe(
     'A developer, user, or assistant message supplied as text history before the Live session starts.',
   )
@@ -11674,9 +12619,15 @@ export type LiveSessionAudioFormatPCMAParamSchema =
   typeof LiveSessionAudioFormatPCMAParamSchema.infer
 
 export const LiveAudioFormatSchema = type(
-  type(LiveSessionAudioFormatPCMParamSchema).or(LiveSessionAudioFormatPCMUParamSchema),
+  type(
+    type(LiveSessionAudioFormatPCMParamSchema).and({ type: "'LiveSessionAudioFormatPCMParam'" }),
+  ).or(
+    type(LiveSessionAudioFormatPCMUParamSchema).and({ type: "'LiveSessionAudioFormatPCMUParam'" }),
+  ),
 )
-  .or(LiveSessionAudioFormatPCMAParamSchema)
+  .or(
+    type(LiveSessionAudioFormatPCMAParamSchema).and({ type: "'LiveSessionAudioFormatPCMAParam'" }),
+  )
   .describe(
     'Audio encoding and sample rate for audio sent and received over a Live WebSocket connection. WebRTC and SIP negotiate their media format separately.',
   )
@@ -11759,12 +12710,12 @@ export const LiveSessionCreateParamsSchema = type({
       .describe(
         'A stable identifier for your end user, used for safety monitoring and abuse detection.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'instructions?': type(
     type('string').describe(
       'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input?': type(type(LiveInitialItemSchema).array())
     .and(type('unknown[] <= 128'))
     .describe(
@@ -11774,12 +12725,16 @@ export const LiveSessionCreateParamsSchema = type({
     'Startup audio configuration. Only primary WebSockets accept audio.format; WebRTC and SIP negotiate their media format. Voice and format are immutable after startup.',
   ),
   'delegation?': type(
-    type(type(LiveClientDelegationParamSchema).or(LiveResponsesDelegationParamSchema))
-      .or(LiveDecisionsDelegationParamSchema)
+    type(
+      type(type(LiveClientDelegationParamSchema).and({ type: "'LiveClientDelegationParam'" })).or(
+        type(LiveResponsesDelegationParamSchema).and({ type: "'LiveResponsesDelegationParam'" }),
+      ),
+    )
+      .or(type(LiveDecisionsDelegationParamSchema).and({ type: "'LiveDecisionsDelegationParam'" }))
       .describe(
         'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'triggers?': type(type(LiveDecisionTriggerInputParamSchema).array())
     .and(type('unknown[] <= 2'))
     .describe(
@@ -11804,7 +12759,7 @@ export const LiveSessionStartEventSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.start'").describe('The Live client event type. Always `session.start`.'),
   session: LiveSessionCreateParamsSchema.describe(
     'Initial configuration for a primary WebSocket. Send session.start first and wait for session.started before application commands. WebRTC creation already starts the session; do not send this event again on its data channel.',
@@ -11823,25 +12778,25 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = type({
     type('string').describe(
       'Instructions for the delegated Responses model, separate from Live instructions. See [backend prompting](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt).',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'max_output_tokens?': type(
     type('number.integer >= 16').describe(
       'Maximum number of output tokens for each delegated response.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'service_tier?': type(
     LiveResponsesServiceTierSchema.describe('Service tier for delegated Responses requests.'),
-  ).or('null | null'),
+  ).or('null'),
   'reasoning?': type(
     LiveDelegationReasoningInputParamSchema.describe(
       'Reasoning settings passed to each delegated Responses request.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'text?': type(
     LiveDelegationTextInputParamSchema.describe(
       'Text generation settings passed to each delegated Responses request.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(
     type(
       type(
@@ -11854,20 +12809,56 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = type({
                     type(
                       type(
                         type(
-                          type(LiveFunctionToolInputParamSchema).or(
-                            LiveWebSearchToolInputParamSchema,
+                          type(
+                            type(LiveFunctionToolInputParamSchema).and({
+                              type: "'LiveFunctionToolInputParam'",
+                            }),
+                          ).or(
+                            type(LiveWebSearchToolInputParamSchema).and({
+                              type: "'LiveWebSearchToolInputParam'",
+                            }),
                           ),
-                        ).or(LiveFileSearchToolInputParamSchema),
-                      ).or(LiveCodeInterpreterToolInputParamSchema),
-                    ).or(LiveHostedShellToolInputParamSchema),
-                  ).or(LiveImageGenerationToolInputParamSchema),
-                ).or(LiveMCPToolInputParamSchema),
-              ).or(LiveCustomToolInputParamSchema),
-            ).or(LiveNamespaceToolInputParamSchema),
-          ).or(LiveToolSearchToolInputParamSchema),
-        ).or(LiveProgrammaticToolInputParamSchema),
-      ).or(LiveComputerToolInputParamSchema),
-    ).or(LiveApplyPatchToolInputParamSchema),
+                        ).or(
+                          type(LiveFileSearchToolInputParamSchema).and({
+                            type: "'LiveFileSearchToolInputParam'",
+                          }),
+                        ),
+                      ).or(
+                        type(LiveCodeInterpreterToolInputParamSchema).and({
+                          type: "'LiveCodeInterpreterToolInputParam'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveHostedShellToolInputParamSchema).and({
+                        type: "'LiveHostedShellToolInputParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveImageGenerationToolInputParamSchema).and({
+                      type: "'LiveImageGenerationToolInputParam'",
+                    }),
+                  ),
+                ).or(type(LiveMCPToolInputParamSchema).and({ type: "'LiveMCPToolInputParam'" })),
+              ).or(
+                type(LiveCustomToolInputParamSchema).and({ type: "'LiveCustomToolInputParam'" }),
+              ),
+            ).or(
+              type(LiveNamespaceToolInputParamSchema).and({
+                type: "'LiveNamespaceToolInputParam'",
+              }),
+            ),
+          ).or(
+            type(LiveToolSearchToolInputParamSchema).and({
+              type: "'LiveToolSearchToolInputParam'",
+            }),
+          ),
+        ).or(
+          type(LiveProgrammaticToolInputParamSchema).and({
+            type: "'LiveProgrammaticToolInputParam'",
+          }),
+        ),
+      ).or(type(LiveComputerToolInputParamSchema).and({ type: "'LiveComputerToolInputParam'" })),
+    ).or(type(LiveApplyPatchToolInputParamSchema).and({ type: "'LiveApplyPatchToolInputParam'" })),
   )
     .array()
     .describe(
@@ -11885,17 +12876,59 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = type({
                     type(
                       type(
                         type(
-                          type(LiveFunctionToolChoiceParamSchema).or(LiveMCPToolChoiceParamSchema),
-                        ).or(LiveSpecificFileSearchParamSchema),
-                      ).or(LiveSpecificWebSearchParamSchema),
-                    ).or(LiveSpecificWebSearchPreviewParamSchema),
-                  ).or(LiveSpecificImageGenParamSchema),
-                ).or(LiveSpecificComputerParamSchema),
-              ).or(LiveSpecificCodeInterpreterParamSchema),
-            ).or(LiveSpecificProgrammaticToolCallingParamSchema),
-          ).or(LiveSpecificFunctionShellParamSchema),
-        ).or(LiveSpecificCustomToolParamSchema),
-      ).or(LiveSpecificApplyPatchParamSchema),
+                          type(
+                            type(LiveFunctionToolChoiceParamSchema).and({
+                              type: "'LiveFunctionToolChoiceParam'",
+                            }),
+                          ).or(
+                            type(LiveMCPToolChoiceParamSchema).and({
+                              type: "'LiveMCPToolChoiceParam'",
+                            }),
+                          ),
+                        ).or(
+                          type(LiveSpecificFileSearchParamSchema).and({
+                            type: "'LiveSpecificFileSearchParam'",
+                          }),
+                        ),
+                      ).or(
+                        type(LiveSpecificWebSearchParamSchema).and({
+                          type: "'LiveSpecificWebSearchParam'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveSpecificWebSearchPreviewParamSchema).and({
+                        type: "'LiveSpecificWebSearchPreviewParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveSpecificImageGenParamSchema).and({
+                      type: "'LiveSpecificImageGenParam'",
+                    }),
+                  ),
+                ).or(
+                  type(LiveSpecificComputerParamSchema).and({
+                    type: "'LiveSpecificComputerParam'",
+                  }),
+                ),
+              ).or(
+                type(LiveSpecificCodeInterpreterParamSchema).and({
+                  type: "'LiveSpecificCodeInterpreterParam'",
+                }),
+              ),
+            ).or(
+              type(LiveSpecificProgrammaticToolCallingParamSchema).and({
+                type: "'LiveSpecificProgrammaticToolCallingParam'",
+              }),
+            ),
+          ).or(
+            type(LiveSpecificFunctionShellParamSchema).and({
+              type: "'LiveSpecificFunctionShellParam'",
+            }),
+          ),
+        ).or(
+          type(LiveSpecificCustomToolParamSchema).and({ type: "'LiveSpecificCustomToolParam'" }),
+        ),
+      ).or(type(LiveSpecificApplyPatchParamSchema).and({ type: "'LiveSpecificApplyPatchParam'" })),
     ),
   )
     .or(LiveAllowedToolsChoiceParamSchema)
@@ -11906,7 +12939,7 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = type({
     type('boolean').describe(
       'Whether the delegated Responses model may request multiple tool calls in a single response.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Updates to the Responses backend of an existing Live session. Omitted settings retain their current values.',
 )
@@ -11956,12 +12989,22 @@ export type LiveDecisionsDelegationUpdateParamSchema =
 
 export const LiveSessionUpdateParamsSchema = type({
   'delegation?': type(
-    type(type(LiveClientDelegationParamSchema).or(LiveResponsesDelegationUpdateParamSchema))
-      .or(LiveDecisionsDelegationUpdateParamSchema)
+    type(
+      type(type(LiveClientDelegationParamSchema).and({ type: "'LiveClientDelegationParam'" })).or(
+        type(LiveResponsesDelegationUpdateParamSchema).and({
+          type: "'LiveResponsesDelegationUpdateParam'",
+        }),
+      ),
+    )
+      .or(
+        type(LiveDecisionsDelegationUpdateParamSchema).and({
+          type: "'LiveDecisionsDelegationUpdateParam'",
+        }),
+      )
       .describe(
         'Delegation settings to update. The delegation type must match the current session; omitted settings retain their values.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'triggers?': type(type(LiveDecisionTriggerInputParamSchema).array())
     .and(type('unknown[] <= 2'))
     .describe(
@@ -11978,7 +13021,7 @@ export const LiveSessionUpdateParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.update'").describe('The Live client event type. Always `session.update`.'),
   session: LiveSessionUpdateParamsSchema.describe(
     'Sparse delegation and trigger updates. Omitted settings retain their values. The delegation type cannot change. Model, frontend instructions, audio, and startup input are immutable.',
@@ -11996,7 +13039,7 @@ export const LiveInputAudioAppendEventSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.input_audio.append'").describe(
     'The Live client event type. Always `session.input_audio.append`.',
   ),
@@ -12018,7 +13061,7 @@ export const LiveInputAudioMuteParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.input_audio.mute'").describe(
     'The Live client event type. Always `session.input_audio.mute`.',
   ),
@@ -12035,7 +13078,7 @@ export const LiveInputAudioUnmuteParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.input_audio.unmute'").describe(
     'The Live client event type. Always `session.input_audio.unmute`.',
   ),
@@ -12052,7 +13095,7 @@ export const LiveOutputAudioFixturePlayParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'session.output_audio.fixture.play'",
   audio: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -12074,7 +13117,7 @@ export const LiveInstructionsAppendParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.instructions.append'").describe(
     'The Live client event type. Always `session.instructions.append`.',
   ),
@@ -12084,7 +13127,7 @@ export const LiveInstructionsAppendParamSchema = type({
       .describe(
         'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   content: type('string').describe(
     'Instruction text to append, limited to 500 tokens. This is a plain string, not an array of content parts.',
   ),
@@ -12101,7 +13144,7 @@ export const LiveThinkingAppendParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.thinking.append'").describe(
     'The Live client event type. Always `session.thinking.append`.',
   ),
@@ -12111,7 +13154,7 @@ export const LiveThinkingAppendParamSchema = type({
       .describe(
         'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   content: type('string').describe(
     'Silent reasoning or progress context, limited to 500 tokens. It does not directly request speech, but can influence later speech and is not a secrecy boundary.',
   ),
@@ -12128,7 +13171,7 @@ export const LiveCommentaryAppendParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.commentary.append'").describe(
     'The Live client event type. Always `session.commentary.append`.',
   ),
@@ -12138,7 +13181,7 @@ export const LiveCommentaryAppendParamSchema = type({
       .describe(
         'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   content: type('string').describe(
     'Speakable context for the Live model, limited to 500 tokens. Use this for a result the model should communicate; use session.thinking.append for silent context.',
   ),
@@ -12182,14 +13225,14 @@ export const LiveDecisionUserInputImageParamSchema = type({
     LiveDetailEnumSchema.describe(
       'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveDecisionUserInputImageParamSchema =
   typeof LiveDecisionUserInputImageParamSchema.infer
 
 export const LiveDecisionUserMessageParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this message item.')).or('null | null'),
+  'id?': type(type('string').describe('The unique ID of this message item.')).or('null'),
   'type?': "'message'",
   role: type("'user'").describe('The message role. Always `user`.'),
   content: type(
@@ -12200,9 +13243,17 @@ export const LiveDecisionUserMessageParamSchema = type({
       .describe('The text input to the model.'),
   ).or(
     type(
-      type(type(LiveDecisionUserInputTextParamSchema).or(LiveDecisionUserInputImageParamSchema)).or(
-        LiveDecisionInputJsonParamSchema,
-      ),
+      type(
+        type(
+          type(LiveDecisionUserInputTextParamSchema).and({
+            type: "'LiveDecisionUserInputTextParam'",
+          }),
+        ).or(
+          type(LiveDecisionUserInputImageParamSchema).and({
+            type: "'LiveDecisionUserInputImageParam'",
+          }),
+        ),
+      ).or(type(LiveDecisionInputJsonParamSchema).and({ type: "'LiveDecisionInputJsonParam'" })),
     ).array(),
   ),
 })
@@ -12210,7 +13261,7 @@ export const LiveDecisionUserMessageParamSchema = type({
 export type LiveDecisionUserMessageParamSchema = typeof LiveDecisionUserMessageParamSchema.infer
 
 export const LiveDecisionDeveloperMessageParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this message item.')).or('null | null'),
+  'id?': type(type('string').describe('The unique ID of this message item.')).or('null'),
   'type?': "'message'",
   role: "'developer'",
   content: type(
@@ -12226,7 +13277,7 @@ export type LiveDecisionDeveloperMessageParamSchema =
   typeof LiveDecisionDeveloperMessageParamSchema.infer
 
 export const LiveDecisionSystemMessageParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this message item.')).or('null | null'),
+  'id?': type(type('string').describe('The unique ID of this message item.')).or('null'),
   'type?': "'message'",
   role: "'system'",
   content: type(
@@ -12267,7 +13318,7 @@ export const LiveMessagePhaseSchema = type("'commentary' | 'final_answer'")
 export type LiveMessagePhaseSchema = typeof LiveMessagePhaseSchema.infer
 
 export const LiveDecisionAssistantMessageParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this message item.')).or('null | null'),
+  'id?': type(type('string').describe('The unique ID of this message item.')).or('null'),
   'type?': "'message'",
   role: "'assistant'",
   content: type(
@@ -12276,12 +13327,18 @@ export const LiveDecisionAssistantMessageParamSchema = type({
         (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
       )
       .describe('The text input to the model.'),
-  ).or(type(type(LiveDecisionOutputTextParamSchema).or(LiveDecisionRefusalParamSchema)).array()),
+  ).or(
+    type(
+      type(
+        type(LiveDecisionOutputTextParamSchema).and({ type: "'LiveDecisionOutputTextParam'" }),
+      ).or(type(LiveDecisionRefusalParamSchema).and({ type: "'LiveDecisionRefusalParam'" })),
+    ).array(),
+  ),
   'phase?': type(
     LiveMessagePhaseSchema.describe(
       'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveDecisionAssistantMessageParamSchema =
@@ -12292,12 +13349,12 @@ export const LiveFunctionCallItemStatusSchema = type("'in_progress' | 'completed
 export type LiveFunctionCallItemStatusSchema = typeof LiveFunctionCallItemStatusSchema.infer
 
 export const LiveDecisionFunctionCallParamSchema = type({
-  'id?': type(type('string').describe('The local Decision item ID.')).or('null | null'),
+  'id?': type(type('string').describe('The local Decision item ID.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: type("'function_call'").describe('The item type. Always `function_call`.'),
   name: type('string')
     .and(/^[a-zA-Z0-9_.-]+$/)
@@ -12309,19 +13366,19 @@ export const LiveDecisionFunctionCallParamSchema = type({
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
       .describe('The namespace of the function to call.'),
-  ).or('null | null'),
+  ).or('null'),
   arguments: type('string').describe('The function arguments as a JSON string.'),
 })
 
 export type LiveDecisionFunctionCallParamSchema = typeof LiveDecisionFunctionCallParamSchema.infer
 
 export const LiveDecisionFunctionCallOutputParamSchema = type({
-  'id?': type(type('string').describe('The local Decision item ID.')).or('null | null'),
+  'id?': type(type('string').describe('The local Decision item ID.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: type("'function_call_output'").describe(
     'The type of the function tool call output. Always `function_call_output`.',
   ),
@@ -12331,19 +13388,25 @@ export const LiveDecisionFunctionCallOutputParamSchema = type({
         (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
       )
       .describe('The text input to the model.'),
-  ).or(type(type(LiveDecisionInputTextParamSchema).or(LiveDecisionInputImageParamSchema)).array()),
+  ).or(
+    type(
+      type(type(LiveDecisionInputTextParamSchema).and({ type: "'LiveDecisionInputTextParam'" })).or(
+        type(LiveDecisionInputImageParamSchema).and({ type: "'LiveDecisionInputImageParam'" }),
+      ),
+    ).array(),
+  ),
 })
 
 export type LiveDecisionFunctionCallOutputParamSchema =
   typeof LiveDecisionFunctionCallOutputParamSchema.infer
 
 export const LiveDecisionCustomToolCallParamSchema = type({
-  'id?': type(type('string').describe('The local Decision item ID.')).or('null | null'),
+  'id?': type(type('string').describe('The local Decision item ID.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: type("'custom_tool_call'").describe('The item type. Always `custom_tool_call`.'),
   name: type('string')
     .and(/^[a-zA-Z0-9_-]+$/)
@@ -12356,7 +13419,7 @@ export const LiveDecisionCustomToolCallParamSchema = type({
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The namespace of the function to call.'),
-  ).or('null | null'),
+  ).or('null'),
   input: type('string').describe('The input to the custom tool call.'),
 })
 
@@ -12364,12 +13427,12 @@ export type LiveDecisionCustomToolCallParamSchema =
   typeof LiveDecisionCustomToolCallParamSchema.infer
 
 export const LiveDecisionCustomToolCallOutputParamSchema = type({
-  'id?': type(type('string').describe('The local Decision item ID.')).or('null | null'),
+  'id?': type(type('string').describe('The local Decision item ID.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: "'custom_tool_call_output'",
   output: type(
     type('string')
@@ -12377,7 +13440,13 @@ export const LiveDecisionCustomToolCallOutputParamSchema = type({
         (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
       )
       .describe('The text input to the model.'),
-  ).or(type(type(LiveDecisionInputTextParamSchema).or(LiveDecisionInputImageParamSchema)).array()),
+  ).or(
+    type(
+      type(type(LiveDecisionInputTextParamSchema).and({ type: "'LiveDecisionInputTextParam'" })).or(
+        type(LiveDecisionInputImageParamSchema).and({ type: "'LiveDecisionInputImageParam'" }),
+      ),
+    ).array(),
+  ),
 })
 
 export type LiveDecisionCustomToolCallOutputParamSchema =
@@ -12389,13 +13458,41 @@ export const LiveDecisionInputItemParamSchema = type(
       type(
         type(
           type(
-            type(LiveDecisionUserMessageParamSchema).or(LiveDecisionDeveloperMessageParamSchema),
-          ).or(LiveDecisionSystemMessageParamSchema),
-        ).or(LiveDecisionAssistantMessageParamSchema),
-      ).or(LiveDecisionFunctionCallParamSchema),
-    ).or(LiveDecisionFunctionCallOutputParamSchema),
-  ).or(LiveDecisionCustomToolCallParamSchema),
-).or(LiveDecisionCustomToolCallOutputParamSchema)
+            type(
+              type(LiveDecisionUserMessageParamSchema).and({
+                role: "'LiveDecisionUserMessageParam'",
+              }),
+            ).or(
+              type(LiveDecisionDeveloperMessageParamSchema).and({
+                role: "'LiveDecisionDeveloperMessageParam'",
+              }),
+            ),
+          ).or(
+            type(LiveDecisionSystemMessageParamSchema).and({
+              role: "'LiveDecisionSystemMessageParam'",
+            }),
+          ),
+        ).or(
+          type(LiveDecisionAssistantMessageParamSchema).and({
+            role: "'LiveDecisionAssistantMessageParam'",
+          }),
+        ),
+      ).or(
+        type(LiveDecisionFunctionCallParamSchema).and({ type: "'LiveDecisionFunctionCallParam'" }),
+      ),
+    ).or(
+      type(LiveDecisionFunctionCallOutputParamSchema).and({
+        type: "'LiveDecisionFunctionCallOutputParam'",
+      }),
+    ),
+  ).or(
+    type(LiveDecisionCustomToolCallParamSchema).and({ type: "'LiveDecisionCustomToolCallParam'" }),
+  ),
+).or(
+  type(LiveDecisionCustomToolCallOutputParamSchema).and({
+    type: "'LiveDecisionCustomToolCallOutputParam'",
+  }),
+)
 
 export type LiveDecisionInputItemParamSchema = typeof LiveDecisionInputItemParamSchema.infer
 
@@ -12406,7 +13503,7 @@ export const LiveDecisionItemCreateParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'decision.item.create'",
   item: LiveDecisionInputItemParamSchema,
 }).describe(
@@ -12422,7 +13519,7 @@ export const LiveDecisionItemDeleteParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'decision.item.delete'",
   item_id: type('string').narrow(
     (data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'),
@@ -12440,7 +13537,7 @@ export const LiveResponseItemCreateParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'response.item.create'").describe(
     'The Live client event type. Always `response.item.create`.',
   ),
@@ -12460,7 +13557,7 @@ export const LiveResponseCreateParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'response.create'").describe('The Live client event type. Always `response.create`.'),
 }).describe(
   'Request a response from the Live session’s Responses backend, or continue a delegated response waiting for tool results. Requires Responses delegation.',
@@ -12475,7 +13572,7 @@ export const LiveSessionCloseParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.close'").describe('The Live client event type. Always `session.close`.'),
 }).describe(
   'Request that the Live session close. The terminal `session.closed` event contains the close reason and final usage.',
@@ -12495,22 +13592,54 @@ export const LiveClientEventSchema = type(
                   type(
                     type(
                       type(
-                        type(type(LiveSessionStartEventSchema).or(LiveSessionUpdateParamSchema)).or(
-                          LiveInputAudioAppendEventSchema,
+                        type(
+                          type(
+                            type(LiveSessionStartEventSchema).and({
+                              type: "'LiveSessionStartEvent'",
+                            }),
+                          ).or(
+                            type(LiveSessionUpdateParamSchema).and({
+                              type: "'LiveSessionUpdateParam'",
+                            }),
+                          ),
+                        ).or(
+                          type(LiveInputAudioAppendEventSchema).and({
+                            type: "'LiveInputAudioAppendEvent'",
+                          }),
                         ),
-                      ).or(LiveInputAudioMuteParamSchema),
-                    ).or(LiveInputAudioUnmuteParamSchema),
-                  ).or(LiveOutputAudioFixturePlayParamSchema),
-                ).or(LiveInstructionsAppendParamSchema),
-              ).or(LiveThinkingAppendParamSchema),
-            ).or(LiveCommentaryAppendParamSchema),
-          ).or(LiveDecisionCreateParamSchema),
-        ).or(LiveDecisionItemCreateParamSchema),
-      ).or(LiveDecisionItemDeleteParamSchema),
-    ).or(LiveResponseItemCreateParamSchema),
-  ).or(LiveResponseCreateParamSchema),
+                      ).or(
+                        type(LiveInputAudioMuteParamSchema).and({
+                          type: "'LiveInputAudioMuteParam'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveInputAudioUnmuteParamSchema).and({
+                        type: "'LiveInputAudioUnmuteParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveOutputAudioFixturePlayParamSchema).and({
+                      type: "'LiveOutputAudioFixturePlayParam'",
+                    }),
+                  ),
+                ).or(
+                  type(LiveInstructionsAppendParamSchema).and({
+                    type: "'LiveInstructionsAppendParam'",
+                  }),
+                ),
+              ).or(type(LiveThinkingAppendParamSchema).and({ type: "'LiveThinkingAppendParam'" })),
+            ).or(
+              type(LiveCommentaryAppendParamSchema).and({ type: "'LiveCommentaryAppendParam'" }),
+            ),
+          ).or(type(LiveDecisionCreateParamSchema).and({ type: "'LiveDecisionCreateParam'" })),
+        ).or(
+          type(LiveDecisionItemCreateParamSchema).and({ type: "'LiveDecisionItemCreateParam'" }),
+        ),
+      ).or(type(LiveDecisionItemDeleteParamSchema).and({ type: "'LiveDecisionItemDeleteParam'" })),
+    ).or(type(LiveResponseItemCreateParamSchema).and({ type: "'LiveResponseItemCreateParam'" })),
+  ).or(type(LiveResponseCreateParamSchema).and({ type: "'LiveResponseCreateParam'" })),
 )
-  .or(LiveSessionCloseParamSchema)
+  .or(type(LiveSessionCloseParamSchema).and({ type: "'LiveSessionCloseParam'" }))
   .describe(
     'Client events for Live. Initialize a primary WebSocket with session.start and wait for session.started. WebRTC creation already starts the session. Audio append is primary WebSocket-only. See the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting) before writing frontend instructions and delegation policies.',
   )
@@ -12634,7 +13763,7 @@ export const LiveForkSessionStartEventSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'session.start'").describe('The Live client event type. Always `session.start`.'),
   session: LiveForkSessionConfigParamSchema.describe(
     'Overrides for a stored session after connecting to the fork WebSocket. An empty object inherits the stored configuration; do not supply a new model. audio.format applies only to the new WebSocket connection. client overrides are only supported for WebRTC forks.',
@@ -12658,21 +13787,53 @@ export const LiveForkClientEventSchema = type(
                     type(
                       type(
                         type(
-                          type(LiveForkSessionStartEventSchema).or(LiveSessionUpdateParamSchema),
-                        ).or(LiveInputAudioAppendEventSchema),
-                      ).or(LiveInputAudioMuteParamSchema),
-                    ).or(LiveInputAudioUnmuteParamSchema),
-                  ).or(LiveOutputAudioFixturePlayParamSchema),
-                ).or(LiveInstructionsAppendParamSchema),
-              ).or(LiveThinkingAppendParamSchema),
-            ).or(LiveCommentaryAppendParamSchema),
-          ).or(LiveDecisionCreateParamSchema),
-        ).or(LiveDecisionItemCreateParamSchema),
-      ).or(LiveDecisionItemDeleteParamSchema),
-    ).or(LiveResponseItemCreateParamSchema),
-  ).or(LiveResponseCreateParamSchema),
+                          type(
+                            type(LiveForkSessionStartEventSchema).and({
+                              type: "'LiveForkSessionStartEvent'",
+                            }),
+                          ).or(
+                            type(LiveSessionUpdateParamSchema).and({
+                              type: "'LiveSessionUpdateParam'",
+                            }),
+                          ),
+                        ).or(
+                          type(LiveInputAudioAppendEventSchema).and({
+                            type: "'LiveInputAudioAppendEvent'",
+                          }),
+                        ),
+                      ).or(
+                        type(LiveInputAudioMuteParamSchema).and({
+                          type: "'LiveInputAudioMuteParam'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveInputAudioUnmuteParamSchema).and({
+                        type: "'LiveInputAudioUnmuteParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveOutputAudioFixturePlayParamSchema).and({
+                      type: "'LiveOutputAudioFixturePlayParam'",
+                    }),
+                  ),
+                ).or(
+                  type(LiveInstructionsAppendParamSchema).and({
+                    type: "'LiveInstructionsAppendParam'",
+                  }),
+                ),
+              ).or(type(LiveThinkingAppendParamSchema).and({ type: "'LiveThinkingAppendParam'" })),
+            ).or(
+              type(LiveCommentaryAppendParamSchema).and({ type: "'LiveCommentaryAppendParam'" }),
+            ),
+          ).or(type(LiveDecisionCreateParamSchema).and({ type: "'LiveDecisionCreateParam'" })),
+        ).or(
+          type(LiveDecisionItemCreateParamSchema).and({ type: "'LiveDecisionItemCreateParam'" }),
+        ),
+      ).or(type(LiveDecisionItemDeleteParamSchema).and({ type: "'LiveDecisionItemDeleteParam'" })),
+    ).or(type(LiveResponseItemCreateParamSchema).and({ type: "'LiveResponseItemCreateParam'" })),
+  ).or(type(LiveResponseCreateParamSchema).and({ type: "'LiveResponseCreateParam'" })),
 )
-  .or(LiveSessionCloseParamSchema)
+  .or(type(LiveSessionCloseParamSchema).and({ type: "'LiveSessionCloseParam'" }))
   .describe(
     'Client events for a Live fork WebSocket. First send session.start with an overrides object (which may be empty), then wait for session.started before sending other commands. The model and conversation are inherited from the stored session.',
   )
@@ -12726,12 +13887,12 @@ export const LiveSessionResourceParamSchema = type({
       .describe(
         'A stable identifier for your end user, used for safety monitoring and abuse detection.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'instructions?': type(
     type('string').describe(
       'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input?': type(type(LiveInitialItemSchema).array())
     .and(type('unknown[] <= 128'))
     .describe(
@@ -12741,12 +13902,16 @@ export const LiveSessionResourceParamSchema = type({
     'Startup audio configuration. Only primary WebSockets accept audio.format; WebRTC and SIP negotiate their media format. Voice and format are immutable after startup.',
   ),
   'delegation?': type(
-    type(type(LiveClientDelegationParamSchema).or(LiveResponsesDelegationParamSchema))
-      .or(LiveDecisionsDelegationParamSchema)
+    type(
+      type(type(LiveClientDelegationParamSchema).and({ type: "'LiveClientDelegationParam'" })).or(
+        type(LiveResponsesDelegationParamSchema).and({ type: "'LiveResponsesDelegationParam'" }),
+      ),
+    )
+      .or(type(LiveDecisionsDelegationParamSchema).and({ type: "'LiveDecisionsDelegationParam'" }))
       .describe(
         'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'triggers?': type(type(LiveDecisionTriggerInputParamSchema).array())
     .and(type('unknown[] <= 2'))
     .describe(
@@ -13145,11 +14310,13 @@ export const AnswerResourceRefusalSchema = type({
 export type AnswerResourceRefusalSchema = typeof AnswerResourceRefusalSchema.infer
 
 export const AnswerResourceSchema = type(
-  type(type(AnswerResourcePredicateSchema).or(AnswerResourceChoiceSchema)).or(
-    AnswerResourceScoreSchema,
-  ),
+  type(
+    type(type(AnswerResourcePredicateSchema).and({ type: "'predicate'" })).or(
+      type(AnswerResourceChoiceSchema).and({ type: "'choice'" }),
+    ),
+  ).or(type(AnswerResourceScoreSchema).and({ type: "'score'" })),
 )
-  .or(AnswerResourceRefusalSchema)
+  .or(type(AnswerResourceRefusalSchema).and({ type: "'refusal'" }))
   .describe('A completed question always includes its name, including null when unnamed.')
 
 export type AnswerResourceSchema = typeof AnswerResourceSchema.infer
@@ -13257,19 +14424,18 @@ export const LiveDecisionEventSchema = type({
   event_id: type('string').describe('The unique ID of this Live server event.'),
   delegation_id: type(
     type('string').describe('The Live delegation ID, or null for a transcript trigger.'),
-  ).or('null | null'),
+  ).or('null'),
   trigger_id: type(
     type('string').describe(
       'The Live-assigned ID of this trigger firing, or null for a delegation.',
     ),
-  ).or('null | null'),
-  source_event_type:
-    "'session.input_transcript.delta' | 'session.output_transcript.delta' | null | null",
+  ).or('null'),
+  source_event_type: "'session.input_transcript.delta' | 'session.output_transcript.delta' | null",
   source_event_id: type(
     type('string').describe(
       'The event_id of the transcript delta that fired this trigger, or null for a delegation.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   event: LiveDecisionCompletedSchema,
 }).describe(
   'A Decision API event for a Live delegation or transcript trigger. For a trigger, source_event_id identifies the transcript delta that caused this evaluation.',
@@ -13289,9 +14455,17 @@ export const LiveDecisionStoredUserMessageParamSchema = type({
       .describe('The text input to the model.'),
   ).or(
     type(
-      type(type(LiveDecisionUserInputTextParamSchema).or(LiveDecisionUserInputImageParamSchema)).or(
-        LiveDecisionInputJsonParamSchema,
-      ),
+      type(
+        type(
+          type(LiveDecisionUserInputTextParamSchema).and({
+            type: "'LiveDecisionUserInputTextParam'",
+          }),
+        ).or(
+          type(LiveDecisionUserInputImageParamSchema).and({
+            type: "'LiveDecisionUserInputImageParam'",
+          }),
+        ),
+      ).or(type(LiveDecisionInputJsonParamSchema).and({ type: "'LiveDecisionInputJsonParam'" })),
     ).array(),
   ),
 })
@@ -13341,12 +14515,18 @@ export const LiveDecisionStoredAssistantMessageParamSchema = type({
         (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
       )
       .describe('The text input to the model.'),
-  ).or(type(type(LiveDecisionOutputTextParamSchema).or(LiveDecisionRefusalParamSchema)).array()),
+  ).or(
+    type(
+      type(
+        type(LiveDecisionOutputTextParamSchema).and({ type: "'LiveDecisionOutputTextParam'" }),
+      ).or(type(LiveDecisionRefusalParamSchema).and({ type: "'LiveDecisionRefusalParam'" })),
+    ).array(),
+  ),
   'phase?': type(
     LiveMessagePhaseSchema.describe(
       'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type LiveDecisionStoredAssistantMessageParamSchema =
@@ -13358,7 +14538,7 @@ export const LiveDecisionStoredFunctionCallParamSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: type("'function_call'").describe('The item type. Always `function_call`.'),
   name: type('string')
     .and(/^[a-zA-Z0-9_.-]+$/)
@@ -13370,7 +14550,7 @@ export const LiveDecisionStoredFunctionCallParamSchema = type({
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
       .describe('The namespace of the function to call.'),
-  ).or('null | null'),
+  ).or('null'),
   arguments: type('string').describe('The function arguments as a JSON string.'),
 })
 
@@ -13383,7 +14563,7 @@ export const LiveDecisionStoredFunctionCallOutputParamSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: type("'function_call_output'").describe(
     'The type of the function tool call output. Always `function_call_output`.',
   ),
@@ -13393,7 +14573,13 @@ export const LiveDecisionStoredFunctionCallOutputParamSchema = type({
         (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
       )
       .describe('The text input to the model.'),
-  ).or(type(type(LiveDecisionInputTextParamSchema).or(LiveDecisionInputImageParamSchema)).array()),
+  ).or(
+    type(
+      type(type(LiveDecisionInputTextParamSchema).and({ type: "'LiveDecisionInputTextParam'" })).or(
+        type(LiveDecisionInputImageParamSchema).and({ type: "'LiveDecisionInputImageParam'" }),
+      ),
+    ).array(),
+  ),
 })
 
 export type LiveDecisionStoredFunctionCallOutputParamSchema =
@@ -13405,7 +14591,7 @@ export const LiveDecisionStoredCustomToolCallParamSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: type("'custom_tool_call'").describe('The item type. Always `custom_tool_call`.'),
   name: type('string')
     .and(/^[a-zA-Z0-9_-]+$/)
@@ -13418,7 +14604,7 @@ export const LiveDecisionStoredCustomToolCallParamSchema = type({
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The namespace of the function to call.'),
-  ).or('null | null'),
+  ).or('null'),
   input: type('string').describe('The input to the custom tool call.'),
 })
 
@@ -13431,7 +14617,7 @@ export const LiveDecisionStoredCustomToolCallOutputParamSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the function tool call generated by the model.'),
-  'status?': type(LiveFunctionCallItemStatusSchema).or('null | null'),
+  'status?': type(LiveFunctionCallItemStatusSchema).or('null'),
   type: "'custom_tool_call_output'",
   output: type(
     type('string')
@@ -13439,7 +14625,13 @@ export const LiveDecisionStoredCustomToolCallOutputParamSchema = type({
         (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
       )
       .describe('The text input to the model.'),
-  ).or(type(type(LiveDecisionInputTextParamSchema).or(LiveDecisionInputImageParamSchema)).array()),
+  ).or(
+    type(
+      type(type(LiveDecisionInputTextParamSchema).and({ type: "'LiveDecisionInputTextParam'" })).or(
+        type(LiveDecisionInputImageParamSchema).and({ type: "'LiveDecisionInputImageParam'" }),
+      ),
+    ).array(),
+  ),
 })
 
 export type LiveDecisionStoredCustomToolCallOutputParamSchema =
@@ -13451,15 +14643,45 @@ export const LiveDecisionStoredInputItemParamSchema = type(
       type(
         type(
           type(
-            type(LiveDecisionStoredUserMessageParamSchema).or(
-              LiveDecisionStoredDeveloperMessageParamSchema,
+            type(
+              type(LiveDecisionStoredUserMessageParamSchema).and({
+                role: "'LiveDecisionStoredUserMessageParam'",
+              }),
+            ).or(
+              type(LiveDecisionStoredDeveloperMessageParamSchema).and({
+                role: "'LiveDecisionStoredDeveloperMessageParam'",
+              }),
             ),
-          ).or(LiveDecisionStoredSystemMessageParamSchema),
-        ).or(LiveDecisionStoredAssistantMessageParamSchema),
-      ).or(LiveDecisionStoredFunctionCallParamSchema),
-    ).or(LiveDecisionStoredFunctionCallOutputParamSchema),
-  ).or(LiveDecisionStoredCustomToolCallParamSchema),
-).or(LiveDecisionStoredCustomToolCallOutputParamSchema)
+          ).or(
+            type(LiveDecisionStoredSystemMessageParamSchema).and({
+              role: "'LiveDecisionStoredSystemMessageParam'",
+            }),
+          ),
+        ).or(
+          type(LiveDecisionStoredAssistantMessageParamSchema).and({
+            role: "'LiveDecisionStoredAssistantMessageParam'",
+          }),
+        ),
+      ).or(
+        type(LiveDecisionStoredFunctionCallParamSchema).and({
+          type: "'LiveDecisionStoredFunctionCallParam'",
+        }),
+      ),
+    ).or(
+      type(LiveDecisionStoredFunctionCallOutputParamSchema).and({
+        type: "'LiveDecisionStoredFunctionCallOutputParam'",
+      }),
+    ),
+  ).or(
+    type(LiveDecisionStoredCustomToolCallParamSchema).and({
+      type: "'LiveDecisionStoredCustomToolCallParam'",
+    }),
+  ),
+).or(
+  type(LiveDecisionStoredCustomToolCallOutputParamSchema).and({
+    type: "'LiveDecisionStoredCustomToolCallOutputParam'",
+  }),
+)
 
 export type LiveDecisionStoredInputItemParamSchema =
   typeof LiveDecisionStoredInputItemParamSchema.infer
@@ -13496,7 +14718,7 @@ export const LiveResponseEventSchema = type({
     type('string').describe(
       'The Live delegation associated with the nested Responses event. May be null or omitted when the event cannot be correlated with a delegation.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   event: type({ '[string]': 'unknown' }).describe(
     'The nested Responses streaming event. Dispatch on its type field. Response lifecycle snapshots omit input and clear instructions, tools, and output to keep messages small; consume granular output events for the generated content.',
   ),
@@ -13710,37 +14932,109 @@ export const LiveServerEvent2Schema = type(
                                                 type(
                                                   type(
                                                     type(
-                                                      type(LiveSessionStartedSchema).or(
-                                                        LiveSessionUpdatedSchema,
+                                                      type(
+                                                        type(LiveSessionStartedSchema).and({
+                                                          type: "'LiveSessionStarted'",
+                                                        }),
+                                                      ).or(
+                                                        type(LiveSessionUpdatedSchema).and({
+                                                          type: "'LiveSessionUpdated'",
+                                                        }),
                                                       ),
-                                                    ).or(LiveSessionResumedSchema),
-                                                  ).or(LiveSessionPausedSchema),
-                                                ).or(LiveInputAudioMutedSchema),
-                                              ).or(LiveInputAudioUnmutedSchema),
-                                            ).or(LiveOutputAudioFixturePlayingSchema),
-                                          ).or(LiveOutputAudioFixturePlayedSchema),
-                                        ).or(LiveInstructionsAppendedSchema),
-                                      ).or(LiveThinkingAppendedSchema),
-                                    ).or(LiveCommentaryAppendedSchema),
-                                  ).or(LiveInputAudioAppendSchema),
-                                ).or(LiveOutputAudioDeltaSchema),
-                              ).or(LiveInputTranscriptDeltaSchema),
-                            ).or(LiveOutputTranscriptDeltaSchema),
-                          ).or(LiveDelegationCreatedSchema),
-                        ).or(LiveDecisionEventSchema),
-                      ).or(LiveDecisionItemCreatedSchema),
-                    ).or(LiveDecisionItemDeletedSchema),
-                  ).or(LiveResponseEventSchema),
-                ).or(LiveSessionUsageUpdatedSchema),
-              ).or(LiveSessionClosedSchema),
-            ).or(LiveErrorEventSchema),
-          ).or(LiveInfoEventSchema),
-        ).or(LiveTransportDTMFReceivedSchema),
-      ).or(LiveTransportDTMFSentSchema),
-    ).or(LiveTransportRingingSchema),
-  ).or(LiveTransportAnsweredSchema),
+                                                    ).or(
+                                                      type(LiveSessionResumedSchema).and({
+                                                        type: "'LiveSessionResumed'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(LiveSessionPausedSchema).and({
+                                                      type: "'LiveSessionPaused'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(LiveInputAudioMutedSchema).and({
+                                                    type: "'LiveInputAudioMuted'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(LiveInputAudioUnmutedSchema).and({
+                                                  type: "'LiveInputAudioUnmuted'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(LiveOutputAudioFixturePlayingSchema).and({
+                                                type: "'LiveOutputAudioFixturePlaying'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(LiveOutputAudioFixturePlayedSchema).and({
+                                              type: "'LiveOutputAudioFixturePlayed'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(LiveInstructionsAppendedSchema).and({
+                                            type: "'LiveInstructionsAppended'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(LiveThinkingAppendedSchema).and({
+                                          type: "'LiveThinkingAppended'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(LiveCommentaryAppendedSchema).and({
+                                        type: "'LiveCommentaryAppended'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(LiveInputAudioAppendSchema).and({
+                                      type: "'LiveInputAudioAppend'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(LiveOutputAudioDeltaSchema).and({
+                                    type: "'LiveOutputAudioDelta'",
+                                  }),
+                                ),
+                              ).or(
+                                type(LiveInputTranscriptDeltaSchema).and({
+                                  type: "'LiveInputTranscriptDelta'",
+                                }),
+                              ),
+                            ).or(
+                              type(LiveOutputTranscriptDeltaSchema).and({
+                                type: "'LiveOutputTranscriptDelta'",
+                              }),
+                            ),
+                          ).or(
+                            type(LiveDelegationCreatedSchema).and({
+                              type: "'LiveDelegationCreated'",
+                            }),
+                          ),
+                        ).or(type(LiveDecisionEventSchema).and({ type: "'LiveDecisionEvent'" })),
+                      ).or(
+                        type(LiveDecisionItemCreatedSchema).and({
+                          type: "'LiveDecisionItemCreated'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveDecisionItemDeletedSchema).and({
+                        type: "'LiveDecisionItemDeleted'",
+                      }),
+                    ),
+                  ).or(type(LiveResponseEventSchema).and({ type: "'LiveResponseEvent'" })),
+                ).or(
+                  type(LiveSessionUsageUpdatedSchema).and({ type: "'LiveSessionUsageUpdated'" }),
+                ),
+              ).or(type(LiveSessionClosedSchema).and({ type: "'LiveSessionClosed'" })),
+            ).or(type(LiveErrorEventSchema).and({ type: "'LiveErrorEvent'" })),
+          ).or(type(LiveInfoEventSchema).and({ type: "'LiveInfoEvent'" })),
+        ).or(type(LiveTransportDTMFReceivedSchema).and({ type: "'LiveTransportDTMFReceived'" })),
+      ).or(type(LiveTransportDTMFSentSchema).and({ type: "'LiveTransportDTMFSent'" })),
+    ).or(type(LiveTransportRingingSchema).and({ type: "'LiveTransportRinging'" })),
+  ).or(type(LiveTransportAnsweredSchema).and({ type: "'LiveTransportAnswered'" })),
 )
-  .or(LiveTransportFailedSchema)
+  .or(type(LiveTransportFailedSchema).and({ type: "'LiveTransportFailed'" }))
   .describe('An event sent by the Live API on a primary WebSocket or sideband connection.')
 
 export type LiveServerEvent2Schema = typeof LiveServerEvent2Schema.infer
@@ -13804,8 +15098,8 @@ export const LiveSessionCreateRequestSchema = type({
   session: LiveMediaSessionCreateParamsSchema.describe(
     'Startup configuration for the Live session.',
   ),
-  transport: type(LiveWebRTCTransportSchema)
-    .or(LiveSIPTransportSchema)
+  transport: type(type(LiveWebRTCTransportSchema).and({ type: "'LiveWebRTCTransport'" }))
+    .or(type(LiveSIPTransportSchema).and({ type: "'LiveSIPTransport'" }))
     .describe(
       'WebRTC transport with an SDP offer, or SIP transport with a destination and per-call trunk credentials.',
     ),
@@ -13828,7 +15122,7 @@ export type SessionSchema = typeof SessionSchema.infer
 
 export const LiveSessionCreateResponseSchema = type({
   session: SessionSchema,
-  transport: type(LiveWebRTCTransportSchema)
+  transport: type(type(LiveWebRTCTransportSchema).and({ type: "'LiveWebRTCTransport'" }))
     .or(
       type({
         type: type("'sip'").describe('The transport used for the Live session. Always `sip`.'),
@@ -13850,7 +15144,7 @@ export const LiveTransportDTMFSendParamSchema = type({
       .describe(
         "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
       ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'transport.dtmf.send'",
   event: type('string')
     .and(/^[0-9A-D*#]$/)
@@ -13873,21 +15167,49 @@ export const LiveSidebandClientEventSchema = type(
                 type(
                   type(
                     type(
-                      type(type(LiveSessionUpdateParamSchema).or(LiveInputAudioMuteParamSchema)).or(
-                        LiveInputAudioUnmuteParamSchema,
+                      type(
+                        type(
+                          type(LiveSessionUpdateParamSchema).and({
+                            type: "'LiveSessionUpdateParam'",
+                          }),
+                        ).or(
+                          type(LiveInputAudioMuteParamSchema).and({
+                            type: "'LiveInputAudioMuteParam'",
+                          }),
+                        ),
+                      ).or(
+                        type(LiveInputAudioUnmuteParamSchema).and({
+                          type: "'LiveInputAudioUnmuteParam'",
+                        }),
                       ),
-                    ).or(LiveOutputAudioFixturePlayParamSchema),
-                  ).or(LiveTransportDTMFSendParamSchema),
-                ).or(LiveInstructionsAppendParamSchema),
-              ).or(LiveThinkingAppendParamSchema),
-            ).or(LiveCommentaryAppendParamSchema),
-          ).or(LiveDecisionCreateParamSchema),
-        ).or(LiveDecisionItemCreateParamSchema),
-      ).or(LiveDecisionItemDeleteParamSchema),
-    ).or(LiveResponseItemCreateParamSchema),
-  ).or(LiveResponseCreateParamSchema),
+                    ).or(
+                      type(LiveOutputAudioFixturePlayParamSchema).and({
+                        type: "'LiveOutputAudioFixturePlayParam'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveTransportDTMFSendParamSchema).and({
+                      type: "'LiveTransportDTMFSendParam'",
+                    }),
+                  ),
+                ).or(
+                  type(LiveInstructionsAppendParamSchema).and({
+                    type: "'LiveInstructionsAppendParam'",
+                  }),
+                ),
+              ).or(type(LiveThinkingAppendParamSchema).and({ type: "'LiveThinkingAppendParam'" })),
+            ).or(
+              type(LiveCommentaryAppendParamSchema).and({ type: "'LiveCommentaryAppendParam'" }),
+            ),
+          ).or(type(LiveDecisionCreateParamSchema).and({ type: "'LiveDecisionCreateParam'" })),
+        ).or(
+          type(LiveDecisionItemCreateParamSchema).and({ type: "'LiveDecisionItemCreateParam'" }),
+        ),
+      ).or(type(LiveDecisionItemDeleteParamSchema).and({ type: "'LiveDecisionItemDeleteParam'" })),
+    ).or(type(LiveResponseItemCreateParamSchema).and({ type: "'LiveResponseItemCreateParam'" })),
+  ).or(type(LiveResponseCreateParamSchema).and({ type: "'LiveResponseCreateParam'" })),
 )
-  .or(LiveSessionCloseParamSchema)
+  .or(type(LiveSessionCloseParamSchema).and({ type: "'LiveSessionCloseParam'" }))
   .describe(
     'Client events accepted by an attached Live sideband WebSocket. The session has already started. Send input audio over the primary connection.',
   )
@@ -13934,35 +15256,103 @@ export const LiveSidebandServerEventSchema = type(
                                             type(
                                               type(
                                                 type(
-                                                  type(LiveTransportRingingSchema).or(
-                                                    LiveTransportAnsweredSchema,
+                                                  type(
+                                                    type(LiveTransportRingingSchema).and({
+                                                      type: "'LiveTransportRinging'",
+                                                    }),
+                                                  ).or(
+                                                    type(LiveTransportAnsweredSchema).and({
+                                                      type: "'LiveTransportAnswered'",
+                                                    }),
                                                   ),
-                                                ).or(LiveTransportFailedSchema),
-                                              ).or(LiveTransportDTMFReceivedSchema),
-                                            ).or(LiveTransportDTMFSentSchema),
-                                          ).or(LiveSessionStartedSchema),
-                                        ).or(LiveSessionUpdatedSchema),
-                                      ).or(LiveSessionResumedSchema),
-                                    ).or(LiveSessionPausedSchema),
-                                  ).or(LiveInputAudioMutedSchema),
-                                ).or(LiveInputAudioUnmutedSchema),
-                              ).or(LiveOutputAudioFixturePlayingSchema),
-                            ).or(LiveOutputAudioFixturePlayedSchema),
-                          ).or(LiveInstructionsAppendedSchema),
-                        ).or(LiveThinkingAppendedSchema),
-                      ).or(LiveCommentaryAppendedSchema),
-                    ).or(LiveInputTranscriptDeltaSchema),
-                  ).or(LiveOutputTranscriptDeltaSchema),
-                ).or(LiveDelegationCreatedSchema),
-              ).or(LiveDecisionEventSchema),
-            ).or(LiveDecisionItemCreatedSchema),
-          ).or(LiveDecisionItemDeletedSchema),
-        ).or(LiveResponseEventSchema),
-      ).or(LiveSessionUsageUpdatedSchema),
-    ).or(LiveSessionClosedSchema),
-  ).or(LiveErrorEventSchema),
+                                                ).or(
+                                                  type(LiveTransportFailedSchema).and({
+                                                    type: "'LiveTransportFailed'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(LiveTransportDTMFReceivedSchema).and({
+                                                  type: "'LiveTransportDTMFReceived'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(LiveTransportDTMFSentSchema).and({
+                                                type: "'LiveTransportDTMFSent'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(LiveSessionStartedSchema).and({
+                                              type: "'LiveSessionStarted'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(LiveSessionUpdatedSchema).and({
+                                            type: "'LiveSessionUpdated'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(LiveSessionResumedSchema).and({
+                                          type: "'LiveSessionResumed'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(LiveSessionPausedSchema).and({
+                                        type: "'LiveSessionPaused'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(LiveInputAudioMutedSchema).and({
+                                      type: "'LiveInputAudioMuted'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(LiveInputAudioUnmutedSchema).and({
+                                    type: "'LiveInputAudioUnmuted'",
+                                  }),
+                                ),
+                              ).or(
+                                type(LiveOutputAudioFixturePlayingSchema).and({
+                                  type: "'LiveOutputAudioFixturePlaying'",
+                                }),
+                              ),
+                            ).or(
+                              type(LiveOutputAudioFixturePlayedSchema).and({
+                                type: "'LiveOutputAudioFixturePlayed'",
+                              }),
+                            ),
+                          ).or(
+                            type(LiveInstructionsAppendedSchema).and({
+                              type: "'LiveInstructionsAppended'",
+                            }),
+                          ),
+                        ).or(
+                          type(LiveThinkingAppendedSchema).and({ type: "'LiveThinkingAppended'" }),
+                        ),
+                      ).or(
+                        type(LiveCommentaryAppendedSchema).and({
+                          type: "'LiveCommentaryAppended'",
+                        }),
+                      ),
+                    ).or(
+                      type(LiveInputTranscriptDeltaSchema).and({
+                        type: "'LiveInputTranscriptDelta'",
+                      }),
+                    ),
+                  ).or(
+                    type(LiveOutputTranscriptDeltaSchema).and({
+                      type: "'LiveOutputTranscriptDelta'",
+                    }),
+                  ),
+                ).or(type(LiveDelegationCreatedSchema).and({ type: "'LiveDelegationCreated'" })),
+              ).or(type(LiveDecisionEventSchema).and({ type: "'LiveDecisionEvent'" })),
+            ).or(type(LiveDecisionItemCreatedSchema).and({ type: "'LiveDecisionItemCreated'" })),
+          ).or(type(LiveDecisionItemDeletedSchema).and({ type: "'LiveDecisionItemDeleted'" })),
+        ).or(type(LiveResponseEventSchema).and({ type: "'LiveResponseEvent'" })),
+      ).or(type(LiveSessionUsageUpdatedSchema).and({ type: "'LiveSessionUsageUpdated'" })),
+    ).or(type(LiveSessionClosedSchema).and({ type: "'LiveSessionClosed'" })),
+  ).or(type(LiveErrorEventSchema).and({ type: "'LiveErrorEvent'" })),
 )
-  .or(LiveInfoEventSchema)
+  .or(type(LiveInfoEventSchema).and({ type: "'LiveInfoEvent'" }))
   .describe(
     'Server events received by an attached Live sideband WebSocket. Audio deltas are delivered over the primary connection.',
   )
@@ -13984,7 +15374,7 @@ export const ModelIdsSchema = type(ModelIdsSharedSchema).or(ModelIdsResponsesSch
 export type ModelIdsSchema = typeof ModelIdsSchema.infer
 
 export const ModelIdsCompactionSchema = type(type(ModelIdsResponsesSchema).or('string'))
-  .or('null | null')
+  .or('null')
   .describe(
     'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
   )
@@ -14002,19 +15392,19 @@ export const ModifyAssistantRequestSchema = type({
     type('string')
       .narrow((data, ctx) => [...data].length <= 256 || ctx.mustBe('at most 256 characters'))
       .describe('The name of the assistant. The maximum length is 256 characters.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'description?': type(
     type('string')
       .narrow((data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'))
       .describe('The description of the assistant. The maximum length is 512 characters.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'instructions?': type(
     type('string')
       .narrow((data, ctx) => [...data].length <= 256000 || ctx.mustBe('at most 256000 characters'))
       .describe(
         'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(
     type(
       type(type(AssistantToolsCodeSchema).or(AssistantToolsFileSearchSchema)).or(
@@ -14045,19 +15435,19 @@ export const ModifyAssistantRequestSchema = type({
     }).describe(
       "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'metadata?': MetadataSchema,
   'temperature?': type(
     type('number >= 0 & number <= 2').describe(
       'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'top_p?': type(
     type('number >= 0 & number <= 1').describe(
       'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
     ),
-  ).or('null | null'),
-  'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null | null'),
+  ).or('null'),
+  'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null'),
   '+': 'reject',
 })
 
@@ -14097,7 +15487,7 @@ export const ModifyThreadRequestSchema = type({
     }).describe(
       "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'metadata?': MetadataSchema,
   '+': 'reject',
 })
@@ -14192,8 +15582,8 @@ export const OrganizationSpendAlertListResourceSchema = type({
   data: type(OrganizationSpendAlertSchema)
     .array()
     .describe('Spend alerts returned in the current page.'),
-  first_id: type('string | null | null').describe('The ID of the first spend alert in this page.'),
-  last_id: type('string | null | null').describe('The ID of the last spend alert in this page.'),
+  first_id: type('string | null').describe('The ID of the first spend alert in this page.'),
+  last_id: type('string | null').describe('The ID of the last spend alert in this page.'),
   has_more: type('boolean').describe('Whether more spend alerts are available when paginating.'),
 }).describe('Paginated list of organization spend alerts.')
 
@@ -14234,35 +15624,81 @@ export const OutputItemSchema = type(
                                               type(
                                                 type(
                                                   type(
-                                                    type(OutputMessageSchema).or(
-                                                      FileSearchToolCallSchema,
+                                                    type(
+                                                      type(OutputMessageSchema).and({
+                                                        type: "'OutputMessage'",
+                                                      }),
+                                                    ).or(
+                                                      type(FileSearchToolCallSchema).and({
+                                                        type: "'FileSearchToolCall'",
+                                                      }),
                                                     ),
-                                                  ).or(FunctionToolCallSchema),
-                                                ).or(FunctionToolCallOutputResourceSchema),
-                                              ).or(WebSearchToolCallSchema),
-                                            ).or(ComputerToolCallSchema),
-                                          ).or(ComputerToolCallOutputResourceSchema),
-                                        ).or(ReasoningItemSchema),
-                                      ).or(ProgramSchema),
-                                    ).or(ProgramOutputSchema),
-                                  ).or(ToolSearchCallSchema),
-                                ).or(ToolSearchOutputSchema),
-                              ).or(AdditionalToolsSchema),
-                            ).or(CompactionBodySchema),
-                          ).or(ImageGenToolCallSchema),
-                        ).or(CodeInterpreterToolCallSchema),
-                      ).or(LocalShellToolCallSchema),
-                    ).or(LocalShellToolCallOutputSchema),
-                  ).or(FunctionShellCallSchema),
-                ).or(FunctionShellCallOutputSchema),
-              ).or(ApplyPatchToolCallSchema),
-            ).or(ApplyPatchToolCallOutputSchema),
-          ).or(MCPToolCallSchema),
-        ).or(MCPListToolsSchema),
-      ).or(MCPApprovalRequestSchema),
-    ).or(MCPApprovalResponseResourceSchema),
-  ).or(CustomToolCallSchema),
-).or(CustomToolCallOutputResourceSchema)
+                                                  ).or(
+                                                    type(FunctionToolCallSchema).and({
+                                                      type: "'FunctionToolCall'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(FunctionToolCallOutputResourceSchema).and({
+                                                    type: "'FunctionToolCallOutputResource'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(WebSearchToolCallSchema).and({
+                                                  type: "'WebSearchToolCall'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(ComputerToolCallSchema).and({
+                                                type: "'ComputerToolCall'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(ComputerToolCallOutputResourceSchema).and({
+                                              type: "'ComputerToolCallOutputResource'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(ReasoningItemSchema).and({
+                                            type: "'ReasoningItem'",
+                                          }),
+                                        ),
+                                      ).or(type(ProgramSchema).and({ type: "'Program'" })),
+                                    ).or(
+                                      type(ProgramOutputSchema).and({ type: "'ProgramOutput'" }),
+                                    ),
+                                  ).or(
+                                    type(ToolSearchCallSchema).and({ type: "'ToolSearchCall'" }),
+                                  ),
+                                ).or(
+                                  type(ToolSearchOutputSchema).and({ type: "'ToolSearchOutput'" }),
+                                ),
+                              ).or(type(AdditionalToolsSchema).and({ type: "'AdditionalTools'" })),
+                            ).or(type(CompactionBodySchema).and({ type: "'CompactionBody'" })),
+                          ).or(type(ImageGenToolCallSchema).and({ type: "'ImageGenToolCall'" })),
+                        ).or(
+                          type(CodeInterpreterToolCallSchema).and({
+                            type: "'CodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(type(LocalShellToolCallSchema).and({ type: "'LocalShellToolCall'" })),
+                    ).or(
+                      type(LocalShellToolCallOutputSchema).and({
+                        type: "'LocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(type(FunctionShellCallSchema).and({ type: "'FunctionShellCall'" })),
+                ).or(
+                  type(FunctionShellCallOutputSchema).and({ type: "'FunctionShellCallOutput'" }),
+                ),
+              ).or(type(ApplyPatchToolCallSchema).and({ type: "'ApplyPatchToolCall'" })),
+            ).or(type(ApplyPatchToolCallOutputSchema).and({ type: "'ApplyPatchToolCallOutput'" })),
+          ).or(type(MCPToolCallSchema).and({ type: "'MCPToolCall'" })),
+        ).or(type(MCPListToolsSchema).and({ type: "'MCPListTools'" })),
+      ).or(type(MCPApprovalRequestSchema).and({ type: "'MCPApprovalRequest'" })),
+    ).or(type(MCPApprovalResponseResourceSchema).and({ type: "'MCPApprovalResponseResource'" })),
+  ).or(type(CustomToolCallSchema).and({ type: "'CustomToolCall'" })),
+).or(type(CustomToolCallOutputResourceSchema).and({ type: "'CustomToolCallOutputResource'" }))
 
 export type OutputItemSchema = typeof OutputItemSchema.infer
 
@@ -14285,9 +15721,7 @@ export const ProjectSchema = type({
   object: type("'organization.project'").describe(
     'The object type, which is always `organization.project`',
   ),
-  'name?': type('string | null | null').describe(
-    'The name of the project. This appears in reporting.',
-  ),
+  'name?': type('string | null').describe('The name of the project. This appears in reporting.'),
   created_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the project was created.',
   ),
@@ -14295,9 +15729,9 @@ export const ProjectSchema = type({
     type('number.integer').describe(
       'The Unix timestamp (in seconds) of when the project was archived or `null`.',
     ),
-  ).or('null | null'),
-  'status?': type('string | null | null').describe('`active` or `archived`'),
-  'external_key_id?': type('string | null | null').describe(
+  ).or('null'),
+  'status?': type('string | null').describe('`active` or `archived`'),
+  'external_key_id?': type('string | null').describe(
     'The external key associated with the project.',
   ),
   'residency?': PublicProjectResidencySchema.describe(
@@ -14340,10 +15774,10 @@ export const ProjectApiKeySchema = type({
   created_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the API key was created',
   ),
-  'expires_at?': type('number.integer | null | null').describe(
+  'expires_at?': type('number.integer | null').describe(
     'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
   ),
-  last_used_at: type('number.integer | null | null').describe(
+  last_used_at: type('number.integer | null').describe(
     'The Unix timestamp (in seconds) of when the API key was last used.',
   ),
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
@@ -14370,8 +15804,8 @@ export type ProjectApiKeyDeleteResponseSchema = typeof ProjectApiKeyDeleteRespon
 export const ProjectApiKeyListResponseSchema = type({
   object: "'list'",
   data: type(ProjectApiKeySchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -14379,15 +15813,15 @@ export type ProjectApiKeyListResponseSchema = typeof ProjectApiKeyListResponseSc
 
 export const ProjectCreateRequestSchema = type({
   name: type('string').describe('The friendly name of the project, this name appears in reports.'),
-  'geography?': type('string | null | null').describe(
+  'geography?': type('string | null').describe(
     'Create the project with the specified data residency region. Your organization must have access to Data residency functionality in order to use. See [data residency controls](https://developers.openai.com/api/docs/guides/your-data#data-residency-controls) to review the functionality and limitations of setting this field.\nDeprecated: use `residency` instead. Do not provide both `geography` and `residency`.',
   ),
   'residency?': type(PublicProjectResidencySchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Create the project with the specified residency configuration. Your organization must have access to the requested residency configuration in order to use it. See [data residency controls](https://developers.openai.com/api/docs/guides/your-data#data-residency-controls) to review the functionality and limitations of setting this field.',
     ),
-  'external_key_id?': type('string | null | null').describe(
+  'external_key_id?': type('string | null').describe(
     'External key ID to associate with the project.',
   ),
 })
@@ -14431,7 +15865,7 @@ export const ProjectGroupListResourceSchema = type({
     .array()
     .describe('Project group memberships returned in the current page.'),
   has_more: type('boolean').describe('Whether additional project group memberships are available.'),
-  next: type('string | null | null').describe(
+  next: type('string | null').describe(
     'Cursor to fetch the next page of results, or `null` when there are no more results.',
   ),
 }).describe('Paginated list of groups that have access to a project.')
@@ -14450,19 +15884,17 @@ export type ProjectHostedToolPermissionsSchema = typeof ProjectHostedToolPermiss
 
 export const ProjectHostedToolPermissionsUpdateRequestSchema = type({
   'file_search?': type(HostedToolPermissionUpdateSchema)
-    .or('null | null')
+    .or('null')
     .describe('The file search permission update.'),
   'web_search?': type(HostedToolPermissionUpdateSchema)
-    .or('null | null')
+    .or('null')
     .describe('The web search permission update.'),
   'image_generation?': type(HostedToolPermissionUpdateSchema)
-    .or('null | null')
+    .or('null')
     .describe('The image generation permission update.'),
-  'mcp?': type(HostedToolPermissionUpdateSchema)
-    .or('null | null')
-    .describe('The MCP permission update.'),
+  'mcp?': type(HostedToolPermissionUpdateSchema).or('null').describe('The MCP permission update.'),
   'code_interpreter?': type(HostedToolPermissionUpdateSchema)
-    .or('null | null')
+    .or('null')
     .describe('The code interpreter permission update.'),
 })
 
@@ -14472,8 +15904,8 @@ export type ProjectHostedToolPermissionsUpdateRequestSchema =
 export const ProjectListResponseSchema = type({
   object: "'list'",
   data: type(ProjectSchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -14536,8 +15968,8 @@ export type ProjectRateLimitSchema = typeof ProjectRateLimitSchema.infer
 export const ProjectRateLimitListResponseSchema = type({
   object: "'list'",
   data: type(ProjectRateLimitSchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -14583,7 +16015,7 @@ export const ProjectServiceAccountApiKeySchema = type({
   value: 'string',
   name: 'string',
   created_at: 'number.integer',
-  'expires_at?': type('number.integer | null | null').describe(
+  'expires_at?': type('number.integer | null').describe(
     'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
   ),
   id: 'string',
@@ -14595,10 +16027,8 @@ export const ProjectServiceAccountCreateRequestSchema = type({
   name: type('string').describe('The name of the service account being created.'),
   'create_service_account_only?': type(
     type('boolean').describe('Create the service account without default roles or an API key.'),
-  ).or('null | null'),
-  'expires_in_seconds?': type(
-    'number.integer >= 1 & number.integer <= 31536000 | null | null',
-  ).describe(
+  ).or('null'),
+  'expires_in_seconds?': type('number.integer >= 1 & number.integer <= 31536000 | null').describe(
     'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
   ),
 })
@@ -14614,7 +16044,7 @@ export const ProjectServiceAccountCreateResponseSchema = type({
     'Service accounts created with default project membership have role `member`. Accounts created with `create_service_account_only` have role `none`.\n',
   ),
   created_at: 'number.integer',
-  api_key: type(ProjectServiceAccountApiKeySchema).or('null | null'),
+  api_key: type(ProjectServiceAccountApiKeySchema).or('null'),
 })
 
 export type ProjectServiceAccountCreateResponseSchema =
@@ -14632,8 +16062,8 @@ export type ProjectServiceAccountDeleteResponseSchema =
 export const ProjectServiceAccountListResponseSchema = type({
   object: "'list'",
   data: type(ProjectServiceAccountSchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -14669,21 +16099,21 @@ export const ProjectSpendAlertListResourceSchema = type({
   data: type(ProjectSpendAlertSchema)
     .array()
     .describe('Spend alerts returned in the current page.'),
-  first_id: type('string | null | null').describe('The ID of the first spend alert in this page.'),
-  last_id: type('string | null | null').describe('The ID of the last spend alert in this page.'),
+  first_id: type('string | null').describe('The ID of the first spend alert in this page.'),
+  last_id: type('string | null').describe('The ID of the last spend alert in this page.'),
   has_more: type('boolean').describe('Whether more spend alerts are available when paginating.'),
 }).describe('Paginated list of project spend alerts.')
 
 export type ProjectSpendAlertListResourceSchema = typeof ProjectSpendAlertListResourceSchema.infer
 
 export const ProjectUpdateRequestSchema = type({
-  'name?': type('string | null | null').describe(
+  'name?': type('string | null').describe(
     'The updated name of the project, this name appears in reports.',
   ),
-  'external_key_id?': type('string | null | null').describe(
+  'external_key_id?': type('string | null').describe(
     'External key ID to associate with the project.',
   ),
-  'geography?': type('string | null | null').describe(
+  'geography?': type('string | null').describe(
     'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
   ),
 })
@@ -14695,8 +16125,8 @@ export const ProjectUserSchema = type({
     'The object type, which is always `organization.project.user`',
   ),
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
-  'name?': type('string | null | null').describe('The name of the user'),
-  'email?': type('string | null | null').describe('The email address of the user'),
+  'name?': type('string | null').describe('The name of the user'),
+  'email?': type('string | null').describe('The email address of the user'),
   role: type('string').describe('`owner` or `member`'),
   added_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the project was added.',
@@ -14706,8 +16136,8 @@ export const ProjectUserSchema = type({
 export type ProjectUserSchema = typeof ProjectUserSchema.infer
 
 export const ProjectUserCreateRequestSchema = type({
-  'user_id?': type('string | null | null').describe('The ID of the user.'),
-  'email?': type('string | null | null').describe('Email of the user to add.'),
+  'user_id?': type('string | null').describe('The ID of the user.'),
+  'email?': type('string | null').describe('Email of the user to add.'),
   role: type('string').describe('`owner` or `member`'),
 })
 
@@ -14724,15 +16154,15 @@ export type ProjectUserDeleteResponseSchema = typeof ProjectUserDeleteResponseSc
 export const ProjectUserListResponseSchema = type({
   object: 'string',
   data: type(ProjectUserSchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
 export type ProjectUserListResponseSchema = typeof ProjectUserListResponseSchema.infer
 
 export const ProjectUserUpdateRequestSchema = type({
-  'role?': type('string | null | null').describe('`owner` or `member`'),
+  'role?': type('string | null').describe('`owner` or `member`'),
 })
 
 export type ProjectUserUpdateRequestSchema = typeof ProjectUserUpdateRequestSchema.infer
@@ -14747,7 +16177,7 @@ export type PublicAssignOrganizationGroupRoleBodySchema =
 export const PublicCreateOrganizationRoleBodySchema = type({
   role_name: type('string').describe('Unique name for the role.'),
   permissions: type('string[]').describe('Permissions to grant to the role.'),
-  'description?': type('string | null | null').describe('Optional description of the role.'),
+  'description?': type('string | null').describe('Optional description of the role.'),
 }).describe('Request payload for creating a custom role.')
 
 export type PublicCreateOrganizationRoleBodySchema =
@@ -14757,7 +16187,7 @@ export const PublicRoleListResourceSchema = type({
   object: type("'list'").describe('Always `list`.'),
   data: type(RoleSchema).array().describe('Roles returned in the current page.'),
   has_more: type('boolean').describe('Whether more roles are available when paginating.'),
-  next: type('string | null | null').describe(
+  next: type('string | null').describe(
     'Cursor to fetch the next page of results, or `null` when there are no additional roles.',
   ),
 }).describe('Paginated list of roles available on an organization or project.')
@@ -14765,11 +16195,9 @@ export const PublicRoleListResourceSchema = type({
 export type PublicRoleListResourceSchema = typeof PublicRoleListResourceSchema.infer
 
 export const PublicUpdateOrganizationRoleBodySchema = type({
-  'permissions?': type('string[] | null | null').describe(
-    'Updated set of permissions for the role.',
-  ),
-  'description?': type('string | null | null').describe('New description for the role.'),
-  'role_name?': type('string | null | null').describe('New name for the role.'),
+  'permissions?': type('string[] | null').describe('Updated set of permissions for the role.'),
+  'description?': type('string | null').describe('New description for the role.'),
+  'role_name?': type('string | null').describe('New name for the role.'),
 }).describe('Request payload for updating an existing role.')
 
 export type PublicUpdateOrganizationRoleBodySchema =
@@ -14945,7 +16373,7 @@ export const RealtimeMCPApprovalResponseSchema = type({
   id: type('string').describe('The unique ID of the approval response.'),
   approval_request_id: type('string').describe('The ID of the approval request being answered.'),
   approve: type('boolean').describe('Whether the request was approved.'),
-  'reason?': type(type('string').describe('Optional reason for the decision.')).or('null | null'),
+  'reason?': type(type('string').describe('Optional reason for the decision.')).or('null'),
 }).describe('A Realtime item responding to an MCP approval request.\n')
 
 export type RealtimeMCPApprovalResponseSchema = typeof RealtimeMCPApprovalResponseSchema.infer
@@ -14990,13 +16418,13 @@ export const RealtimeMCPToolCallSchema = type({
   arguments: type('string').describe('A JSON string of the arguments passed to the tool.'),
   'approval_request_id?': type(
     type('string').describe('The ID of an associated approval request, if any.'),
-  ).or('null | null'),
-  'output?': type(type('string').describe('The output from the tool call.')).or('null | null'),
+  ).or('null'),
+  'output?': type(type('string').describe('The output from the tool call.')).or('null'),
   'error?': type(
     type(type(RealtimeMCPProtocolErrorSchema).or(RealtimeMCPToolExecutionErrorSchema))
       .or(RealtimeMCPHTTPErrorSchema)
       .describe('The error from the tool call, if any.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A Realtime item representing an invocation of a tool on an MCP server.\n')
 
 export type RealtimeMCPToolCallSchema = typeof RealtimeMCPToolCallSchema.infer
@@ -15518,7 +16946,7 @@ export const RealtimeBetaServerEventConversationItemCreatedSchema = type({
     type('string').describe(
       'The ID of the preceding item in the Conversation context, allows the\nclient to understand the order of the conversation. Can be `null` if the\nitem has no predecessor.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   item: RealtimeConversationItemSchema,
 }).describe(
   'Returned when a conversation item is created. There are several scenarios that produce this event:\n  - The server is generating a Response, which if successful will produce\n    either one or two Items, which will be of type `message`\n    (role `assistant`) or type `function_call`.\n  - The input audio buffer has been committed, either by the client or the\n    server (in `server_vad` mode). The server will take the content of the\n    input audio buffer and add it to a new user message Item.\n  - The client has sent a `conversation.item.create` event to add a new Item\n    to the Conversation.\n',
@@ -15557,7 +16985,7 @@ export const RealtimeBetaServerEventConversationItemInputAudioTranscriptionCompl
     ),
   'logprobs?': type(
     type(LogProbPropertiesSchema).array().describe('The log probabilities of the transcription.'),
-  ).or('null | null'),
+  ).or('null'),
   usage: type(TranscriptTextUsageTokensSchema)
     .or(TranscriptTextUsageDurationSchema)
     .describe('Usage statistics for the transcription.'),
@@ -15580,7 +17008,7 @@ export const RealtimeBetaServerEventConversationItemInputAudioTranscriptionDelta
   'delta?': type('string').describe('The text delta.'),
   'logprobs?': type(
     type(LogProbPropertiesSchema).array().describe('The log probabilities of the transcription.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Returned when the text value of an input audio transcription content part is updated.\n',
 )
@@ -15666,16 +17094,14 @@ export const RealtimeBetaServerEventErrorSchema = type({
     type: type('string').describe(
       'The type of error (e.g., "invalid_request_error", "server_error").\n',
     ),
-    'code?': type(type('string').describe('Error code, if any.')).or('null | null'),
+    'code?': type(type('string').describe('Error code, if any.')).or('null'),
     message: type('string').describe('A human-readable error message.'),
-    'param?': type(type('string').describe('Parameter related to the error, if any.')).or(
-      'null | null',
-    ),
+    'param?': type(type('string').describe('Parameter related to the error, if any.')).or('null'),
     'event_id?': type(
       type('string').describe(
         'The event_id of the client event that caused the error, if applicable.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }).describe('Details of the error.'),
 }).describe(
   'Returned when an error occurs, which could be a client problem or a server\nproblem. Most errors are recoverable and the session will stay open, we\nrecommend to implementors to monitor and log error messages by default.\n',
@@ -15704,7 +17130,7 @@ export const RealtimeBetaServerEventInputAudioBufferCommittedSchema = type({
     type('string').describe(
       'The ID of the preceding item after which the new item will be inserted.\nCan be `null` if the item has no predecessor.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   item_id: type('string').describe('The ID of the user message item that will be created.'),
 }).describe(
   'Returned when an input audio buffer is committed, either by the client or\nautomatically in server VAD mode. The `item_id` property is the ID of the user\nmessage item that will be created, thus a `conversation.item.created` event\nwill also be sent to the client.\n',
@@ -15989,7 +17415,7 @@ export const RealtimeBetaServerEventResponseMCPCallArgumentsDeltaSchema = type({
   delta: type('string').describe('The JSON-encoded arguments delta.'),
   'obfuscation?': type(
     type('string').describe('If present, indicates the delta text was obfuscated.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Returned when MCP tool call arguments are updated during response generation.')
 
 export type RealtimeBetaServerEventResponseMCPCallArgumentsDeltaSchema =
@@ -16134,7 +17560,7 @@ export const RealtimeTurnDetectionSchema = type(
         type('number.integer >= 5000 & number.integer <= 30000').describe(
           "Optional timeout after which a model response will be triggered automatically. This is\nuseful for situations in which a long pause from the user is unexpected, such as a phone\ncall. The model will effectively prompt the user to continue the conversation based\non the current context.\n\nThe timeout value will be applied after the last model response's audio has finished playing,\ni.e. it's set to the `response.done` time plus audio playback duration.\n\nAn `input_audio_buffer.timeout_triggered` event (plus events\nassociated with the Response) will be emitted when the timeout is reached.\nIdle timeout is currently only supported for `server_vad` mode.\n",
         ),
-      ).or('null | null'),
+      ).or('null'),
     }).describe(
       'Server-side voice activity detection (VAD) which flips on when user speech is detected and off after a period of silence.',
     ),
@@ -16160,7 +17586,7 @@ export const RealtimeTurnDetectionSchema = type(
     .describe(
       'Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.\n\nServer VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.\n\nSemantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.\n\nFor `gpt-realtime-whisper` transcription sessions, turn detection must be\nset to `null`; VAD is not supported.\n',
     ),
-).or('null | null')
+).or('null')
 
 export type RealtimeTurnDetectionSchema = typeof RealtimeTurnDetectionSchema.infer
 
@@ -16202,7 +17628,7 @@ export const RealtimeSessionSchema = type({
     AudioTranscriptionResponseSchema.describe(
       'Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'turn_detection?': RealtimeTurnDetectionSchema,
   'input_audio_noise_reduction?': type('unknown')
     .narrow(
@@ -16236,7 +17662,7 @@ export const RealtimeSessionSchema = type({
       .describe(
         'Configuration options for tracing. Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(RealtimeFunctionToolSchema)
     .array()
     .describe('Tools (functions) available to the model.'),
@@ -16252,12 +17678,12 @@ export const RealtimeSessionSchema = type({
   'expires_at?': type('number.integer').describe(
     'Expiration timestamp for the session, in seconds since epoch.',
   ),
-  'prompt?': type(PromptSchema).or('null | null'),
+  'prompt?': type(PromptSchema).or('null'),
   'include?': type(
     type("'item.input_audio_transcription.logprobs'[]").describe(
       'Additional fields to include in server outputs.\n- `item.input_audio_transcription.logprobs`: Include logprobs for input audio transcription.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Realtime session object for the beta interface.')
 
 export type RealtimeSessionSchema = typeof RealtimeSessionSchema.infer
@@ -16378,9 +17804,31 @@ export const RealtimeSessionCreateRequestGASchema = type({
   'output_modalities?': type("'text' | 'audio'[]").describe(
     'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
   ),
-  'model?': type(
-    "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2' | 'gpt-realtime-2.1' | 'gpt-realtime-2.1-mini' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15'",
-  ).describe('The Realtime model used for this session.\n'),
+  'model?': type('string')
+    .or(
+      type.enumerated(
+        'gpt-realtime',
+        'gpt-realtime-1.5',
+        'gpt-realtime-2',
+        'gpt-realtime-2.1',
+        'gpt-realtime-2.1-mini',
+        'gpt-realtime-2025-08-28',
+        'gpt-4o-realtime-preview',
+        'gpt-4o-realtime-preview-2024-10-01',
+        'gpt-4o-realtime-preview-2024-12-17',
+        'gpt-4o-realtime-preview-2025-06-03',
+        'gpt-4o-mini-realtime-preview',
+        'gpt-4o-mini-realtime-preview-2024-12-17',
+        'gpt-realtime-mini',
+        'gpt-realtime-mini-2025-10-06',
+        'gpt-realtime-mini-2025-12-15',
+        'gpt-audio-1.5',
+        'gpt-audio-mini',
+        'gpt-audio-mini-2025-10-06',
+        'gpt-audio-mini-2025-12-15',
+      ),
+    )
+    .describe('The Realtime model used for this session.\n'),
   'instructions?': type('string').describe(
     'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\n\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
   ),
@@ -16435,7 +17883,7 @@ export const RealtimeSessionCreateRequestGASchema = type({
       }).describe('Granular configuration for tracing.\n'),
     ),
   )
-    .or('null | null')
+    .or('null')
     .describe(
       'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
     ),
@@ -16649,7 +18097,7 @@ export const RealtimeResponseInputMessageFieldsSchema = type({
     .or('null')
     .describe('An optional client ID. The value `root` is reserved.'),
   type: "'message'",
-  'status?': type("'completed' | 'incomplete' | null | null").describe(
+  'status?': type("'completed' | 'incomplete' | null").describe(
     'Optional input status. Omission or null defaults to completed.',
   ),
   role: 'string',
@@ -16710,7 +18158,7 @@ export const RealtimeResponseInputImageSchema = type({
   image_url: type('string.url')
     .and(/^data:image\/[^;,]+;base64,.+/)
     .describe('A base64 data URL with an image MIME type; use PNG or JPEG.'),
-  'detail?': "'low' | 'high' | 'auto' | null | null",
+  'detail?': "'low' | 'high' | 'auto' | null",
   '+': 'reject',
 })
 
@@ -16778,7 +18226,7 @@ export const RealtimeResponseInputFunctionCallSchema = type({
     .or('null')
     .narrow((data: unknown) => !['root'].includes(data as never)),
   type: "'function_call'",
-  'status?': "'completed' | 'incomplete' | null | null",
+  'status?': "'completed' | 'incomplete' | null",
   call_id: type('string')
     .and(/^[a-zA-Z0-9_-]+$/)
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -16807,7 +18255,7 @@ export const RealtimeResponseInputFunctionCallOutputSchema = type({
     .or('null')
     .narrow((data: unknown) => !['root'].includes(data as never)),
   type: "'function_call_output'",
-  'status?': "'completed' | 'incomplete' | null | null",
+  'status?': "'completed' | 'incomplete' | null",
   call_id: type('string')
     .and(/^[a-zA-Z0-9_-]+$/)
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -17110,9 +18558,31 @@ export const RealtimeSessionCreateResponseGASchema = type({
   'output_modalities?': type("'text' | 'audio'[]").describe(
     'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
   ),
-  'model?': type(
-    "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2' | 'gpt-realtime-2.1' | 'gpt-realtime-2.1-mini' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15'",
-  ).describe('The Realtime model used for this session.\n'),
+  'model?': type('string')
+    .or(
+      type.enumerated(
+        'gpt-realtime',
+        'gpt-realtime-1.5',
+        'gpt-realtime-2',
+        'gpt-realtime-2.1',
+        'gpt-realtime-2.1-mini',
+        'gpt-realtime-2025-08-28',
+        'gpt-4o-realtime-preview',
+        'gpt-4o-realtime-preview-2024-10-01',
+        'gpt-4o-realtime-preview-2024-12-17',
+        'gpt-4o-realtime-preview-2025-06-03',
+        'gpt-4o-mini-realtime-preview',
+        'gpt-4o-mini-realtime-preview-2024-12-17',
+        'gpt-realtime-mini',
+        'gpt-realtime-mini-2025-10-06',
+        'gpt-realtime-mini-2025-12-15',
+        'gpt-audio-1.5',
+        'gpt-audio-mini',
+        'gpt-audio-mini-2025-10-06',
+        'gpt-audio-mini-2025-12-15',
+      ),
+    )
+    .describe('The Realtime model used for this session.\n'),
   'instructions?': type('string').describe(
     'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\n\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
   ),
@@ -17120,7 +18590,7 @@ export const RealtimeSessionCreateResponseGASchema = type({
     'input?': type({
       'format?': RealtimeAudioFormatsSchema.describe('The format of the input audio.'),
       'transcription?': type(AudioTranscriptionResponseSchema)
-        .or('null | null')
+        .or('null')
         .describe(
           'Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.\n',
         ),
@@ -17171,7 +18641,7 @@ export const RealtimeSessionCreateResponseGASchema = type({
       .describe(
         'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(type(RealtimeFunctionToolSchema).or(MCPToolSchema))
     .array()
     .describe('Tools available to the model.'),
@@ -17209,7 +18679,7 @@ export const RealtimeTranscriptionSessionCreateResponseGASchema = type({
     'input?': type({
       'format?': RealtimeAudioFormatsSchema,
       'transcription?': type(AudioTranscriptionResponseSchema)
-        .or('null | null')
+        .or('null')
         .describe('Configuration of the transcription model.\n'),
       'noise_reduction?': type(
         type({
@@ -17237,7 +18707,7 @@ export const RealtimeTranscriptionSessionCreateResponseGASchema = type({
           'Configuration for turn detection. Can be set to `null` to turn off. Server\nVAD means that the model will detect the start and end of speech based on\naudio volume and respond at the end of user speech. For `gpt-realtime-whisper`, this must be `null`; VAD is not supported.\n',
         ),
       )
-        .or('null | null')
+        .or('null')
         .describe(
           'Configuration for turn detection. For `gpt-realtime-whisper`, this must be `null`; VAD is not supported.\n',
         ),
@@ -17253,8 +18723,8 @@ export const RealtimeCreateClientSecretResponseSchema = type({
   expires_at: type('number.integer').describe(
     'Expiration timestamp for the client secret, in seconds since epoch.',
   ),
-  session: type(RealtimeSessionCreateResponseGASchema)
-    .or(RealtimeTranscriptionSessionCreateResponseGASchema)
+  session: type(type(RealtimeSessionCreateResponseGASchema).and({ type: "'realtime'" }))
+    .or(type(RealtimeTranscriptionSessionCreateResponseGASchema).and({ type: "'transcription'" }))
     .describe('The session configuration for either a realtime or transcription session.\n'),
 }).describe('Response from creating a session and client secret for the Realtime API.\n')
 
@@ -17378,7 +18848,7 @@ export const RealtimeServerEventConversationItemCreatedSchema = type({
     type('string').describe(
       'The ID of the preceding item in the Conversation context, allows the\nclient to understand the order of the conversation. Can be `null` if the\nitem has no predecessor.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   item: RealtimeConversationItemSchema,
 }).describe(
   'Returned when a conversation item is created. There are several scenarios that produce this event:\n  - The server is generating a Response, which if successful will produce\n    either one or two Items, which will be of type `message`\n    (role `assistant`) or type `function_call`.\n  - The input audio buffer has been committed, either by the client or the\n    server (in `server_vad` mode). The server will take the content of the\n    input audio buffer and add it to a new user message Item.\n  - The client has sent a `conversation.item.create` event to add a new Item\n    to the Conversation.\n',
@@ -17419,7 +18889,7 @@ export const RealtimeServerEventConversationItemInputAudioTranscriptionCompleted
     ),
   'logprobs?': type(
     type(LogProbPropertiesSchema).array().describe('The log probabilities of the transcription.'),
-  ).or('null | null'),
+  ).or('null'),
   usage: type(TranscriptTextUsageTokensSchema)
     .or(TranscriptTextUsageDurationSchema)
     .describe(
@@ -17450,7 +18920,7 @@ export const RealtimeServerEventConversationItemInputAudioTranscriptionDeltaSche
       .describe(
         'The log probabilities of the transcription. These can be enabled by configuring the session with `"include": ["item.input_audio_transcription.logprobs"]`. Each entry in the array corresponds a log probability of which token would be selected for this chunk of transcription. This can help to identify if it was possible there were multiple valid options for a given chunk of transcription.',
       ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Returned when the text value of an input audio transcription content part is updated with incremental transcription results.\n',
 )
@@ -17519,16 +18989,14 @@ export const RealtimeServerEventErrorSchema = type({
     type: type('string').describe(
       'The type of error (e.g., "invalid_request_error", "server_error").\n',
     ),
-    'code?': type(type('string').describe('Error code, if any.')).or('null | null'),
+    'code?': type(type('string').describe('Error code, if any.')).or('null'),
     message: type('string').describe('A human-readable error message.'),
-    'param?': type(type('string').describe('Parameter related to the error, if any.')).or(
-      'null | null',
-    ),
+    'param?': type(type('string').describe('Parameter related to the error, if any.')).or('null'),
     'event_id?': type(
       type('string').describe(
         'The event_id of the client event that caused the error, if applicable.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }).describe('Details of the error.'),
 }).describe(
   'Returned when an error occurs, which could be a client problem or a server\nproblem. Most errors are recoverable and the session will stay open, we\nrecommend to implementers to monitor and log error messages by default.\n',
@@ -17557,7 +19025,7 @@ export const RealtimeServerEventInputAudioBufferCommittedSchema = type({
     type('string').describe(
       'The ID of the preceding item after which the new item will be inserted.\nCan be `null` if the item has no predecessor.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   item_id: type('string').describe('The ID of the user message item that will be created.'),
 }).describe(
   'Returned when an input audio buffer is committed, either by the client or\nautomatically in server VAD mode. The `item_id` property is the ID of the user\nmessage item that will be created, thus a `conversation.item.created` event\nwill also be sent to the client.\n',
@@ -17951,7 +19419,7 @@ export const RealtimeServerEventConversationItemAddedSchema = type({
     type('string').describe(
       'The ID of the item that precedes this one, if any. This is used to\nmaintain ordering when items are inserted.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   item: RealtimeConversationItemSchema,
 }).describe(
   'Sent by the server when an Item is added to the default Conversation. This can happen in several cases:\n- When the client sends a `conversation.item.create` event.\n- When the input audio buffer is committed. In this case the item will be a user message containing the audio from the buffer.\n- When the model is generating a Response. In this case the `conversation.item.added` event will be sent when the model starts generating a specific Item, and thus it will not yet have any content (and `status` will be `in_progress`).\n\nThe event will include the full content of the Item (except when model is generating a Response) except for audio data, which can be retrieved separately with a `conversation.item.retrieve` event if necessary.\n',
@@ -17969,7 +19437,7 @@ export const RealtimeServerEventConversationItemDoneSchema = type({
     type('string').describe(
       'The ID of the item that precedes this one, if any. This is used to\nmaintain ordering when items are inserted.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   item: RealtimeConversationItemSchema,
 }).describe(
   'Returned when a conversation item is finalized.\n\nThe event will include the full content of the Item except for audio data, which can be retrieved separately with a `conversation.item.retrieve` event if needed.\n',
@@ -18060,7 +19528,7 @@ export const RealtimeServerEventResponseMCPCallArgumentsDeltaSchema = type({
   delta: type('string').describe('The JSON-encoded arguments delta.'),
   'obfuscation?': type(
     type('string').describe('If present, indicates the delta text was obfuscated.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Returned when MCP tool call arguments are updated during response generation.')
 
 export type RealtimeServerEventResponseMCPCallArgumentsDeltaSchema =
@@ -18376,13 +19844,13 @@ export const RealtimeTranslationSessionUpdateRequestSchema = type({
         }).describe(
           'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
         ),
-      ).or('null | null'),
+      ).or('null'),
       'noise_reduction?': type(
         type({
           type: NoiseReductionTypeSchema,
           'strength?': RealtimeNoiseReductionStrengthSchema,
         }).describe('Optional input noise reduction. Set to `null` to disable it.\n'),
-      ).or('null | null'),
+      ).or('null'),
     }),
     'output?': type({
       'language?': type('string').describe(
@@ -18459,13 +19927,13 @@ export const RealtimeTranslationSessionCreateRequestSchema = type({
         }).describe(
           'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
         ),
-      ).or('null | null'),
+      ).or('null'),
       'noise_reduction?': type(
         type({
           type: NoiseReductionTypeSchema,
           'strength?': RealtimeNoiseReductionStrengthSchema,
         }).describe('Optional input noise reduction. Set to `null` to disable it.\n'),
-      ).or('null | null'),
+      ).or('null'),
     }),
     'output?': type({
       'language?': type('string').describe(
@@ -18529,13 +19997,13 @@ export const RealtimeTranslationSessionSchema = type({
         }).describe(
           'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
         ),
-      ).or('null | null'),
+      ).or('null'),
       'noise_reduction?': type(
         type({
           type: NoiseReductionTypeSchema,
           'strength?': RealtimeNoiseReductionStrengthSchema,
         }).describe('Optional input noise reduction.\n'),
-      ).or('null | null'),
+      ).or('null'),
     }),
     'output?': type({
       'language?': type('string').describe(
@@ -18607,7 +20075,7 @@ export const RealtimeTranslationServerEventSessionInputTranscriptDeltaSchema = t
     type('number.integer').describe(
       'Timing metadata for stream alignment, derived from the translation frame\nwhen available. It advances in 200 ms increments, but multiple transcript\ndeltas may share the same `elapsed_ms`. Treat it as alignment metadata,\nnot a unique transcript-delta identifier.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Returned when optional source-language transcript text is available. This event\nis emitted only when `audio.input.transcription` is configured.\n\nTranscript deltas are append-only text fragments. Clients should not insert\nunconditional spaces between deltas.\n',
 )
@@ -18625,7 +20093,7 @@ export const RealtimeTranslationServerEventSessionOutputTranscriptDeltaSchema = 
     type('number.integer').describe(
       'Timing metadata for stream alignment, derived from the translation frame\nwhen available. It advances in 200 ms increments, but multiple transcript\ndeltas may share the same `elapsed_ms`. Treat it as alignment metadata,\nnot a unique transcript-delta identifier.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Returned when translated transcript text is available.\n\nTranscript deltas are append-only text fragments. Clients should not insert\nunconditional spaces between deltas.\n',
 )
@@ -18646,7 +20114,7 @@ export const RealtimeTranslationServerEventSessionOutputAudioDeltaSchema = type(
     type('number.integer').describe(
       'Timing metadata for stream alignment, derived from the translation frame\nwhen available. Treat `elapsed_ms` as alignment metadata, not a unique\nevent identifier.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Returned when translated output audio is available. The `delta` contains a\nPCM16 audio chunk whose length can vary. Clients should decode and queue the\ncomplete delta instead of assuming a fixed byte or sample count.\n',
 )
@@ -18693,25 +20161,47 @@ export const AccessProgramsBodySchema = type({
 
 export type AccessProgramsBodySchema = typeof AccessProgramsBodySchema.infer
 
-export const ResponseErrorCodeSchema = type(
-  "'server_error' | 'rate_limit_exceeded' | 'invalid_prompt' | 'data_residency_mismatch' | 'bio_policy' | 'misalignment_policy_violation' | 'vector_store_timeout' | 'invalid_image' | 'invalid_image_format' | 'invalid_base64_image' | 'invalid_image_url' | 'image_too_large' | 'image_too_small' | 'image_parse_error' | 'image_content_policy_violation' | 'invalid_image_mode' | 'image_file_too_large' | 'unsupported_image_media_type' | 'empty_image_file' | 'failed_to_download_image' | 'image_file_not_found'",
-).describe('The error code for the response.\n')
+export const ResponseErrorCodeSchema = type
+  .enumerated(
+    'server_error',
+    'rate_limit_exceeded',
+    'invalid_prompt',
+    'data_residency_mismatch',
+    'bio_policy',
+    'misalignment_policy_violation',
+    'vector_store_timeout',
+    'invalid_image',
+    'invalid_image_format',
+    'invalid_base64_image',
+    'invalid_image_url',
+    'image_too_large',
+    'image_too_small',
+    'image_parse_error',
+    'image_content_policy_violation',
+    'invalid_image_mode',
+    'image_file_too_large',
+    'unsupported_image_media_type',
+    'empty_image_file',
+    'failed_to_download_image',
+    'image_file_not_found',
+  )
+  .describe('The error code for the response.\n')
 
 export type ResponseErrorCodeSchema = typeof ResponseErrorCodeSchema.infer
 
 export const ResponseErrorSchema = type(
   type({
-    'type?': type('string | null | null').describe(
+    'type?': type('string | null').describe(
       'The original error type, or null if it was not recorded.',
     ),
-    'param?': type('string | null | null').describe(
+    'param?': type('string | null').describe(
       'The request parameter associated with the error, or null if none was recorded.',
     ),
     code: ResponseErrorCodeSchema,
     message: type('string').describe('A human-readable description of the error.\n'),
     'misalignment?': MisalignmentErrorDetailsResourceSchema,
   }).describe('An error object returned when the model fails to generate a Response.\n'),
-).or('null | null')
+).or('null')
 
 export type ResponseErrorSchema = typeof ResponseErrorSchema.infer
 
@@ -18814,7 +20304,7 @@ export const PromptCacheOptionsSchema = type({
   ),
   'comparison_response_id?': type(
     type('string').describe('The response ID supplied as the prompt cache diagnostics comparison.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'The prompt-caching options that were applied to the response. Supported for `gpt-5.6` and later models.',
 )
@@ -18857,11 +20347,23 @@ export type PromptCacheUnavailableDiagnosticsBodySchema =
   typeof PromptCacheUnavailableDiagnosticsBodySchema.infer
 
 export const PromptCacheDiagnosticsSchema = type(
-  type(type(PromptCacheMissDiagnosticsBodySchema).or(PromptCacheHitDiagnosticsBodySchema)).or(
-    PromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
+  type(
+    type(
+      type(PromptCacheMissDiagnosticsBodySchema).and({ type: "'PromptCacheMissDiagnosticsBody'" }),
+    ).or(
+      type(PromptCacheHitDiagnosticsBodySchema).and({ type: "'PromptCacheHitDiagnosticsBody'" }),
+    ),
+  ).or(
+    type(PromptCacheComparisonResponseNotFoundDiagnosticsBodySchema).and({
+      type: "'PromptCacheComparisonResponseNotFoundDiagnosticsBody'",
+    }),
   ),
 )
-  .or(PromptCacheUnavailableDiagnosticsBodySchema)
+  .or(
+    type(PromptCacheUnavailableDiagnosticsBodySchema).and({
+      type: "'PromptCacheUnavailableDiagnosticsBody'",
+    }),
+  )
   .describe('Prompt cache diagnostics requested for this response.')
 
 export type PromptCacheDiagnosticsSchema = typeof PromptCacheDiagnosticsSchema.infer
@@ -18877,11 +20379,11 @@ export const ModerationErrorBodySchema = type({
 export type ModerationErrorBodySchema = typeof ModerationErrorBodySchema.infer
 
 export const ModerationSchema = type({
-  input: type(ModerationResultBodySchema)
-    .or(ModerationErrorBodySchema)
+  input: type(type(ModerationResultBodySchema).and({ type: "'ModerationResultBody'" }))
+    .or(type(ModerationErrorBodySchema).and({ type: "'ModerationErrorBody'" }))
     .describe('Moderation for the response input.'),
-  output: type(ModerationResultBodySchema)
-    .or(ModerationErrorBodySchema)
+  output: type(type(ModerationResultBodySchema).and({ type: "'ModerationResultBody'" }))
+    .or(type(ModerationErrorBodySchema).and({ type: "'ModerationErrorBody'" }))
     .describe('Moderation for the response output.'),
 }).describe('Moderation results or errors for the response input and output.')
 
@@ -18907,7 +20409,7 @@ export const ResponseSchema = type(
       type("'auto' | 'disabled'").describe(
         "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
       ),
-    ).or('null | null'),
+    ).or('null'),
     id: type('string').describe('Unique identifier for this Response.\n'),
     object: type("'response'").describe(
       'The object type of this resource - always set to `response`.\n',
@@ -18917,7 +20419,7 @@ export const ResponseSchema = type(
     ).describe(
       'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
     ),
-    access_programs: type(AccessProgramsBodySchema).or('null | null'),
+    access_programs: type(AccessProgramsBodySchema).or('null'),
     created_at: type('number').describe(
       'Unix timestamp (in seconds) of when this Response was created.\n',
     ),
@@ -18925,7 +20427,7 @@ export const ResponseSchema = type(
       type('number').describe(
         'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     error: ResponseErrorSchema,
     incomplete_details: type(
       type({
@@ -18935,7 +20437,7 @@ export const ResponseSchema = type(
           'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
         ),
       }).describe('Details about why the response is incomplete.\n'),
-    ).or('null | null'),
+    ).or('null'),
     'input_transformations?': type(ReasoningInputTransformationSchema)
       .array()
       .describe('Reasoning inputs withheld from the model, in input order.'),
@@ -18944,7 +20446,7 @@ export const ResponseSchema = type(
       .describe(
         "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
       ),
-    'reasoning?': type(ReasoningSchema).or('null | null'),
+    'reasoning?': type(ReasoningSchema).or('null'),
     instructions: type(
       type(
         type('string').describe(
@@ -18961,13 +20463,13 @@ export const ResponseSchema = type(
         .describe(
           "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
         ),
-    ).or('null | null'),
+    ).or('null'),
     'output_text?': type(
       type('string').describe(
         'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
       ),
-    ).or('null | null'),
-    'usage?': type(ResponseUsageSchema).or('null | null'),
+    ).or('null'),
+    'usage?': type(ResponseUsageSchema).or('null'),
     'tool_usage?': ResponseToolUsageSchema.describe(
       'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
     ),
@@ -18977,16 +20479,22 @@ export const ResponseSchema = type(
       ModerationSchema.describe(
         'Moderation results for the response input and output, if moderated completions were requested.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     parallel_tool_calls: type('boolean').describe(
       'Whether to allow the model to run tool calls in parallel.\n',
     ),
-    'conversation?': type(ResponseConversationSchema).or('null | null'),
+    'conversation?': type(ResponseConversationSchema).or('null'),
     'max_output_tokens?': type(
       type('number.integer').describe(
         'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
+    model: 'unknown',
+    tools: 'unknown',
+    metadata: 'unknown',
+    tool_choice: 'unknown',
+    temperature: 'unknown',
+    top_p: 'unknown',
   }),
 )
 
@@ -19009,6 +20517,7 @@ export const ResponseAudioDoneEventSchema = type({
     'The type of the event. Always `response.audio.done`.\n',
   ),
   sequence_number: type('number.integer').describe('The sequence number of the delta.\n'),
+  response_id: 'unknown',
 }).describe('Emitted when the audio response is complete.')
 
 export type ResponseAudioDoneEventSchema = typeof ResponseAudioDoneEventSchema.infer
@@ -19019,6 +20528,7 @@ export const ResponseAudioTranscriptDeltaEventSchema = type({
   ),
   delta: type('string').describe('The partial transcript of the audio response.\n'),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
+  response_id: 'unknown',
 }).describe('Emitted when there is a partial transcript of audio.')
 
 export type ResponseAudioTranscriptDeltaEventSchema =
@@ -19029,6 +20539,7 @@ export const ResponseAudioTranscriptDoneEventSchema = type({
     'The type of the event. Always `response.audio.transcript.done`.\n',
   ),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
+  response_id: 'unknown',
 }).describe('Emitted when the full audio transcript is completed.')
 
 export type ResponseAudioTranscriptDoneEventSchema =
@@ -19220,9 +20731,9 @@ export type ResponseCustomToolCallInputDoneEventSchema =
 
 export const ResponseErrorEventSchema = type({
   type: type("'error'").describe('The type of the event. Always `error`.\n'),
-  code: type(type('string').describe('The error code.\n')).or('null | null'),
+  code: type(type('string').describe('The error code.\n')).or('null'),
   message: type('string').describe('The error message.\n'),
-  param: type(type('string').describe('The error parameter.\n')).or('null | null'),
+  param: type(type('string').describe('The error parameter.\n')).or('null'),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
 }).describe('Emitted when an error occurs.')
 
@@ -19625,7 +21136,7 @@ export const ResponseOutputTextAnnotationAddedEventSchema = type({
   ),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
   annotation: type(AnnotationSchema)
-    .or('null | null')
+    .or('null')
     .describe('The annotation object being added. (See annotation schema for details.)'),
 }).describe('Emitted when an annotation is added to output text content.\n')
 
@@ -19823,13 +21334,19 @@ export const ResponseSteerErrorCodeSchema = type(
 export type ResponseSteerErrorCodeSchema = typeof ResponseSteerErrorCodeSchema.infer
 
 export const UserMessageItemParamSchema = type({
-  'id?': type(type('string').describe('The unique ID of this message item.')).or('null | null'),
+  'id?': type(type('string').describe('The unique ID of this message item.')).or('null'),
   type: type("'message'").describe('The item type. Always `message`.'),
   role: type("'user'").describe('The message role. Always `user`.'),
   content: type(
     type(
-      type(type(InputTextContentParamSchema).or(InputImageContentParamAutoParamSchema))
-        .or(InputFileContentParamSchema)
+      type(
+        type(type(InputTextContentParamSchema).and({ type: "'InputTextContentParam'" })).or(
+          type(InputImageContentParamAutoParamSchema).and({
+            type: "'InputImageContentParamAutoParam'",
+          }),
+        ),
+      )
+        .or(type(InputFileContentParamSchema).and({ type: "'InputFileContentParam'" }))
         .describe('A piece of message content, such as text, an image, or a file.'),
     ).array(),
   )
@@ -19841,7 +21358,7 @@ export const UserMessageItemParamSchema = type({
         .describe('The message content, as a single string.'),
     )
     .describe('The message content, as an array of content parts.'),
-  'status?': type(type('string').describe('The status of the message item.')).or('null | null'),
+  'status?': type(type('string').describe('The status of the message item.')).or('null'),
 })
 
 export type UserMessageItemParamSchema = typeof UserMessageItemParamSchema.infer
@@ -20376,11 +21893,11 @@ export type ResponseStreamEventSchema = typeof ResponseStreamEventSchema.infer
 
 export const ErrorPayloadSchema = type({
   type: type('string').describe('The error type that was emitted.'),
-  code: type(type('string').describe('The error code that was emitted, if any.')).or('null | null'),
+  code: type(type('string').describe('The error code that was emitted, if any.')).or('null'),
   message: type('string').describe('The human-readable error message that was emitted.'),
   param: type(
     type('string').describe('The parameter name that was associated with the error, if any.'),
-  ).or('null | null'),
+  ).or('null'),
   'headers?': type({
     '[string]': type('string').describe('The header value that was emitted.'),
   }).describe('The response headers that were emitted with the error, if any.'),
@@ -21643,7 +23160,7 @@ export const RoleListResourceSchema = type({
   has_more: type('boolean').describe(
     'Whether additional assignments are available when paginating.',
   ),
-  next: type('string | null | null').describe(
+  next: type('string | null').describe(
     'Cursor to fetch the next page of results, or `null` when there are no more assignments.',
   ),
 }).describe('Paginated list of roles assigned to a principal.')
@@ -21681,13 +23198,13 @@ export const RunGraderResponseSchema = type({
       invalid_variable_error: 'boolean',
       other_error: 'boolean',
       python_grader_server_error: 'boolean',
-      python_grader_server_error_type: 'string | null | null',
+      python_grader_server_error_type: 'string | null',
       python_grader_runtime_error: 'boolean',
-      python_grader_runtime_error_details: 'string | null | null',
+      python_grader_runtime_error_details: 'string | null',
       model_grader_server_error: 'boolean',
       model_grader_refusal_error: 'boolean',
       model_grader_parse_error: 'boolean',
-      model_grader_server_error_details: 'string | null | null',
+      model_grader_server_error_details: 'string | null',
     }),
     execution_time: 'number',
     scores: type({ '[string]': 'unknown' }),
@@ -21695,11 +23212,11 @@ export const RunGraderResponseSchema = type({
       type({
         prompt_tokens: 'number.integer',
         total_tokens: 'number.integer',
-        'completion_tokens?': 'number.integer | null | null',
-        'cached_tokens?': 'number.integer | null | null',
+        'completion_tokens?': 'number.integer | null',
+        'cached_tokens?': 'number.integer | null',
       }),
-    ).or('null | null'),
-    sampled_model_name: 'string | null | null',
+    ).or('null'),
+    sampled_model_name: 'string | null',
   }),
   sub_rewards: type({ '[string]': 'unknown' }),
   model_grader_token_usage_per_model: type({ '[string]': 'unknown' }),
@@ -21724,7 +23241,7 @@ export const SubmitToolOutputsRunRequestSchema = type({
     type('boolean').describe(
       'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   '+': 'reject',
 })
 
@@ -21826,7 +23343,7 @@ export const UploadSchema = type({
   ),
   'object?': type("'upload'").describe('The object type, which is always "upload".'),
   'file?': type(OpenAIFileSchema)
-    .or('null | null')
+    .or('null')
     .describe('The ready File object after the Upload is completed.'),
 }).describe('The Upload object can accept byte chunks in the form of Parts.\n')
 
@@ -21860,22 +23377,22 @@ export const UsageAudioSpeechesResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated audio speeches usage details of the specific time bucket.')
 
 export type UsageAudioSpeechesResultSchema = typeof UsageAudioSpeechesResultSchema.infer
@@ -21895,22 +23412,22 @@ export const UsageAudioTranscriptionsResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated audio transcriptions usage details of the specific time bucket.')
 
 export type UsageAudioTranscriptionsResultSchema = typeof UsageAudioTranscriptionsResultSchema.infer
@@ -21922,14 +23439,14 @@ export const UsageCodeInterpreterSessionsResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated code interpreter sessions usage details of the specific time bucket.')
 
 export type UsageCodeInterpreterSessionsResultSchema =
   typeof UsageCodeInterpreterSessionsResultSchema.infer
 
 export const UsageCompletionsResultSchema = type({
-  'api_source?': type("'agents_api' | 'unlabeled' | null | null").describe(
+  'api_source?': type("'agents_api' | 'unlabeled' | null").describe(
     'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
   ),
   object: "'organization.usage.completions.result'",
@@ -21946,7 +23463,7 @@ export const UsageCompletionsResultSchema = type({
     type('number.integer').describe(
       'The aggregated number of input tokens written to the cache with a 30-minute retention period. May be absent or null for older responses.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input_cache_write_12h_tokens?': type('number.integer').describe(
     'The aggregated number of input tokens written to the cache with a 12-hour retention period.',
   ),
@@ -21988,32 +23505,32 @@ export const UsageCompletionsResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'batch?': type(
     type('boolean').describe(
       'When `group_by=batch`, this field tells whether the grouped usage result is batch or not.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'service_tier?': type(
     type('string').describe(
       'When `group_by=service_tier`, this field provides the service tier of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated completions usage details of the specific time bucket.')
 
 export type UsageCompletionsResultSchema = typeof UsageCompletionsResultSchema.infer
@@ -22026,22 +23543,22 @@ export const UsageEmbeddingsResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated embeddings usage details of the specific time bucket.')
 
 export type UsageEmbeddingsResultSchema = typeof UsageEmbeddingsResultSchema.infer
@@ -22053,22 +23570,22 @@ export const UsageFileSearchCallsResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'vector_store_id?': type(
     type('string').describe(
       'When `group_by=vector_store_id`, this field provides the vector store ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated file search calls usage details of the specific time bucket.')
 
 export type UsageFileSearchCallsResultSchema = typeof UsageFileSearchCallsResultSchema.infer
@@ -22081,32 +23598,32 @@ export const UsageImagesResultSchema = type({
     type('string').describe(
       'When `group_by=source`, this field provides the source of the grouped usage result, possible values are `image.generation`, `image.edit`, `image.variation`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'size?': type(
     type('string').describe(
       'When `group_by=size`, this field provides the image size of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'project_id?': type(
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated images usage details of the specific time bucket.')
 
 export type UsageImagesResultSchema = typeof UsageImagesResultSchema.infer
@@ -22119,22 +23636,22 @@ export const UsageModerationsResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated moderations usage details of the specific time bucket.')
 
 export type UsageModerationsResultSchema = typeof UsageModerationsResultSchema.infer
@@ -22146,13 +23663,13 @@ export const UsageVectorStoresResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated vector stores usage details of the specific time bucket.')
 
 export type UsageVectorStoresResultSchema = typeof UsageVectorStoresResultSchema.infer
 
 export const UsageWebSearchCallsResultSchema = type({
-  'api_source?': type("'agents_api' | 'unlabeled' | null | null").describe(
+  'api_source?': type("'agents_api' | 'unlabeled' | null").describe(
     'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
   ),
   object: "'organization.usage.web_searches.result'",
@@ -22162,27 +23679,27 @@ export const UsageWebSearchCallsResultSchema = type({
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'context_level?': type(
     type('string').describe(
       'When `group_by=context_level`, this field provides the search context size of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated web search calls usage details of the specific time bucket.')
 
 export type UsageWebSearchCallsResultSchema = typeof UsageWebSearchCallsResultSchema.infer
@@ -22200,17 +23717,43 @@ export const UsageTimeBucketSchema = type({
               type(
                 type(
                   type(
-                    type(type(UsageCompletionsResultSchema).or(UsageEmbeddingsResultSchema)).or(
-                      UsageModerationsResultSchema,
+                    type(
+                      type(
+                        type(UsageCompletionsResultSchema).and({
+                          object: "'UsageCompletionsResult'",
+                        }),
+                      ).or(
+                        type(UsageEmbeddingsResultSchema).and({
+                          object: "'UsageEmbeddingsResult'",
+                        }),
+                      ),
+                    ).or(
+                      type(UsageModerationsResultSchema).and({
+                        object: "'UsageModerationsResult'",
+                      }),
                     ),
-                  ).or(UsageImagesResultSchema),
-                ).or(UsageAudioSpeechesResultSchema),
-              ).or(UsageAudioTranscriptionsResultSchema),
-            ).or(UsageVectorStoresResultSchema),
-          ).or(UsageCodeInterpreterSessionsResultSchema),
-        ).or(UsageFileSearchCallsResultSchema),
-      ).or(UsageWebSearchCallsResultSchema),
-    ).or(CostsResultSchema),
+                  ).or(type(UsageImagesResultSchema).and({ object: "'UsageImagesResult'" })),
+                ).or(
+                  type(UsageAudioSpeechesResultSchema).and({
+                    object: "'UsageAudioSpeechesResult'",
+                  }),
+                ),
+              ).or(
+                type(UsageAudioTranscriptionsResultSchema).and({
+                  object: "'UsageAudioTranscriptionsResult'",
+                }),
+              ),
+            ).or(type(UsageVectorStoresResultSchema).and({ object: "'UsageVectorStoresResult'" })),
+          ).or(
+            type(UsageCodeInterpreterSessionsResultSchema).and({
+              object: "'UsageCodeInterpreterSessionsResult'",
+            }),
+          ),
+        ).or(
+          type(UsageFileSearchCallsResultSchema).and({ object: "'UsageFileSearchCallsResult'" }),
+        ),
+      ).or(type(UsageWebSearchCallsResultSchema).and({ object: "'UsageWebSearchCallsResult'" })),
+    ).or(type(CostsResultSchema).and({ object: "'CostsResult'" })),
   ).array(),
 })
 
@@ -22220,7 +23763,7 @@ export const UsageResponseSchema = type({
   object: "'page'",
   data: type(UsageTimeBucketSchema).array(),
   has_more: 'boolean',
-  next_page: 'string | null | null',
+  next_page: 'string | null',
 })
 
 export type UsageResponseSchema = typeof UsageResponseSchema.infer
@@ -22230,9 +23773,9 @@ export const UserSchema = type({
     'The object type, which is always `organization.user`',
   ),
   id: type('string').describe('The identifier, which can be referenced in API endpoints'),
-  'name?': type('string | null | null').describe('The name of the user'),
-  'email?': type('string | null | null').describe('The email address of the user'),
-  'role?': type('string | null | null').describe('`owner` or `reader`'),
+  'name?': type('string | null').describe('The name of the user'),
+  'email?': type('string | null').describe('The email address of the user'),
+  'role?': type('string | null').describe('`owner` or `reader`'),
   added_at: type('number.integer').describe(
     'The Unix timestamp (in seconds) of when the user was added.',
   ),
@@ -22243,40 +23786,34 @@ export const UserSchema = type({
   'user?': type({
     object: "'user'",
     id: 'string',
-    'email?': 'string | null | null',
-    'name?': 'string | null | null',
-    'picture?': 'string | null | null',
-    'enabled?': 'boolean | null | null',
-    'banned?': 'boolean | null | null',
-    'banned_at?': 'number.integer | null | null',
+    'email?': 'string | null',
+    'name?': 'string | null',
+    'picture?': 'string | null',
+    'enabled?': 'boolean | null',
+    'banned?': 'boolean | null',
+    'banned_at?': 'number.integer | null',
   }).describe('Nested user details.'),
   'is_service_account?': type('boolean').describe('Whether the user is a service account.'),
-  'is_scale_tier_authorized_purchaser?': type('boolean | null | null').describe(
+  'is_scale_tier_authorized_purchaser?': type('boolean | null').describe(
     'Whether the user is an authorized purchaser for Scale Tier.',
   ),
   'is_scim_managed?': type('boolean').describe('Whether the user is managed through SCIM.'),
-  'api_key_last_used_at?': type('number.integer | null | null').describe(
+  'api_key_last_used_at?': type('number.integer | null').describe(
     "The Unix timestamp (in seconds) of the user's last API key usage.",
   ),
-  'technical_level?': type('string | null | null').describe(
-    'The technical level metadata for the user.',
-  ),
-  'developer_persona?': type('string | null | null').describe(
+  'technical_level?': type('string | null').describe('The technical level metadata for the user.'),
+  'developer_persona?': type('string | null').describe(
     'The developer persona metadata for the user.',
   ),
   'projects?': type(
     type({
       object: "'list'",
       data: type(
-        type({
-          'id?': 'string | null | null',
-          'name?': 'string | null | null',
-          'role?': 'string | null | null',
-        }),
+        type({ 'id?': 'string | null', 'name?': 'string | null', 'role?': 'string | null' }),
       ).array(),
     }),
   )
-    .or('null | null')
+    .or('null')
     .describe('Projects associated with the user, if included.'),
 }).describe('Represents an individual `user` within an organization.')
 
@@ -22294,7 +23831,7 @@ export const UserListResourceSchema = type({
   object: type("'list'").describe('Always `list`.'),
   data: type(GroupUserSchema).array().describe('Users in the current page.'),
   has_more: type('boolean').describe('Whether more users are available when paginating.'),
-  next: type('string | null | null').describe(
+  next: type('string | null').describe(
     'Cursor to fetch the next page of results, or `null` when no further users are available.',
   ),
 }).describe('Paginated list of user objects returned when inspecting group membership.')
@@ -22304,8 +23841,8 @@ export type UserListResourceSchema = typeof UserListResourceSchema.infer
 export const UserListResponseSchema = type({
   object: "'list'",
   data: type(UserSchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
 })
 
@@ -22320,10 +23857,10 @@ export const UserRoleAssignmentSchema = type({
 export type UserRoleAssignmentSchema = typeof UserRoleAssignmentSchema.infer
 
 export const UserRoleUpdateRequestSchema = type({
-  'role?': type('string | null | null').describe('`owner` or `reader`'),
-  'role_id?': type('string | null | null').describe('Role ID to assign to the user.'),
-  'technical_level?': type('string | null | null').describe('Technical level metadata.'),
-  'developer_persona?': type('string | null | null').describe('Developer persona metadata.'),
+  'role?': type('string | null').describe('`owner` or `reader`'),
+  'role_id?': type('string | null').describe('Role ID to assign to the user.'),
+  'technical_level?': type('string | null').describe('Technical level metadata.'),
+  'developer_persona?': type('string | null').describe('Developer persona metadata.'),
 })
 
 export type UserRoleUpdateRequestSchema = typeof UserRoleUpdateRequestSchema.infer
@@ -22392,9 +23929,7 @@ export const VectorStoreFileContentResponseSchema = type({
     .array()
     .describe('Parsed content of the file.'),
   has_more: type('boolean').describe('Indicates if there are more content pages to fetch.'),
-  next_page: type(type('string').describe('The token for the next page, if any.')).or(
-    'null | null',
-  ),
+  next_page: type(type('string').describe('The token for the next page, if any.')).or('null'),
 }).describe('Represents the parsed content of a vector store file.')
 
 export type VectorStoreFileContentResponseSchema = typeof VectorStoreFileContentResponseSchema.infer
@@ -22455,9 +23990,7 @@ export const VectorStoreSearchResultsPageSchema = type({
     .array()
     .describe('The list of search result items.'),
   has_more: type('boolean').describe('Indicates if there are more results to fetch.'),
-  next_page: type(type('string').describe('The token for the next page, if any.')).or(
-    'null | null',
-  ),
+  next_page: type(type('string').describe('The token for the next page, if any.')).or('null'),
   '+': 'reject',
 })
 
@@ -22492,8 +24025,8 @@ export type VoiceConsentResourceSchema = typeof VoiceConsentResourceSchema.infer
 export const VoiceConsentListResourceSchema = type({
   object: "'list'",
   data: type(VoiceConsentResourceSchema).array(),
-  'first_id?': 'string | null | null',
-  'last_id?': 'string | null | null',
+  'first_id?': 'string | null',
+  'last_id?': 'string | null',
   has_more: 'boolean',
   '+': 'reject',
 })
@@ -23241,14 +24774,14 @@ export const CreateConversationBodySchema = type({
     MetadataSchema.describe(
       'Set of 16 key-value pairs that can be attached to an object. This can be         useful for storing additional information about the object in a structured         format, and querying for objects via API or the dashboard.\n        Keys are strings with a maximum length of 64 characters. Values are strings         with a maximum length of 512 characters.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'items?': type(
     type(type(InputItemSchema).array())
       .and(type('unknown[] <= 20'))
       .describe(
         'Initial items to include in the conversation context. You may add up to 20 items at a time.',
       ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type CreateConversationBodySchema = typeof CreateConversationBodySchema.infer
@@ -23274,7 +24807,7 @@ export const SafetyCaseResourceSchema = type({
   object: "'safety.case'",
   created_at: 'number.integer',
   entity_identifier: 'string',
-  reason: 'string | null | null',
+  reason: 'string | null',
   notice: SafetyCaseNoticeSchema,
 })
 
@@ -23301,12 +24834,12 @@ export const SafetyAlertResourceSchema = type({
     type('string').describe(
       'A customer-safe description derived from error_type, or null for zero data retention requests.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'detailed_explanation?': type(
     type('string').describe(
       'A generated explanation, temporarily available for eligible zero data retention alerts. Omitted when unavailable.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type SafetyAlertResourceSchema = typeof SafetyAlertResourceSchema.infer
@@ -23355,8 +24888,8 @@ export type ExternalKeyResourceSchema = typeof ExternalKeyResourceSchema.infer
 export const ListExternalKeysResourceSchema = type({
   object: "'list'",
   data: type(ExternalKeyResourceSchema).array(),
-  first_id: 'string | null | null',
-  last_id: 'string | null | null',
+  first_id: 'string | null',
+  last_id: 'string | null',
   has_more: 'boolean',
 })
 
@@ -23460,10 +24993,12 @@ export const OciExternalKeyParamsSchema = type({
 export type OciExternalKeyParamsSchema = typeof OciExternalKeyParamsSchema.infer
 
 export const V1OrganizationExternalKeysPostRequestSchema = type(
-  type(type(AwsExternalKeyParamsSchema).or(GcpExternalKeyParamsSchema)).or(
-    AzureExternalKeyParamsSchema,
-  ),
-).or(OciExternalKeyParamsSchema)
+  type(
+    type(type(AwsExternalKeyParamsSchema).and({ type: "'AwsExternalKeyParams'" })).or(
+      type(GcpExternalKeyParamsSchema).and({ type: "'GcpExternalKeyParams'" }),
+    ),
+  ).or(type(AzureExternalKeyParamsSchema).and({ type: "'AzureExternalKeyParams'" })),
+).or(type(OciExternalKeyParamsSchema).and({ type: "'OciExternalKeyParams'" }))
 
 export type V1OrganizationExternalKeysPostRequestSchema =
   typeof V1OrganizationExternalKeysPostRequestSchema.infer
@@ -23474,7 +25009,7 @@ export type ValidateExternalKeyResourceSchema = typeof ValidateExternalKeyResour
 
 export const DiscoveryVerificationSchema = type({
   type: "'discovery'",
-  discovery_url: 'string | null | null',
+  discovery_url: 'string | null',
 })
 
 export type DiscoveryVerificationSchema = typeof DiscoveryVerificationSchema.infer
@@ -23498,7 +25033,7 @@ export const PlatformProviderSchema = type({
   issuer: 'string',
   audience: 'string',
   verification: type(DiscoveryVerificationSchema).or(UploadedJwksVerificationSchema),
-  description: 'string | null | null',
+  description: 'string | null',
   attribute_transformations: type(TransformationSchema).array(),
   enabled: 'boolean',
   created_at: 'number.integer',
@@ -23510,8 +25045,8 @@ export type PlatformProviderSchema = typeof PlatformProviderSchema.infer
 export const PlatformProviderListResourceSchema = type({
   object: "'list'",
   data: type(PlatformProviderSchema).array(),
-  first_id: 'string | null | null',
-  last_id: 'string | null | null',
+  first_id: 'string | null',
+  last_id: 'string | null',
   has_more: 'boolean',
 })
 
@@ -23519,7 +25054,7 @@ export type PlatformProviderListResourceSchema = typeof PlatformProviderListReso
 
 export const DiscoveryVerificationParamSchema = type({
   type: "'discovery'",
-  discovery_url: 'string | null | null',
+  discovery_url: 'string | null',
 })
 
 export type DiscoveryVerificationParamSchema = typeof DiscoveryVerificationParamSchema.infer
@@ -23575,7 +25110,7 @@ export const UpdatePlatformWorkloadIdentityProviderBodySchema = type({
     (data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'),
   ),
   'verification?': type(DiscoveryVerificationParamSchema).or(UploadedJwksVerificationParamSchema),
-  'description?': 'string | null | null',
+  'description?': 'string | null',
   'attribute_transformations?': type(type(TransformationParamSchema).array()).and(
     type('unknown[] <= 20'),
   ),
@@ -23608,8 +25143,8 @@ export const PlatformFederationRuleSchema = type({
   workload_identity_provider_id: 'string',
   project_id: 'string',
   service_account_id: 'string',
-  name: 'string | null | null',
-  description: 'string | null | null',
+  name: 'string | null',
+  description: 'string | null',
   attribute_matchers: type({ '[string]': 'string | boolean | number.integer | number' }),
   permissions: type(DefaultPermissionsSchema).or(RestrictedPermissionsSchema),
   enabled: 'boolean',
@@ -23622,8 +25157,8 @@ export type PlatformFederationRuleSchema = typeof PlatformFederationRuleSchema.i
 export const PlatformFederationRuleListResourceSchema = type({
   object: "'list'",
   data: type(PlatformFederationRuleSchema).array(),
-  first_id: 'string | null | null',
-  last_id: 'string | null | null',
+  first_id: 'string | null',
+  last_id: 'string | null',
   has_more: 'boolean',
 })
 
@@ -23659,8 +25194,8 @@ export type CreatePlatformWorkloadIdentityFederationRuleBodySchema =
   typeof CreatePlatformWorkloadIdentityFederationRuleBodySchema.infer
 
 export const UpdatePlatformWorkloadIdentityFederationRuleBodySchema = type({
-  'name?': 'string | null | null',
-  'description?': 'string | null | null',
+  'name?': 'string | null',
+  'description?': 'string | null',
   'attribute_matchers?': type({ '[string]': 'string | boolean | number.integer | number' }),
   'permissions?': type(DefaultPermissionsParamSchema).or(RestrictedPermissionsParamSchema),
   'enabled?': 'boolean',
@@ -23697,7 +25232,7 @@ export const DecisionsUsageResultSchema = type({
     DecisionsUsageApiSourceSchema.describe(
       'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   object: "'organization.usage.decisions.result'",
   input_tokens: type('number.integer').describe(
     'The aggregated number of input tokens used, including cached and cache-write tokens. This includes text, audio, and image tokens. For customers subscribed to Scale Tier, this includes Scale Tier tokens.',
@@ -23706,27 +25241,27 @@ export const DecisionsUsageResultSchema = type({
     type('number.integer').describe(
       'The aggregated number of cached input tokens used across text, audio, and image inputs. For customers subscribed to Scale Tier, this includes Scale Tier tokens.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input_cache_write_tokens?': type(
     type('number.integer').describe(
       'The aggregated number of input tokens written to the cache across 30-minute and 12-hour retention periods.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input_cache_write_30m_tokens?': type(
     type('number.integer').describe(
       'The aggregated number of input tokens written to the cache with a 30-minute retention period.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input_cache_write_12h_tokens?': type(
     type('number.integer').describe(
       'The aggregated number of input tokens written to the cache with a 12-hour retention period.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input_uncached_tokens?': type(
     type('number.integer').describe(
       'The aggregated number of uncached input tokens used across text, audio, and image inputs, excluding cache-write tokens.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   output_tokens: type('number.integer').describe(
     'The aggregated number of output tokens used across text, audio, and image outputs. For customers subscribed to Scale Tier, this includes Scale Tier tokens.',
   ),
@@ -23734,62 +25269,62 @@ export const DecisionsUsageResultSchema = type({
     type('number.integer').describe(
       'The aggregated number of uncached text input tokens used, excluding cache-write tokens.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'output_text_tokens?': type(
     type('number.integer').describe('The aggregated number of text output tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   'input_cached_text_tokens?': type(
     type('number.integer').describe('The aggregated number of cached text input tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   'input_audio_tokens?': type(
     type('number.integer').describe('The aggregated number of uncached audio input tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   'input_cached_audio_tokens?': type(
     type('number.integer').describe('The aggregated number of cached audio input tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   'output_audio_tokens?': type(
     type('number.integer').describe('The aggregated number of audio output tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   'input_image_tokens?': type(
     type('number.integer').describe('The aggregated number of uncached image input tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   'input_cached_image_tokens?': type(
     type('number.integer').describe('The aggregated number of cached image input tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   'output_image_tokens?': type(
     type('number.integer').describe('The aggregated number of image output tokens used.'),
-  ).or('null | null'),
+  ).or('null'),
   num_model_requests: type('number.integer').describe('The count of requests made to the model.'),
   'project_id?': type(
     type('string').describe(
       'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user_id?': type(
     type('string').describe(
       'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'api_key_id?': type(
     type('string').describe(
       'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': type(
     type('string').describe(
       'When `group_by=model`, this field provides the model name of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'batch?': type(
     type('boolean').describe(
       'When `group_by=batch`, this field tells whether the grouped usage result is batch or not.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'service_tier?': type(
     type('string').describe(
       'When `group_by=service_tier`, this field provides the service tier of the grouped usage result.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The aggregated Decisions API usage details of the specific time bucket.')
 
 export type DecisionsUsageResultSchema = typeof DecisionsUsageResultSchema.infer
@@ -23806,7 +25341,7 @@ export type DecisionsUsageBucketSchema = typeof DecisionsUsageBucketSchema.infer
 export const PublicDecisionsUsageResponseResourceSchema = type({
   object: "'page'",
   has_more: 'boolean',
-  next_page: 'string | null | null',
+  next_page: 'string | null',
   data: type(DecisionsUsageBucketSchema).array(),
 })
 
@@ -23814,9 +25349,9 @@ export type PublicDecisionsUsageResponseResourceSchema =
   typeof PublicDecisionsUsageResponseResourceSchema.infer
 
 export const DecisionsUsageErrorDetailsSchema = type({
-  code: 'string | null | null',
+  code: 'string | null',
   message: 'string',
-  param: 'string | null | null',
+  param: 'string | null',
   type: 'string',
 })
 
@@ -23851,9 +25386,25 @@ export const ExternalStorageResponseSchema = type({
   project_id: 'string',
   provider: type(
     type(
-      type(AwsExternalStorageProviderResponseSchema).or(AzureExternalStorageProviderResponseSchema),
-    ).or(GcpExternalStorageProviderResponseSchema),
-  ).or(OciExternalStorageProviderResponseSchema),
+      type(
+        type(AwsExternalStorageProviderResponseSchema).and({
+          type: "'AwsExternalStorageProviderResponse'",
+        }),
+      ).or(
+        type(AzureExternalStorageProviderResponseSchema).and({
+          type: "'AzureExternalStorageProviderResponse'",
+        }),
+      ),
+    ).or(
+      type(GcpExternalStorageProviderResponseSchema).and({
+        type: "'GcpExternalStorageProviderResponse'",
+      }),
+    ),
+  ).or(
+    type(OciExternalStorageProviderResponseSchema).and({
+      type: "'OciExternalStorageProviderResponse'",
+    }),
+  ),
   geography: 'string',
   status: ExternalStorageStatusSchema,
   created_at: 'number.integer',
@@ -23864,8 +25415,8 @@ export type ExternalStorageResponseSchema = typeof ExternalStorageResponseSchema
 export const ExternalStorageListResourceSchema = type({
   object: "'list'",
   data: type(ExternalStorageResponseSchema).array(),
-  first_id: 'string | null | null',
-  last_id: 'string | null | null',
+  first_id: 'string | null',
+  last_id: 'string | null',
   has_more: 'boolean',
 })
 
@@ -23917,9 +25468,25 @@ export const CreateExternalStorageBodySchema = type({
   project_id: 'string',
   provider: type(
     type(
-      type(AwsExternalStorageProviderParamsSchema).or(AzureExternalStorageProviderParamsSchema),
-    ).or(GcpExternalStorageProviderParamsSchema),
-  ).or(OciExternalStorageProviderParamsSchema),
+      type(
+        type(AwsExternalStorageProviderParamsSchema).and({
+          type: "'AwsExternalStorageProviderParams'",
+        }),
+      ).or(
+        type(AzureExternalStorageProviderParamsSchema).and({
+          type: "'AzureExternalStorageProviderParams'",
+        }),
+      ),
+    ).or(
+      type(GcpExternalStorageProviderParamsSchema).and({
+        type: "'GcpExternalStorageProviderParams'",
+      }),
+    ),
+  ).or(
+    type(OciExternalStorageProviderParamsSchema).and({
+      type: "'OciExternalStorageProviderParams'",
+    }),
+  ),
 })
 
 export type CreateExternalStorageBodySchema = typeof CreateExternalStorageBodySchema.infer
@@ -23955,7 +25522,7 @@ export type SpendLimitEnforcementSchema = typeof SpendLimitEnforcementSchema.inf
 export const EmailNotificationChannelSchema = type({
   type: "'email'",
   recipients: 'string[]',
-  'subject_prefix?': 'string | null | null',
+  'subject_prefix?': 'string | null',
 })
 
 export type EmailNotificationChannelSchema = typeof EmailNotificationChannelSchema.infer
@@ -23990,7 +25557,7 @@ export const SpendLimitEmailNotificationChannelParamsSchema = type({
     type('string').describe(
       'Email subject prefix. Omit to keep it unchanged; send null or an empty string to clear it.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
 )
@@ -24010,7 +25577,7 @@ export const UpdateOrganizationSpendLimitBodySchema = type({
     SpendLimitEmailNotificationChannelParamsSchema.describe(
       'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Parameters for the hard spend limit you want to create or replace.')
 
 export type UpdateOrganizationSpendLimitBodySchema =
@@ -24059,7 +25626,7 @@ export const UpdateProjectSpendLimitBodySchema = type({
     SpendLimitEmailNotificationChannelParamsSchema.describe(
       'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Parameters for the hard spend limit you want to create or replace.')
 
 export type UpdateProjectSpendLimitBodySchema = typeof UpdateProjectSpendLimitBodySchema.infer
@@ -24109,7 +25676,7 @@ export const CreateProjectServiceAccountApiKeyBodySchema = type({
     type('number.integer >= 1 & number.integer <= 31536000').describe(
       'Number of seconds until the API key expires.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The service account API key create request payload.')
 
 export type CreateProjectServiceAccountApiKeyBodySchema =
@@ -24128,7 +25695,7 @@ export const ServiceAccountApiKeyBodySchema = type({
     type('number.integer').describe(
       'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   id: type('string').describe('The identifier of the API key.'),
 })
 
@@ -24162,17 +25729,15 @@ export const C2PAProvenanceResultSchema = type({
   validation_state: C2PAValidationStateApiSchema.describe(
     'The validation status of the C2PA manifest in the uploaded image.',
   ),
-  issuer: type(type('string').describe('The C2PA manifest issuer, when available.')).or(
-    'null | null',
-  ),
+  issuer: type(type('string').describe('The C2PA manifest issuer, when available.')).or('null'),
   model: type(
     type('string').describe('The OpenAI model recorded by the provenance signal, when available.'),
-  ).or('null | null'),
+  ).or('null'),
   generated_at: type(
     type('string').describe(
       'The UTC RFC 3339 timestamp recorded by the provenance signal for when the asset was generated, when available.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type C2PAProvenanceResultSchema = typeof C2PAProvenanceResultSchema.infer
@@ -24184,12 +25749,12 @@ export const SynthIDProvenanceResultSchema = type({
   ),
   model: type(
     type('string').describe('The OpenAI model recorded by the provenance signal, when available.'),
-  ).or('null | null'),
+  ).or('null'),
   generated_at: type(
     type('string').describe(
       'The UTC RFC 3339 timestamp recorded by the provenance signal for when the asset was generated, when available.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type SynthIDProvenanceResultSchema = typeof SynthIDProvenanceResultSchema.infer
@@ -24201,7 +25766,11 @@ export const ProvenanceResourceSchema = type({
   created_at: type('number.integer').describe(
     'The Unix timestamp, in seconds, when the provenance check was created.',
   ),
-  results: type(type(C2PAProvenanceResultSchema).or(SynthIDProvenanceResultSchema))
+  results: type(
+    type(type(C2PAProvenanceResultSchema).and({ type: "'C2PAProvenanceResult'" })).or(
+      type(SynthIDProvenanceResultSchema).and({ type: "'SynthIDProvenanceResult'" }),
+    ),
+  )
     .array()
     .describe(
       'The provenance results that apply to the uploaded file. Image results include C2PA and SynthID; audio results include SynthID.',
@@ -24228,12 +25797,12 @@ export const Error2Schema = type({
   code: type('string').describe('A machine-readable error code that was returned.'),
   'type?': type(
     type('string').describe('The original error type, or null if it was not recorded.'),
-  ).or('null | null'),
+  ).or('null'),
   'param?': type(
     type('string').describe(
       'The request parameter associated with the error, or null if none was recorded.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   message: type('string').describe('A human-readable description of the error that was returned.'),
   'headers?': type({ '[string]': type('string').describe('The header value.') }).describe(
     'Headers returned with the original error. These can include Retry-After, Retry-After-Ms, and, on opted-in deployments, x-openai-inference-capacity-reason.',
@@ -24258,14 +25827,14 @@ export const VideoResourceSchema = type({
     type('number.integer').describe(
       'Unix timestamp (seconds) for when the job completed, if finished.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   expires_at: type(
     type('number.integer').describe(
       'Unix timestamp (seconds) for when the downloadable assets expire, if set.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   prompt: type(type('string').describe('The prompt that was used to generate the video.')).or(
-    'null | null',
+    'null',
   ),
   size: VideoSizeSchema.describe('The resolution of the generated video.'),
   seconds: type('string').describe(
@@ -24273,10 +25842,10 @@ export const VideoResourceSchema = type({
   ),
   remixed_from_video_id: type(
     type('string').describe('Identifier of the source video if this video is a remix.'),
-  ).or('null | null'),
+  ).or('null'),
   error: type(
     Error2Schema.describe('Error payload that explains why generation failed, if applicable.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Structured information describing a generated video job.')
 
 export type VideoResourceSchema = typeof VideoResourceSchema.infer
@@ -24284,10 +25853,8 @@ export type VideoResourceSchema = typeof VideoResourceSchema.infer
 export const VideoListResourceSchema = type({
   object: type("'list'").describe('The type of object returned, must be `list`.'),
   data: type(VideoResourceSchema).array().describe('A list of items'),
-  first_id: type(type('string').describe('The ID of the first item in the list.')).or(
-    'null | null',
-  ),
-  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null | null'),
+  first_id: type(type('string').describe('The ID of the first item in the list.')).or('null'),
+  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null'),
   has_more: type('boolean').describe('Whether there are more items available.'),
 })
 
@@ -24367,10 +25934,8 @@ export const CreateVideoCharacterBodySchema = type({
 export type CreateVideoCharacterBodySchema = typeof CreateVideoCharacterBodySchema.infer
 
 export const VideoCharacterResourceSchema = type({
-  id: type(type('string').describe('Identifier for the character creation cameo.')).or(
-    'null | null',
-  ),
-  name: type(type('string').describe('Display name for the character.')).or('null | null'),
+  id: type(type('string').describe('Identifier for the character creation cameo.')).or('null'),
+  name: type(type('string').describe('Display name for the character.')).or('null'),
   created_at: type('number.integer').describe(
     'Unix timestamp (in seconds) when the character was created.',
   ),
@@ -24468,7 +26033,7 @@ export const TokenCountsBodySchema = type({
     type('string').describe(
       'Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input?': type(
     type(
       type('string')
@@ -24485,25 +26050,25 @@ export const TokenCountsBodySchema = type({
           ),
       )
       .describe('Text, image, or file inputs to the model, used to generate a response'),
-  ).or('null | null'),
+  ).or('null'),
   'previous_response_id?': type(
     type('string').describe(
       'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(
     type(ToolSchema)
       .array()
       .describe(
         'An array of tools the model may call while generating a response. You can specify which tool to use by setting the `tool_choice` parameter.',
       ),
-  ).or('null | null'),
-  'text?': type(ResponseTextParamSchema).or('null | null'),
+  ).or('null'),
+  'text?': type(ResponseTextParamSchema).or('null'),
   'reasoning?': type(
     ReasoningSchema.describe(
       '**gpt-5 and o-series models only** Configuration options for [reasoning models](https://developers.openai.com/api/docs/guides/reasoning).',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'truncation?': TruncationEnumSchema.describe(
     "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds the model's context window size, the model will truncate the response to fit the context window by dropping items from the beginning of the conversation. On some models, trimming can begin earlier because the API subtracts the model's maximum output allowance from its input limit before counting tokens.\n- `disabled` (default): If the input size will exceed the context window size for a model, the request will fail with a 400 error.",
   ),
@@ -24511,17 +26076,17 @@ export const TokenCountsBodySchema = type({
     type('string').describe(
       "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'personality?': PersonalityEnumSchema.describe(
     "A model-owned style preset to apply to this request. Omit this parameter to use the model's default style. Supported values may expand over time. Values must be at most 64 characters.",
   ),
-  'conversation?': type(ConversationParamSchema).or('null | null'),
+  'conversation?': type(ConversationParamSchema).or('null'),
   'tool_choice?': type(
     ToolChoiceParamSchema.describe('Controls which tool the model should use, if any.'),
-  ).or('null | null'),
+  ).or('null'),
   'parallel_tool_calls?': type(
     type('boolean').describe('Whether to allow the model to run tool calls in parallel.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type TokenCountsBodySchema = typeof TokenCountsBodySchema.infer
@@ -24559,34 +26124,34 @@ export const CompactResponseMethodPublicBodySchema = type({
           ),
       )
       .describe('Text, image, or file inputs to the model, used to generate a response'),
-  ).or('null | null'),
+  ).or('null'),
   'previous_response_id?': type(
     type('string').describe(
       'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'instructions?': type(
     type('string').describe(
       "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'image?': ImageOptionsParamSchema.describe('Request level image options.'),
   'prompt_cache_key?': type(
     type('string')
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('A key to use when reading from or writing to the prompt cache.'),
-  ).or('null | null'),
+  ).or('null'),
   'prompt_cache_retention?': type(
     PromptCacheRetentionEnumSchema.describe(
       'How long to retain a prompt cache entry created by this request.',
     ),
-  ).or('null | null'),
-  'prompt_cache_options?': type(PromptCacheOptionsParamSchema).or('null | null'),
+  ).or('null'),
+  'prompt_cache_options?': type(PromptCacheOptionsParamSchema).or('null'),
   'service_tier?': type(
     ServiceTierEnumSchema.describe(
       "Specifies the processing type used for serving the request.   - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.   - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.   - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.   - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. For models with a dedicated Fast tier, either value resolves to `service_tier=fast`; for other models, either value resolves to `service_tier=priority`.   - When not set, the default behavior is 'auto'.\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.",
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type CompactResponseMethodPublicBodySchema =
@@ -24617,35 +26182,95 @@ export const ItemFieldSchema = type(
                                             type(
                                               type(
                                                 type(
-                                                  type(type(MessageSchema).or(ProgramSchema)).or(
-                                                    ProgramOutputSchema,
+                                                  type(
+                                                    type(
+                                                      type(MessageSchema).and({
+                                                        type: "'Message'",
+                                                      }),
+                                                    ).or(
+                                                      type(ProgramSchema).and({
+                                                        type: "'Program'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(ProgramOutputSchema).and({
+                                                      type: "'ProgramOutput'",
+                                                    }),
                                                   ),
-                                                ).or(FunctionToolCallSchema),
-                                              ).or(ToolSearchCallSchema),
-                                            ).or(ToolSearchOutputSchema),
-                                          ).or(AdditionalToolsSchema),
-                                        ).or(FunctionToolCallOutputSchema),
-                                      ).or(FileSearchToolCallSchema),
-                                    ).or(WebSearchToolCallSchema),
-                                  ).or(ImageGenToolCallSchema),
-                                ).or(ComputerToolCallSchema),
-                              ).or(ComputerToolCallOutputResourceSchema),
-                            ).or(ReasoningItemSchema),
-                          ).or(CompactionBodySchema),
-                        ).or(CodeInterpreterToolCallSchema),
-                      ).or(LocalShellToolCallSchema),
-                    ).or(LocalShellToolCallOutputSchema),
-                  ).or(FunctionShellCallSchema),
-                ).or(FunctionShellCallOutputSchema),
-              ).or(ApplyPatchToolCallSchema),
-            ).or(ApplyPatchToolCallOutputSchema),
-          ).or(MCPListToolsSchema),
-        ).or(MCPApprovalRequestSchema),
-      ).or(MCPApprovalResponseResourceSchema),
-    ).or(MCPToolCallSchema),
-  ).or(CustomToolCallSchema),
+                                                ).or(
+                                                  type(FunctionToolCallSchema).and({
+                                                    type: "'FunctionToolCall'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(ToolSearchCallSchema).and({
+                                                  type: "'ToolSearchCall'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(ToolSearchOutputSchema).and({
+                                                type: "'ToolSearchOutput'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(AdditionalToolsSchema).and({
+                                              type: "'AdditionalTools'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(FunctionToolCallOutputSchema).and({
+                                            type: "'FunctionToolCallOutput'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(FileSearchToolCallSchema).and({
+                                          type: "'FileSearchToolCall'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(WebSearchToolCallSchema).and({
+                                        type: "'WebSearchToolCall'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(ImageGenToolCallSchema).and({
+                                      type: "'ImageGenToolCall'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(ComputerToolCallSchema).and({ type: "'ComputerToolCall'" }),
+                                ),
+                              ).or(
+                                type(ComputerToolCallOutputResourceSchema).and({
+                                  type: "'ComputerToolCallOutputResource'",
+                                }),
+                              ),
+                            ).or(type(ReasoningItemSchema).and({ type: "'ReasoningItem'" })),
+                          ).or(type(CompactionBodySchema).and({ type: "'CompactionBody'" })),
+                        ).or(
+                          type(CodeInterpreterToolCallSchema).and({
+                            type: "'CodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(type(LocalShellToolCallSchema).and({ type: "'LocalShellToolCall'" })),
+                    ).or(
+                      type(LocalShellToolCallOutputSchema).and({
+                        type: "'LocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(type(FunctionShellCallSchema).and({ type: "'FunctionShellCall'" })),
+                ).or(
+                  type(FunctionShellCallOutputSchema).and({ type: "'FunctionShellCallOutput'" }),
+                ),
+              ).or(type(ApplyPatchToolCallSchema).and({ type: "'ApplyPatchToolCall'" })),
+            ).or(type(ApplyPatchToolCallOutputSchema).and({ type: "'ApplyPatchToolCallOutput'" })),
+          ).or(type(MCPListToolsSchema).and({ type: "'MCPListTools'" })),
+        ).or(type(MCPApprovalRequestSchema).and({ type: "'MCPApprovalRequest'" })),
+      ).or(type(MCPApprovalResponseResourceSchema).and({ type: "'MCPApprovalResponseResource'" })),
+    ).or(type(MCPToolCallSchema).and({ type: "'MCPToolCall'" })),
+  ).or(type(CustomToolCallSchema).and({ type: "'CustomToolCall'" })),
 )
-  .or(CustomToolCallOutputSchema)
+  .or(type(CustomToolCallOutputSchema).and({ type: "'CustomToolCallOutput'" }))
   .describe(
     'An item representing a message, tool call, tool output, reasoning, or other response element.',
   )
@@ -24684,10 +26309,8 @@ export type SkillResourceSchema = typeof SkillResourceSchema.infer
 export const SkillListResourceSchema = type({
   object: type("'list'").describe('The type of object returned, must be `list`.'),
   data: type(SkillResourceSchema).array().describe('A list of items'),
-  first_id: type(type('string').describe('The ID of the first item in the list.')).or(
-    'null | null',
-  ),
-  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null | null'),
+  first_id: type(type('string').describe('The ID of the first item in the list.')).or('null'),
+  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null'),
   has_more: type('boolean').describe('Whether there are more items available.'),
 })
 
@@ -24734,10 +26357,8 @@ export type SkillVersionResourceSchema = typeof SkillVersionResourceSchema.infer
 export const SkillVersionListResourceSchema = type({
   object: type("'list'").describe('The type of object returned, must be `list`.'),
   data: type(SkillVersionResourceSchema).array().describe('A list of items'),
-  first_id: type(type('string').describe('The ID of the first item in the list.')).or(
-    'null | null',
-  ),
-  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null | null'),
+  first_id: type(type('string').describe('The ID of the first item in the list.')).or('null'),
+  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null'),
   has_more: type('boolean').describe('Whether there are more items available.'),
 })
 
@@ -24775,12 +26396,12 @@ export const ChatkitWorkflowSchema = type({
     type('string').describe(
       'Specific workflow version used for the session. Defaults to null when using the latest deployment.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   state_variables: type(
-    type({ '[string]': 'string | number.integer | boolean | number | null | null' }).describe(
+    type({ '[string]': 'string | number.integer | boolean | number | null' }).describe(
       'State variable key-value pairs applied when invoking the workflow. Defaults to null when no overrides were provided.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   tracing: ChatkitWorkflowTracingSchema.describe('Tracing settings applied to the workflow.'),
 }).describe('Workflow metadata and state returned for the session.')
 
@@ -24808,11 +26429,11 @@ export type ChatSessionAutomaticThreadTitlingSchema =
 export const ChatSessionFileUploadSchema = type({
   enabled: type('boolean').describe('Indicates if uploads are enabled for the session.'),
   max_file_size: type(type('number.integer').describe('Maximum upload size in megabytes.')).or(
-    'null | null',
+    'null',
   ),
   max_files: type(
     type('number.integer').describe('Maximum number of uploads allowed during the session.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Upload permissions and limits applied to the session.')
 
 export type ChatSessionFileUploadSchema = typeof ChatSessionFileUploadSchema.infer
@@ -24823,7 +26444,7 @@ export const ChatSessionHistorySchema = type({
     type('number.integer').describe(
       'Number of prior threads surfaced in history views. Defaults to null when all history is retained.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('History retention preferences returned for the session.')
 
 export type ChatSessionHistorySchema = typeof ChatSessionHistorySchema.infer
@@ -25014,7 +26635,7 @@ export const AttachmentSchema = type({
   mime_type: type('string').describe('MIME type of the attachment.'),
   preview_url: type(
     type('string.url').describe('Preview URL for rendering the attachment inline.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Attachment metadata included on thread items.')
 
 export type AttachmentSchema = typeof AttachmentSchema.infer
@@ -25030,12 +26651,12 @@ export const InferenceOptionsSchema = type({
     ToolChoiceSchema.describe(
       'Preferred tool to invoke. Defaults to null when ChatKit should auto-select.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   model: type(
     type('string').describe(
       'Model name that generated the response. Defaults to null when using the session default.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Model and tool overrides applied when generating the assistant response.')
 
 export type InferenceOptionsSchema = typeof InferenceOptionsSchema.infer
@@ -25051,8 +26672,8 @@ export const UserMessageItemSchema = type({
   thread_id: type('string').describe('Identifier of the parent thread.'),
   type: "'chatkit.user_message'",
   content: type(
-    type(UserMessageInputTextSchema)
-      .or(UserMessageQuotedTextSchema)
+    type(type(UserMessageInputTextSchema).and({ type: "'UserMessageInputText'" }))
+      .or(type(UserMessageQuotedTextSchema).and({ type: "'UserMessageQuotedText'" }))
       .describe('Content blocks that comprise a user message.'),
   )
     .array()
@@ -25064,7 +26685,7 @@ export const UserMessageItemSchema = type({
     InferenceOptionsSchema.describe(
       'Inference overrides applied to the message. Defaults to null when unset.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('User-authored messages within a thread.')
 
 export type UserMessageItemSchema = typeof UserMessageItemSchema.infer
@@ -25101,8 +26722,8 @@ export const ResponseOutputTextSchema = type({
   type: type("'output_text'").describe('Type discriminator that is always `output_text`.'),
   text: type('string').describe('Assistant generated text.'),
   annotations: type(
-    type(FileAnnotationSchema)
-      .or(UrlAnnotationSchema)
+    type(type(FileAnnotationSchema).and({ type: "'FileAnnotation'" }))
+      .or(type(UrlAnnotationSchema).and({ type: "'UrlAnnotation'" }))
       .describe('Annotation object describing a cited source.'),
   )
     .array()
@@ -25167,7 +26788,7 @@ export const ClientToolCallItemSchema = type({
     type('string').describe(
       'JSON-encoded output captured from the tool. Defaults to null while execution is in progress.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Record of a client side tool invocation initiated by the assistant.')
 
 export type ClientToolCallItemSchema = typeof ClientToolCallItemSchema.infer
@@ -25189,12 +26810,12 @@ export const TaskItemSchema = type({
   task_type: TaskTypeSchema.describe('Subtype for the task.'),
   heading: type(
     type('string').describe('Optional heading for the task. Defaults to null when not provided.'),
-  ).or('null | null'),
+  ).or('null'),
   summary: type(
     type('string').describe(
       'Optional summary that describes the task. Defaults to null when omitted.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Task emitted by the workflow to show progress and status updates.')
 
 export type TaskItemSchema = typeof TaskItemSchema.infer
@@ -25205,12 +26826,12 @@ export const TaskGroupTaskSchema = type({
     type('string').describe(
       'Optional heading for the grouped task. Defaults to null when not provided.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   summary: type(
     type('string').describe(
       'Optional summary that describes the grouped task. Defaults to null when omitted.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Task entry that appears within a TaskGroup.')
 
 export type TaskGroupTaskSchema = typeof TaskGroupTaskSchema.infer
@@ -25235,20 +26856,22 @@ export type TaskGroupItemSchema = typeof TaskGroupItemSchema.infer
 export const ThreadItemSchema = type(
   type(
     type(
-      type(type(UserMessageItemSchema).or(AssistantMessageItemSchema)).or(WidgetMessageItemSchema),
-    ).or(ClientToolCallItemSchema),
-  ).or(TaskItemSchema),
-).or(TaskGroupItemSchema)
+      type(
+        type(type(UserMessageItemSchema).and({ type: "'UserMessageItem'" })).or(
+          type(AssistantMessageItemSchema).and({ type: "'AssistantMessageItem'" }),
+        ),
+      ).or(type(WidgetMessageItemSchema).and({ type: "'WidgetMessageItem'" })),
+    ).or(type(ClientToolCallItemSchema).and({ type: "'ClientToolCallItem'" })),
+  ).or(type(TaskItemSchema).and({ type: "'TaskItem'" })),
+).or(type(TaskGroupItemSchema).and({ type: "'TaskGroupItem'" }))
 
 export type ThreadItemSchema = typeof ThreadItemSchema.infer
 
 export const ThreadItemListResourceSchema = type({
   object: type("'list'").describe('The type of object returned, must be `list`.'),
   data: type(ThreadItemSchema).array().describe('A list of items'),
-  first_id: type(type('string').describe('The ID of the first item in the list.')).or(
-    'null | null',
-  ),
-  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null | null'),
+  first_id: type(type('string').describe('The ID of the first item in the list.')).or('null'),
+  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null'),
   has_more: type('boolean').describe('Whether there are more items available.'),
 }).describe('A paginated list of thread items rendered for the ChatKit API.')
 
@@ -25266,7 +26889,7 @@ export const LockedStatusSchema = type({
     type('string').describe(
       'Reason that the thread was locked. Defaults to null when no reason is recorded.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Indicates that a thread is locked and cannot accept new input.')
 
 export type LockedStatusSchema = typeof LockedStatusSchema.infer
@@ -25277,7 +26900,7 @@ export const ClosedStatusSchema = type({
     type('string').describe(
       'Reason that the thread was closed. Defaults to null when no reason is recorded.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Indicates that a thread has been closed.')
 
 export type ClosedStatusSchema = typeof ClosedStatusSchema.infer
@@ -25292,9 +26915,13 @@ export const ThreadResourceSchema = type({
     type('string').describe(
       'Optional human-readable title for the thread. Defaults to null when no title has been generated.',
     ),
-  ).or('null | null'),
-  status: type(type(ActiveStatusSchema).or(LockedStatusSchema))
-    .or(ClosedStatusSchema)
+  ).or('null'),
+  status: type(
+    type(type(ActiveStatusSchema).and({ type: "'ActiveStatus'" })).or(
+      type(LockedStatusSchema).and({ type: "'LockedStatus'" }),
+    ),
+  )
+    .or(type(ClosedStatusSchema).and({ type: "'ClosedStatus'" }))
     .describe('Current status for the thread. Defaults to `active` for newly created threads.'),
   user: type('string').describe(
     'Free-form string that identifies your end user who owns the thread.',
@@ -25316,10 +26943,8 @@ export type DeletedThreadResourceSchema = typeof DeletedThreadResourceSchema.inf
 export const ThreadListResourceSchema = type({
   object: type("'list'").describe('The type of object returned, must be `list`.'),
   data: type(ThreadResourceSchema).array().describe('A list of items'),
-  first_id: type(type('string').describe('The ID of the first item in the list.')).or(
-    'null | null',
-  ),
-  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null | null'),
+  first_id: type(type('string').describe('The ID of the first item in the list.')).or('null'),
+  last_id: type(type('string').describe('The ID of the last item in the list.')).or('null'),
   has_more: type('boolean').describe('Whether there are more items available.'),
 }).describe('A paginated list of ChatKit threads.')
 
@@ -25360,7 +26985,7 @@ export const DecisionInputImageSchema = type({
     )
     .describe('A base64-encoded image in a data URL or a publicly accessible HTTP(S) image URL.'),
   'detail?': type(ImageDetailParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       "The image detail level, using the selected model's image profile. Defaults to auto.",
     ),
@@ -25384,8 +27009,8 @@ export type DecisionInputImageSchema = typeof DecisionInputImageSchema.infer
 
 export const DecisionInputJsonSchema = type({
   type: "'input_json'",
-  data: type(type({ '[string]': 'unknown | null | null' })).or(
-    type(type(type({ '[string]': 'unknown | null | null' })).array()).and(type('unknown[] >= 0')),
+  data: type(type({ '[string]': 'unknown | null' })).or(
+    type(type(type({ '[string]': 'unknown | null' })).array()).and(type('unknown[] >= 0')),
   ),
   '+': 'reject',
 }).describe(
@@ -25396,7 +27021,11 @@ export type DecisionInputJsonSchema = typeof DecisionInputJsonSchema.infer
 
 export const DecisionInputContentPartsSchema = type(
   type(
-    type(type(DecisionInputTextSchema).or(DecisionInputImageSchema)).or(DecisionInputJsonSchema),
+    type(
+      type(type(DecisionInputTextSchema).and({ type: "'input_text'" })).or(
+        type(DecisionInputImageSchema).and({ type: "'input_image'" }),
+      ),
+    ).or(type(DecisionInputJsonSchema).and({ type: "'input_json'" })),
   ).array(),
 ).and(type('0 <= unknown[] <= 16384'))
 
@@ -25485,7 +27114,11 @@ export const DecisionInputRefusalSchema = type({
 export type DecisionInputRefusalSchema = typeof DecisionInputRefusalSchema.infer
 
 export const DecisionInputAssistantContentPartsSchema = type(
-  type(type(DecisionInputOutputTextSchema).or(DecisionInputRefusalSchema)).array(),
+  type(
+    type(type(DecisionInputOutputTextSchema).and({ type: "'output_text'" })).or(
+      type(DecisionInputRefusalSchema).and({ type: "'refusal'" }),
+    ),
+  ).array(),
 ).and(type('0 <= unknown[] <= 16384'))
 
 export type DecisionInputAssistantContentPartsSchema =
@@ -25510,9 +27143,7 @@ export type MessagePhaseParamSchema = typeof MessagePhaseParamSchema.infer
 export const DecisionInputAssistantMessageSchema = type({
   role: "'assistant'",
   content: DecisionInputAssistantContentSchema,
-  'phase?': type(MessagePhaseParamSchema)
-    .or('null | null')
-    .describe('The phase of an assistant message.'),
+  'phase?': type(MessagePhaseParamSchema).or('null').describe('The phase of an assistant message.'),
   'type?': "'message'",
   '+': 'reject',
 }).describe('An assistant message containing output text or refusals.')
@@ -25520,10 +27151,12 @@ export const DecisionInputAssistantMessageSchema = type({
 export type DecisionInputAssistantMessageSchema = typeof DecisionInputAssistantMessageSchema.infer
 
 export const DecisionInputMessageSchema = type(
-  type(type(DecisionInputUserMessageSchema).or(DecisionInputDeveloperMessageSchema)).or(
-    DecisionInputSystemMessageSchema,
-  ),
-).or(DecisionInputAssistantMessageSchema)
+  type(
+    type(type(DecisionInputUserMessageSchema).and({ role: "'user'" })).or(
+      type(DecisionInputDeveloperMessageSchema).and({ role: "'developer'" }),
+    ),
+  ).or(type(DecisionInputSystemMessageSchema).and({ role: "'system'" })),
+).or(type(DecisionInputAssistantMessageSchema).and({ role: "'assistant'" }))
 
 export type DecisionInputMessageSchema = typeof DecisionInputMessageSchema.infer
 
@@ -25555,7 +27188,7 @@ export const DecisionInputFunctionCallSchema = type({
   arguments: type('string')
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
     .narrow((data, ctx) => [...data].length <= 1048576 || ctx.mustBe('at most 1048576 characters')),
-  'status?': type(FunctionCallStatusParamSchema).or('null | null'),
+  'status?': type(FunctionCallStatusParamSchema).or('null'),
   type: "'function_call'",
   '+': 'reject',
 })
@@ -25563,7 +27196,11 @@ export const DecisionInputFunctionCallSchema = type({
 export type DecisionInputFunctionCallSchema = typeof DecisionInputFunctionCallSchema.infer
 
 export const DecisionInputToolOutputContentPartsSchema = type(
-  type(type(DecisionInputTextSchema).or(DecisionInputImageSchema)).array(),
+  type(
+    type(type(DecisionInputTextSchema).and({ type: "'input_text'" })).or(
+      type(DecisionInputImageSchema).and({ type: "'input_image'" }),
+    ),
+  ).array(),
 ).and(type('0 <= unknown[] <= 16384'))
 
 export type DecisionInputToolOutputContentPartsSchema =
@@ -25593,7 +27230,7 @@ export const DecisionInputFunctionCallOutputSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters')),
   output: DecisionInputToolOutputContentSchema,
-  'status?': type(FunctionCallStatusParamSchema).or('null | null'),
+  'status?': type(FunctionCallStatusParamSchema).or('null'),
   type: "'function_call_output'",
   '+': 'reject',
 })
@@ -25625,7 +27262,7 @@ export const DecisionInputCustomToolCallSchema = type({
   input: type('string')
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
     .narrow((data, ctx) => [...data].length <= 1048576 || ctx.mustBe('at most 1048576 characters')),
-  'status?': type(FunctionCallStatusParamSchema).or('null | null'),
+  'status?': type(FunctionCallStatusParamSchema).or('null'),
   type: "'custom_tool_call'",
   '+': 'reject',
 })
@@ -25644,7 +27281,7 @@ export const DecisionInputCustomToolCallOutputSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters')),
   output: DecisionInputToolOutputContentSchema,
-  'status?': type(FunctionCallStatusParamSchema).or('null | null'),
+  'status?': type(FunctionCallStatusParamSchema).or('null'),
   type: "'custom_tool_call_output'",
   '+': 'reject',
 })
@@ -25664,11 +27301,17 @@ export const DecisionInputSchema = type(
       type(
         type(
           type(
-            type(type(DecisionInputMessageSchema).or(DecisionInputFunctionCallSchema)).or(
-              DecisionInputFunctionCallOutputSchema,
+            type(
+              type(type(DecisionInputMessageSchema).and({ type: "'message'" })).or(
+                type(DecisionInputFunctionCallSchema).and({ type: "'function_call'" }),
+              ),
+            ).or(
+              type(DecisionInputFunctionCallOutputSchema).and({ type: "'function_call_output'" }),
             ),
-          ).or(DecisionInputCustomToolCallSchema),
-        ).or(DecisionInputCustomToolCallOutputSchema),
+          ).or(type(DecisionInputCustomToolCallSchema).and({ type: "'custom_tool_call'" })),
+        ).or(
+          type(DecisionInputCustomToolCallOutputSchema).and({ type: "'custom_tool_call_output'" }),
+        ),
       ).array(),
     ).and(type('0 <= unknown[] <= 131072')),
   )
@@ -25699,7 +27342,7 @@ export const DecisionQuestionInputImageSchema = type({
     )
     .describe('A base64-encoded image in a data URL or a publicly accessible HTTP(S) image URL.'),
   'detail?': type(ImageDetailParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       "The image detail level, using the selected model's image profile. Defaults to auto.",
     ),
@@ -25712,9 +27355,11 @@ export const DecisionQuestionInputImageSchema = type({
 export type DecisionQuestionInputImageSchema = typeof DecisionQuestionInputImageSchema.infer
 
 export const DecisionQuestionInputPartSchema = type(
-  type(DecisionQuestionInputTextSchema).or(DecisionQuestionInputImageSchema),
+  type(type(DecisionQuestionInputTextSchema).and({ type: "'input_text'" })).or(
+    type(DecisionQuestionInputImageSchema).and({ type: "'input_image'" }),
+  ),
 )
-  .or(DecisionInputJsonSchema)
+  .or(type(DecisionInputJsonSchema).and({ type: "'input_json'" }))
   .describe('A text, image, or JSON content part in a question instruction.')
 
 export type DecisionQuestionInputPartSchema = typeof DecisionQuestionInputPartSchema.infer
@@ -25807,9 +27452,11 @@ export const QuestionParamScoreSchema = type({
 export type QuestionParamScoreSchema = typeof QuestionParamScoreSchema.infer
 
 export const QuestionParamSchema = type(
-  type(QuestionParamPredicateSchema).or(QuestionParamChoiceSchema),
+  type(type(QuestionParamPredicateSchema).and({ type: "'predicate'" })).or(
+    type(QuestionParamChoiceSchema).and({ type: "'choice'" }),
+  ),
 )
-  .or(QuestionParamScoreSchema)
+  .or(type(QuestionParamScoreSchema).and({ type: "'score'" }))
   .describe("A question about the request's input, with an optional correlation name.")
 
 export type QuestionParamSchema = typeof QuestionParamSchema.infer
@@ -25846,7 +27493,7 @@ export const DecisionRequestSchema = type({
       'ttl?': type("'30m'").describe(
         'The minimum lifetime applied to every implicit and explicit cache breakpoint written by the request. Defaults to `30m`, which is currently the only supported value. The backend may retain cache entries for longer.',
       ),
-      'mode?': type("'implicit' | 'explicit' | null | null").describe(
+      'mode?': type("'implicit' | 'explicit' | null").describe(
         'Controls whether OpenAI automatically creates an implicit cache breakpoint. Defaults to `implicit`. With `implicit`, OpenAI creates one implicit breakpoint and writes up to the latest three explicit breakpoints in the request. With `explicit`, OpenAI does not create an implicit breakpoint and writes up to the latest four explicit breakpoints. If there are no explicit breakpoints, the request does not use prompt caching.',
       ),
       '+': 'reject',
@@ -25881,10 +27528,10 @@ export type ReasoningSummaryResourceSchema = typeof ReasoningSummaryResourceSche
 
 export const ReasoningResourceSchema = type({
   effort: type(ReasoningEffortResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The requested reasoning effort, or `null` when the model selects its own default.'),
   summary: type(ReasoningSummaryResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The requested reasoning summary format, or `null` when summaries are disabled.'),
   '+': 'reject',
 }).describe('The reasoning configuration used by an agent.')
@@ -25908,8 +27555,10 @@ export const TextFormatResourceJsonSchemaSchema = type({
 
 export type TextFormatResourceJsonSchemaSchema = typeof TextFormatResourceJsonSchemaSchema.infer
 
-export const TextFormatResourceSchema = type(TextFormatResourceTextSchema)
-  .or(TextFormatResourceJsonSchemaSchema)
+export const TextFormatResourceSchema = type(
+  type(TextFormatResourceTextSchema).and({ type: "'text'" }),
+)
+  .or(type(TextFormatResourceJsonSchemaSchema).and({ type: "'json_schema'" }))
   .describe('The effective output format for generated text.')
 
 export type TextFormatResourceSchema = typeof TextFormatResourceSchema.infer
@@ -26012,8 +27661,10 @@ export const McpTransportResourceStdioSchema = type({
 
 export type McpTransportResourceStdioSchema = typeof McpTransportResourceStdioSchema.infer
 
-export const McpTransportResourceSchema = type(McpTransportResourceHttpSchema)
-  .or(McpTransportResourceStdioSchema)
+export const McpTransportResourceSchema = type(
+  type(McpTransportResourceHttpSchema).and({ type: "'http'" }),
+)
+  .or(type(McpTransportResourceStdioSchema).and({ type: "'stdio'" }))
   .describe('The transport used to connect to an MCP server.')
 
 export type McpTransportResourceSchema = typeof McpTransportResourceSchema.infer
@@ -26130,7 +27781,7 @@ export const AgentToolResourceWebSearchSchema = type({
     .or('null')
     .describe('Allowed search domains, or `null` when the search is unrestricted.'),
   location: type(WebSearchLocationResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Approximate location used to localize search results, if provided.'),
   '+': 'reject',
 }).describe('Web search.')
@@ -26158,12 +27809,16 @@ export const AgentToolResourceSchema = type(
   type(
     type(
       type(
-        type(AgentToolResourceFunctionSchema).or(AgentToolResourceProgrammaticToolCallingSchema),
-      ).or(AgentToolResourceMcpSchema),
-    ).or(AgentToolResourceWebSearchSchema),
-  ).or(AgentToolResourceComputerUseSchema),
+        type(type(AgentToolResourceFunctionSchema).and({ type: "'function'" })).or(
+          type(AgentToolResourceProgrammaticToolCallingSchema).and({
+            type: "'programmatic_tool_calling'",
+          }),
+        ),
+      ).or(type(AgentToolResourceMcpSchema).and({ type: "'mcp'" })),
+    ).or(type(AgentToolResourceWebSearchSchema).and({ type: "'web_search'" })),
+  ).or(type(AgentToolResourceComputerUseSchema).and({ type: "'computer_use'" })),
 )
-  .or(AgentToolResourceAutomationsSchema)
+  .or(type(AgentToolResourceAutomationsSchema).and({ type: "'automations'" }))
   .describe('A tool available to the agent.')
 
 export type AgentToolResourceSchema = typeof AgentToolResourceSchema.infer
@@ -26354,9 +28009,9 @@ export type HostedTemplateSkillResourceInlineSchema =
   typeof HostedTemplateSkillResourceInlineSchema.infer
 
 export const HostedTemplateSkillResourceSchema = type(
-  HostedTemplateSkillResourceSkillReferenceSchema,
+  type(HostedTemplateSkillResourceSkillReferenceSchema).and({ type: "'skill_reference'" }),
 )
-  .or(HostedTemplateSkillResourceInlineSchema)
+  .or(type(HostedTemplateSkillResourceInlineSchema).and({ type: "'inline'" }))
   .describe('Safe metadata for a skill configured by an environment template.')
 
 export type HostedTemplateSkillResourceSchema = typeof HostedTemplateSkillResourceSchema.infer
@@ -26374,9 +28029,9 @@ export const HostedPluginResourceInlineSchema = type({
 
 export type HostedPluginResourceInlineSchema = typeof HostedPluginResourceInlineSchema.infer
 
-export const HostedPluginResourceSchema = HostedPluginResourceInlineSchema.describe(
-  'A plugin installed in an OpenAI-hosted environment.',
-)
+export const HostedPluginResourceSchema = type(HostedPluginResourceInlineSchema)
+  .and({ type: "'inline'" })
+  .describe('A plugin installed in an OpenAI-hosted environment.')
 
 export type HostedPluginResourceSchema = typeof HostedPluginResourceSchema.infer
 
@@ -26414,8 +28069,10 @@ export const HostedTemplateFileResourceInlineSchema = type({
 export type HostedTemplateFileResourceInlineSchema =
   typeof HostedTemplateFileResourceInlineSchema.infer
 
-export const HostedTemplateFileResourceSchema = type(HostedTemplateFileResourceFileIdSchema)
-  .or(HostedTemplateFileResourceInlineSchema)
+export const HostedTemplateFileResourceSchema = type(
+  type(HostedTemplateFileResourceFileIdSchema).and({ type: "'file_id'" }),
+)
+  .or(type(HostedTemplateFileResourceInlineSchema).and({ type: "'inline'" }))
   .describe('Safe metadata for a file configured by an environment template.')
 
 export type HostedTemplateFileResourceSchema = typeof HostedTemplateFileResourceSchema.infer
@@ -26437,16 +28094,16 @@ export const AutomationEnvironmentResourceOpenaiHostedSchema = type({
     .or('null')
     .describe('A template reference, or null when no template is selected.'),
   container_size: type(ContainerSizeResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The configured container size, or null to use the creation default.'),
   packages: type(EnvironmentPackagesResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Package overrides, or null to inherit the template or creation default.'),
   network: type(NetworkPolicyResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Network overrides, or null to inherit the template or creation default.'),
   desktop: type(DesktopResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Desktop overrides, or null to inherit the template or creation default.'),
   capability_directories: type(
     type(
@@ -26506,9 +28163,11 @@ export type AutomationEnvironmentResourceSelfHostedSchema =
   typeof AutomationEnvironmentResourceSelfHostedSchema.infer
 
 export const AutomationEnvironmentResourceSchema = type(
-  type(AutomationEnvironmentResourceNoneSchema).or(AutomationEnvironmentResourceOpenaiHostedSchema),
+  type(type(AutomationEnvironmentResourceNoneSchema).and({ type: "'none'" })).or(
+    type(AutomationEnvironmentResourceOpenaiHostedSchema).and({ type: "'openai_hosted'" }),
+  ),
 )
-  .or(AutomationEnvironmentResourceSelfHostedSchema)
+  .or(type(AutomationEnvironmentResourceSelfHostedSchema).and({ type: "'self_hosted'" }))
   .describe('Environment selection saved before an invocation creates its session.')
 
 export type AutomationEnvironmentResourceSchema = typeof AutomationEnvironmentResourceSchema.infer
@@ -26535,8 +28194,10 @@ export const InputContentResourceInputImageSchema = type({
 
 export type InputContentResourceInputImageSchema = typeof InputContentResourceInputImageSchema.infer
 
-export const InputContentResourceSchema = type(InputContentResourceInputTextSchema)
-  .or(InputContentResourceInputImageSchema)
+export const InputContentResourceSchema = type(
+  type(InputContentResourceInputTextSchema).and({ type: "'input_text'" }),
+)
+  .or(type(InputContentResourceInputImageSchema).and({ type: "'input_image'" }))
   .describe('User-provided content recorded in a session item.')
 
 export type InputContentResourceSchema = typeof InputContentResourceSchema.infer
@@ -26562,7 +28223,7 @@ export const AutomationTargetResourceNewSessionSchema = type({
     .or('null')
     .describe('The saved agent reference, or null when an inline agent is configured.'),
   agent: type(AutomationAgentConfigResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The inline agent configuration, or null when agent_id is configured.'),
   environment: AutomationEnvironmentResourceSchema.describe(
     'Configuration or references used to select the execution environment.',
@@ -26604,8 +28265,10 @@ export const AutomationTargetResourceExistingSessionSchema = type({
 export type AutomationTargetResourceExistingSessionSchema =
   typeof AutomationTargetResourceExistingSessionSchema.infer
 
-export const AutomationTargetResourceSchema = type(AutomationTargetResourceNewSessionSchema)
-  .or(AutomationTargetResourceExistingSessionSchema)
+export const AutomationTargetResourceSchema = type(
+  type(AutomationTargetResourceNewSessionSchema).and({ type: "'new_session'" }),
+)
+  .or(type(AutomationTargetResourceExistingSessionSchema).and({ type: "'existing_session'" }))
   .describe('Saved target configuration, excluding confidential request-only values.')
 
 export type AutomationTargetResourceSchema = typeof AutomationTargetResourceSchema.infer
@@ -26632,8 +28295,10 @@ export const AutomationCreatedByResourceAgentSchema = type({
 export type AutomationCreatedByResourceAgentSchema =
   typeof AutomationCreatedByResourceAgentSchema.infer
 
-export const AutomationCreatedByResourceSchema = type(AutomationCreatedByResourceDeveloperSchema)
-  .or(AutomationCreatedByResourceAgentSchema)
+export const AutomationCreatedByResourceSchema = type(
+  type(AutomationCreatedByResourceDeveloperSchema).and({ type: "'developer'" }),
+)
+  .or(type(AutomationCreatedByResourceAgentSchema).and({ type: "'agent'" }))
   .describe('How the automation was created, independently of how an invocation started.')
 
 export type AutomationCreatedByResourceSchema = typeof AutomationCreatedByResourceSchema.infer
@@ -26671,7 +28336,7 @@ export const AutomationResourcePeriodicSchema = type({
   created_by: AutomationCreatedByResourceSchema.describe(
     'Service-recorded provenance; callers cannot supply this field.',
   ),
-  'pause_reason?': type("'target_session_failed' | null | null").describe(
+  'pause_reason?': type("'target_session_failed' | null").describe(
     'Why the service paused this schedule, or null for other schedules.',
   ),
   expression: type('string')
@@ -26720,7 +28385,7 @@ export const AutomationResourceOnceSchema = type({
   created_by: AutomationCreatedByResourceSchema.describe(
     'Service-recorded provenance; callers cannot supply this field.',
   ),
-  'pause_reason?': type("'target_session_failed' | null | null").describe(
+  'pause_reason?': type("'target_session_failed' | null").describe(
     'Why the service paused this schedule, or null for other schedules.',
   ),
   run_at: type('bigint | number.integer')
@@ -26739,8 +28404,10 @@ export const AutomationResourceOnceSchema = type({
 
 export type AutomationResourceOnceSchema = typeof AutomationResourceOnceSchema.infer
 
-export const AutomationResourceSchema = type(AutomationResourcePeriodicSchema)
-  .or(AutomationResourceOnceSchema)
+export const AutomationResourceSchema = type(
+  type(AutomationResourcePeriodicSchema).and({ type: "'periodic'" }),
+)
+  .or(type(AutomationResourceOnceSchema).and({ type: "'once'" }))
   .describe('A saved automation and its schedule.')
 
 export type AutomationResourceSchema = typeof AutomationResourceSchema.infer
@@ -26798,12 +28465,12 @@ export type ReasoningSummaryParamSchema = typeof ReasoningSummaryParamSchema.inf
 
 export const ReasoningParamSchema = type({
   'effort?': type(ReasoningEffortParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'The amount of reasoning effort the model should use. Omission lets the model select it.',
     ),
   'summary?': type(ReasoningSummaryParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Controls whether the response includes a reasoning summary.'),
   '+': 'reject',
 }).describe('Reasoning configuration for the agent.')
@@ -26827,8 +28494,8 @@ export const TextFormatParamJsonSchemaSchema = type({
 
 export type TextFormatParamJsonSchemaSchema = typeof TextFormatParamJsonSchemaSchema.infer
 
-export const TextFormatParamSchema = type(TextFormatParamTextSchema)
-  .or(TextFormatParamJsonSchemaSchema)
+export const TextFormatParamSchema = type(type(TextFormatParamTextSchema).and({ type: "'text'" }))
+  .or(type(TextFormatParamJsonSchemaSchema).and({ type: "'json_schema'" }))
   .describe('The output format for generated text.')
 
 export type TextFormatParamSchema = typeof TextFormatParamSchema.infer
@@ -26841,10 +28508,10 @@ export type VerbosityParamSchema = typeof VerbosityParamSchema.infer
 
 export const TextParamSchema = type({
   'format?': type(TextFormatParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The output format. Omission uses ordinary text (`{"type": "text"}`).'),
   'verbosity?': type(VerbosityParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'The amount of text the model should produce. Defaults to `medium`, matching Responses.',
     ),
@@ -27012,8 +28679,10 @@ export const McpTransportConfigParamStdioSchema = type({
 
 export type McpTransportConfigParamStdioSchema = typeof McpTransportConfigParamStdioSchema.infer
 
-export const McpTransportConfigParamSchema = type(McpTransportConfigParamHttpSchema)
-  .or(McpTransportConfigParamStdioSchema)
+export const McpTransportConfigParamSchema = type(
+  type(McpTransportConfigParamHttpSchema).and({ type: "'http'" }),
+)
+  .or(type(McpTransportConfigParamStdioSchema).and({ type: "'stdio'" }))
   .describe('The transport used to connect to an MCP server.')
 
 export type McpTransportConfigParamSchema = typeof McpTransportConfigParamSchema.infer
@@ -27064,7 +28733,7 @@ export const AgentToolConfigParamMcpSchema = type({
     'Whether this MCP server must initialize before the first turn. Defaults to `false`.',
   ),
   'connection_origin?': type(McpConnectionOriginParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       "Selects where outbound MCP HTTP connections originate. Omitted or `service` uses the Managed Agents service network; `environment` uses the session's selected environment.",
     ),
@@ -27130,10 +28799,10 @@ export type WebSearchLocationParamSchema = typeof WebSearchLocationParamSchema.i
 export const AgentToolConfigParamWebSearchSchema = type({
   type: type("'web_search'").describe('The type of the object. Always `web_search`.'),
   'mode?': type(WebSearchModeParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The source used for web search results. Defaults to `live`.'),
   'context_size?': type(WebSearchContextSizeParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The amount of search context made available to the model. Defaults to `medium`.'),
   'allowed_domains?': type(
     type(
@@ -27149,7 +28818,7 @@ export const AgentToolConfigParamWebSearchSchema = type({
     .or('null')
     .describe('Domains the search may include.'),
   'location?': type(WebSearchLocationParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Approximate location used to localize search results.'),
   '+': 'reject',
 }).describe('Web search.')
@@ -27179,14 +28848,20 @@ export const AgentToolConfigParamSchema = type(
   type(
     type(
       type(
-        type(type(AgentToolConfigParamFunctionSchema).or(AgentToolConfigParamToolSearchSchema)).or(
-          AgentToolConfigParamProgrammaticToolCallingSchema,
+        type(
+          type(type(AgentToolConfigParamFunctionSchema).and({ type: "'function'" })).or(
+            type(AgentToolConfigParamToolSearchSchema).and({ type: "'tool_search'" }),
+          ),
+        ).or(
+          type(AgentToolConfigParamProgrammaticToolCallingSchema).and({
+            type: "'programmatic_tool_calling'",
+          }),
         ),
-      ).or(AgentToolConfigParamMcpSchema),
-    ).or(AgentToolConfigParamWebSearchSchema),
-  ).or(AgentToolConfigParamComputerUseSchema),
+      ).or(type(AgentToolConfigParamMcpSchema).and({ type: "'mcp'" })),
+    ).or(type(AgentToolConfigParamWebSearchSchema).and({ type: "'web_search'" })),
+  ).or(type(AgentToolConfigParamComputerUseSchema).and({ type: "'computer_use'" })),
 )
-  .or(AgentToolConfigParamAutomationsSchema)
+  .or(type(AgentToolConfigParamAutomationsSchema).and({ type: "'automations'" }))
   .describe('A tool available to the agent.')
 
 export type AgentToolConfigParamSchema = typeof AgentToolConfigParamSchema.infer
@@ -27200,15 +28875,15 @@ export const SessionAgentConfigParamSchema = type({
     .narrow((data, ctx) => [...data].length <= 1048576 || ctx.mustBe('at most 1048576 characters'))
     .describe('The model to use for the agent. The requested model name is preserved.'),
   'reasoning?': type(ReasoningParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
     ),
   'text?': type(TextParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Configuration for text generated by the agent.'),
   'service_tier?': type(ServiceTierParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The service tier used for model requests.'),
   'instructions?': type(
     type('string')
@@ -27222,10 +28897,10 @@ export const SessionAgentConfigParamSchema = type({
       "Additional instructions appended to the agent's default base instructions. Omit to leave unchanged.",
     ),
   'multi_agent?': type(MultiAgentConfigCurrentParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Configuration for creating and coordinating subagents.'),
   'compaction?': type(CompactionParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
     ),
@@ -27397,9 +29072,9 @@ export const InlineCapabilitySourceParamBase64Schema = type({
 export type InlineCapabilitySourceParamBase64Schema =
   typeof InlineCapabilitySourceParamBase64Schema.infer
 
-export const InlineCapabilitySourceParamSchema = InlineCapabilitySourceParamBase64Schema.describe(
-  'The encoded ZIP archive for an inline skill or plugin.',
-)
+export const InlineCapabilitySourceParamSchema = type(InlineCapabilitySourceParamBase64Schema)
+  .and({ type: "'base64'" })
+  .describe('The encoded ZIP archive for an inline skill or plugin.')
 
 export type InlineCapabilitySourceParamSchema = typeof InlineCapabilitySourceParamSchema.infer
 
@@ -27419,8 +29094,10 @@ export const HostedSkillParamInlineSchema = type({
 
 export type HostedSkillParamInlineSchema = typeof HostedSkillParamInlineSchema.infer
 
-export const HostedSkillParamSchema = type(HostedSkillParamSkillReferenceSchema)
-  .or(HostedSkillParamInlineSchema)
+export const HostedSkillParamSchema = type(
+  type(HostedSkillParamSkillReferenceSchema).and({ type: "'skill_reference'" }),
+)
+  .or(type(HostedSkillParamInlineSchema).and({ type: "'inline'" }))
   .describe('A skill installed in an OpenAI-hosted environment.')
 
 export type HostedSkillParamSchema = typeof HostedSkillParamSchema.infer
@@ -27441,9 +29118,9 @@ export const HostedPluginParamInlineSchema = type({
 
 export type HostedPluginParamInlineSchema = typeof HostedPluginParamInlineSchema.infer
 
-export const HostedPluginParamSchema = HostedPluginParamInlineSchema.describe(
-  'A plugin installed in an OpenAI-hosted environment.',
-)
+export const HostedPluginParamSchema = type(HostedPluginParamInlineSchema)
+  .and({ type: "'inline'" })
+  .describe('A plugin installed in an OpenAI-hosted environment.')
 
 export type HostedPluginParamSchema = typeof HostedPluginParamSchema.infer
 
@@ -27479,8 +29156,10 @@ export const HostedEnvironmentFileParamInlineSchema = type({
 export type HostedEnvironmentFileParamInlineSchema =
   typeof HostedEnvironmentFileParamInlineSchema.infer
 
-export const HostedEnvironmentFileParamSchema = type(HostedEnvironmentFileParamFileIdSchema)
-  .or(HostedEnvironmentFileParamInlineSchema)
+export const HostedEnvironmentFileParamSchema = type(
+  type(HostedEnvironmentFileParamFileIdSchema).and({ type: "'file_id'" }),
+)
+  .or(type(HostedEnvironmentFileParamInlineSchema).and({ type: "'inline'" }))
   .describe('A file materialized in an OpenAI-hosted execution environment.')
 
 export type HostedEnvironmentFileParamSchema = typeof HostedEnvironmentFileParamSchema.infer
@@ -27494,7 +29173,7 @@ export type ContainerSizeParamSchema = typeof ContainerSizeParamSchema.infer
 export const EnvironmentParamOpenaiHostedSchema = type({
   type: type("'openai_hosted'").describe('The type of the object. Always `openai_hosted`.'),
   'packages?': type(EnvironmentPackagesParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Packages to install in the environment. Defaults to empty package lists.'),
   'setup_commands?': type(
     type(type(SetupCommandParamSchema).array()).and(type('0 <= unknown[] <= 16')),
@@ -27502,12 +29181,12 @@ export const EnvironmentParamOpenaiHostedSchema = type({
     .or('null')
     .describe('Ordered, confidential setup commands. Command bodies are never returned.'),
   'network?': type(NetworkPolicyParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
     ),
   'desktop?': type(DesktopParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
     ),
@@ -27599,9 +29278,11 @@ export const EnvironmentParamSelfHostedSchema = type({
 export type EnvironmentParamSelfHostedSchema = typeof EnvironmentParamSelfHostedSchema.infer
 
 export const EnvironmentParamSchema = type(
-  type(EnvironmentParamNoneSchema).or(EnvironmentParamOpenaiHostedSchema),
+  type(type(EnvironmentParamNoneSchema).and({ type: "'none'" })).or(
+    type(EnvironmentParamOpenaiHostedSchema).and({ type: "'openai_hosted'" }),
+  ),
 )
-  .or(EnvironmentParamSelfHostedSchema)
+  .or(type(EnvironmentParamSelfHostedSchema).and({ type: "'self_hosted'" }))
   .describe('The execution environment and optional reusable template for a session.')
 
 export type EnvironmentParamSchema = typeof EnvironmentParamSchema.infer
@@ -27628,8 +29309,10 @@ export const InputContentParamInputImageSchema = type({
 
 export type InputContentParamInputImageSchema = typeof InputContentParamInputImageSchema.infer
 
-export const InputContentParamSchema = type(InputContentParamInputTextSchema)
-  .or(InputContentParamInputImageSchema)
+export const InputContentParamSchema = type(
+  type(InputContentParamInputTextSchema).and({ type: "'input_text'" }),
+)
+  .or(type(InputContentParamInputImageSchema).and({ type: "'input_image'" }))
   .describe('Content included in an input message.')
 
 export type InputContentParamSchema = typeof InputContentParamSchema.infer
@@ -27702,8 +29385,10 @@ export const AutomationTargetParamExistingSessionSchema = type({
 export type AutomationTargetParamExistingSessionSchema =
   typeof AutomationTargetParamExistingSessionSchema.infer
 
-export const AutomationTargetParamSchema = type(AutomationTargetParamNewSessionSchema)
-  .or(AutomationTargetParamExistingSessionSchema)
+export const AutomationTargetParamSchema = type(
+  type(AutomationTargetParamNewSessionSchema).and({ type: "'new_session'" }),
+)
+  .or(type(AutomationTargetParamExistingSessionSchema).and({ type: "'existing_session'" }))
   .describe('The session an automation invocation targets.')
 
 export type AutomationTargetParamSchema = typeof AutomationTargetParamSchema.infer
@@ -27758,8 +29443,10 @@ export const CreateAutomationParamsOnceSchema = type({
 
 export type CreateAutomationParamsOnceSchema = typeof CreateAutomationParamsOnceSchema.infer
 
-export const CreateAutomationParamsSchema = type(CreateAutomationParamsPeriodicSchema)
-  .or(CreateAutomationParamsOnceSchema)
+export const CreateAutomationParamsSchema = type(
+  type(CreateAutomationParamsPeriodicSchema).and({ type: "'periodic'" }),
+)
+  .or(type(CreateAutomationParamsOnceSchema).and({ type: "'once'" }))
   .describe('Creates an automation without invoking it immediately.')
 
 export type CreateAutomationParamsSchema = typeof CreateAutomationParamsSchema.infer
@@ -27830,8 +29517,8 @@ export type AutomationInvocationSourceResourceAutomationSchema =
   typeof AutomationInvocationSourceResourceAutomationSchema.infer
 
 export const AutomationInvocationSourceResourceSchema = type(
-  AutomationInvocationSourceResourceManualSchema,
-).or(AutomationInvocationSourceResourceAutomationSchema)
+  type(AutomationInvocationSourceResourceManualSchema).and({ type: "'manual'" }),
+).or(type(AutomationInvocationSourceResourceAutomationSchema).and({ type: "'automation'" }))
 
 export type AutomationInvocationSourceResourceSchema =
   typeof AutomationInvocationSourceResourceSchema.infer
@@ -27896,11 +29583,11 @@ export const AutomationInvocationResourceSchema = type({
   status: AutomationInvocationStatusResourceSchema.describe(
     "Delivery status; completed does not mean the agent's work has finished.",
   ),
-  skip_reason: type("'pending_delivery' | null | null").describe(
+  skip_reason: type("'pending_delivery' | null").describe(
     'Why an occurrence was skipped, or null when it was not skipped.',
   ),
   error: type(AutomationInvocationErrorResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The permanent delivery failure, or null when no failure occurred.'),
   '+': 'reject',
 }).describe('One attempted delivery by an automation.')
@@ -27974,8 +29661,10 @@ export const HostedEnvironmentFileResourceInlineSchema = type({
 export type HostedEnvironmentFileResourceInlineSchema =
   typeof HostedEnvironmentFileResourceInlineSchema.infer
 
-export const HostedEnvironmentFileResourceSchema = type(HostedEnvironmentFileResourceFileIdSchema)
-  .or(HostedEnvironmentFileResourceInlineSchema)
+export const HostedEnvironmentFileResourceSchema = type(
+  type(HostedEnvironmentFileResourceFileIdSchema).and({ type: "'file_id'" }),
+)
+  .or(type(HostedEnvironmentFileResourceInlineSchema).and({ type: "'inline'" }))
   .describe('Metadata for a file materialized in an OpenAI-hosted execution environment.')
 
 export type HostedEnvironmentFileResourceSchema = typeof HostedEnvironmentFileResourceSchema.infer
@@ -28013,8 +29702,10 @@ export const HostedSkillResourceInlineSchema = type({
 
 export type HostedSkillResourceInlineSchema = typeof HostedSkillResourceInlineSchema.infer
 
-export const HostedSkillResourceSchema = type(HostedSkillResourceSkillReferenceSchema)
-  .or(HostedSkillResourceInlineSchema)
+export const HostedSkillResourceSchema = type(
+  type(HostedSkillResourceSkillReferenceSchema).and({ type: "'skill_reference'" }),
+)
+  .or(type(HostedSkillResourceInlineSchema).and({ type: "'inline'" }))
   .describe('A skill installed in an OpenAI-hosted environment.')
 
 export type HostedSkillResourceSchema = typeof HostedSkillResourceSchema.infer
@@ -28074,7 +29765,7 @@ export type AgentEnvironmentListResourceSchema = typeof AgentEnvironmentListReso
 export const CreateEnvironmentParamOpenaiHostedSchema = type({
   type: type("'openai_hosted'").describe('The type of the object. Always `openai_hosted`.'),
   'packages?': type(EnvironmentPackagesParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Packages to install in the environment. Defaults to empty package lists.'),
   'setup_commands?': type(
     type(type(SetupCommandParamSchema).array()).and(type('0 <= unknown[] <= 16')),
@@ -28082,12 +29773,12 @@ export const CreateEnvironmentParamOpenaiHostedSchema = type({
     .or('null')
     .describe('Ordered, confidential setup commands. Command bodies are never returned.'),
   'network?': type(NetworkPolicyParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
     ),
   'desktop?': type(DesktopParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
     ),
@@ -28142,9 +29833,9 @@ export const CreateEnvironmentParamOpenaiHostedSchema = type({
 export type CreateEnvironmentParamOpenaiHostedSchema =
   typeof CreateEnvironmentParamOpenaiHostedSchema.infer
 
-export const CreateEnvironmentParamSchema = CreateEnvironmentParamOpenaiHostedSchema.describe(
-  'Configuration for a new prewarmed OpenAI-hosted environment.',
-)
+export const CreateEnvironmentParamSchema = type(CreateEnvironmentParamOpenaiHostedSchema)
+  .and({ type: "'openai_hosted'" })
+  .describe('Configuration for a new prewarmed OpenAI-hosted environment.')
 
 export type CreateEnvironmentParamSchema = typeof CreateEnvironmentParamSchema.infer
 
@@ -28245,8 +29936,10 @@ export const EncryptedContentResourceSchema = type({
 
 export type EncryptedContentResourceSchema = typeof EncryptedContentResourceSchema.infer
 
-export const AgentContentResourceSchema = type(OutputTextResourceSchema)
-  .or(EncryptedContentResourceSchema)
+export const AgentContentResourceSchema = type(
+  type(OutputTextResourceSchema).and({ type: "'output_text'" }),
+)
+  .or(type(EncryptedContentResourceSchema).and({ type: "'encrypted_content'" }))
   .describe('A plaintext or encrypted content part exchanged between agents.')
 
 export type AgentContentResourceSchema = typeof AgentContentResourceSchema.infer
@@ -28353,9 +30046,11 @@ export type MessageContentResourceOutputTextSchema =
   typeof MessageContentResourceOutputTextSchema.infer
 
 export const MessageContentResourceSchema = type(
-  type(MessageContentResourceInputTextSchema).or(MessageContentResourceInputImageSchema),
+  type(type(MessageContentResourceInputTextSchema).and({ type: "'input_text'" })).or(
+    type(MessageContentResourceInputImageSchema).and({ type: "'input_image'" }),
+  ),
 )
-  .or(MessageContentResourceOutputTextSchema)
+  .or(type(MessageContentResourceOutputTextSchema).and({ type: "'output_text'" }))
   .describe('A content part in a session message.')
 
 export type MessageContentResourceSchema = typeof MessageContentResourceSchema.infer
@@ -28394,7 +30089,7 @@ export const MessageItemResourceSchema = type({
     'The status of the message. User messages are always `completed`.',
   ),
   phase: type(MessagePhaseResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The phase of an assistant message. Null for user messages.'),
   '+': 'reject',
 }).describe('A user or assistant message recorded in a session.')
@@ -28423,7 +30118,7 @@ export const ReasoningItemResourceSchema = type({
     .and(type('0 <= unknown[] <= 2000'))
     .describe('The reasoning summaries produced by the agent.'),
   status: type(OutputItemStatusResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The status of the reasoning item.'),
   '+': 'reject',
 }).describe('A reasoning item produced by the agent.')
@@ -28480,7 +30175,7 @@ export const FunctionCallOutputItemResourceSchema = type({
     .describe('The ID of the function call that produced this output.'),
   status: FunctionCallStatusResourceSchema.describe('The status of the function call.'),
   output: type(FunctionCallOutputResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The function result, if the call succeeded.'),
   error: type(
     type('string').narrow(
@@ -28532,8 +30227,8 @@ export const McpCallItemResourceSchema = type({
     .describe('The name of the MCP tool.'),
   arguments: type('unknown').describe('The arguments passed to the MCP tool.'),
   status: FunctionCallStatusResourceSchema.describe('The status of the MCP tool call.'),
-  output: type('unknown | null | null').describe('The output returned by the MCP tool, if any.'),
-  error: type('unknown | null | null').describe('The error returned by the MCP tool, if any.'),
+  output: type('unknown | null').describe('The output returned by the MCP tool, if any.'),
+  error: type('unknown | null').describe('The error returned by the MCP tool, if any.'),
   '+': 'reject',
 }).describe('A call to a tool on an MCP server.')
 
@@ -28566,7 +30261,7 @@ export const ComputerUseCallItemResourceSchema = type({
     .describe('A model-generated description of the activity, when available.'),
   status: FunctionCallStatusResourceSchema.describe('The execution status of the activity.'),
   output: type(ComputerScreenshotResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'The last screenshot emitted by the model. Null when screenshot inclusion is disabled or the call emitted no screenshot.',
     ),
@@ -28644,8 +30339,9 @@ export const BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticatio
 export type BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema =
   typeof BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema.infer
 
-export const BrowserAuthenticationHistoryRequestKindResourceSchema =
-  BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema
+export const BrowserAuthenticationHistoryRequestKindResourceSchema = type(
+  BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema,
+).and({ type: "'browser_authentication'" })
 
 export type BrowserAuthenticationHistoryRequestKindResourceSchema =
   typeof BrowserAuthenticationHistoryRequestKindResourceSchema.infer
@@ -28694,8 +30390,14 @@ export type ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelRe
   typeof ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema.infer
 
 export const ComputerUseApprovalResponseKindResourceSchema = type(
-  ComputerUseApprovalResponseKindResourceBrowserAuthenticationSubmitResourceSchema,
-).or(ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema)
+  type(ComputerUseApprovalResponseKindResourceBrowserAuthenticationSubmitResourceSchema).and({
+    action: "'submit'",
+  }),
+).or(
+  type(ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema).and({
+    action: "'cancel'",
+  }),
+)
 
 export type ComputerUseApprovalResponseKindResourceSchema =
   typeof ComputerUseApprovalResponseKindResourceSchema.infer
@@ -28790,11 +30492,13 @@ export const WebSearchActionResourceOtherSchema = type({
 export type WebSearchActionResourceOtherSchema = typeof WebSearchActionResourceOtherSchema.infer
 
 export const WebSearchActionResourceSchema = type(
-  type(type(WebSearchActionResourceSearchSchema).or(WebSearchActionResourceOpenPageSchema)).or(
-    WebSearchActionResourceFindInPageSchema,
-  ),
+  type(
+    type(type(WebSearchActionResourceSearchSchema).and({ type: "'search'" })).or(
+      type(WebSearchActionResourceOpenPageSchema).and({ type: "'open_page'" }),
+    ),
+  ).or(type(WebSearchActionResourceFindInPageSchema).and({ type: "'find_in_page'" })),
 )
-  .or(WebSearchActionResourceOtherSchema)
+  .or(type(WebSearchActionResourceOtherSchema).and({ type: "'other'" }))
   .describe('An action performed by the web search tool.')
 
 export type WebSearchActionResourceSchema = typeof WebSearchActionResourceSchema.infer
@@ -28809,7 +30513,7 @@ export const WebSearchCallItemResourceSchema = type({
     .describe('The ID of the turn that contains this item.'),
   status: OutputItemStatusResourceSchema.describe('The status of the web search call.'),
   action: type(WebSearchActionResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The action performed by the web search tool.'),
   '+': 'reject',
 }).describe('A web search call produced by the agent.')
@@ -29036,23 +30740,43 @@ export const SessionTurnItemResourceSchema = type(
                         type(
                           type(
                             type(
-                              type(MessageItemResourceSchema).or(ReasoningItemResourceSchema),
-                            ).or(FunctionCallItemResourceSchema),
-                          ).or(FunctionCallOutputItemResourceSchema),
-                        ).or(AgentMessageItemResourceSchema),
-                      ).or(McpCallItemResourceSchema),
-                    ).or(ComputerUseCallItemResourceSchema),
-                  ).or(BrowserAuthenticationRequestItemResourceSchema),
-                ).or(ComputerUseApprovalRequestResultItemResourceSchema),
-              ).or(WebSearchCallItemResourceSchema),
-            ).or(CommandExecutionItemResourceSchema),
-          ).or(CreateSubagentCallItemResourceSchema),
-        ).or(SendSubagentInputCallItemResourceSchema),
-      ).or(ResumeSubagentCallItemResourceSchema),
-    ).or(WaitForSubagentsCallItemResourceSchema),
-  ).or(InterruptSubagentCallItemResourceSchema),
+                              type(type(MessageItemResourceSchema).and({ type: "'message'" })).or(
+                                type(ReasoningItemResourceSchema).and({ type: "'reasoning'" }),
+                              ),
+                            ).or(
+                              type(FunctionCallItemResourceSchema).and({ type: "'function_call'" }),
+                            ),
+                          ).or(
+                            type(FunctionCallOutputItemResourceSchema).and({
+                              type: "'function_call_output'",
+                            }),
+                          ),
+                        ).or(type(AgentMessageItemResourceSchema).and({ type: "'agent_message'" })),
+                      ).or(type(McpCallItemResourceSchema).and({ type: "'mcp_call'" })),
+                    ).or(
+                      type(ComputerUseCallItemResourceSchema).and({ type: "'computer_use_call'" }),
+                    ),
+                  ).or(
+                    type(BrowserAuthenticationRequestItemResourceSchema).and({
+                      type: "'computer_use_approval_request'",
+                    }),
+                  ),
+                ).or(
+                  type(ComputerUseApprovalRequestResultItemResourceSchema).and({
+                    type: "'computer_use_approval_request_result'",
+                  }),
+                ),
+              ).or(type(WebSearchCallItemResourceSchema).and({ type: "'web_search_call'" })),
+            ).or(type(CommandExecutionItemResourceSchema).and({ type: "'command_execution'" })),
+          ).or(type(CreateSubagentCallItemResourceSchema).and({ type: "'create_subagent_call'" })),
+        ).or(
+          type(SendSubagentInputCallItemResourceSchema).and({ type: "'send_subagent_input_call'" }),
+        ),
+      ).or(type(ResumeSubagentCallItemResourceSchema).and({ type: "'resume_subagent_call'" })),
+    ).or(type(WaitForSubagentsCallItemResourceSchema).and({ type: "'wait_for_subagents_call'" })),
+  ).or(type(InterruptSubagentCallItemResourceSchema).and({ type: "'interrupt_subagent_call'" })),
 )
-  .or(CloseSubagentCallItemResourceSchema)
+  .or(type(CloseSubagentCallItemResourceSchema).and({ type: "'close_subagent_call'" }))
   .describe('An item associated with a session turn.')
 
 export type SessionTurnItemResourceSchema = typeof SessionTurnItemResourceSchema.infer
@@ -29109,9 +30833,36 @@ export const TurnStatusResourceSchema = type(
 
 export type TurnStatusResourceSchema = typeof TurnStatusResourceSchema.infer
 
-export const SessionTurnErrorCodeResourceSchema = type(
-  "'context_length_exceeded' | 'max_output_tokens' | 'session_budget_exceeded' | 'usage_limit_exceeded' | 'api_key_spend_limit_exceeded' | 'project_spend_limit_exceeded' | 'organization_spend_limit_exceeded' | 'organization_usage_limit_exceeded' | 'billing_not_active' | 'credit_balance_exhausted' | 'rate_limit_exceeded' | 'flex_unavailable' | 'server_overloaded' | 'cyber_policy' | 'misalignment_policy_violation' | 'audio_input_unavailable' | 'connection_failed' | 'server_error' | 'authentication_error' | 'invalid_request' | 'resource_not_found' | 'sandbox_error' | 'executor_version_incompatible' | 'active_turn_not_steerable' | 'request_timeout' | 'internal_error'",
-).describe('Stable public categories for session request failures.')
+export const SessionTurnErrorCodeResourceSchema = type
+  .enumerated(
+    'context_length_exceeded',
+    'max_output_tokens',
+    'session_budget_exceeded',
+    'usage_limit_exceeded',
+    'api_key_spend_limit_exceeded',
+    'project_spend_limit_exceeded',
+    'organization_spend_limit_exceeded',
+    'organization_usage_limit_exceeded',
+    'billing_not_active',
+    'credit_balance_exhausted',
+    'rate_limit_exceeded',
+    'flex_unavailable',
+    'server_overloaded',
+    'cyber_policy',
+    'misalignment_policy_violation',
+    'audio_input_unavailable',
+    'connection_failed',
+    'server_error',
+    'authentication_error',
+    'invalid_request',
+    'resource_not_found',
+    'sandbox_error',
+    'executor_version_incompatible',
+    'active_turn_not_steerable',
+    'request_timeout',
+    'internal_error',
+  )
+  .describe('Stable public categories for session request failures.')
 
 export type SessionTurnErrorCodeResourceSchema = typeof SessionTurnErrorCodeResourceSchema.infer
 
@@ -29191,7 +30942,7 @@ export type TokenUsageResourceSchema = typeof TokenUsageResourceSchema.infer
 
 export const TurnResourceSchema = type({
   'prompt_cache_options?': type(PromptCacheOptionsResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Prompt cache lifetime selected when this turn started, including an inherited session TTL. Null when the turn used the model default or no TTL was recorded.',
     ),
@@ -29246,10 +30997,10 @@ export const TurnResourceSchema = type({
     .or('null')
     .describe('The Unix timestamp, in seconds, when the turn reached a terminal state.'),
   error: type(SessionTurnErrorResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('A customer-safe error. Non-null only for a failed turn.'),
   usage: type(TokenUsageResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Best-effort token usage for the turn, or null if unknown. Recorded usage may change.',
     ),
@@ -29377,8 +31128,10 @@ export const PersistedMcpTransportResourceStdioSchema = type({
 export type PersistedMcpTransportResourceStdioSchema =
   typeof PersistedMcpTransportResourceStdioSchema.infer
 
-export const PersistedMcpTransportResourceSchema = type(PersistedMcpTransportResourceHttpSchema)
-  .or(PersistedMcpTransportResourceStdioSchema)
+export const PersistedMcpTransportResourceSchema = type(
+  type(PersistedMcpTransportResourceHttpSchema).and({ type: "'http'" }),
+)
+  .or(type(PersistedMcpTransportResourceStdioSchema).and({ type: "'stdio'" }))
   .describe('A credential-free transport used to connect to an MCP server.')
 
 export type PersistedMcpTransportResourceSchema = typeof PersistedMcpTransportResourceSchema.infer
@@ -29441,7 +31194,7 @@ export const PersistedAgentToolResourceWebSearchSchema = type({
     .or('null')
     .describe('Allowed search domains, or `null` when the search is unrestricted.'),
   location: type(WebSearchLocationResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Approximate location used to localize search results, if provided.'),
   '+': 'reject',
 }).describe('Web search.')
@@ -29473,15 +31226,19 @@ export const PersistedAgentToolResourceSchema = type(
     type(
       type(
         type(
-          type(PersistedAgentToolResourceFunctionSchema).or(
-            PersistedAgentToolResourceToolSearchSchema,
+          type(type(PersistedAgentToolResourceFunctionSchema).and({ type: "'function'" })).or(
+            type(PersistedAgentToolResourceToolSearchSchema).and({ type: "'tool_search'" }),
           ),
-        ).or(PersistedAgentToolResourceProgrammaticToolCallingSchema),
-      ).or(PersistedAgentToolResourceMcpSchema),
-    ).or(PersistedAgentToolResourceWebSearchSchema),
-  ).or(PersistedAgentToolResourceComputerUseSchema),
+        ).or(
+          type(PersistedAgentToolResourceProgrammaticToolCallingSchema).and({
+            type: "'programmatic_tool_calling'",
+          }),
+        ),
+      ).or(type(PersistedAgentToolResourceMcpSchema).and({ type: "'mcp'" })),
+    ).or(type(PersistedAgentToolResourceWebSearchSchema).and({ type: "'web_search'" })),
+  ).or(type(PersistedAgentToolResourceComputerUseSchema).and({ type: "'computer_use'" })),
 )
-  .or(PersistedAgentToolResourceAutomationsSchema)
+  .or(type(PersistedAgentToolResourceAutomationsSchema).and({ type: "'automations'" }))
   .describe('A credential-free tool available to a reusable agent.')
 
 export type PersistedAgentToolResourceSchema = typeof PersistedAgentToolResourceSchema.infer
@@ -29701,9 +31458,9 @@ export type PersistedMcpTransportConfigParamStdioSchema =
   typeof PersistedMcpTransportConfigParamStdioSchema.infer
 
 export const PersistedMcpTransportConfigParamSchema = type(
-  PersistedMcpTransportConfigParamHttpSchema,
+  type(PersistedMcpTransportConfigParamHttpSchema).and({ type: "'http'" }),
 )
-  .or(PersistedMcpTransportConfigParamStdioSchema)
+  .or(type(PersistedMcpTransportConfigParamStdioSchema).and({ type: "'stdio'" }))
   .describe('A credential-free transport used to connect to an MCP server.')
 
 export type PersistedMcpTransportConfigParamSchema =
@@ -29749,7 +31506,7 @@ export const PersistedAgentToolConfigParamMcpSchema = type({
     'Whether this MCP server must initialize before the first turn. Defaults to `false`.',
   ),
   'connection_origin?': type(McpConnectionOriginParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Selects where outbound MCP HTTP connections originate.'),
   '+': 'reject',
 }).describe('Tools provided by a remote MCP server without stored credentials.')
@@ -29760,10 +31517,10 @@ export type PersistedAgentToolConfigParamMcpSchema =
 export const PersistedAgentToolConfigParamWebSearchSchema = type({
   type: type("'web_search'").describe('The type of the object. Always `web_search`.'),
   'mode?': type(WebSearchModeParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The source used for web search results. Defaults to `live`.'),
   'context_size?': type(WebSearchContextSizeParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The amount of search context made available to the model. Defaults to `medium`.'),
   'allowed_domains?': type(
     type(
@@ -29779,7 +31536,7 @@ export const PersistedAgentToolConfigParamWebSearchSchema = type({
     .or('null')
     .describe('Domains the search may include.'),
   'location?': type(WebSearchLocationParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Approximate location used to localize search results.'),
   '+': 'reject',
 }).describe('Web search.')
@@ -29811,15 +31568,19 @@ export const PersistedAgentToolConfigParamSchema = type(
     type(
       type(
         type(
-          type(PersistedAgentToolConfigParamFunctionSchema).or(
-            PersistedAgentToolConfigParamToolSearchSchema,
+          type(type(PersistedAgentToolConfigParamFunctionSchema).and({ type: "'function'" })).or(
+            type(PersistedAgentToolConfigParamToolSearchSchema).and({ type: "'tool_search'" }),
           ),
-        ).or(PersistedAgentToolConfigParamProgrammaticToolCallingSchema),
-      ).or(PersistedAgentToolConfigParamMcpSchema),
-    ).or(PersistedAgentToolConfigParamWebSearchSchema),
-  ).or(PersistedAgentToolConfigParamComputerUseSchema),
+        ).or(
+          type(PersistedAgentToolConfigParamProgrammaticToolCallingSchema).and({
+            type: "'programmatic_tool_calling'",
+          }),
+        ),
+      ).or(type(PersistedAgentToolConfigParamMcpSchema).and({ type: "'mcp'" })),
+    ).or(type(PersistedAgentToolConfigParamWebSearchSchema).and({ type: "'web_search'" })),
+  ).or(type(PersistedAgentToolConfigParamComputerUseSchema).and({ type: "'computer_use'" })),
 )
-  .or(PersistedAgentToolConfigParamAutomationsSchema)
+  .or(type(PersistedAgentToolConfigParamAutomationsSchema).and({ type: "'automations'" }))
   .describe('A tool that can be stored on a reusable agent without session credentials.')
 
 export type PersistedAgentToolConfigParamSchema = typeof PersistedAgentToolConfigParamSchema.infer
@@ -29851,15 +31612,15 @@ export const CreateAgentParamsSchema = type({
     .narrow((data, ctx) => [...data].length <= 1048576 || ctx.mustBe('at most 1048576 characters'))
     .describe('The model to use for the agent. The requested model name is preserved.'),
   'reasoning?': type(ReasoningParamSchema)
-    .or('null | null')
+    .or('null')
     .describe("Configuration for model reasoning. Omission uses the model's default effort."),
   'text?': type(TextParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Configuration for generated text. Defaults to the `text` format and medium verbosity.',
     ),
   'service_tier?': type(ServiceTierParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The service tier used for model requests. Defaults to `auto`.'),
   'instructions?': type(
     type('string')
@@ -29880,12 +31641,12 @@ export const CreateAgentParamsSchema = type({
       'Tools available to the agent. Defaults to an empty list. The tool list must fit within 3 MiB (3,145,728 bytes) of compact UTF-8 JSON.',
     ),
   'multi_agent?': type(MultiAgentConfigCurrentParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Configuration for creating and coordinating subagents. Subagent tools are disabled by default.',
     ),
   'compaction?': type(CompactionParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Context compaction settings. Omission or null uses blocking compaction.'),
   '+': 'reject',
 }).describe('Parameters for creating a reusable agent.')
@@ -29901,15 +31662,15 @@ export const UpdateAgentParamsSchema = type({
     .narrow((data, ctx) => [...data].length <= 1048576 || ctx.mustBe('at most 1048576 characters'))
     .describe('The model to use for the agent. The requested model name is preserved.'),
   'reasoning?': type(ReasoningParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
     ),
   'text?': type(TextParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Configuration for text generated by the agent.'),
   'service_tier?': type(ServiceTierParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The service tier used for model requests.'),
   'instructions?': type(
     type('string')
@@ -29923,10 +31684,10 @@ export const UpdateAgentParamsSchema = type({
       "Additional instructions appended to the agent's default base instructions. Omit to leave unchanged.",
     ),
   'multi_agent?': type(MultiAgentConfigCurrentParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Configuration for creating and coordinating subagents.'),
   'compaction?': type(CompactionParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
     ),
@@ -30067,7 +31828,7 @@ export type EnvironmentTemplateListResourceSchema =
 
 export const CreateEnvironmentTemplateParamsSchema = type({
   'packages?': type(EnvironmentPackagesParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Packages to install in the environment. Defaults to empty package lists.'),
   'setup_commands?': type(
     type(type(SetupCommandParamSchema).array()).and(type('0 <= unknown[] <= 16')),
@@ -30075,12 +31836,12 @@ export const CreateEnvironmentTemplateParamsSchema = type({
     .or('null')
     .describe('Ordered, confidential setup commands. Command bodies are never returned.'),
   'network?': type(NetworkPolicyParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
     ),
   'desktop?': type(DesktopParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
     ),
@@ -30147,7 +31908,7 @@ export const UpdateEnvironmentTemplateParamsSchema = type({
     .or('null')
     .describe('A replacement human-readable display name, or `null` to clear the name.'),
   'packages?': type(EnvironmentPackagesParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Packages installed before the runtime network policy applies.'),
   'setup_commands?': type(
     type(type(SetupCommandParamSchema).array()).and(type('0 <= unknown[] <= 16')),
@@ -30155,12 +31916,12 @@ export const UpdateEnvironmentTemplateParamsSchema = type({
     .or('null')
     .describe('Replacement confidential setup commands, never included in returned resources.'),
   'network?': type(NetworkPolicyParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Network access available after setup completes. Omit to preserve the current policy, or pass `null` to reset to the default policy.',
     ),
   'desktop?': type(DesktopParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Replacement desktop configuration, or null to disable the desktop.'),
   'env?': type(
     type({
@@ -30265,7 +32026,7 @@ export const McpApprovalRequestResourceMcpToolCallSchema = type({
   )
     .or('null')
     .describe('The tool name, or null when CCA does not provide it.'),
-  arguments: type('unknown | null | null').describe(
+  arguments: type('unknown | null').describe(
     'The tool arguments as JSON, or null when CCA does not provide them.',
   ),
   message: type('string').narrow(
@@ -30277,10 +32038,9 @@ export const McpApprovalRequestResourceMcpToolCallSchema = type({
 export type McpApprovalRequestResourceMcpToolCallSchema =
   typeof McpApprovalRequestResourceMcpToolCallSchema.infer
 
-export const McpApprovalRequestResourceSchema =
-  McpApprovalRequestResourceMcpToolCallSchema.describe(
-    'Information for presenting an MCP approval.',
-  )
+export const McpApprovalRequestResourceSchema = type(McpApprovalRequestResourceMcpToolCallSchema)
+  .and({ type: "'mcp_tool_call'" })
+  .describe('Information for presenting an MCP approval.')
 
 export type McpApprovalRequestResourceSchema = typeof McpApprovalRequestResourceSchema.infer
 
@@ -30352,8 +32112,14 @@ export type ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema =
   typeof ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema.infer
 
 export const ComputerUseApprovalRequestKindResourceSchema = type(
-  ComputerUseApprovalRequestKindResourceBrowserAuthenticationSchema,
-).or(ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema)
+  type(ComputerUseApprovalRequestKindResourceBrowserAuthenticationSchema).and({
+    type: "'browser_authentication'",
+  }),
+).or(
+  type(ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema).and({
+    type: "'browser_origin_access'",
+  }),
+)
 
 export type ComputerUseApprovalRequestKindResourceSchema =
   typeof ComputerUseApprovalRequestKindResourceSchema.infer
@@ -30410,12 +32176,22 @@ export type SessionRequiredActionResourceEnvironmentConnectionSchema =
 
 export const SessionRequiredActionResourceSchema = type(
   type(
-    type(SessionRequiredActionResourceMcpApprovalRequestSchema).or(
-      SessionRequiredActionResourceComputerUseApprovalRequestSchema,
+    type(
+      type(SessionRequiredActionResourceMcpApprovalRequestSchema).and({
+        type: "'mcp_approval_request'",
+      }),
+    ).or(
+      type(SessionRequiredActionResourceComputerUseApprovalRequestSchema).and({
+        type: "'computer_use_approval_request'",
+      }),
     ),
-  ).or(SessionRequiredActionResourceFunctionCallSchema),
+  ).or(type(SessionRequiredActionResourceFunctionCallSchema).and({ type: "'function_call'" })),
 )
-  .or(SessionRequiredActionResourceEnvironmentConnectionSchema)
+  .or(
+    type(SessionRequiredActionResourceEnvironmentConnectionSchema).and({
+      type: "'environment_connection'",
+    }),
+  )
   .describe('An action that must be completed before a session can continue.')
 
 export type SessionRequiredActionResourceSchema = typeof SessionRequiredActionResourceSchema.infer
@@ -30476,7 +32252,7 @@ export const EnvironmentResourceOpenaiHostedSchema = type({
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
     .describe('The public ID of the environment.'),
   'container_size?': type(ContainerSizeResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'The effective CPU and memory tier, or null when unknown or outside the public tiers.',
     ),
@@ -30537,16 +32313,18 @@ export const EnvironmentResourceSelfHostedSchema = type({
 export type EnvironmentResourceSelfHostedSchema = typeof EnvironmentResourceSelfHostedSchema.infer
 
 export const EnvironmentResourceSchema = type(
-  type(EnvironmentResourceNoneSchema).or(EnvironmentResourceOpenaiHostedSchema),
+  type(type(EnvironmentResourceNoneSchema).and({ type: "'none'" })).or(
+    type(EnvironmentResourceOpenaiHostedSchema).and({ type: "'openai_hosted'" }),
+  ),
 )
-  .or(EnvironmentResourceSelfHostedSchema)
+  .or(type(EnvironmentResourceSelfHostedSchema).and({ type: "'self_hosted'" }))
   .describe('The execution environment for a session.')
 
 export type EnvironmentResourceSchema = typeof EnvironmentResourceSchema.infer
 
 export const SessionResourceSchema = type({
   'prompt_cache_options?': type(PromptCacheOptionsResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Default prompt cache lifetime for turns in this session, when configured.'),
   'review?': SessionReviewResourceSchema.describe(
     'Review applied to eligible actions in this session. Omitted when review is none and automatic review is not enabled. Omission means none.',
@@ -30602,7 +32380,7 @@ export const SessionResourceSchema = type({
     .and(type('0 <= unknown[] <= 2000'))
     .describe('The IDs of vaults made available to the session.'),
   usage: type(TokenUsageResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Best-effort token usage for the session, or null if unknown. Recorded usage may change.',
     ),
@@ -30705,7 +32483,7 @@ export const CreateAgentSessionParamsSchema = type({
   ),
   'review?': SessionReviewParamSchema.describe('Action review mode. Omit to use none.'),
   'spend_control?': type(SessionBudgetControlParamsSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Optional spending limit in USD cents. Omission or null creates an unlimited session.',
     ),
@@ -30741,12 +32519,12 @@ export const CreateAgentSessionParamsSchema = type({
     .or('null')
     .describe('The IDs of vaults made available to the session.'),
   'input?': type(CreateSessionInputParamSchema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Initial input to submit when the session is created. A string is shorthand for a single user message. Required when `environment.type` is `none`, or when `stream` is `true` for an environment that is not `self_hosted`; optional for self-hosted and non-streaming execution environments.',
     ),
   'prompt_cache_options?': type(PromptCacheOptionsParam2Schema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Default prompt cache lifetime for turns in this session. Omit to use the model default.',
     ),
@@ -30854,7 +32632,7 @@ export const SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema = type({
     .narrow((data, ctx) => data <= 4294967295n || ctx.mustBe('at most 4294967295'))
     .describe('The index of the summary part.'),
   part: SummaryTextResourceSchema.describe('The completed summary part.'),
-  status: type("'incomplete' | null | null").describe(
+  status: type("'incomplete' | null").describe(
     'Present as `incomplete` when summary generation was interrupted.',
   ),
   'obfuscation?': type('string')
@@ -30993,7 +32771,7 @@ export const SessionEnvironmentStateResourceSchema = type({
     .describe('The environment type.'),
   status: SessionEnvironmentStatusResourceSchema.describe("The environment's connection status."),
   error: type(SessionEnvironmentErrorResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The error reported while preparing the environment, if any.'),
   '+': 'reject',
 }).describe('The current state of a session environment.')
@@ -31242,7 +33020,7 @@ export const SessionEventAgentSessionTurnCompletedSchema = type({
     .describe('The ID of the turn associated with the event.'),
   turn: TurnResourceSchema.describe('The completed turn.'),
   usage: type(TokenUsageResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Token usage by the root agent during the turn, when available.'),
   'obfuscation?': type('string')
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
@@ -31268,7 +33046,7 @@ export const SessionEventAgentSessionTurnFailedSchema = type({
     .describe('The ID of the turn associated with the event.'),
   turn: TurnResourceSchema.describe('The failed turn.'),
   usage: type(TokenUsageResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Token usage by the root agent during the turn, when available.'),
   'obfuscation?': type('string')
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
@@ -31294,7 +33072,7 @@ export const SessionEventAgentSessionTurnCancelledSchema = type({
     .describe('The ID of the turn associated with the event.'),
   turn: TurnResourceSchema.describe('The cancelled turn.'),
   usage: type(TokenUsageResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Token usage by the root agent during the turn, when available.'),
   'obfuscation?': type('string')
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
@@ -31601,7 +33379,7 @@ export const AssistantMessageItemResourceSchema = type({
     .and(type('0 <= unknown[] <= 2000'))
     .describe('The content of the message.'),
   phase: type(MessagePhaseResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('The phase of the assistant message.'),
   '+': 'reject',
 }).describe('An assistant message produced by the agent.')
@@ -31620,20 +33398,30 @@ export const AgentOutputItemResourceSchema = type(
                   type(
                     type(
                       type(
-                        type(AssistantMessageItemResourceSchema).or(ReasoningItemResourceSchema),
-                      ).or(FunctionCallItemResourceSchema),
-                    ).or(McpCallItemResourceSchema),
-                  ).or(ComputerUseCallItemResourceSchema),
-                ).or(BrowserAuthenticationRequestItemResourceSchema),
-              ).or(WebSearchCallItemResourceSchema),
-            ).or(CommandExecutionItemResourceSchema),
-          ).or(CreateSubagentCallItemResourceSchema),
-        ).or(SendSubagentInputCallItemResourceSchema),
-      ).or(ResumeSubagentCallItemResourceSchema),
-    ).or(WaitForSubagentsCallItemResourceSchema),
-  ).or(InterruptSubagentCallItemResourceSchema),
+                        type(
+                          type(AssistantMessageItemResourceSchema).and({ type: "'message'" }),
+                        ).or(type(ReasoningItemResourceSchema).and({ type: "'reasoning'" })),
+                      ).or(type(FunctionCallItemResourceSchema).and({ type: "'function_call'" })),
+                    ).or(type(McpCallItemResourceSchema).and({ type: "'mcp_call'" })),
+                  ).or(
+                    type(ComputerUseCallItemResourceSchema).and({ type: "'computer_use_call'" }),
+                  ),
+                ).or(
+                  type(BrowserAuthenticationRequestItemResourceSchema).and({
+                    type: "'computer_use_approval_request'",
+                  }),
+                ),
+              ).or(type(WebSearchCallItemResourceSchema).and({ type: "'web_search_call'" })),
+            ).or(type(CommandExecutionItemResourceSchema).and({ type: "'command_execution'" })),
+          ).or(type(CreateSubagentCallItemResourceSchema).and({ type: "'create_subagent_call'" })),
+        ).or(
+          type(SendSubagentInputCallItemResourceSchema).and({ type: "'send_subagent_input_call'" }),
+        ),
+      ).or(type(ResumeSubagentCallItemResourceSchema).and({ type: "'resume_subagent_call'" })),
+    ).or(type(WaitForSubagentsCallItemResourceSchema).and({ type: "'wait_for_subagents_call'" })),
+  ).or(type(InterruptSubagentCallItemResourceSchema).and({ type: "'interrupt_subagent_call'" })),
 )
-  .or(CloseSubagentCallItemResourceSchema)
+  .or(type(CloseSubagentCallItemResourceSchema).and({ type: "'close_subagent_call'" }))
   .describe('An output item produced by an agent.')
 
 export type AgentOutputItemResourceSchema = typeof AgentOutputItemResourceSchema.infer
@@ -31961,59 +33749,197 @@ export const SessionEventSchema = type(
                                                           type(
                                                             type(
                                                               type(
-                                                                type(SessionEventErrorSchema).or(
-                                                                  SessionEventAgentSessionEnvironmentReadySchema,
+                                                                type(
+                                                                  type(SessionEventErrorSchema).and(
+                                                                    { type: "'error'" },
+                                                                  ),
+                                                                ).or(
+                                                                  type(
+                                                                    SessionEventAgentSessionEnvironmentReadySchema,
+                                                                  ).and({
+                                                                    type: "'agent.session.environment.ready'",
+                                                                  }),
                                                                 ),
                                                               ).or(
-                                                                SessionEventAgentSessionEnvironmentSuspendedSchema,
+                                                                type(
+                                                                  SessionEventAgentSessionEnvironmentSuspendedSchema,
+                                                                ).and({
+                                                                  type: "'agent.session.environment.suspended'",
+                                                                }),
                                                               ),
                                                             ).or(
-                                                              SessionEventAgentSessionEnvironmentExpiredSchema,
+                                                              type(
+                                                                SessionEventAgentSessionEnvironmentExpiredSchema,
+                                                              ).and({
+                                                                type: "'agent.session.environment.expired'",
+                                                              }),
                                                             ),
                                                           ).or(
-                                                            SessionEventAgentSessionEnvironmentResetSchema,
+                                                            type(
+                                                              SessionEventAgentSessionEnvironmentResetSchema,
+                                                            ).and({
+                                                              type: "'agent.session.environment.reset'",
+                                                            }),
                                                           ),
                                                         ).or(
-                                                          SessionEventAgentOutputCommandExecutionOutputDeltaSchema,
+                                                          type(
+                                                            SessionEventAgentOutputCommandExecutionOutputDeltaSchema,
+                                                          ).and({
+                                                            type: "'agent.output.command_execution_output.delta'",
+                                                          }),
                                                         ),
-                                                      ).or(SessionEventAgentSessionCreatedSchema),
-                                                    ).or(SessionEventAgentSessionTurnCreatedSchema),
+                                                      ).or(
+                                                        type(
+                                                          SessionEventAgentSessionCreatedSchema,
+                                                        ).and({ type: "'agent.session.created'" }),
+                                                      ),
+                                                    ).or(
+                                                      type(
+                                                        SessionEventAgentSessionTurnCreatedSchema,
+                                                      ).and({
+                                                        type: "'agent.session.turn.created'",
+                                                      }),
+                                                    ),
                                                   ).or(
-                                                    SessionEventAgentSessionTurnInProgressSchema,
+                                                    type(
+                                                      SessionEventAgentSessionTurnInProgressSchema,
+                                                    ).and({
+                                                      type: "'agent.session.turn.in_progress'",
+                                                    }),
                                                   ),
-                                                ).or(SessionEventAgentSessionTurnCompletedSchema),
-                                              ).or(SessionEventAgentSessionTurnFailedSchema),
-                                            ).or(SessionEventAgentSessionTurnCancelledSchema),
-                                          ).or(SessionEventAgentSessionTurnItemAddedSchema),
-                                        ).or(SessionEventAgentSessionIdleSchema),
-                                      ).or(SessionEventAgentSessionBudgetReachedSchema),
-                                    ).or(SessionEventAgentSessionInProgressSchema),
-                                  ).or(SessionEventAgentSessionRequiresActionSchema),
-                                ).or(SessionEventAgentSessionFailedSchema),
-                              ).or(SessionEventAgentSessionEnvironmentPendingSchema),
-                            ).or(SessionEventAgentSessionEnvironmentConnectedSchema),
-                          ).or(SessionEventAgentSessionEnvironmentDisconnectedSchema),
-                        ).or(SessionEventAgentSessionEnvironmentFailedSchema),
-                      ).or(SessionEventAgentSessionSubagentCreatedSchema),
-                    ).or(SessionEventAgentSessionSubagentActiveSchema),
-                  ).or(SessionEventAgentSessionSubagentClosedSchema),
-                ).or(SessionEventAgentSessionTurnItemDoneSchema),
-              ).or(SessionEventAgentSessionTurnContentPartAddedSchema),
-            ).or(SessionEventAgentSessionTurnContentPartDoneSchema),
-          ).or(SessionEventAgentSessionTurnOutputTextDeltaSchema),
-        ).or(SessionEventAgentSessionTurnOutputTextDoneSchema),
-      ).or(SessionEventAgentSessionTurnReasoningSummaryPartAddedSchema),
-    ).or(SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema),
-  ).or(SessionEventAgentSessionTurnReasoningSummaryTextDeltaSchema),
+                                                ).or(
+                                                  type(
+                                                    SessionEventAgentSessionTurnCompletedSchema,
+                                                  ).and({ type: "'agent.session.turn.completed'" }),
+                                                ),
+                                              ).or(
+                                                type(SessionEventAgentSessionTurnFailedSchema).and({
+                                                  type: "'agent.session.turn.failed'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(SessionEventAgentSessionTurnCancelledSchema).and(
+                                                { type: "'agent.session.turn.cancelled'" },
+                                              ),
+                                            ),
+                                          ).or(
+                                            type(SessionEventAgentSessionTurnItemAddedSchema).and({
+                                              type: "'agent.session.turn.item.added'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(SessionEventAgentSessionIdleSchema).and({
+                                            type: "'agent.session.idle'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(SessionEventAgentSessionBudgetReachedSchema).and({
+                                          type: "'agent.session.budget_reached'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(SessionEventAgentSessionInProgressSchema).and({
+                                        type: "'agent.session.in_progress'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(SessionEventAgentSessionRequiresActionSchema).and({
+                                      type: "'agent.session.requires_action'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(SessionEventAgentSessionFailedSchema).and({
+                                    type: "'agent.session.failed'",
+                                  }),
+                                ),
+                              ).or(
+                                type(SessionEventAgentSessionEnvironmentPendingSchema).and({
+                                  type: "'agent.session.environment.pending'",
+                                }),
+                              ),
+                            ).or(
+                              type(SessionEventAgentSessionEnvironmentConnectedSchema).and({
+                                type: "'agent.session.environment.connected'",
+                              }),
+                            ),
+                          ).or(
+                            type(SessionEventAgentSessionEnvironmentDisconnectedSchema).and({
+                              type: "'agent.session.environment.disconnected'",
+                            }),
+                          ),
+                        ).or(
+                          type(SessionEventAgentSessionEnvironmentFailedSchema).and({
+                            type: "'agent.session.environment.failed'",
+                          }),
+                        ),
+                      ).or(
+                        type(SessionEventAgentSessionSubagentCreatedSchema).and({
+                          type: "'agent.session.subagent.created'",
+                        }),
+                      ),
+                    ).or(
+                      type(SessionEventAgentSessionSubagentActiveSchema).and({
+                        type: "'agent.session.subagent.active'",
+                      }),
+                    ),
+                  ).or(
+                    type(SessionEventAgentSessionSubagentClosedSchema).and({
+                      type: "'agent.session.subagent.closed'",
+                    }),
+                  ),
+                ).or(
+                  type(SessionEventAgentSessionTurnItemDoneSchema).and({
+                    type: "'agent.session.turn.item.done'",
+                  }),
+                ),
+              ).or(
+                type(SessionEventAgentSessionTurnContentPartAddedSchema).and({
+                  type: "'agent.session.turn.content_part.added'",
+                }),
+              ),
+            ).or(
+              type(SessionEventAgentSessionTurnContentPartDoneSchema).and({
+                type: "'agent.session.turn.content_part.done'",
+              }),
+            ),
+          ).or(
+            type(SessionEventAgentSessionTurnOutputTextDeltaSchema).and({
+              type: "'agent.session.turn.output_text.delta'",
+            }),
+          ),
+        ).or(
+          type(SessionEventAgentSessionTurnOutputTextDoneSchema).and({
+            type: "'agent.session.turn.output_text.done'",
+          }),
+        ),
+      ).or(
+        type(SessionEventAgentSessionTurnReasoningSummaryPartAddedSchema).and({
+          type: "'agent.session.turn.reasoning_summary_part.added'",
+        }),
+      ),
+    ).or(
+      type(SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema).and({
+        type: "'agent.session.turn.reasoning_summary_part.done'",
+      }),
+    ),
+  ).or(
+    type(SessionEventAgentSessionTurnReasoningSummaryTextDeltaSchema).and({
+      type: "'agent.session.turn.reasoning_summary_text.delta'",
+    }),
+  ),
 )
-  .or(SessionEventAgentSessionTurnReasoningSummaryTextDoneSchema)
+  .or(
+    type(SessionEventAgentSessionTurnReasoningSummaryTextDoneSchema).and({
+      type: "'agent.session.turn.reasoning_summary_text.done'",
+    }),
+  )
   .describe('An event emitted by a Managed Agents session.')
 
 export type SessionEventSchema = typeof SessionEventSchema.infer
 
 export const UpdateSessionReasoningParamSchema = type({
   'effort?': type(ReasoningEffortParamSchema)
-    .or('null | null')
+    .or('null')
     .describe("Omit to keep the current effort. Null selects the model's default effort."),
   '+': 'reject',
 }).describe('Reasoning effort for subsequent turns. The reasoning summary stays unchanged.')
@@ -32036,7 +33962,7 @@ export const UpdateSessionAgentParamSchema = type({
     'Reasoning settings to update. Omit to keep the current effort.',
   ),
   'service_tier?': type(ServiceTierParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Omit to keep the current tier. Null resets it to auto.'),
   '+': 'reject',
 }).describe('Agent settings that can change after session creation.')
@@ -32045,7 +33971,7 @@ export type UpdateSessionAgentParamSchema = typeof UpdateSessionAgentParamSchema
 
 export const UpdateAgentSessionParamsSchema = type({
   'prompt_cache_options?': type(PromptCacheOptionsParam2Schema)
-    .or('null | null')
+    .or('null')
     .describe(
       'Default prompt cache lifetime for future turns. Send null to clear the session default.',
     ),
@@ -32068,7 +33994,7 @@ export const UpdateAgentSessionParamsSchema = type({
     'Default action review for new root turns. Existing turns and their subagents keep their review mode.',
   ),
   'spend_control?': type(SessionBudgetControlParamsSchema)
-    .or('null | null')
+    .or('null')
     .describe('Omit to retain the limit; null or a null limit removes it without resetting spend.'),
   'agent?': UpdateSessionAgentParamSchema.describe(
     'Agent settings to update on this session. Omitted fields stay unchanged.',
@@ -32204,9 +34130,9 @@ export const McpApprovalResponseParamMcpToolCallSchema = type({
 export type McpApprovalResponseParamMcpToolCallSchema =
   typeof McpApprovalResponseParamMcpToolCallSchema.infer
 
-export const McpApprovalResponseParamSchema = McpApprovalResponseParamMcpToolCallSchema.describe(
-  "The user's decision for a pending MCP tool call.",
-)
+export const McpApprovalResponseParamSchema = type(McpApprovalResponseParamMcpToolCallSchema)
+  .and({ type: "'mcp_tool_call'" })
+  .describe("The user's decision for a pending MCP tool call.")
 
 export type McpApprovalResponseParamSchema = typeof McpApprovalResponseParamSchema.infer
 
@@ -32273,8 +34199,14 @@ export type ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSche
   typeof ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSchema.infer
 
 export const ComputerUseApprovalResponseParamBrowserAuthenticationSchema = type(
-  ComputerUseApprovalResponseParamBrowserAuthenticationSubmitParamSchema,
-).or(ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSchema)
+  type(ComputerUseApprovalResponseParamBrowserAuthenticationSubmitParamSchema).and({
+    action: "'submit'",
+  }),
+).or(
+  type(ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSchema).and({
+    action: "'cancel'",
+  }),
+)
 
 export type ComputerUseApprovalResponseParamBrowserAuthenticationSchema =
   typeof ComputerUseApprovalResponseParamBrowserAuthenticationSchema.infer
@@ -32298,8 +34230,14 @@ export type ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema =
   typeof ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema.infer
 
 export const ComputerUseApprovalResponseParamSchema = type(
-  ComputerUseApprovalResponseParamBrowserAuthenticationSchema,
-).or(ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema)
+  type(ComputerUseApprovalResponseParamBrowserAuthenticationSchema).and({
+    type: "'browser_authentication'",
+  }),
+).or(
+  type(ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema).and({
+    type: "'browser_origin_access'",
+  }),
+)
 
 export type ComputerUseApprovalResponseParamSchema =
   typeof ComputerUseApprovalResponseParamSchema.infer
@@ -32366,7 +34304,7 @@ export const SessionInputParamAgentSessionInputToolResultSchema = type({
     .describe('The ID of the function call.'),
   success: type('boolean').describe('Whether the function call succeeded.'),
   'output?': type(FunctionCallOutputParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('The function result when the call succeeded.'),
   'error?': type(
     type('string')
@@ -32386,13 +34324,31 @@ export type SessionInputParamAgentSessionInputToolResultSchema =
 export const SessionInputParamSchema = type(
   type(
     type(
-      type(SessionInputParamAgentSessionInputMcpApprovalRequestResultSchema).or(
-        SessionInputParamAgentSessionInputComputerUseApprovalRequestResultSchema,
+      type(
+        type(SessionInputParamAgentSessionInputMcpApprovalRequestResultSchema).and({
+          type: "'agent.session.input.mcp_approval_request_result'",
+        }),
+      ).or(
+        type(SessionInputParamAgentSessionInputComputerUseApprovalRequestResultSchema).and({
+          type: "'agent.session.input.computer_use_approval_request_result'",
+        }),
       ),
-    ).or(SessionInputParamAgentSessionInputMessageSchema),
-  ).or(SessionInputParamAgentSessionInputCancelSchema),
+    ).or(
+      type(SessionInputParamAgentSessionInputMessageSchema).and({
+        type: "'agent.session.input.message'",
+      }),
+    ),
+  ).or(
+    type(SessionInputParamAgentSessionInputCancelSchema).and({
+      type: "'agent.session.input.cancel'",
+    }),
+  ),
 )
-  .or(SessionInputParamAgentSessionInputToolResultSchema)
+  .or(
+    type(SessionInputParamAgentSessionInputToolResultSchema).and({
+      type: "'agent.session.input.tool_result'",
+    }),
+  )
   .describe('Input submitted to an existing session.')
 
 export type SessionInputParamSchema = typeof SessionInputParamSchema.infer
@@ -32623,11 +34579,17 @@ export type McpOauthTokenEndpointAuthResourceClientSecretPostSchema =
   typeof McpOauthTokenEndpointAuthResourceClientSecretPostSchema.infer
 
 export const McpOauthTokenEndpointAuthResourceSchema = type(
-  type(McpOauthTokenEndpointAuthResourceNoneSchema).or(
-    McpOauthTokenEndpointAuthResourceClientSecretBasicSchema,
+  type(type(McpOauthTokenEndpointAuthResourceNoneSchema).and({ type: "'none'" })).or(
+    type(McpOauthTokenEndpointAuthResourceClientSecretBasicSchema).and({
+      type: "'client_secret_basic'",
+    }),
   ),
 )
-  .or(McpOauthTokenEndpointAuthResourceClientSecretPostSchema)
+  .or(
+    type(McpOauthTokenEndpointAuthResourceClientSecretPostSchema).and({
+      type: "'client_secret_post'",
+    }),
+  )
   .describe('The client authentication method used for OAuth token refresh.')
 
 export type McpOauthTokenEndpointAuthResourceSchema =
@@ -32675,7 +34637,7 @@ export const VaultCredentialAuthResourceMcpOauthSchema = type({
     .or('null')
     .describe('When the OAuth access token expires, as an RFC 3339 timestamp, if known.'),
   refresh: type(McpOauthRefreshResourceSchema)
-    .or('null | null')
+    .or('null')
     .describe('Public refresh metadata without refresh tokens or OAuth client secrets.'),
   '+': 'reject',
 }).describe(
@@ -32728,9 +34690,9 @@ export type VaultCredentialNetworkingResourceLimitedSchema =
   typeof VaultCredentialNetworkingResourceLimitedSchema.infer
 
 export const VaultCredentialNetworkingResourceSchema = type(
-  VaultCredentialNetworkingResourceUnrestrictedSchema,
+  type(VaultCredentialNetworkingResourceUnrestrictedSchema).and({ type: "'unrestricted'" }),
 )
-  .or(VaultCredentialNetworkingResourceLimitedSchema)
+  .or(type(VaultCredentialNetworkingResourceLimitedSchema).and({ type: "'limited'" }))
   .describe(
     'Destination permissions for an environment-variable credential. These do not grant network access to the environment.',
   )
@@ -32757,9 +34719,15 @@ export type VaultCredentialAuthResourceEnvironmentVariableSchema =
   typeof VaultCredentialAuthResourceEnvironmentVariableSchema.infer
 
 export const VaultCredentialAuthResourceSchema = type(
-  type(VaultCredentialAuthResourceMcpOauthSchema).or(VaultCredentialAuthResourceStaticBearerSchema),
+  type(type(VaultCredentialAuthResourceMcpOauthSchema).and({ type: "'mcp_oauth'" })).or(
+    type(VaultCredentialAuthResourceStaticBearerSchema).and({ type: "'static_bearer'" }),
+  ),
 )
-  .or(VaultCredentialAuthResourceEnvironmentVariableSchema)
+  .or(
+    type(VaultCredentialAuthResourceEnvironmentVariableSchema).and({
+      type: "'environment_variable'",
+    }),
+  )
   .describe('The authentication configuration of a vault credential, excluding secrets.')
 
 export type VaultCredentialAuthResourceSchema = typeof VaultCredentialAuthResourceSchema.infer
@@ -32870,11 +34838,17 @@ export type CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema =
   typeof CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema.infer
 
 export const CreateMcpOauthTokenEndpointAuthParamSchema = type(
-  type(CreateMcpOauthTokenEndpointAuthParamNoneSchema).or(
-    CreateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
+  type(type(CreateMcpOauthTokenEndpointAuthParamNoneSchema).and({ type: "'none'" })).or(
+    type(CreateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema).and({
+      type: "'client_secret_basic'",
+    }),
   ),
 )
-  .or(CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema)
+  .or(
+    type(CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema).and({
+      type: "'client_secret_post'",
+    }),
+  )
   .describe('Client authentication credentials for OAuth token refresh.')
 
 export type CreateMcpOauthTokenEndpointAuthParamSchema =
@@ -32941,7 +34915,7 @@ export const CreateVaultCredentialAuthParamMcpOauthSchema = type({
     .or('null')
     .describe('When the OAuth access token expires, as an RFC 3339 timestamp, if known.'),
   'refresh?': type(CreateMcpOauthRefreshParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Optional refresh configuration for an HTTPS OAuth token endpoint.'),
   '+': 'reject',
 }).describe('An OAuth credential for an HTTPS MCP destination.')
@@ -32999,9 +34973,9 @@ export type VaultCredentialNetworkingParamLimitedSchema =
   typeof VaultCredentialNetworkingParamLimitedSchema.infer
 
 export const VaultCredentialNetworkingParamSchema = type(
-  VaultCredentialNetworkingParamUnrestrictedSchema,
+  type(VaultCredentialNetworkingParamUnrestrictedSchema).and({ type: "'unrestricted'" }),
 )
-  .or(VaultCredentialNetworkingParamLimitedSchema)
+  .or(type(VaultCredentialNetworkingParamLimitedSchema).and({ type: "'limited'" }))
   .describe(
     'Destination permissions for an environment-variable credential. These do not grant network access to the environment.',
   )
@@ -33036,11 +35010,15 @@ export type CreateVaultCredentialAuthParamEnvironmentVariableSchema =
   typeof CreateVaultCredentialAuthParamEnvironmentVariableSchema.infer
 
 export const CreateVaultCredentialAuthParamSchema = type(
-  type(CreateVaultCredentialAuthParamMcpOauthSchema).or(
-    CreateVaultCredentialAuthParamStaticBearerSchema,
+  type(type(CreateVaultCredentialAuthParamMcpOauthSchema).and({ type: "'mcp_oauth'" })).or(
+    type(CreateVaultCredentialAuthParamStaticBearerSchema).and({ type: "'static_bearer'" }),
   ),
 )
-  .or(CreateVaultCredentialAuthParamEnvironmentVariableSchema)
+  .or(
+    type(CreateVaultCredentialAuthParamEnvironmentVariableSchema).and({
+      type: "'environment_variable'",
+    }),
+  )
   .describe('Authentication credentials for an MCP server or an OpenAI-hosted environment.')
 
 export type CreateVaultCredentialAuthParamSchema = typeof CreateVaultCredentialAuthParamSchema.infer
@@ -33112,9 +35090,15 @@ export type RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema =
   typeof RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema.infer
 
 export const RotateMcpOauthTokenEndpointAuthParamSchema = type(
-  RotateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
+  type(RotateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema).and({
+    type: "'client_secret_basic'",
+  }),
 )
-  .or(RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema)
+  .or(
+    type(RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema).and({
+      type: "'client_secret_post'",
+    }),
+  )
   .describe("Client-secret updates that preserve the credential's OAuth authentication method.")
 
 export type RotateMcpOauthTokenEndpointAuthParamSchema =
@@ -33144,7 +35128,7 @@ export const RotateMcpOauthRefreshParamSchema = type({
       'Replacement space-separated OAuth scopes for refresh requests. Omit to keep the scopes, or pass `null` to stop sending a scope parameter.',
     ),
   'token_endpoint_auth?': type(RotateMcpOauthTokenEndpointAuthParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Client-secret updates for the existing token endpoint authentication method.'),
   '+': 'reject',
 }).describe("Updates to an MCP credential's existing OAuth refresh configuration.")
@@ -33174,7 +35158,7 @@ export const RotateVaultCredentialAuthParamMcpOauthSchema = type({
       'The replacement expiry as an RFC 3339 timestamp, or `null` to clear it. Omitting this field preserves the expiry unless a new access token is supplied, in which case the expiry is cleared.',
     ),
   'refresh?': type(RotateMcpOauthRefreshParamSchema)
-    .or('null | null')
+    .or('null')
     .describe('Optional write-only refresh-token and client-secret updates.'),
   '+': 'reject',
 }).describe('Rotate an OAuth credential for an HTTPS MCP destination.')
@@ -33215,11 +35199,15 @@ export type RotateVaultCredentialAuthParamEnvironmentVariableSchema =
   typeof RotateVaultCredentialAuthParamEnvironmentVariableSchema.infer
 
 export const RotateVaultCredentialAuthParamSchema = type(
-  type(RotateVaultCredentialAuthParamMcpOauthSchema).or(
-    RotateVaultCredentialAuthParamStaticBearerSchema,
+  type(type(RotateVaultCredentialAuthParamMcpOauthSchema).and({ type: "'mcp_oauth'" })).or(
+    type(RotateVaultCredentialAuthParamStaticBearerSchema).and({ type: "'static_bearer'" }),
   ),
 )
-  .or(RotateVaultCredentialAuthParamEnvironmentVariableSchema)
+  .or(
+    type(RotateVaultCredentialAuthParamEnvironmentVariableSchema).and({
+      type: "'environment_variable'",
+    }),
+  )
   .describe(
     'Updates to a vault credential without changing its authentication method or destination configuration.',
   )
@@ -33273,7 +35261,7 @@ export const WebhookEndpointBodySchema = type({
   ),
   signing_secret_hint: type(
     type('string').describe("A masked hint for the endpoint's signing secret."),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type WebhookEndpointBodySchema = typeof WebhookEndpointBodySchema.infer
@@ -33281,19 +35269,41 @@ export type WebhookEndpointBodySchema = typeof WebhookEndpointBodySchema.infer
 export const WebhookEndpointListResourceSchema = type({
   object: type("'list'").describe('The object type, which is always list.'),
   data: type(WebhookEndpointBodySchema).array().describe('The webhook endpoints in this page.'),
-  first_id: type(type('string').describe('The ID of the first endpoint in this page.')).or(
-    'null | null',
-  ),
-  last_id: type(type('string').describe('The ID of the last endpoint in this page.')).or(
-    'null | null',
-  ),
+  first_id: type(type('string').describe('The ID of the first endpoint in this page.')).or('null'),
+  last_id: type(type('string').describe('The ID of the last endpoint in this page.')).or('null'),
   has_more: type('boolean').describe('Whether more webhook endpoints are available.'),
 })
 
 export type WebhookEndpointListResourceSchema = typeof WebhookEndpointListResourceSchema.infer
 
-export const ProjectEventTypeEnumSchema = type(
-  "'batch.completed' | 'batch.failed' | 'batch.expired' | 'batch.cancelled' | 'response.completed' | 'response.failed' | 'response.cancelled' | 'response.incomplete' | 'eval.run.succeeded' | 'eval.run.failed' | 'eval.run.canceled' | 'fine_tuning.job.succeeded' | 'fine_tuning.job.failed' | 'fine_tuning.job.cancelled' | 'realtime.call.incoming' | 'video.completed' | 'video.failed' | 'agent.environment.ready' | 'agent.environment.failed' | 'agent.environment.suspended' | 'agent.environment.expired' | 'agent.session.created' | 'agent.session.action_required' | 'agent.session.in_progress' | 'agent.session.idle' | 'agent.session.failed' | 'safety.alert.created'",
+export const ProjectEventTypeEnumSchema = type.enumerated(
+  'batch.completed',
+  'batch.failed',
+  'batch.expired',
+  'batch.cancelled',
+  'response.completed',
+  'response.failed',
+  'response.cancelled',
+  'response.incomplete',
+  'eval.run.succeeded',
+  'eval.run.failed',
+  'eval.run.canceled',
+  'fine_tuning.job.succeeded',
+  'fine_tuning.job.failed',
+  'fine_tuning.job.cancelled',
+  'realtime.call.incoming',
+  'video.completed',
+  'video.failed',
+  'agent.environment.ready',
+  'agent.environment.failed',
+  'agent.environment.suspended',
+  'agent.environment.expired',
+  'agent.session.created',
+  'agent.session.action_required',
+  'agent.session.in_progress',
+  'agent.session.idle',
+  'agent.session.failed',
+  'safety.alert.created',
 )
 
 export type ProjectEventTypeEnumSchema = typeof ProjectEventTypeEnumSchema.infer
@@ -33328,7 +35338,7 @@ export const WebhookEndpointWithSecretResourceSchema = type({
   ),
   signing_secret_hint: type(
     type('string').describe("A masked hint for the endpoint's signing secret."),
-  ).or('null | null'),
+  ).or('null'),
   signing_secret: type('string').describe(
     "The endpoint's signing secret. This is returned only when the endpoint is created or the secret is rotated.",
   ),
@@ -33447,9 +35457,9 @@ export const BetaInputImageContentSchema = type({
     type('string.url').describe(
       'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   detail: BetaImageDetailSchema.describe(
     'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
@@ -33468,7 +35478,7 @@ export type BetaFileInputDetailSchema = typeof BetaFileInputDetailSchema.infer
 export const BetaInputFileContentSchema = type({
   type: type("'input_file'").describe('The type of the input item. Always `input_file`.'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'filename?': type('string').describe('The name of the file to be sent to the model.'),
   'file_data?': type('string').describe('The content of the file to be sent to the model.\n'),
@@ -33482,8 +35492,10 @@ export const BetaInputFileContentSchema = type({
 export type BetaInputFileContentSchema = typeof BetaInputFileContentSchema.infer
 
 export const BetaInputContentSchema = type(
-  type(BetaInputTextContentSchema).or(BetaInputImageContentSchema),
-).or(BetaInputFileContentSchema)
+  type(type(BetaInputTextContentSchema).and({ type: "'BetaInputTextContent'" })).or(
+    type(BetaInputImageContentSchema).and({ type: "'BetaInputImageContent'" }),
+  ),
+).or(type(BetaInputFileContentSchema).and({ type: "'BetaInputFileContent'" }))
 
 export type BetaInputContentSchema = typeof BetaInputContentSchema.infer
 
@@ -33510,7 +35522,7 @@ export const BetaEasyInputMessageSchema = type({
     .describe(
       'Text, image, or audio input to the model, used to generate a response.\nCan also contain previous assistant responses.\n',
     ),
-  'phase?': type(BetaMessagePhaseSchema).or('null | null'),
+  'phase?': type(BetaMessagePhaseSchema).or('null'),
   'type?': type("'message'").describe('The type of the message input. Always `message`.\n'),
 }).describe(
   'A message input to the model with a role indicating instruction following\nhierarchy. Instructions given with the `developer` or `system` role take\nprecedence over instructions given with the `user` role. Messages with the\n`assistant` role are presumed to have been generated by the model in previous\ninteractions.\n',
@@ -33525,9 +35537,7 @@ export const BetaAgentTagSchema = type({
 export type BetaAgentTagSchema = typeof BetaAgentTagSchema.infer
 
 export const BetaInputMessageSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   'type?': type("'message'").describe('The type of the message input. Always set to `message`.\n'),
   role: type("'user' | 'system' | 'developer'").describe(
     'The role of the message input. One of `user`, `system`, or `developer`.\n',
@@ -33593,11 +35603,13 @@ export const BetaFilePathSchema = type({
 export type BetaFilePathSchema = typeof BetaFilePathSchema.infer
 
 export const BetaAnnotationSchema = type(
-  type(type(BetaFileCitationBodySchema).or(BetaUrlCitationBodySchema)).or(
-    BetaContainerFileCitationBodySchema,
-  ),
+  type(
+    type(type(BetaFileCitationBodySchema).and({ type: "'BetaFileCitationBody'" })).or(
+      type(BetaUrlCitationBodySchema).and({ type: "'BetaUrlCitationBody'" }),
+    ),
+  ).or(type(BetaContainerFileCitationBodySchema).and({ type: "'BetaContainerFileCitationBody'" })),
 )
-  .or(BetaFilePathSchema)
+  .or(type(BetaFilePathSchema).and({ type: "'BetaFilePath'" }))
   .describe('An annotation that applies to a span of output text.')
 
 export type BetaAnnotationSchema = typeof BetaAnnotationSchema.infer
@@ -33635,23 +35647,21 @@ export const BetaRefusalContentSchema = type({
 
 export type BetaRefusalContentSchema = typeof BetaRefusalContentSchema.infer
 
-export const BetaOutputMessageContentSchema = type(BetaOutputTextContentSchema).or(
-  BetaRefusalContentSchema,
-)
+export const BetaOutputMessageContentSchema = type(
+  type(BetaOutputTextContentSchema).and({ type: "'BetaOutputTextContent'" }),
+).or(type(BetaRefusalContentSchema).and({ type: "'BetaRefusalContent'" }))
 
 export type BetaOutputMessageContentSchema = typeof BetaOutputMessageContentSchema.infer
 
 export const BetaOutputMessageSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   id: type('string').describe('The unique ID of the output message.\n'),
   type: type("'message'").describe('The type of the output message. Always `message`.\n'),
   role: type("'assistant'").describe('The role of the output message. Always `assistant`.\n'),
   content: type(BetaOutputMessageContentSchema)
     .array()
     .describe('The content of the output message.\n'),
-  'phase?': type(BetaMessagePhaseSchema).or('null | null'),
+  'phase?': type(BetaMessagePhaseSchema).or('null'),
   status: type("'in_progress' | 'completed' | 'incomplete'").describe(
     'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
   ),
@@ -33671,14 +35681,12 @@ export const BetaVectorStoreFileAttributesSchema = type(
   }).describe(
     'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard. Keys are strings\nwith a maximum length of 64 characters. Values are strings with a maximum\nlength of 512 characters, booleans, or numbers.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type BetaVectorStoreFileAttributesSchema = typeof BetaVectorStoreFileAttributesSchema.infer
 
 export const BetaFileSearchToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   id: type('string').describe('The unique ID of the file search tool call.\n'),
   type: type("'file_search_call'").describe(
     'The type of the file search tool call. Always `file_search_call`.\n',
@@ -33694,14 +35702,15 @@ export const BetaFileSearchToolCallSchema = type({
         'text?': type('string').describe('The text that was retrieved from the file.\n'),
         'filename?': type('string').describe('The name of the file.\n'),
         'attributes?': BetaVectorStoreFileAttributesSchema,
-        'score?': type(
-          'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-        ).describe('The relevance score of the file - a value between 0 and 1.\n'),
+        'score?': type('number')
+          .atLeast(-3.4028234663852886e38)
+          .atMost(3.4028234663852886e38)
+          .describe('The relevance score of the file - a value between 0 and 1.\n'),
       }),
     )
       .array()
       .describe('The results of the file search tool call.\n'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'The results of a file search tool call. See the\n[file search guide](https://developers.openai.com/api/docs/guides/tools-file-search) for more information.\n',
 )
@@ -33721,7 +35730,7 @@ export const BetaClickParamSchema = type({
   ),
   x: type('number.integer').describe('The x-coordinate where the click occurred.'),
   y: type('number.integer').describe('The y-coordinate where the click occurred.'),
-  'keys?': type(type('string[]').describe('The keys being held while clicking.')).or('null | null'),
+  'keys?': type(type('string[]').describe('The keys being held while clicking.')).or('null'),
 }).describe('A click action.')
 
 export type BetaClickParamSchema = typeof BetaClickParamSchema.infer
@@ -33732,9 +35741,7 @@ export const BetaDoubleClickActionSchema = type({
   ),
   x: type('number.integer').describe('The x-coordinate where the double click occurred.'),
   y: type('number.integer').describe('The y-coordinate where the double click occurred.'),
-  keys: type(type('string[]').describe('The keys being held while double-clicking.')).or(
-    'null | null',
-  ),
+  keys: type(type('string[]').describe('The keys being held while double-clicking.')).or('null'),
 }).describe('A double click action.')
 
 export type BetaDoubleClickActionSchema = typeof BetaDoubleClickActionSchema.infer
@@ -33756,7 +35763,7 @@ export const BetaDragParamSchema = type({
       'An array of coordinates representing the path of the drag action. Coordinates will appear as an array of objects, eg\n```\n[\n  { x: 100, y: 200 },\n  { x: 200, y: 300 }\n]\n```',
     ),
   'keys?': type(type('string[]').describe('The keys being held while dragging the mouse.')).or(
-    'null | null',
+    'null',
   ),
 }).describe('A drag action.')
 
@@ -33782,7 +35789,7 @@ export const BetaMoveParamSchema = type({
   x: type('number.integer').describe('The x-coordinate to move to.'),
   y: type('number.integer').describe('The y-coordinate to move to.'),
   'keys?': type(type('string[]').describe('The keys being held while moving the mouse.')).or(
-    'null | null',
+    'null',
   ),
 }).describe('A mouse move action.')
 
@@ -33804,9 +35811,7 @@ export const BetaScrollParamSchema = type({
   y: type('number.integer').describe('The y-coordinate where the scroll occurred.'),
   scroll_x: type('number.integer').describe('The horizontal scroll distance.'),
   scroll_y: type('number.integer').describe('The vertical scroll distance.'),
-  'keys?': type(type('string[]').describe('The keys being held while scrolling.')).or(
-    'null | null',
-  ),
+  'keys?': type(type('string[]').describe('The keys being held while scrolling.')).or('null'),
 }).describe('A scroll action.')
 
 export type BetaScrollParamSchema = typeof BetaScrollParamSchema.infer
@@ -33834,15 +35839,17 @@ export const BetaComputerActionSchema = type(
       type(
         type(
           type(
-            type(type(BetaClickParamSchema).or(BetaDoubleClickActionSchema)).or(
-              BetaDragParamSchema,
-            ),
-          ).or(BetaKeyPressActionSchema),
-        ).or(BetaMoveParamSchema),
-      ).or(BetaScreenshotParamSchema),
-    ).or(BetaScrollParamSchema),
-  ).or(BetaTypeParamSchema),
-).or(BetaWaitParamSchema)
+            type(
+              type(type(BetaClickParamSchema).and({ type: "'BetaClickParam'" })).or(
+                type(BetaDoubleClickActionSchema).and({ type: "'BetaDoubleClickAction'" }),
+              ),
+            ).or(type(BetaDragParamSchema).and({ type: "'BetaDragParam'" })),
+          ).or(type(BetaKeyPressActionSchema).and({ type: "'BetaKeyPressAction'" })),
+        ).or(type(BetaMoveParamSchema).and({ type: "'BetaMoveParam'" })),
+      ).or(type(BetaScreenshotParamSchema).and({ type: "'BetaScreenshotParam'" })),
+    ).or(type(BetaScrollParamSchema).and({ type: "'BetaScrollParam'" })),
+  ).or(type(BetaTypeParamSchema).and({ type: "'BetaTypeParam'" })),
+).or(type(BetaWaitParamSchema).and({ type: "'BetaWaitParam'" }))
 
 export type BetaComputerActionSchema = typeof BetaComputerActionSchema.infer
 
@@ -33856,19 +35863,15 @@ export type BetaComputerActionListSchema = typeof BetaComputerActionListSchema.i
 
 export const BetaComputerCallSafetyCheckParamSchema = type({
   id: type('string').describe('The ID of the pending safety check.'),
-  'code?': type(type('string').describe('The type of the pending safety check.')).or('null | null'),
-  'message?': type(type('string').describe('Details about the pending safety check.')).or(
-    'null | null',
-  ),
+  'code?': type(type('string').describe('The type of the pending safety check.')).or('null'),
+  'message?': type(type('string').describe('Details about the pending safety check.')).or('null'),
 }).describe('A pending safety check for the computer call.')
 
 export type BetaComputerCallSafetyCheckParamSchema =
   typeof BetaComputerCallSafetyCheckParamSchema.infer
 
 export const BetaComputerToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'computer_call'").describe('The type of the computer call. Always `computer_call`.'),
   id: type('string').describe('The unique ID of the computer call.'),
   call_id: type('string').describe(
@@ -33911,12 +35914,8 @@ export const BetaFunctionCallItemStatusSchema = type("'in_progress' | 'completed
 export type BetaFunctionCallItemStatusSchema = typeof BetaFunctionCallItemStatusSchema.infer
 
 export const BetaComputerCallOutputItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The ID of the computer tool call output.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The ID of the computer tool call output.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
@@ -33931,12 +35930,12 @@ export const BetaComputerCallOutputItemParamSchema = type({
       .describe(
         'The safety checks reported by the API that have been acknowledged by the developer.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'status?': type(
     BetaFunctionCallItemStatusSchema.describe(
       'The status of the message input. One of `in_progress`, `completed`, or `incomplete`. Populated when input items are returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The output of a computer tool call.')
 
 export type BetaComputerCallOutputItemParamSchema =
@@ -33968,14 +35967,14 @@ export type BetaWebSearchActionSearchSchema = typeof BetaWebSearchActionSearchSc
 
 export const BetaWebSearchActionOpenPageSchema = type({
   type: type("'open_page'").describe('The action type.\n'),
-  'url?': type('string.url | null | null').describe('The URL opened by the model.\n'),
+  'url?': type('string.url | null').describe('The URL opened by the model.\n'),
 }).describe('Action type "open_page" - Opens a specific URL from search results.\n')
 
 export type BetaWebSearchActionOpenPageSchema = typeof BetaWebSearchActionOpenPageSchema.infer
 
 export const BetaWebSearchActionFindSchema = type({
   type: type("'find_in_page'").describe('The action type.\n'),
-  'url?': type('string.url | null | null').describe(
+  'url?': type('string.url | null').describe(
     'The URL of the page searched for the pattern, when available.\n',
   ),
   pattern: type('string').describe('The pattern or text to search for within the page.\n'),
@@ -33984,16 +35983,18 @@ export const BetaWebSearchActionFindSchema = type({
 export type BetaWebSearchActionFindSchema = typeof BetaWebSearchActionFindSchema.infer
 
 export const BetaWebSearchToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   id: type('string').describe('The unique ID of the web search tool call.\n'),
   type: type("'web_search_call'").describe(
     'The type of the web search tool call. Always `web_search_call`.\n',
   ),
   status: BetaWebSearchCallStatusSchema.describe('The status of the web search tool call.\n'),
-  'action?': type(type(BetaWebSearchActionSearchSchema).or(BetaWebSearchActionOpenPageSchema))
-    .or(BetaWebSearchActionFindSchema)
+  'action?': type(
+    type(type(BetaWebSearchActionSearchSchema).and({ type: "'BetaWebSearchActionSearch'" })).or(
+      type(BetaWebSearchActionOpenPageSchema).and({ type: "'BetaWebSearchActionOpenPage'" }),
+    ),
+  )
+    .or(type(BetaWebSearchActionFindSchema).and({ type: "'BetaWebSearchActionFind'" }))
     .describe(
       'An object describing the specific action taken in this web search call.\nIncludes details on how the model used the web (search, open_page, find_in_page).\n',
     ),
@@ -34016,16 +36017,16 @@ export const BetaProgramToolCallCallerSchema = type({
 
 export type BetaProgramToolCallCallerSchema = typeof BetaProgramToolCallCallerSchema.infer
 
-export const BetaToolCallCallerSchema = type(BetaDirectToolCallCallerSchema)
-  .or(BetaProgramToolCallCallerSchema)
+export const BetaToolCallCallerSchema = type(
+  type(BetaDirectToolCallCallerSchema).and({ type: "'BetaDirectToolCallCaller'" }),
+)
+  .or(type(BetaProgramToolCallCallerSchema).and({ type: "'BetaProgramToolCallCaller'" }))
   .describe('The execution context that produced this tool call.')
 
 export type BetaToolCallCallerSchema = typeof BetaToolCallCallerSchema.infer
 
 export const BetaFunctionToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   'id?': type('string').describe('The unique ID of the function tool call.\n'),
   type: type("'function_call'").describe(
     'The type of the function tool call. Always `function_call`.\n',
@@ -34033,7 +36034,7 @@ export const BetaFunctionToolCallSchema = type({
   call_id: type('string').describe(
     'The unique ID of the function tool call generated by the model.\n',
   ),
-  'caller?': type(BetaToolCallCallerSchema).or('null | null'),
+  'caller?': type(BetaToolCallCallerSchema).or('null'),
   'namespace?': type('string').describe('The namespace of the function to run.\n'),
   name: type('string').describe('The name of the function to run.\n'),
   arguments: type('string').describe('A JSON string of the arguments to pass to the function.\n'),
@@ -34065,7 +36066,7 @@ export const BetaInputTextContentParamSchema = type({
       (data, ctx) => [...data].length <= 10485760 || ctx.mustBe('at most 10485760 characters'),
     )
     .describe('The text input to the model.'),
-  'prompt_cache_breakpoint?': type(BetaPromptCacheBreakpointParamSchema).or('null | null'),
+  'prompt_cache_breakpoint?': type(BetaPromptCacheBreakpointParamSchema).or('null'),
 }).describe('A text input to the model.')
 
 export type BetaInputTextContentParamSchema = typeof BetaInputTextContentParamSchema.infer
@@ -34084,16 +36085,16 @@ export const BetaInputImageContentParamAutoParamSchema = type({
       .describe(
         'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'detail?': type(
     BetaDetailEnumSchema.describe(
       'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
     ),
-  ).or('null | null'),
-  'prompt_cache_breakpoint?': type(BetaPromptCacheBreakpointParamSchema).or('null | null'),
+  ).or('null'),
+  'prompt_cache_breakpoint?': type(BetaPromptCacheBreakpointParamSchema).or('null'),
 }).describe(
   'An image input to the model. Learn about [image inputs](https://developers.openai.com/api/docs/guides/images-vision)',
 )
@@ -34108,10 +36109,10 @@ export type BetaFileDetailEnumSchema = typeof BetaFileDetailEnumSchema.infer
 export const BetaInputFileContentParamSchema = type({
   type: type("'input_file'").describe('The type of the input item. Always `input_file`.'),
   'file_id?': type(type('string').describe('The ID of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'filename?': type(type('string').describe('The name of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'file_data?': type(
     type('string')
@@ -34119,14 +36120,14 @@ export const BetaInputFileContentParamSchema = type({
         (data, ctx) => [...data].length <= 73400320 || ctx.mustBe('at most 73400320 characters'),
       )
       .describe('The base64-encoded data of the file to be sent to the model.'),
-  ).or('null | null'),
+  ).or('null'),
   'file_url?': type(type('string.url').describe('The URL of the file to be sent to the model.')).or(
-    'null | null',
+    'null',
   ),
   'detail?': BetaFileDetailEnumSchema.describe(
     'The detail level of the file to be sent to the model. Use `auto` to let the system select the detail level; for GPT-5.6 and later models, `auto` uses high-quality rendering, which may increase input token usage. Use `low` for lower-cost rendering, or `high` to render the file at higher quality. Defaults to `auto`.',
   ),
-  'prompt_cache_breakpoint?': type(BetaPromptCacheBreakpointParamSchema).or('null | null'),
+  'prompt_cache_breakpoint?': type(BetaPromptCacheBreakpointParamSchema).or('null'),
 }).describe('A file input to the model.')
 
 export type BetaInputFileContentParamSchema = typeof BetaInputFileContentParamSchema.infer
@@ -34147,27 +36148,27 @@ export const BetaProgramToolCallCallerParamSchema = type({
 
 export type BetaProgramToolCallCallerParamSchema = typeof BetaProgramToolCallCallerParamSchema.infer
 
-export const BetaToolCallCallerParamSchema = type(BetaDirectToolCallCallerParamSchema)
-  .or(BetaProgramToolCallCallerParamSchema)
+export const BetaToolCallCallerParamSchema = type(
+  type(BetaDirectToolCallCallerParamSchema).and({ type: "'BetaDirectToolCallCallerParam'" }),
+)
+  .or(type(BetaProgramToolCallCallerParamSchema).and({ type: "'BetaProgramToolCallCallerParam'" }))
   .describe('The execution context that produced this tool call.')
 
 export type BetaToolCallCallerParamSchema = typeof BetaToolCallCallerParamSchema.infer
 
 export const BetaFunctionCallOutputItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   'id?': type(
     type('string').describe(
       'The unique ID of the function tool call output. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'call_id?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The unique ID of the function tool call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'function_call_output'").describe(
     'The type of the function tool call output. Always `function_call_output`.',
   ),
@@ -34180,8 +36181,16 @@ export const BetaFunctionCallOutputItemParamSchema = type({
   )
     .or(
       type(
-        type(type(BetaInputTextContentParamSchema).or(BetaInputImageContentParamAutoParamSchema))
-          .or(BetaInputFileContentParamSchema)
+        type(
+          type(
+            type(BetaInputTextContentParamSchema).and({ type: "'BetaInputTextContentParam'" }),
+          ).or(
+            type(BetaInputImageContentParamAutoParamSchema).and({
+              type: "'BetaInputImageContentParamAutoParam'",
+            }),
+          ),
+        )
+          .or(type(BetaInputFileContentParamSchema).and({ type: "'BetaInputFileContentParam'" }))
           .describe('A piece of message content, such as text, an image, or a file.'),
       )
         .array()
@@ -34193,22 +36202,22 @@ export const BetaFunctionCallOutputItemParamSchema = type({
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
       .describe('The name of the tool that produced the output.'),
-  ).or('null | null'),
+  ).or('null'),
   'namespace?': type(
     type('string')
       .and(/^[a-zA-Z0-9_-]+$/)
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
       .describe('The namespace of the tool that produced the output.'),
-  ).or('null | null'),
+  ).or('null'),
   'caller?': type(
     BetaToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   'status?': type(
     BetaFunctionCallItemStatusSchema.describe(
       'The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The output of a function tool call.')
 
 export type BetaFunctionCallOutputItemParamSchema =
@@ -34228,18 +36237,20 @@ export const BetaEncryptedContentParamSchema = type({
 export type BetaEncryptedContentParamSchema = typeof BetaEncryptedContentParamSchema.infer
 
 export const BetaAgentMessageItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this agent message item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this agent message item.')).or('null'),
   type: type("'agent_message'").describe('The item type. Always `agent_message`.'),
   author: type('string').describe('The sending agent identity.'),
   recipient: type('string').describe('The destination agent identity.'),
   content: type(
-    type(type(BetaInputTextContentParamSchema).or(BetaInputImageContentParamAutoParamSchema))
-      .or(BetaEncryptedContentParamSchema)
+    type(
+      type(type(BetaInputTextContentParamSchema).and({ type: "'BetaInputTextContentParam'" })).or(
+        type(BetaInputImageContentParamAutoParamSchema).and({
+          type: "'BetaInputImageContentParamAutoParam'",
+        }),
+      ),
+    )
+      .or(type(BetaEncryptedContentParamSchema).and({ type: "'BetaEncryptedContentParam'" }))
       .describe('A plaintext, image, or encrypted agent message content part.'),
   )
     .array()
@@ -34255,10 +36266,8 @@ export const BetaMultiAgentAction1Schema = type(
 export type BetaMultiAgentAction1Schema = typeof BetaMultiAgentAction1Schema.infer
 
 export const BetaMultiAgentCallItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this multi-agent call.')).or('null | null'),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this multi-agent call.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
@@ -34318,8 +36327,12 @@ export const BetaOutputTextContentParamSchema = type({
     )
     .describe('The text content.'),
   'annotations?': type(
-    type(type(BetaFileCitationParamSchema).or(BetaUrlCitationParamSchema)).or(
-      BetaContainerFileCitationParamSchema,
+    type(
+      type(type(BetaFileCitationParamSchema).and({ type: "'BetaFileCitationParam'" })).or(
+        type(BetaUrlCitationParamSchema).and({ type: "'BetaUrlCitationParam'" }),
+      ),
+    ).or(
+      type(BetaContainerFileCitationParamSchema).and({ type: "'BetaContainerFileCitationParam'" }),
     ),
   )
     .array()
@@ -34329,12 +36342,8 @@ export const BetaOutputTextContentParamSchema = type({
 export type BetaOutputTextContentParamSchema = typeof BetaOutputTextContentParamSchema.infer
 
 export const BetaMultiAgentCallOutputItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this multi-agent call output.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this multi-agent call output.')).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
@@ -34360,16 +36369,14 @@ export const BetaEmptyModelParamSchema = type({})
 export type BetaEmptyModelParamSchema = typeof BetaEmptyModelParamSchema.infer
 
 export const BetaToolSearchCallItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this tool search call.')).or('null | null'),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this tool search call.')).or('null'),
   'call_id?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'tool_search_call'").describe('The item type. Always `tool_search_call`.'),
   'execution?': BetaToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
@@ -34377,7 +36384,7 @@ export const BetaToolSearchCallItemParamSchema = type({
   arguments: BetaEmptyModelParamSchema.describe('The arguments supplied to the tool search call.'),
   'status?': type(
     BetaFunctionCallItemStatusSchema.describe('The status of the tool search call.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaToolSearchCallItemParamSchema = typeof BetaToolSearchCallItemParamSchema.infer
@@ -34394,28 +36401,28 @@ export const BetaFunctionToolSchema = type({
     type('string').describe(
       'A description of the function. Used by the model to determine whether or not to call the function.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   parameters: type(
     type({ '[string]': 'unknown' }).describe(
       'A JSON schema object describing the parameters of the function.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'output_schema?': type(
     type({ '[string]': 'unknown' }).describe(
       'A JSON schema object describing the JSON value encoded in string outputs for this function.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   strict: type(
     type('boolean').describe(
       'Whether strict parameter validation is enforced for this function tool.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this function is deferred and loaded via tool search.',
   ),
   'allowed_callers?': type(
     type(BetaCallableToolAllowedCallerSchema).array().describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Defines a function in your own code the model can choose to call. Learn more about [function calling](https://developers.openai.com/api/docs/guides/function-calling).',
 )
@@ -34467,11 +36474,15 @@ export const BetaCompoundFilterSchema = scope({
   BetaCompoundFilterSchema: [
     {
       type: ["'and' | 'or'", '@', 'Type of operation: `and` or `or`.'],
-      filters: [
-        'BetaComparisonFilterSchema | BetaCompoundFilterSchema[]',
-        '@',
-        'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
-      ],
+      filters: type([
+        ['BetaComparisonFilterSchema', '&', { type: "'BetaComparisonFilter'" }],
+        '|',
+        ['BetaCompoundFilterSchema', '&', { type: "'BetaCompoundFilterSchema'" }],
+      ])
+        .array()
+        .describe(
+          'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
+        ),
       '+': 'reject',
     },
     '@',
@@ -34492,7 +36503,7 @@ export const BetaFileSearchToolSchema = type({
     'The maximum number of results to return. This number should be between 1 and 50 inclusive.',
   ),
   'ranking_options?': BetaRankingOptionsSchema.describe('Ranking options for search.'),
-  'filters?': type(BetaFiltersSchema.describe('A filter to apply.')).or('null | null'),
+  'filters?': type(BetaFiltersSchema.describe('A filter to apply.')).or('null'),
 }).describe(
   'A tool that searches for relevant content from uploaded files. Learn more about the [file search tool](https://developers.openai.com/api/docs/guides/tools-file-search).',
 )
@@ -34537,20 +36548,20 @@ export const BetaWebSearchApproximateLocationSchema = type(
       type('string').describe(
         'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'region?': type(
       type('string').describe('Free text input for the region of the user, e.g. `California`.'),
-    ).or('null | null'),
+    ).or('null'),
     'city?': type(
       type('string').describe('Free text input for the city of the user, e.g. `San Francisco`.'),
-    ).or('null | null'),
+    ).or('null'),
     'timezone?': type(
       type('string').describe(
         'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
       ),
-    ).or('null | null'),
+    ).or('null'),
   }).describe('The approximate location of the user.\n'),
-).or('null | null')
+).or('null')
 
 export type BetaWebSearchApproximateLocationSchema =
   typeof BetaWebSearchApproximateLocationSchema.infer
@@ -34570,9 +36581,9 @@ export const BetaWebSearchToolSchema = type({
           .describe(
             'Allowed domains for the search. If not provided, all domains are allowed.\nSubdomains of the provided domains are allowed as well.\n\nExample: `["pubmed.ncbi.nlm.nih.gov"]`\n',
           ),
-      ).or('null | null'),
+      ).or('null'),
     }).describe('Filters for the search.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'user_location?': BetaWebSearchApproximateLocationSchema.describe(
     'The approximate location of the user. If omitted or null, defaults to the\nUnited States. To avoid this fallback, pass `{"type": "approximate"}` without\nlocation fields. To localize results, provide the relevant location fields.\n',
   ),
@@ -34623,17 +36634,17 @@ export const BetaMCPToolSchema = type({
     type({ '[string]': 'string' }).describe(
       'Optional HTTP headers to send to the MCP server. Use for authentication\nor other purposes.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'allowed_tools?': type(
     type(type('string[]').describe('A string array of allowed tool names'))
       .or(BetaMCPToolFilterSchema)
       .describe('List of allowed tool names or a filter object.\n'),
-  ).or('null | null'),
+  ).or('null'),
   'allowed_callers?': type(
     type(type(BetaCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
   'require_approval?': type(
     type(
       type({
@@ -34650,7 +36661,7 @@ export const BetaMCPToolSchema = type({
         ),
       )
       .describe("Specify which of the MCP server's tools require approval."),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this MCP tool is deferred and discovered via tool search.\n',
   ),
@@ -34711,9 +36722,17 @@ export const BetaAutoCodeInterpreterToolParamSchema = type({
     .describe('An optional list of uploaded files to make available to your code.'),
   'memory_limit?': type(
     BetaContainerMemoryLimitSchema.describe('The memory limit for the code interpreter container.'),
-  ).or('null | null'),
-  'network_policy?': type(BetaContainerNetworkPolicyDisabledParamSchema)
-    .or(BetaContainerNetworkPolicyAllowlistParamSchema)
+  ).or('null'),
+  'network_policy?': type(
+    type(BetaContainerNetworkPolicyDisabledParamSchema).and({
+      type: "'BetaContainerNetworkPolicyDisabledParam'",
+    }),
+  )
+    .or(
+      type(BetaContainerNetworkPolicyAllowlistParamSchema).and({
+        type: "'BetaContainerNetworkPolicyAllowlistParam'",
+      }),
+    )
     .describe('Network access policy for the container.'),
 }).describe(
   'Configuration for a code interpreter container. Optionally specify the IDs of the files to run the code on.',
@@ -34735,7 +36754,7 @@ export const BetaCodeInterpreterToolSchema = type({
     type(type(BetaCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool that runs Python code to help generate a response to a prompt.\n')
 
 export type BetaCodeInterpreterToolSchema = typeof BetaCodeInterpreterToolSchema.infer
@@ -34773,7 +36792,7 @@ export const BetaSvgParamSchema = type({
     BetaSvgReasoningParamSchema.describe(
       "Reasoning effort for SVG authoring. When omitted, uses the author model's default in both Images and Responses.",
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaSvgParamSchema = typeof BetaSvgParamSchema.infer
@@ -34829,7 +36848,7 @@ export const BetaImageGenToolSchema = type({
   'background?': type("'transparent' | 'opaque' | 'auto'").describe(
     'Set the background of the generated image. One of `transparent`, `opaque`,\nor `auto`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including\ntheir `2026-09-08` snapshots, support `opaque` and `transparent`\nbackgrounds. Transparent backgrounds are available for supported GPT Image\nmodels. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in\npreview. When using `transparent`, set the output format to `png` or `webp`.\nDefault: `auto`.\n',
   ),
-  'input_fidelity?': type(BetaInputFidelitySchema).or('null | null'),
+  'input_fidelity?': type(BetaInputFidelitySchema).or('null'),
   'input_image_mask?': type({
     'image_url?': type('string').describe('Base64-encoded mask image.\n'),
     'file_id?': type('string').describe('File ID for the mask image.\n'),
@@ -34899,11 +36918,25 @@ export const BetaContainerAutoParamSchema = type({
     .describe('An optional list of uploaded files to make available to your code.'),
   'memory_limit?': type(
     BetaContainerMemoryLimitSchema.describe('The memory limit for the container.'),
-  ).or('null | null'),
-  'network_policy?': type(BetaContainerNetworkPolicyDisabledParamSchema)
-    .or(BetaContainerNetworkPolicyAllowlistParamSchema)
+  ).or('null'),
+  'network_policy?': type(
+    type(BetaContainerNetworkPolicyDisabledParamSchema).and({
+      type: "'BetaContainerNetworkPolicyDisabledParam'",
+    }),
+  )
+    .or(
+      type(BetaContainerNetworkPolicyAllowlistParamSchema).and({
+        type: "'BetaContainerNetworkPolicyAllowlistParam'",
+      }),
+    )
     .describe('Network access policy for the container.'),
-  'skills?': type(type(type(BetaSkillReferenceParamSchema).or(BetaInlineSkillParamSchema)).array())
+  'skills?': type(
+    type(
+      type(type(BetaSkillReferenceParamSchema).and({ type: "'BetaSkillReferenceParam'" })).or(
+        type(BetaInlineSkillParamSchema).and({ type: "'BetaInlineSkillParam'" }),
+      ),
+    ).array(),
+  )
     .and(type('unknown[] <= 200'))
     .describe(
       'An optional list of skills referenced by id or inline data. Across all inline skills in this list, decoded ZIP data must total at most 50 MiB and Base64 text must total at most 70,254,592 characters, including line breaks. Skill references do not count toward these limits.',
@@ -34941,15 +36974,17 @@ export type BetaContainerReferenceParamSchema = typeof BetaContainerReferencePar
 export const BetaFunctionShellToolParamSchema = type({
   type: type("'shell'").describe('The type of the shell tool. Always `shell`.'),
   'environment?': type(
-    type(type(BetaContainerAutoParamSchema).or(BetaLocalEnvironmentParamSchema)).or(
-      BetaContainerReferenceParamSchema,
-    ),
-  ).or('null | null'),
+    type(
+      type(type(BetaContainerAutoParamSchema).and({ type: "'BetaContainerAutoParam'" })).or(
+        type(BetaLocalEnvironmentParamSchema).and({ type: "'BetaLocalEnvironmentParam'" }),
+      ),
+    ).or(type(BetaContainerReferenceParamSchema).and({ type: "'BetaContainerReferenceParam'" })),
+  ).or('null'),
   'allowed_callers?': type(
     type(type(BetaCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool that allows the model to execute shell commands.')
 
 export type BetaFunctionShellToolParamSchema = typeof BetaFunctionShellToolParamSchema.infer
@@ -34983,8 +37018,10 @@ export const BetaCustomToolParamSchema = type({
   'description?': type('string').describe(
     'Optional description of the custom tool, used to provide more context.',
   ),
-  'format?': type(BetaCustomTextFormatParamSchema)
-    .or(BetaCustomGrammarFormatParamSchema)
+  'format?': type(
+    type(BetaCustomTextFormatParamSchema).and({ type: "'BetaCustomTextFormatParam'" }),
+  )
+    .or(type(BetaCustomGrammarFormatParamSchema).and({ type: "'BetaCustomGrammarFormatParam'" }))
     .describe('The input format for the custom tool. Default is unconstrained text.'),
   'defer_loading?': type('boolean').describe(
     'Whether this tool should be deferred and discovered via tool search.',
@@ -34993,7 +37030,7 @@ export const BetaCustomToolParamSchema = type({
     type(type(BetaCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'A custom tool that processes input using a specified format. Learn more about   [custom tools](https://developers.openai.com/api/docs/guides/function-calling#custom-tools)',
 )
@@ -35006,13 +37043,13 @@ export const BetaToolSearchOutputFunctionToolParamSchema = type({
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
     .describe('The name of the loaded function tool.'),
-  'description?': 'string | null | null',
-  'parameters?': type(BetaEmptyModelParamSchema).or('null | null'),
+  'description?': 'string | null',
+  'parameters?': type(BetaEmptyModelParamSchema).or('null'),
   'strict?': type(
     type('boolean').describe(
       'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'function'",
   'async?': type('boolean').describe(
     'Whether the tool response can be returned asynchronously versus immediately returned on next response creation.',
@@ -35021,7 +37058,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = type({
     type({ '[string]': 'unknown' }).describe(
       'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this function should be deferred and discovered via tool search.',
   ),
@@ -35029,7 +37066,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = type({
     type(type(BetaCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaToolSearchOutputFunctionToolParamSchema =
@@ -35043,8 +37080,12 @@ export const BetaToolSearchOutputNamespaceToolParamSchema = type({
   description: type('string').describe('A description of the namespace shown to the model.'),
   tools: type(
     type(
-      type(BetaToolSearchOutputFunctionToolParamSchema)
-        .or(BetaCustomToolParamSchema)
+      type(
+        type(BetaToolSearchOutputFunctionToolParamSchema).and({
+          type: "'BetaToolSearchOutputFunctionToolParam'",
+        }),
+      )
+        .or(type(BetaCustomToolParamSchema).and({ type: "'BetaCustomToolParam'" }))
         .describe('A function or custom tool loaded into a namespace by tool search.'),
     ).array(),
   )
@@ -35064,10 +37105,10 @@ export const BetaToolSearchToolParamSchema = type({
     type('string').describe(
       'Description shown to the model for a client-executed tool search tool.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'parameters?': type(
     BetaEmptyModelParamSchema.describe('Parameter schema for a client-executed tool search tool.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Hosted or BYOT tool search configuration for deferred tools.')
 
 export type BetaToolSearchToolParamSchema = typeof BetaToolSearchToolParamSchema.infer
@@ -35078,18 +37119,18 @@ export const BetaApproximateLocationSchema = type({
     type('string').describe(
       'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'region?': type(
     type('string').describe('Free text input for the region of the user, e.g. `California`.'),
-  ).or('null | null'),
+  ).or('null'),
   'city?': type(
     type('string').describe('Free text input for the city of the user, e.g. `San Francisco`.'),
-  ).or('null | null'),
+  ).or('null'),
   'timezone?': type(
     type('string').describe(
       'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaApproximateLocationSchema = typeof BetaApproximateLocationSchema.infer
@@ -35110,7 +37151,7 @@ export const BetaWebSearchPreviewToolSchema = type({
     BetaApproximateLocationSchema.describe(
       'The approximate location of the user. If omitted or null, defaults to the United States. To avoid this fallback, pass `{"type": "approximate"}` without location fields. To localize results, provide the relevant location fields.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'search_context_size?': BetaSearchContextSizeSchema.describe(
     'High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.',
   ),
@@ -35127,7 +37168,7 @@ export const BetaApplyPatchToolParamSchema = type({
     type(type(BetaCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Allows the assistant to create, delete, or update files using unified diffs.')
 
 export type BetaApplyPatchToolParamSchema = typeof BetaApplyPatchToolParamSchema.infer
@@ -35145,40 +37186,56 @@ export const BetaToolSearchOutputToolSchema = type(
                     type(
                       type(
                         type(
-                          type(type(BetaFunctionToolSchema).or(BetaFileSearchToolSchema)).or(
-                            BetaComputerToolSchema,
-                          ),
-                        ).or(BetaComputerUsePreviewToolSchema),
-                      ).or(BetaWebSearchToolSchema),
-                    ).or(BetaMCPToolSchema),
-                  ).or(BetaCodeInterpreterToolSchema),
-                ).or(BetaProgrammaticToolCallingParamSchema),
-              ).or(BetaImageGenToolSchema),
-            ).or(BetaLocalShellToolParamSchema),
-          ).or(BetaFunctionShellToolParamSchema),
-        ).or(BetaCustomToolParamSchema),
-      ).or(BetaToolSearchOutputNamespaceToolParamSchema),
-    ).or(BetaToolSearchToolParamSchema),
-  ).or(BetaWebSearchPreviewToolSchema),
+                          type(
+                            type(
+                              type(BetaFunctionToolSchema).and({ type: "'BetaFunctionTool'" }),
+                            ).or(
+                              type(BetaFileSearchToolSchema).and({ type: "'BetaFileSearchTool'" }),
+                            ),
+                          ).or(type(BetaComputerToolSchema).and({ type: "'BetaComputerTool'" })),
+                        ).or(
+                          type(BetaComputerUsePreviewToolSchema).and({
+                            type: "'BetaComputerUsePreviewTool'",
+                          }),
+                        ),
+                      ).or(type(BetaWebSearchToolSchema).and({ type: "'BetaWebSearchTool'" })),
+                    ).or(type(BetaMCPToolSchema).and({ type: "'BetaMCPTool'" })),
+                  ).or(
+                    type(BetaCodeInterpreterToolSchema).and({ type: "'BetaCodeInterpreterTool'" }),
+                  ),
+                ).or(
+                  type(BetaProgrammaticToolCallingParamSchema).and({
+                    type: "'BetaProgrammaticToolCallingParam'",
+                  }),
+                ),
+              ).or(type(BetaImageGenToolSchema).and({ type: "'BetaImageGenTool'" })),
+            ).or(type(BetaLocalShellToolParamSchema).and({ type: "'BetaLocalShellToolParam'" })),
+          ).or(
+            type(BetaFunctionShellToolParamSchema).and({ type: "'BetaFunctionShellToolParam'" }),
+          ),
+        ).or(type(BetaCustomToolParamSchema).and({ type: "'BetaCustomToolParam'" })),
+      ).or(
+        type(BetaToolSearchOutputNamespaceToolParamSchema).and({
+          type: "'BetaToolSearchOutputNamespaceToolParam'",
+        }),
+      ),
+    ).or(type(BetaToolSearchToolParamSchema).and({ type: "'BetaToolSearchToolParam'" })),
+  ).or(type(BetaWebSearchPreviewToolSchema).and({ type: "'BetaWebSearchPreviewTool'" })),
 )
-  .or(BetaApplyPatchToolParamSchema)
+  .or(type(BetaApplyPatchToolParamSchema).and({ type: "'BetaApplyPatchToolParam'" }))
   .describe('A tool definition returned by a tool search output.\n')
 
 export type BetaToolSearchOutputToolSchema = typeof BetaToolSearchOutputToolSchema.infer
 
 export const BetaToolSearchOutputItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this tool search output.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this tool search output.')).or('null'),
   'call_id?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'tool_search_output'").describe('The item type. Always `tool_search_output`.'),
   'execution?': BetaToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
@@ -35188,7 +37245,7 @@ export const BetaToolSearchOutputItemParamSchema = type({
     .describe('The loaded tool definitions returned by the tool search output.'),
   'status?': type(
     BetaFunctionCallItemStatusSchema.describe('The status of the tool search output.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaToolSearchOutputItemParamSchema = typeof BetaToolSearchOutputItemParamSchema.infer
@@ -35198,13 +37255,13 @@ export const BetaFunctionToolParamSchema = type({
     .and(/^[a-zA-Z0-9_-]+$/)
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters')),
-  'description?': 'string | null | null',
-  'parameters?': type(BetaEmptyModelParamSchema).or('null | null'),
+  'description?': 'string | null',
+  'parameters?': type(BetaEmptyModelParamSchema).or('null'),
   'strict?': type(
     type('boolean').describe(
       'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   type: "'function'",
   'async?': type('boolean').describe(
     'Whether the tool response can be returned asynchronously versus immediately returned on next response creation.',
@@ -35213,7 +37270,7 @@ export const BetaFunctionToolParamSchema = type({
     type({ '[string]': 'unknown' }).describe(
       'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'defer_loading?': type('boolean').describe(
     'Whether this function should be deferred and discovered via tool search.',
   ),
@@ -35221,7 +37278,7 @@ export const BetaFunctionToolParamSchema = type({
     type(type(BetaCallableToolAllowedCallerSchema).array())
       .and(type('unknown[] >= 1'))
       .describe('The tool invocation context(s).'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaFunctionToolParamSchema = typeof BetaFunctionToolParamSchema.infer
@@ -35234,8 +37291,8 @@ export const BetaNamespaceToolParamSchema = type({
   description: type('string').describe('A description of the namespace shown to the model.'),
   tools: type(
     type(
-      type(BetaFunctionToolParamSchema)
-        .or(BetaCustomToolParamSchema)
+      type(type(BetaFunctionToolParamSchema).and({ type: "'BetaFunctionToolParam'" }))
+        .or(type(BetaCustomToolParamSchema).and({ type: "'BetaCustomToolParam'" }))
         .describe('A function or custom tool that belongs to a namespace.'),
     ).array(),
   )
@@ -35258,34 +37315,46 @@ export const BetaToolSchema = type(
                     type(
                       type(
                         type(
-                          type(type(BetaFunctionToolSchema).or(BetaFileSearchToolSchema)).or(
-                            BetaComputerToolSchema,
-                          ),
-                        ).or(BetaComputerUsePreviewToolSchema),
-                      ).or(BetaWebSearchToolSchema),
-                    ).or(BetaMCPToolSchema),
-                  ).or(BetaCodeInterpreterToolSchema),
-                ).or(BetaProgrammaticToolCallingParamSchema),
-              ).or(BetaImageGenToolSchema),
-            ).or(BetaLocalShellToolParamSchema),
-          ).or(BetaFunctionShellToolParamSchema),
-        ).or(BetaCustomToolParamSchema),
-      ).or(BetaNamespaceToolParamSchema),
-    ).or(BetaToolSearchToolParamSchema),
-  ).or(BetaWebSearchPreviewToolSchema),
+                          type(
+                            type(
+                              type(BetaFunctionToolSchema).and({ type: "'BetaFunctionTool'" }),
+                            ).or(
+                              type(BetaFileSearchToolSchema).and({ type: "'BetaFileSearchTool'" }),
+                            ),
+                          ).or(type(BetaComputerToolSchema).and({ type: "'BetaComputerTool'" })),
+                        ).or(
+                          type(BetaComputerUsePreviewToolSchema).and({
+                            type: "'BetaComputerUsePreviewTool'",
+                          }),
+                        ),
+                      ).or(type(BetaWebSearchToolSchema).and({ type: "'BetaWebSearchTool'" })),
+                    ).or(type(BetaMCPToolSchema).and({ type: "'BetaMCPTool'" })),
+                  ).or(
+                    type(BetaCodeInterpreterToolSchema).and({ type: "'BetaCodeInterpreterTool'" }),
+                  ),
+                ).or(
+                  type(BetaProgrammaticToolCallingParamSchema).and({
+                    type: "'BetaProgrammaticToolCallingParam'",
+                  }),
+                ),
+              ).or(type(BetaImageGenToolSchema).and({ type: "'BetaImageGenTool'" })),
+            ).or(type(BetaLocalShellToolParamSchema).and({ type: "'BetaLocalShellToolParam'" })),
+          ).or(
+            type(BetaFunctionShellToolParamSchema).and({ type: "'BetaFunctionShellToolParam'" }),
+          ),
+        ).or(type(BetaCustomToolParamSchema).and({ type: "'BetaCustomToolParam'" })),
+      ).or(type(BetaNamespaceToolParamSchema).and({ type: "'BetaNamespaceToolParam'" })),
+    ).or(type(BetaToolSearchToolParamSchema).and({ type: "'BetaToolSearchToolParam'" })),
+  ).or(type(BetaWebSearchPreviewToolSchema).and({ type: "'BetaWebSearchPreviewTool'" })),
 )
-  .or(BetaApplyPatchToolParamSchema)
+  .or(type(BetaApplyPatchToolParamSchema).and({ type: "'BetaApplyPatchToolParam'" }))
   .describe('A tool that can be used to generate a response.\n')
 
 export type BetaToolSchema = typeof BetaToolSchema.infer
 
 export const BetaAdditionalToolsItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this additional tools item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this additional tools item.')).or('null'),
   type: type("'additional_tools'").describe('The item type. Always `additional_tools`.'),
   role: type("'developer'").describe(
     'The role that provided the additional tools. Only `developer` is supported.',
@@ -35301,7 +37370,7 @@ export const BetaReasoningEffortSchema = type(
   type("'none' | 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max'").describe(
     'Constrains effort on reasoning for reasoning models. Currently supported\nvalues are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.\nReducing reasoning effort can result in faster responses and fewer tokens\nused on reasoning in a response. Not all reasoning models support every\nvalue. See the\n[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning)\nfor model-specific support.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type BetaReasoningEffortSchema = typeof BetaReasoningEffortSchema.infer
 
@@ -35333,7 +37402,7 @@ export const BetaTextResponseFormatJsonSchemaSchema = type({
     type('boolean').describe(
       'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'JSON Schema response format. Used to generate structured JSON responses.\nLearn more about [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
 )
@@ -35342,11 +37411,9 @@ export type BetaTextResponseFormatJsonSchemaSchema =
   typeof BetaTextResponseFormatJsonSchemaSchema.infer
 
 export const BetaResponseConfigurationUpdateItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   'id?': type(type('string').describe('The unique ID of the configuration update item.')).or(
-    'null | null',
+    'null',
   ),
   type: type("'configuration_update'").describe('The item type. Always `configuration_update`.'),
   'reasoning?': type({
@@ -35355,8 +37422,12 @@ export const BetaResponseConfigurationUpdateItemParamSchema = type({
     ),
   }).describe('Updates to reasoning configuration. Only effort is supported.'),
   'text?': type({
-    format: type(BetaResponseFormatTextSchema)
-      .or(BetaTextResponseFormatJsonSchemaSchema)
+    format: type(type(BetaResponseFormatTextSchema).and({ type: "'BetaResponseFormatText'" }))
+      .or(
+        type(BetaTextResponseFormatJsonSchemaSchema).and({
+          type: "'BetaTextResponseFormatJsonSchema'",
+        }),
+      )
       .describe('Use a JSON schema for structured output or text to return to plain text.'),
   }).describe('The text output configuration for subsequent responses.'),
 }).describe(
@@ -35383,16 +37454,14 @@ export const BetaReasoningTextContentSchema = type({
 export type BetaReasoningTextContentSchema = typeof BetaReasoningTextContentSchema.infer
 
 export const BetaReasoningItemSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'reasoning'").describe('The type of the object. Always `reasoning`.\n'),
   id: type('string').describe('The unique identifier of the reasoning content.\n'),
   'encrypted_content?': type(
     type('string').describe(
       'The encrypted content of the reasoning item. This is populated by default\nfor reasoning items returned by `POST /v1/responses` and WebSocket\n`response.create` requests.\n\nWhen streaming, use the completed reasoning item and its\n`encrypted_content` from the `response.output_item.done` event in\nsubsequent requests. The `encrypted_content` in\n`response.output_item.added` may be incomplete. This is especially\nimportant when `store` is `false` or when using Zero Data Retention.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   summary: type(BetaSummaryTextContentSchema).array().describe('Reasoning summary content.\n'),
   'content?': type(BetaReasoningTextContentSchema).array().describe('Reasoning text content.\n'),
   'status?': type("'in_progress' | 'completed' | 'incomplete'").describe(
@@ -35405,10 +37474,8 @@ export const BetaReasoningItemSchema = type({
 export type BetaReasoningItemSchema = typeof BetaReasoningItemSchema.infer
 
 export const BetaCompactionSummaryItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The ID of the compaction item.')).or('null | null'),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The ID of the compaction item.')).or('null'),
   type: type("'compaction'").describe('The type of the item. Always `compaction`.'),
   encrypted_content: type('string')
     .narrow(
@@ -35434,10 +37501,10 @@ export type BetaImageGenToolCallModerationDetailsSchema =
   typeof BetaImageGenToolCallModerationDetailsSchema.infer
 
 export const BetaImageGenToolCallErrorSchema = type({
-  code: type(type('string').describe('The error code.')).or('null | null'),
+  code: type(type('string').describe('The error code.')).or('null'),
   type: type('string').describe('The error type.'),
   message: type('string').describe('A description of the error.'),
-  param: type(type('string').describe('The related request parameter.')).or('null | null'),
+  param: type(type('string').describe('The related request parameter.')).or('null'),
   'moderation_details?': BetaImageGenToolCallModerationDetailsSchema.describe(
     'Public details for a `moderation_blocked` error, when available.',
   ),
@@ -35464,9 +37531,7 @@ export const BetaSvgUsageSchema = type({
 export type BetaSvgUsageSchema = typeof BetaSvgUsageSchema.infer
 
 export const BetaImageGenToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagSchema.describe('The agent that produced this item.')).or('null'),
   type: type("'image_generation_call'").describe(
     'The type of the image generation call. Always `image_generation_call`.',
   ),
@@ -35474,7 +37539,7 @@ export const BetaImageGenToolCallSchema = type({
   status: type("'in_progress' | 'completed' | 'generating' | 'failed'").describe(
     'The status of the image generation call.',
   ),
-  result: type(type('string').describe('The generated image encoded in base64.')).or('null | null'),
+  result: type(type('string').describe('The generated image encoded in base64.')).or('null'),
   'error?': BetaImageGenToolCallErrorSchema.describe(
     'Details of a moderation failure, when available.',
   ),
@@ -35482,25 +37547,25 @@ export const BetaImageGenToolCallSchema = type({
     type("string | '1024x1024' | '1024x1536' | '1536x1024'").describe(
       'The image dimensions as a `WIDTHxHEIGHT` string, for example `1536x864`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'quality?': type(
     type("'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto'").describe(
       'The quality of the image generated by the image generation tool call. One of `low`, `medium`, `high`, `xhigh`, `max`, or `auto`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'action?': type(
     BetaImageGenActionEnumSchema.describe('The action used for image generation.'),
-  ).or('null | null'),
+  ).or('null'),
   'background?': type(
     BetaImageBackgroundSchema.describe('The background setting used for generation.'),
-  ).or('null | null'),
+  ).or('null'),
   'output_format?': type(
     BetaImageOutputFormatSchema.describe('The output format used for generation.'),
-  ).or('null | null'),
+  ).or('null'),
   'svg_usage?': BetaSvgUsageSchema,
   'revised_prompt?': type(
     type('string').describe('The prompt that was used after any model prompt rewriting.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('An image generation request made by the model.')
 
 export type BetaImageGenToolCallSchema = typeof BetaImageGenToolCallSchema.infer
@@ -35520,9 +37585,7 @@ export const BetaCodeInterpreterOutputImageSchema = type({
 export type BetaCodeInterpreterOutputImageSchema = typeof BetaCodeInterpreterOutputImageSchema.infer
 
 export const BetaCodeInterpreterToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'code_interpreter_call'").describe(
     'The type of the code interpreter tool call. Always `code_interpreter_call`.\n',
   ),
@@ -35531,16 +37594,22 @@ export const BetaCodeInterpreterToolCallSchema = type({
     'The status of the code interpreter tool call. Valid values are `in_progress`, `completed`, `incomplete`, `interpreting`, and `failed`.\n',
   ),
   container_id: type('string').describe('The ID of the container used to run the code.\n'),
-  code: type(type('string').describe('The code to run, or null if not available.\n')).or(
-    'null | null',
-  ),
+  code: type(type('string').describe('The code to run, or null if not available.\n')).or('null'),
   outputs: type(
-    type(type(BetaCodeInterpreterOutputLogsSchema).or(BetaCodeInterpreterOutputImageSchema))
+    type(
+      type(
+        type(BetaCodeInterpreterOutputLogsSchema).and({ type: "'BetaCodeInterpreterOutputLogs'" }),
+      ).or(
+        type(BetaCodeInterpreterOutputImageSchema).and({
+          type: "'BetaCodeInterpreterOutputImage'",
+        }),
+      ),
+    )
       .array()
       .describe(
         'The outputs generated by the code interpreter, such as logs or images.\nCan be null if no outputs are available.\n',
       ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool call to run code.\n')
 
 export type BetaCodeInterpreterToolCallSchema = typeof BetaCodeInterpreterToolCallSchema.infer
@@ -35550,20 +37619,18 @@ export const BetaLocalShellExecActionSchema = type({
   command: type('string[]').describe('The command to run.'),
   'timeout_ms?': type(
     type('number.integer').describe('Optional timeout in milliseconds for the command.'),
-  ).or('null | null'),
+  ).or('null'),
   'working_directory?': type(
     type('string').describe('Optional working directory to run the command in.'),
-  ).or('null | null'),
+  ).or('null'),
   env: type({ '[string]': 'string' }).describe('Environment variables to set for the command.'),
-  'user?': type(type('string').describe('Optional user to run the command as.')).or('null | null'),
+  'user?': type(type('string').describe('Optional user to run the command as.')).or('null'),
 }).describe('Execute a shell command on the server.')
 
 export type BetaLocalShellExecActionSchema = typeof BetaLocalShellExecActionSchema.infer
 
 export const BetaLocalShellToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'local_shell_call'").describe(
     'The type of the local shell call. Always `local_shell_call`.\n',
   ),
@@ -35580,9 +37647,7 @@ export const BetaLocalShellToolCallSchema = type({
 export type BetaLocalShellToolCallSchema = typeof BetaLocalShellToolCallSchema.infer
 
 export const BetaLocalShellToolCallOutputSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'local_shell_call_output'").describe(
     'The type of the local shell tool call output. Always `local_shell_call_output`.\n',
   ),
@@ -35594,7 +37659,8 @@ export const BetaLocalShellToolCallOutputSchema = type({
     type("'in_progress' | 'completed' | 'incomplete'").describe(
       'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
+  call_id: 'unknown',
 }).describe('The output of a local shell tool call.\n')
 
 export type BetaLocalShellToolCallOutputSchema = typeof BetaLocalShellToolCallOutputSchema.infer
@@ -35607,12 +37673,12 @@ export const BetaFunctionShellActionParamSchema = type({
     type('number.integer').describe(
       'Maximum wall-clock time in milliseconds to allow the shell commands to run.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'max_output_length?': type(
     type('number.integer').describe(
       'Maximum number of UTF-8 characters to capture from combined stdout and stderr output.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Commands and limits describing how to run the shell tool call.')
 
 export type BetaFunctionShellActionParamSchema = typeof BetaFunctionShellActionParamSchema.infer
@@ -35625,21 +37691,19 @@ export type BetaFunctionShellCallItemStatusSchema =
   typeof BetaFunctionShellCallItemStatusSchema.infer
 
 export const BetaFunctionShellCallItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   'id?': type(
     type('string').describe(
       'The unique ID of the shell tool call. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     BetaToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'shell_call'").describe('The type of the item. Always `shell_call`.'),
   action: BetaFunctionShellActionParamSchema.describe(
     'The shell commands and limits that describe how to run the tool call.',
@@ -35648,12 +37712,12 @@ export const BetaFunctionShellCallItemParamSchema = type({
     BetaFunctionShellCallItemStatusSchema.describe(
       'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'environment?': type(
-    type(BetaLocalEnvironmentParamSchema)
-      .or(BetaContainerReferenceParamSchema)
+    type(type(BetaLocalEnvironmentParamSchema).and({ type: "'BetaLocalEnvironmentParam'" }))
+      .or(type(BetaContainerReferenceParamSchema).and({ type: "'BetaContainerReferenceParam'" }))
       .describe('The environment to execute the shell commands in.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A tool representing a request to execute one or more shell commands.')
 
 export type BetaFunctionShellCallItemParamSchema = typeof BetaFunctionShellCallItemParamSchema.infer
@@ -35674,9 +37738,15 @@ export type BetaFunctionShellCallOutputExitOutcomeParamSchema =
   typeof BetaFunctionShellCallOutputExitOutcomeParamSchema.infer
 
 export const BetaFunctionShellCallOutputOutcomeParamSchema = type(
-  BetaFunctionShellCallOutputTimeoutOutcomeParamSchema,
+  type(BetaFunctionShellCallOutputTimeoutOutcomeParamSchema).and({
+    type: "'BetaFunctionShellCallOutputTimeoutOutcomeParam'",
+  }),
 )
-  .or(BetaFunctionShellCallOutputExitOutcomeParamSchema)
+  .or(
+    type(BetaFunctionShellCallOutputExitOutcomeParamSchema).and({
+      type: "'BetaFunctionShellCallOutputExitOutcomeParam'",
+    }),
+  )
   .describe('The exit or timeout outcome associated with this shell call.')
 
 export type BetaFunctionShellCallOutputOutcomeParamSchema =
@@ -35702,33 +37772,31 @@ export type BetaFunctionShellCallOutputContentParamSchema =
   typeof BetaFunctionShellCallOutputContentParamSchema.infer
 
 export const BetaFunctionShellCallOutputItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   'id?': type(
     type('string').describe(
       'The unique ID of the shell tool call output. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     BetaToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   type: type("'shell_call_output'").describe('The type of the item. Always `shell_call_output`.'),
   output: type(BetaFunctionShellCallOutputContentParamSchema)
     .array()
     .describe('Captured chunks of stdout and stderr output, along with their associated outcomes.'),
   'status?': type(
     BetaFunctionShellCallItemStatusSchema.describe('The status of the shell call output.'),
-  ).or('null | null'),
+  ).or('null'),
   'max_output_length?': type(
     type('number.integer').describe(
       "The maximum number of UTF-8 characters captured for this shell call's combined output.",
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The streamed output items emitted by a shell tool call.')
 
 export type BetaFunctionShellCallOutputItemParamSchema =
@@ -35781,11 +37849,21 @@ export type BetaApplyPatchUpdateFileOperationParamSchema =
   typeof BetaApplyPatchUpdateFileOperationParamSchema.infer
 
 export const BetaApplyPatchOperationParamSchema = type(
-  type(BetaApplyPatchCreateFileOperationParamSchema).or(
-    BetaApplyPatchDeleteFileOperationParamSchema,
+  type(
+    type(BetaApplyPatchCreateFileOperationParamSchema).and({
+      type: "'BetaApplyPatchCreateFileOperationParam'",
+    }),
+  ).or(
+    type(BetaApplyPatchDeleteFileOperationParamSchema).and({
+      type: "'BetaApplyPatchDeleteFileOperationParam'",
+    }),
   ),
 )
-  .or(BetaApplyPatchUpdateFileOperationParamSchema)
+  .or(
+    type(BetaApplyPatchUpdateFileOperationParamSchema).and({
+      type: "'BetaApplyPatchUpdateFileOperationParam'",
+    }),
+  )
   .describe(
     'One of the create_file, delete_file, or update_file operations supplied to the apply_patch tool.',
   )
@@ -35793,22 +37871,20 @@ export const BetaApplyPatchOperationParamSchema = type(
 export type BetaApplyPatchOperationParamSchema = typeof BetaApplyPatchOperationParamSchema.infer
 
 export const BetaApplyPatchToolCallItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   type: type("'apply_patch_call'").describe('The type of the item. Always `apply_patch_call`.'),
   'id?': type(
     type('string').describe(
       'The unique ID of the apply patch tool call. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the apply patch tool call generated by the model.'),
   'caller?': type(
     BetaToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: BetaApplyPatchCallStatusParamSchema.describe(
     'The status of the apply patch tool call. One of `in_progress` or `completed`.',
   ),
@@ -35830,9 +37906,7 @@ export type BetaApplyPatchCallOutputStatusParamSchema =
   typeof BetaApplyPatchCallOutputStatusParamSchema.infer
 
 export const BetaApplyPatchToolCallOutputItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   type: type("'apply_patch_call_output'").describe(
     'The type of the item. Always `apply_patch_call_output`.',
   ),
@@ -35840,14 +37914,14 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = type({
     type('string').describe(
       'The unique ID of the apply patch tool call output. Populated when this item is returned via API.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   call_id: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
     .describe('The unique ID of the apply patch tool call generated by the model.'),
   'caller?': type(
     BetaToolCallCallerParamSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: BetaApplyPatchCallOutputStatusParamSchema.describe(
     'The status of the apply patch tool call output. One of `completed` or `failed`.',
   ),
@@ -35859,7 +37933,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = type({
       .describe(
         'Optional human-readable log text from the apply patch tool (e.g., patch results or errors).',
       ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The streamed output emitted by an apply patch tool call.')
 
 export type BetaApplyPatchToolCallOutputItemParamSchema =
@@ -35867,34 +37941,28 @@ export type BetaApplyPatchToolCallOutputItemParamSchema =
 
 export const BetaMCPListToolsToolSchema = type({
   name: type('string').describe('The name of the tool.\n'),
-  'description?': type(type('string').describe('The description of the tool.\n')).or('null | null'),
+  'description?': type(type('string').describe('The description of the tool.\n')).or('null'),
   input_schema: type({}).describe("The JSON schema describing the tool's input.\n"),
-  'annotations?': type(type({}).describe('Additional annotations about the tool.\n')).or(
-    'null | null',
-  ),
+  'annotations?': type(type({}).describe('Additional annotations about the tool.\n')).or('null'),
 }).describe('A tool available on an MCP server.\n')
 
 export type BetaMCPListToolsToolSchema = typeof BetaMCPListToolsToolSchema.infer
 
 export const BetaMCPListToolsSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'mcp_list_tools'").describe('The type of the item. Always `mcp_list_tools`.\n'),
   id: type('string').describe('The unique ID of the list.\n'),
   server_label: type('string').describe('The label of the MCP server.\n'),
   tools: type(BetaMCPListToolsToolSchema).array().describe('The tools available on the server.\n'),
   'error?': type(type('string').describe('Error message if the server could not list tools.\n')).or(
-    'null | null',
+    'null',
   ),
 }).describe('A list of tools available on an MCP server.\n')
 
 export type BetaMCPListToolsSchema = typeof BetaMCPListToolsSchema.infer
 
 export const BetaMCPApprovalRequestSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'mcp_approval_request'").describe(
     'The type of the item. Always `mcp_approval_request`.\n',
   ),
@@ -35907,18 +37975,15 @@ export const BetaMCPApprovalRequestSchema = type({
 export type BetaMCPApprovalRequestSchema = typeof BetaMCPApprovalRequestSchema.infer
 
 export const BetaMCPApprovalResponseSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'mcp_approval_response'").describe(
     'The type of the item. Always `mcp_approval_response`.\n',
   ),
-  'id?': type(type('string').describe('The unique ID of the approval response\n')).or(
-    'null | null',
-  ),
+  'id?': type(type('string').describe('The unique ID of the approval response\n')).or('null'),
   approval_request_id: type('string').describe('The ID of the approval request being answered.\n'),
   approve: type('boolean').describe('Whether the request was approved.\n'),
-  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null | null'),
+  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null'),
+  request_id: 'unknown',
 }).describe('A response to an MCP approval request.\n')
 
 export type BetaMCPApprovalResponseSchema = typeof BetaMCPApprovalResponseSchema.infer
@@ -35947,8 +38012,10 @@ export const BetaHTTPErrorSchema = type({
 export type BetaHTTPErrorSchema = typeof BetaHTTPErrorSchema.infer
 
 export const BetaMCPToolCallErrorSchema = type(
-  type(BetaMCPProtocolErrorSchema).or(BetaMCPToolExecutionErrorSchema),
-).or(BetaHTTPErrorSchema)
+  type(type(BetaMCPProtocolErrorSchema).and({ type: "'BetaMCPProtocolError'" })).or(
+    type(BetaMCPToolExecutionErrorSchema).and({ type: "'BetaMCPToolExecutionError'" }),
+  ),
+).or(type(BetaHTTPErrorSchema).and({ type: "'BetaHTTPError'" }))
 
 export type BetaMCPToolCallErrorSchema = typeof BetaMCPToolCallErrorSchema.infer
 
@@ -35959,17 +38026,15 @@ export const BetaMCPToolCallStatusSchema = type(
 export type BetaMCPToolCallStatusSchema = typeof BetaMCPToolCallStatusSchema.infer
 
 export const BetaMCPToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'mcp_call'").describe('The type of the item. Always `mcp_call`.\n'),
   id: type('string').describe('The unique ID of the tool call.\n'),
   server_label: type('string').describe('The label of the MCP server running the tool.\n'),
   name: type('string').describe('The name of the tool that was run.\n'),
   arguments: type('string').describe('A JSON string of the arguments passed to the tool.\n'),
-  'output?': type(type('string').describe('The output from the tool call.\n')).or('null | null'),
+  'output?': type(type('string').describe('The output from the tool call.\n')).or('null'),
   'error?': type(BetaMCPToolCallErrorSchema)
-    .or('null | null')
+    .or('null')
     .describe('The error from the tool call, if any.'),
   'status?': BetaMCPToolCallStatusSchema.describe(
     'The status of the tool call. One of `in_progress`, `completed`, `incomplete`, `calling`, or `failed`.\n',
@@ -35978,22 +38043,22 @@ export const BetaMCPToolCallSchema = type({
     type('string').describe(
       'Unique identifier for the MCP tool call approval request.\nInclude this value in a subsequent `mcp_approval_response` input to approve or reject the corresponding tool call.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('An invocation of a tool on an MCP server.\n')
 
 export type BetaMCPToolCallSchema = typeof BetaMCPToolCallSchema.infer
 
 export const BetaFunctionAndCustomToolCallOutputSchema = type(
-  type(BetaInputTextContentSchema).or(BetaInputImageContentSchema),
-).or(BetaInputFileContentSchema)
+  type(type(BetaInputTextContentSchema).and({ type: "'BetaInputTextContent'" })).or(
+    type(BetaInputImageContentSchema).and({ type: "'BetaInputImageContent'" }),
+  ),
+).or(type(BetaInputFileContentSchema).and({ type: "'BetaInputFileContent'" }))
 
 export type BetaFunctionAndCustomToolCallOutputSchema =
   typeof BetaFunctionAndCustomToolCallOutputSchema.infer
 
 export const BetaCustomToolCallOutputSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'custom_tool_call_output'").describe(
     'The type of the custom tool call output. Always `custom_tool_call_output`.\n',
   ),
@@ -36003,7 +38068,7 @@ export const BetaCustomToolCallOutputSchema = type({
   call_id: type('string').describe(
     'The call ID, used to map this custom tool call output to a custom tool call.\n',
   ),
-  'caller?': type(BetaToolCallCallerParamSchema).or('null | null'),
+  'caller?': type(BetaToolCallCallerParamSchema).or('null'),
   output: type(type('string').describe('A string of the output of the custom tool call.\n'))
     .or(
       type(BetaFunctionAndCustomToolCallOutputSchema)
@@ -36018,9 +38083,7 @@ export const BetaCustomToolCallOutputSchema = type({
 export type BetaCustomToolCallOutputSchema = typeof BetaCustomToolCallOutputSchema.infer
 
 export const BetaCustomToolCallSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'custom_tool_call'").describe(
     'The type of the custom tool call. Always `custom_tool_call`.\n',
   ),
@@ -36028,7 +38091,7 @@ export const BetaCustomToolCallSchema = type({
   call_id: type('string').describe(
     'An identifier used to map this custom tool call to a tool call output.\n',
   ),
-  'caller?': type(BetaToolCallCallerSchema).or('null | null'),
+  'caller?': type(BetaToolCallCallerSchema).or('null'),
   'namespace?': type('string').describe('The namespace of the custom tool being called.\n'),
   name: type('string').describe('The name of the custom tool being called.\n'),
   input: type('string').describe('The input for the custom tool call generated by the model.\n'),
@@ -36066,71 +38129,161 @@ export const BetaItemSchema = type(
                                                     type(
                                                       type(
                                                         type(
-                                                          type(BetaInputMessageSchema).or(
-                                                            BetaOutputMessageSchema,
+                                                          type(
+                                                            type(BetaInputMessageSchema).and({
+                                                              type: "'BetaInputMessage'",
+                                                            }),
+                                                          ).or(
+                                                            type(BetaOutputMessageSchema).and({
+                                                              type: "'BetaOutputMessage'",
+                                                            }),
                                                           ),
-                                                        ).or(BetaFileSearchToolCallSchema),
-                                                      ).or(BetaComputerToolCallSchema),
-                                                    ).or(BetaComputerCallOutputItemParamSchema),
-                                                  ).or(BetaWebSearchToolCallSchema),
-                                                ).or(BetaFunctionToolCallSchema),
-                                              ).or(BetaFunctionCallOutputItemParamSchema),
-                                            ).or(BetaAgentMessageItemParamSchema),
-                                          ).or(BetaMultiAgentCallItemParamSchema),
-                                        ).or(BetaMultiAgentCallOutputItemParamSchema),
-                                      ).or(BetaToolSearchCallItemParamSchema),
-                                    ).or(BetaToolSearchOutputItemParamSchema),
-                                  ).or(BetaAdditionalToolsItemParamSchema),
-                                ).or(BetaResponseConfigurationUpdateItemParamSchema),
-                              ).or(BetaReasoningItemSchema),
-                            ).or(BetaCompactionSummaryItemParamSchema),
-                          ).or(BetaImageGenToolCallSchema),
-                        ).or(BetaCodeInterpreterToolCallSchema),
-                      ).or(BetaLocalShellToolCallSchema),
-                    ).or(BetaLocalShellToolCallOutputSchema),
-                  ).or(BetaFunctionShellCallItemParamSchema),
-                ).or(BetaFunctionShellCallOutputItemParamSchema),
-              ).or(BetaApplyPatchToolCallItemParamSchema),
-            ).or(BetaApplyPatchToolCallOutputItemParamSchema),
-          ).or(BetaMCPListToolsSchema),
-        ).or(BetaMCPApprovalRequestSchema),
-      ).or(BetaMCPApprovalResponseSchema),
-    ).or(BetaMCPToolCallSchema),
-  ).or(BetaCustomToolCallOutputSchema),
+                                                        ).or(
+                                                          type(BetaFileSearchToolCallSchema).and({
+                                                            type: "'BetaFileSearchToolCall'",
+                                                          }),
+                                                        ),
+                                                      ).or(
+                                                        type(BetaComputerToolCallSchema).and({
+                                                          type: "'BetaComputerToolCall'",
+                                                        }),
+                                                      ),
+                                                    ).or(
+                                                      type(
+                                                        BetaComputerCallOutputItemParamSchema,
+                                                      ).and({
+                                                        type: "'BetaComputerCallOutputItemParam'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(BetaWebSearchToolCallSchema).and({
+                                                      type: "'BetaWebSearchToolCall'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(BetaFunctionToolCallSchema).and({
+                                                    type: "'BetaFunctionToolCall'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(BetaFunctionCallOutputItemParamSchema).and({
+                                                  type: "'BetaFunctionCallOutputItemParam'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(BetaAgentMessageItemParamSchema).and({
+                                                type: "'BetaAgentMessageItemParam'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(BetaMultiAgentCallItemParamSchema).and({
+                                              type: "'BetaMultiAgentCallItemParam'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(BetaMultiAgentCallOutputItemParamSchema).and({
+                                            type: "'BetaMultiAgentCallOutputItemParam'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(BetaToolSearchCallItemParamSchema).and({
+                                          type: "'BetaToolSearchCallItemParam'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(BetaToolSearchOutputItemParamSchema).and({
+                                        type: "'BetaToolSearchOutputItemParam'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(BetaAdditionalToolsItemParamSchema).and({
+                                      type: "'BetaAdditionalToolsItemParam'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(BetaResponseConfigurationUpdateItemParamSchema).and({
+                                    type: "'BetaResponseConfigurationUpdateItemParam'",
+                                  }),
+                                ),
+                              ).or(
+                                type(BetaReasoningItemSchema).and({ type: "'BetaReasoningItem'" }),
+                              ),
+                            ).or(
+                              type(BetaCompactionSummaryItemParamSchema).and({
+                                type: "'BetaCompactionSummaryItemParam'",
+                              }),
+                            ),
+                          ).or(
+                            type(BetaImageGenToolCallSchema).and({
+                              type: "'BetaImageGenToolCall'",
+                            }),
+                          ),
+                        ).or(
+                          type(BetaCodeInterpreterToolCallSchema).and({
+                            type: "'BetaCodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(
+                        type(BetaLocalShellToolCallSchema).and({
+                          type: "'BetaLocalShellToolCall'",
+                        }),
+                      ),
+                    ).or(
+                      type(BetaLocalShellToolCallOutputSchema).and({
+                        type: "'BetaLocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(
+                    type(BetaFunctionShellCallItemParamSchema).and({
+                      type: "'BetaFunctionShellCallItemParam'",
+                    }),
+                  ),
+                ).or(
+                  type(BetaFunctionShellCallOutputItemParamSchema).and({
+                    type: "'BetaFunctionShellCallOutputItemParam'",
+                  }),
+                ),
+              ).or(
+                type(BetaApplyPatchToolCallItemParamSchema).and({
+                  type: "'BetaApplyPatchToolCallItemParam'",
+                }),
+              ),
+            ).or(
+              type(BetaApplyPatchToolCallOutputItemParamSchema).and({
+                type: "'BetaApplyPatchToolCallOutputItemParam'",
+              }),
+            ),
+          ).or(type(BetaMCPListToolsSchema).and({ type: "'BetaMCPListTools'" })),
+        ).or(type(BetaMCPApprovalRequestSchema).and({ type: "'BetaMCPApprovalRequest'" })),
+      ).or(type(BetaMCPApprovalResponseSchema).and({ type: "'BetaMCPApprovalResponse'" })),
+    ).or(type(BetaMCPToolCallSchema).and({ type: "'BetaMCPToolCall'" })),
+  ).or(type(BetaCustomToolCallOutputSchema).and({ type: "'BetaCustomToolCallOutput'" })),
 )
-  .or(BetaCustomToolCallSchema)
+  .or(type(BetaCustomToolCallSchema).and({ type: "'BetaCustomToolCall'" }))
   .describe('Content item used to generate a response.\n')
 
 export type BetaItemSchema = typeof BetaItemSchema.infer
 
 export const BetaCompactionTriggerItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this compaction trigger.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this compaction trigger.')).or('null'),
   type: type("'compaction_trigger'").describe('The type of the item. Always `compaction_trigger`.'),
 }).describe('Compacts the current context. Must be the final input item.')
 
 export type BetaCompactionTriggerItemParamSchema = typeof BetaCompactionTriggerItemParamSchema.infer
 
 export const BetaItemReferenceParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   'type?': type(
     type("'item_reference'").describe('The type of item to reference. Always `item_reference`.'),
-  ).or('null | null'),
+  ).or('null'),
   id: type('string').describe('The ID of the item to reference.'),
 }).describe('An internal identifier for an item to reference.')
 
 export type BetaItemReferenceParamSchema = typeof BetaItemReferenceParamSchema.infer
 
 export const BetaProgramItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   id: type('string').describe('The unique ID of this program item.'),
   type: type("'program'").describe('The item type. Always `program`.'),
   call_id: type('string')
@@ -36156,9 +38309,7 @@ export const BetaProgramOutputItemStatusSchema = type("'completed' | 'incomplete
 export type BetaProgramOutputItemStatusSchema = typeof BetaProgramOutputItemStatusSchema.infer
 
 export const BetaProgramOutputItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
   id: type('string').describe('The unique ID of this program output item.'),
   type: type("'program_output'").describe('The item type. Always `program_output`.'),
   call_id: type('string')
@@ -36179,15 +38330,21 @@ export const BetaInputItemSchema = type(
   type(
     type(
       type(
-        type(BetaEasyInputMessageSchema).or(
-          BetaItemSchema.describe(
-            'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
-          ),
+        type(type(BetaEasyInputMessageSchema).and({ type: "'BetaEasyInputMessage'" })).or(
+          type(
+            BetaItemSchema.describe(
+              'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+            ),
+          ).and({ type: "'BetaItem'" }),
         ),
-      ).or(BetaCompactionTriggerItemParamSchema),
-    ).or(BetaItemReferenceParamSchema),
-  ).or(BetaProgramItemParamSchema),
-).or(BetaProgramOutputItemParamSchema)
+      ).or(
+        type(BetaCompactionTriggerItemParamSchema).and({
+          type: "'BetaCompactionTriggerItemParam'",
+        }),
+      ),
+    ).or(type(BetaItemReferenceParamSchema).and({ type: "'BetaItemReferenceParam'" })),
+  ).or(type(BetaProgramItemParamSchema).and({ type: "'BetaProgramItemParam'" })),
+).or(type(BetaProgramOutputItemParamSchema).and({ type: "'BetaProgramOutputItemParam'" }))
 
 export type BetaInputItemSchema = typeof BetaInputItemSchema.infer
 
@@ -36202,9 +38359,13 @@ export const BetaResponseFormatJsonObjectSchema = type({
 export type BetaResponseFormatJsonObjectSchema = typeof BetaResponseFormatJsonObjectSchema.infer
 
 export const BetaTextResponseFormatConfigurationSchema = type(
-  type(BetaResponseFormatTextSchema).or(BetaTextResponseFormatJsonSchemaSchema),
+  type(type(BetaResponseFormatTextSchema).and({ type: "'BetaResponseFormatText'" })).or(
+    type(BetaTextResponseFormatJsonSchemaSchema).and({
+      type: "'BetaTextResponseFormatJsonSchema'",
+    }),
+  ),
 )
-  .or(BetaResponseFormatJsonObjectSchema)
+  .or(type(BetaResponseFormatJsonObjectSchema).and({ type: "'BetaResponseFormatJsonObject'" }))
   .describe(
     'An object specifying the format that the model must output.\n\nConfiguring `{ "type": "json_schema" }` enables Structured Outputs,\nwhich ensures the model will match your supplied JSON schema. Learn more in the\n[Structured Outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs).\n\nThe default format is `{ "type": "text" }` with no additional options.\n\n**Not recommended for gpt-4o and newer models:**\n\nSetting to `{ "type": "json_object" }` enables the older JSON mode, which\nensures the message the model generates is valid JSON. Using `json_schema`\nis preferred for models that support it.\n',
   )
@@ -36216,7 +38377,7 @@ export const BetaVerbositySchema = type(
   type("'low' | 'medium' | 'high'").describe(
     "Constrains the verbosity of the model's response. Lower values will result in\nmore concise responses, while higher values will result in more verbose responses.\nCurrently supported values are `low`, `medium`, and `high`. The default is\n`medium`.\n",
   ),
-).or('null | null')
+).or('null')
 
 export type BetaVerbositySchema = typeof BetaVerbositySchema.infer
 
@@ -36242,17 +38403,17 @@ export const BetaReasoningSchema = type({
     type("'auto' | 'concise' | 'detailed'").describe(
       "A summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n\n`concise` is supported for `computer-use-preview` models and all reasoning models after `gpt-5`.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'context?': type(
     type("'auto' | 'current_turn' | 'all_turns'").describe(
       'Controls which reasoning items are rendered back to the model on later turns.\nIf omitted or set to `auto`, the model determines the context mode. The\n`gpt-5.6` model family defaults to `all_turns`; earlier models default to\n`current_turn`.\n\nWhen returned on a response, this is the effective reasoning context mode\nused for the response.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'generate_summary?': type(
     type("'auto' | 'concise' | 'detailed'").describe(
       "**Deprecated:** use `summary` instead.\n\nA summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Configuration options for\n[reasoning models](https://developers.openai.com/api/docs/guides/reasoning).\n',
 )
@@ -36330,7 +38491,7 @@ export const BetaToolChoiceMCPSchema = type({
   type: type("'mcp'").describe('For MCP tools, the type is always `mcp`.'),
   server_label: type('string').describe('The label of the MCP server to use.\n'),
   'name?': type(type('string').describe('The name of the tool to call on the server.\n')).or(
-    'null | null',
+    'null',
   ),
 }).describe('Use this option to force the model to call a specific tool on a remote MCP server.\n')
 
@@ -36391,7 +38552,7 @@ export const BetaTokenCountsBodySchema = type({
     type('string').describe(
       'Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'input?': type(
     type(
       type('string')
@@ -36408,25 +38569,25 @@ export const BetaTokenCountsBodySchema = type({
           ),
       )
       .describe('Text, image, or file inputs to the model, used to generate a response'),
-  ).or('null | null'),
+  ).or('null'),
   'previous_response_id?': type(
     type('string').describe(
       'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'tools?': type(
     type(BetaToolSchema)
       .array()
       .describe(
         'An array of tools the model may call while generating a response. You can specify which tool to use by setting the `tool_choice` parameter.',
       ),
-  ).or('null | null'),
-  'text?': type(BetaResponseTextParamSchema).or('null | null'),
+  ).or('null'),
+  'text?': type(BetaResponseTextParamSchema).or('null'),
   'reasoning?': type(
     BetaReasoningSchema.describe(
       '**gpt-5 and o-series models only** Configuration options for [reasoning models](https://developers.openai.com/api/docs/guides/reasoning).',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'truncation?': BetaTruncationEnumSchema.describe(
     "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds the model's context window size, the model will truncate the response to fit the context window by dropping items from the beginning of the conversation. On some models, trimming can begin earlier because the API subtracts the model's maximum output allowance from its input limit before counting tokens.\n- `disabled` (default): If the input size will exceed the context window size for a model, the request will fail with a 400 error.",
   ),
@@ -36434,35 +38595,152 @@ export const BetaTokenCountsBodySchema = type({
     type('string').describe(
       "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'personality?': BetaPersonalityEnumSchema.describe(
     "A model-owned style preset to apply to this request. Omit this parameter to use the model's default style. Supported values may expand over time. Values must be at most 64 characters.",
   ),
-  'conversation?': type(BetaConversationParamSchema).or('null | null'),
+  'conversation?': type(BetaConversationParamSchema).or('null'),
   'tool_choice?': type(
     BetaToolChoiceParamSchema.describe('Controls which tool the model should use, if any.'),
-  ).or('null | null'),
+  ).or('null'),
   'parallel_tool_calls?': type(
     type('boolean').describe('Whether to allow the model to run tool calls in parallel.'),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaTokenCountsBodySchema = typeof BetaTokenCountsBodySchema.infer
 
-export const BetaModelIdsSharedSchema = type(
-  "string | 'gpt-6-astra' | 'gpt-6.2-astra' | 'gpt-6.1-sol' | 'gpt-6.2-sol' | 'gpt-6.1-terra' | 'gpt-6-sol' | 'gpt-6-luna' | 'gpt-5.6-sol' | 'gpt-5.6-terra' | 'gpt-5.6-luna' | 'gpt-5.5' | 'gpt-5.5-2026-04-23' | 'gpt-5.4' | 'gpt-5.4-mini' | 'gpt-5.4-nano' | 'gpt-5.4-mini-2026-03-17' | 'gpt-5.4-nano-2026-03-17' | 'gpt-5.3-chat-latest' | 'gpt-5.2' | 'gpt-5.2-2025-12-11' | 'gpt-5.2-chat-latest' | 'gpt-5.2-pro' | 'gpt-5.2-pro-2025-12-11' | 'gpt-5.1' | 'gpt-5.1-2025-11-13' | 'gpt-5.1-codex' | 'gpt-5.1-mini' | 'gpt-5.1-chat-latest' | 'gpt-5' | 'gpt-5-mini' | 'gpt-5-nano' | 'gpt-5-2025-08-07' | 'gpt-5-mini-2025-08-07' | 'gpt-5-nano-2025-08-07' | 'gpt-5-chat-latest' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano' | 'gpt-4.1-2025-04-14' | 'gpt-4.1-mini-2025-04-14' | 'gpt-4.1-nano-2025-04-14' | 'o4-mini' | 'o4-mini-2025-04-16' | 'o3' | 'o3-2025-04-16' | 'o3-mini' | 'o3-mini-2025-01-31' | 'o1' | 'o1-2024-12-17' | 'o1-preview' | 'o1-preview-2024-09-12' | 'o1-mini' | 'o1-mini-2024-09-12' | 'gpt-4o' | 'gpt-4o-2024-11-20' | 'gpt-4o-2024-08-06' | 'gpt-4o-2024-05-13' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-12-15' | 'gpt-4o-audio-preview' | 'gpt-4o-audio-preview-2024-10-01' | 'gpt-4o-audio-preview-2024-12-17' | 'gpt-4o-audio-preview-2025-06-03' | 'gpt-4o-mini-audio-preview' | 'gpt-4o-mini-audio-preview-2024-12-17' | 'gpt-4o-search-preview' | 'gpt-4o-mini-search-preview' | 'gpt-4o-search-preview-2025-03-11' | 'gpt-4o-mini-search-preview-2025-03-11' | 'chatgpt-4o-latest' | 'codex-mini-latest' | 'gpt-4o-mini' | 'gpt-4o-mini-2024-07-18' | 'gpt-4-turbo' | 'gpt-4-turbo-2024-04-09' | 'gpt-4-0125-preview' | 'gpt-4-turbo-preview' | 'gpt-4-1106-preview' | 'gpt-4-vision-preview' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-0613' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'gpt-4-32k-0613' | 'gpt-3.5-turbo' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-0301' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-1106' | 'gpt-3.5-turbo-0125' | 'gpt-3.5-turbo-16k-0613'",
+export const BetaModelIdsSharedSchema = type('string').or(
+  type.enumerated(
+    'gpt-6-astra',
+    'gpt-6.2-astra',
+    'gpt-6.1-sol',
+    'gpt-6.2-sol',
+    'gpt-6.1-terra',
+    'gpt-6-sol',
+    'gpt-6-luna',
+    'gpt-5.6-sol',
+    'gpt-5.6-terra',
+    'gpt-5.6-luna',
+    'gpt-5.5',
+    'gpt-5.5-2026-04-23',
+    'gpt-5.4',
+    'gpt-5.4-mini',
+    'gpt-5.4-nano',
+    'gpt-5.4-mini-2026-03-17',
+    'gpt-5.4-nano-2026-03-17',
+    'gpt-5.3-chat-latest',
+    'gpt-5.2',
+    'gpt-5.2-2025-12-11',
+    'gpt-5.2-chat-latest',
+    'gpt-5.2-pro',
+    'gpt-5.2-pro-2025-12-11',
+    'gpt-5.1',
+    'gpt-5.1-2025-11-13',
+    'gpt-5.1-codex',
+    'gpt-5.1-mini',
+    'gpt-5.1-chat-latest',
+    'gpt-5',
+    'gpt-5-mini',
+    'gpt-5-nano',
+    'gpt-5-2025-08-07',
+    'gpt-5-mini-2025-08-07',
+    'gpt-5-nano-2025-08-07',
+    'gpt-5-chat-latest',
+    'gpt-4.1',
+    'gpt-4.1-mini',
+    'gpt-4.1-nano',
+    'gpt-4.1-2025-04-14',
+    'gpt-4.1-mini-2025-04-14',
+    'gpt-4.1-nano-2025-04-14',
+    'o4-mini',
+    'o4-mini-2025-04-16',
+    'o3',
+    'o3-2025-04-16',
+    'o3-mini',
+    'o3-mini-2025-01-31',
+    'o1',
+    'o1-2024-12-17',
+    'o1-preview',
+    'o1-preview-2024-09-12',
+    'o1-mini',
+    'o1-mini-2024-09-12',
+    'gpt-4o',
+    'gpt-4o-2024-11-20',
+    'gpt-4o-2024-08-06',
+    'gpt-4o-2024-05-13',
+    'gpt-audio-mini',
+    'gpt-audio-mini-2025-12-15',
+    'gpt-4o-audio-preview',
+    'gpt-4o-audio-preview-2024-10-01',
+    'gpt-4o-audio-preview-2024-12-17',
+    'gpt-4o-audio-preview-2025-06-03',
+    'gpt-4o-mini-audio-preview',
+    'gpt-4o-mini-audio-preview-2024-12-17',
+    'gpt-4o-search-preview',
+    'gpt-4o-mini-search-preview',
+    'gpt-4o-search-preview-2025-03-11',
+    'gpt-4o-mini-search-preview-2025-03-11',
+    'chatgpt-4o-latest',
+    'codex-mini-latest',
+    'gpt-4o-mini',
+    'gpt-4o-mini-2024-07-18',
+    'gpt-4-turbo',
+    'gpt-4-turbo-2024-04-09',
+    'gpt-4-0125-preview',
+    'gpt-4-turbo-preview',
+    'gpt-4-1106-preview',
+    'gpt-4-vision-preview',
+    'gpt-4',
+    'gpt-4-0314',
+    'gpt-4-0613',
+    'gpt-4-32k',
+    'gpt-4-32k-0314',
+    'gpt-4-32k-0613',
+    'gpt-3.5-turbo',
+    'gpt-3.5-turbo-16k',
+    'gpt-3.5-turbo-0301',
+    'gpt-3.5-turbo-0613',
+    'gpt-3.5-turbo-1106',
+    'gpt-3.5-turbo-0125',
+    'gpt-3.5-turbo-16k-0613',
+  ),
 )
 
 export type BetaModelIdsSharedSchema = typeof BetaModelIdsSharedSchema.infer
 
 export const BetaModelIdsResponsesSchema = type(BetaModelIdsSharedSchema).or(
-  "'o1-pro' | 'o1-pro-2025-03-19' | 'o3-pro' | 'o3-pro-2025-06-10' | 'o3-deep-research' | 'o3-deep-research-2025-06-26' | 'o4-mini-deep-research' | 'o4-mini-deep-research-2025-06-26' | 'computer-use-preview' | 'computer-use-preview-2025-03-11' | 'gpt-5.5-pro' | 'gpt-5.5-pro-2026-04-23' | 'gpt-5-codex' | 'gpt-5-pro' | 'gpt-5-pro-2025-10-06' | 'gpt-5.1-codex-max' | 'gpt-daybreak-blue-latest' | 'gpt-daybreak-red-latest' | 'gpt-5.6-cyber' | 'gpt-6-cyber' | 'gpt-rosalind-research' | 'gpt-6-rosalind' | 'gpt-6.2-astra-law'",
+  type.enumerated(
+    'o1-pro',
+    'o1-pro-2025-03-19',
+    'o3-pro',
+    'o3-pro-2025-06-10',
+    'o3-deep-research',
+    'o3-deep-research-2025-06-26',
+    'o4-mini-deep-research',
+    'o4-mini-deep-research-2025-06-26',
+    'computer-use-preview',
+    'computer-use-preview-2025-03-11',
+    'gpt-5.5-pro',
+    'gpt-5.5-pro-2026-04-23',
+    'gpt-5-codex',
+    'gpt-5-pro',
+    'gpt-5-pro-2025-10-06',
+    'gpt-5.1-codex-max',
+    'gpt-daybreak-blue-latest',
+    'gpt-daybreak-red-latest',
+    'gpt-5.6-cyber',
+    'gpt-6-cyber',
+    'gpt-rosalind-research',
+    'gpt-6-rosalind',
+    'gpt-6.2-astra-law',
+  ),
 )
 
 export type BetaModelIdsResponsesSchema = typeof BetaModelIdsResponsesSchema.infer
 
 export const BetaModelIdsCompactionSchema = type(type(BetaModelIdsResponsesSchema).or('string'))
-  .or('null | null')
+  .or('null')
   .describe(
     'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
   )
@@ -36529,34 +38807,34 @@ export const BetaCompactResponseMethodPublicBodySchema = type({
           ),
       )
       .describe('Text, image, or file inputs to the model, used to generate a response'),
-  ).or('null | null'),
+  ).or('null'),
   'previous_response_id?': type(
     type('string').describe(
       'The unique ID of the previous response to the model. Use this to create multi-turn conversations. Learn more about [conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'instructions?': type(
     type('string').describe(
       "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
     ),
-  ).or('null | null'),
+  ).or('null'),
   'image?': BetaImageOptionsParamSchema.describe('Request level image options.'),
   'prompt_cache_key?': type(
     type('string')
       .narrow((data, ctx) => [...data].length <= 64 || ctx.mustBe('at most 64 characters'))
       .describe('A key to use when reading from or writing to the prompt cache.'),
-  ).or('null | null'),
+  ).or('null'),
   'prompt_cache_retention?': type(
     BetaPromptCacheRetentionEnumSchema.describe(
       'How long to retain a prompt cache entry created by this request.',
     ),
-  ).or('null | null'),
-  'prompt_cache_options?': type(BetaPromptCacheOptionsParamSchema).or('null | null'),
+  ).or('null'),
+  'prompt_cache_options?': type(BetaPromptCacheOptionsParamSchema).or('null'),
   'service_tier?': type(
     BetaServiceTierEnumSchema.describe(
       "Specifies the processing type used for serving the request.   - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.   - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.   - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.   - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. For models with a dedicated Fast tier, either value resolves to `service_tier=fast`; for other models, either value resolves to `service_tier=priority`.   - When not set, the default behavior is 'auto'.\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.",
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaCompactResponseMethodPublicBodySchema =
@@ -36583,7 +38861,7 @@ export const BetaMisalignmentErrorDetailsResourceSchema = type({
       .describe(
         'An opaque target for explicitly continuing this review, or null when unavailable.',
       ),
-  ).or('null | null'),
+  ).or('null'),
   'error_type?': BetaMisalignmentErrorTypeSchema.describe(
     'An optional classification; clients must accept additional values.',
   ),
@@ -36595,9 +38873,9 @@ export type BetaMisalignmentErrorDetailsResourceSchema =
   typeof BetaMisalignmentErrorDetailsResourceSchema.infer
 
 export const BetaErrorSchema = type({
-  code: 'string | null | null',
+  code: 'string | null',
   message: 'string',
-  param: 'string | null | null',
+  param: 'string | null',
   type: 'string',
   'misalignment?': BetaMisalignmentErrorDetailsResourceSchema,
 })
@@ -36609,15 +38887,13 @@ export const BetaErrorResponseSchema = type({ error: BetaErrorSchema })
 export type BetaErrorResponseSchema = typeof BetaErrorResponseSchema.infer
 
 export const BetaInputMessageResourceSchema = type(BetaInputMessageSchema).and(
-  type({ id: type('string').describe('The unique ID of the message input.\n') }),
+  type({ id: type('string').describe('The unique ID of the message input.\n'), type: 'unknown' }),
 )
 
 export type BetaInputMessageResourceSchema = typeof BetaInputMessageResourceSchema.infer
 
 export const BetaComputerToolCallOutputSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'computer_call_output'").describe(
     'The type of the computer tool call output. Always `computer_call_output`.\n',
   ),
@@ -36646,6 +38922,7 @@ export const BetaComputerToolCallOutputResourceSchema = type(BetaComputerToolCal
       'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
     ),
     'created_by?': type('string').describe('The identifier of the actor that created the item.\n'),
+    id: 'unknown',
   }),
 )
 
@@ -36669,9 +38946,7 @@ export const BetaFunctionToolCallResourceSchema = type(BetaFunctionToolCallSchem
 export type BetaFunctionToolCallResourceSchema = typeof BetaFunctionToolCallResourceSchema.infer
 
 export const BetaFunctionToolCallOutputSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   'id?': type('string').describe(
     'The unique ID of the function tool call output. Populated when this item\nis returned via API.\n',
   ),
@@ -36683,7 +38958,7 @@ export const BetaFunctionToolCallOutputSchema = type({
   ),
   'name?': type('string').describe('The name of the tool that produced the output.\n'),
   'namespace?': type('string').describe('The namespace of the tool that produced the output.\n'),
-  'caller?': type(BetaToolCallCallerParamSchema).or('null | null'),
+  'caller?': type(BetaToolCallCallerParamSchema).or('null'),
   output: type(type('string').describe('A string of the output of the function call.\n'))
     .or(
       type(BetaFunctionAndCustomToolCallOutputSchema)
@@ -36730,12 +39005,10 @@ export const BetaComputerScreenshotContentSchema = type({
   type: type("'computer_screenshot'").describe(
     'Specifies the event type. For a computer screenshot, this property is always set to `computer_screenshot`.',
   ),
-  image_url: type(type('string.url').describe('The URL of the screenshot image.')).or(
-    'null | null',
-  ),
+  image_url: type(type('string.url').describe('The URL of the screenshot image.')).or('null'),
   file_id: type(
     type('string').describe('The identifier of an uploaded file that contains the screenshot.'),
-  ).or('null | null'),
+  ).or('null'),
   detail: BetaImageDetailSchema.describe(
     'The detail level of the screenshot image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
   ),
@@ -36767,17 +39040,27 @@ export const BetaAgentMessageSchema = type({
             type(
               type(
                 type(
-                  type(type(BetaInputTextContentSchema).or(BetaOutputTextContentSchema)).or(
-                    BetaTextContentSchema,
-                  ),
-                ).or(BetaSummaryTextContentSchema),
-              ).or(BetaReasoningTextContentSchema),
-            ).or(BetaRefusalContentSchema),
-          ).or(BetaInputImageContentSchema),
-        ).or(BetaComputerScreenshotContentSchema),
-      ).or(BetaInputFileContentSchema),
+                  type(
+                    type(
+                      type(BetaInputTextContentSchema).and({ type: "'BetaInputTextContent'" }),
+                    ).or(
+                      type(BetaOutputTextContentSchema).and({ type: "'BetaOutputTextContent'" }),
+                    ),
+                  ).or(type(BetaTextContentSchema).and({ type: "'BetaTextContent'" })),
+                ).or(type(BetaSummaryTextContentSchema).and({ type: "'BetaSummaryTextContent'" })),
+              ).or(
+                type(BetaReasoningTextContentSchema).and({ type: "'BetaReasoningTextContent'" }),
+              ),
+            ).or(type(BetaRefusalContentSchema).and({ type: "'BetaRefusalContent'" })),
+          ).or(type(BetaInputImageContentSchema).and({ type: "'BetaInputImageContent'" })),
+        ).or(
+          type(BetaComputerScreenshotContentSchema).and({
+            type: "'BetaComputerScreenshotContent'",
+          }),
+        ),
+      ).or(type(BetaInputFileContentSchema).and({ type: "'BetaInputFileContent'" })),
     )
-      .or(BetaEncryptedContentSchema)
+      .or(type(BetaEncryptedContentSchema).and({ type: "'BetaEncryptedContent'" }))
       .describe('A content part that makes up an input or output item.'),
   )
     .array()
@@ -36826,7 +39109,7 @@ export const BetaToolSearchCallSchema = type({
   id: type('string').describe('The unique ID of the tool search call item.'),
   call_id: type(
     type('string').describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   execution: BetaToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
   ),
@@ -36845,7 +39128,7 @@ export const BetaToolSearchOutputSchema = type({
   id: type('string').describe('The unique ID of the tool search output item.'),
   call_id: type(
     type('string').describe('The unique ID of the tool search call generated by the model.'),
-  ).or('null | null'),
+  ).or('null'),
   execution: BetaToolSearchExecutionTypeSchema.describe(
     'Whether tool search was executed by the server or by the client.',
   ),
@@ -36888,8 +39171,12 @@ export const BetaResponseConfigurationUpdateSchema = type({
     ),
   }).describe('The reasoning configuration applied by this update.'),
   'text?': type({
-    format: type(BetaResponseFormatTextSchema)
-      .or(BetaTextResponseFormatJsonSchemaSchema)
+    format: type(type(BetaResponseFormatTextSchema).and({ type: "'BetaResponseFormatText'" }))
+      .or(
+        type(BetaTextResponseFormatJsonSchemaSchema).and({
+          type: "'BetaTextResponseFormatJsonSchema'",
+        }),
+      )
       .describe('Use a JSON schema for structured output or text to return to plain text.'),
   }).describe('The text output configuration for subsequent responses.'),
 }).describe(
@@ -36945,12 +39232,12 @@ export const BetaFunctionShellActionSchema = type({
   commands: type(type('string').describe('A list of commands to run.')).array(),
   timeout_ms: type(
     type('number.integer').describe('Optional timeout in milliseconds for the commands.'),
-  ).or('null | null'),
+  ).or('null'),
   max_output_length: type(
     type('number.integer').describe(
       'Optional maximum number of characters to return from each command.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Execute a shell command.')
 
 export type BetaFunctionShellActionSchema = typeof BetaFunctionShellActionSchema.infer
@@ -36983,7 +39270,7 @@ export const BetaFunctionShellCallSchema = type({
   call_id: type('string').describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     BetaToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   action: BetaFunctionShellActionSchema.describe(
     'The shell commands and limits that describe how to run the tool call.',
   ),
@@ -36991,8 +39278,12 @@ export const BetaFunctionShellCallSchema = type({
     'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
   ),
   environment: type(
-    type(BetaLocalEnvironmentResourceSchema).or(BetaContainerReferenceResourceSchema),
-  ).or('null | null'),
+    type(
+      type(BetaLocalEnvironmentResourceSchema).and({ type: "'BetaLocalEnvironmentResource'" }),
+    ).or(
+      type(BetaContainerReferenceResourceSchema).and({ type: "'BetaContainerReferenceResource'" }),
+    ),
+  ).or('null'),
   'created_by?': type('string').describe('The ID of the entity that created this tool call.'),
 }).describe('A tool call that executes one or more shell commands in a managed environment.')
 
@@ -37023,8 +39314,16 @@ export type BetaFunctionShellCallOutputExitOutcomeSchema =
 export const BetaFunctionShellCallOutputContentSchema = type({
   stdout: type('string').describe('The standard output that was captured.'),
   stderr: type('string').describe('The standard error output that was captured.'),
-  outcome: type(BetaFunctionShellCallOutputTimeoutOutcomeSchema)
-    .or(BetaFunctionShellCallOutputExitOutcomeSchema)
+  outcome: type(
+    type(BetaFunctionShellCallOutputTimeoutOutcomeSchema).and({
+      type: "'BetaFunctionShellCallOutputTimeoutOutcome'",
+    }),
+  )
+    .or(
+      type(BetaFunctionShellCallOutputExitOutcomeSchema).and({
+        type: "'BetaFunctionShellCallOutputExitOutcome'",
+      }),
+    )
     .describe(
       'Represents either an exit outcome (with an exit code) or a timeout outcome for a shell call output chunk.',
     ),
@@ -37045,7 +39344,7 @@ export const BetaFunctionShellCallOutputSchema = type({
   call_id: type('string').describe('The unique ID of the shell tool call generated by the model.'),
   'caller?': type(
     BetaToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: BetaFunctionShellCallOutputStatusEnumSchema.describe(
     'The status of the shell call output. One of `in_progress`, `completed`, or `incomplete`.',
   ),
@@ -37056,7 +39355,7 @@ export const BetaFunctionShellCallOutputSchema = type({
     type('number.integer').describe(
       'The maximum length of the shell command output. This is generated by the model and should be passed back with the raw output.',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'created_by?': type('string').describe('The identifier of the actor that created the item.'),
 }).describe('The output of a shell tool call that was emitted.')
 
@@ -37103,14 +39402,26 @@ export const BetaApplyPatchToolCallSchema = type({
   ),
   'caller?': type(
     BetaToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: BetaApplyPatchCallStatusSchema.describe(
     'The status of the apply patch tool call. One of `in_progress` or `completed`.',
   ),
   operation: type(
-    type(BetaApplyPatchCreateFileOperationSchema).or(BetaApplyPatchDeleteFileOperationSchema),
+    type(
+      type(BetaApplyPatchCreateFileOperationSchema).and({
+        type: "'BetaApplyPatchCreateFileOperation'",
+      }),
+    ).or(
+      type(BetaApplyPatchDeleteFileOperationSchema).and({
+        type: "'BetaApplyPatchDeleteFileOperation'",
+      }),
+    ),
   )
-    .or(BetaApplyPatchUpdateFileOperationSchema)
+    .or(
+      type(BetaApplyPatchUpdateFileOperationSchema).and({
+        type: "'BetaApplyPatchUpdateFileOperation'",
+      }),
+    )
     .describe(
       'One of the create_file, delete_file, or update_file operations applied via apply_patch.',
     ),
@@ -37136,13 +39447,13 @@ export const BetaApplyPatchToolCallOutputSchema = type({
   ),
   'caller?': type(
     BetaToolCallCallerSchema.describe('The execution context that produced this tool call.'),
-  ).or('null | null'),
+  ).or('null'),
   status: BetaApplyPatchCallOutputStatusSchema.describe(
     'The status of the apply patch tool call output. One of `completed` or `failed`.',
   ),
   'output?': type(
     type('string').describe('Optional textual output returned by the apply patch tool.'),
-  ).or('null | null'),
+  ).or('null'),
   'created_by?': type('string').describe(
     'The ID of the entity that created this tool call output.',
   ),
@@ -37151,16 +39462,15 @@ export const BetaApplyPatchToolCallOutputSchema = type({
 export type BetaApplyPatchToolCallOutputSchema = typeof BetaApplyPatchToolCallOutputSchema.infer
 
 export const BetaMCPApprovalResponseResourceSchema = type({
-  'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
-    .describe('The agent that produced this item.'),
+  'agent?': type(BetaAgentTagSchema).or('null').describe('The agent that produced this item.'),
   type: type("'mcp_approval_response'").describe(
     'The type of the item. Always `mcp_approval_response`.\n',
   ),
   id: type('string').describe('The unique ID of the approval response\n'),
   approval_request_id: type('string').describe('The ID of the approval request being answered.\n'),
   approve: type('boolean').describe('Whether the request was approved.\n'),
-  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null | null'),
+  'reason?': type(type('string').describe('Optional reason for the decision.\n')).or('null'),
+  request_id: 'unknown',
 }).describe('A response to an MCP approval request.\n')
 
 export type BetaMCPApprovalResponseResourceSchema =
@@ -37223,42 +39533,146 @@ export const BetaItemResourceSchema = type(
                                                           type(
                                                             type(
                                                               type(
-                                                                BetaInputMessageResourceSchema,
-                                                              ).or(BetaOutputMessageSchema),
-                                                            ).or(BetaFileSearchToolCallSchema),
-                                                          ).or(BetaComputerToolCallSchema),
+                                                                type(
+                                                                  BetaInputMessageResourceSchema,
+                                                                ).and({
+                                                                  type: "'BetaInputMessageResource'",
+                                                                }),
+                                                              ).or(
+                                                                type(BetaOutputMessageSchema).and({
+                                                                  type: "'BetaOutputMessage'",
+                                                                }),
+                                                              ),
+                                                            ).or(
+                                                              type(
+                                                                BetaFileSearchToolCallSchema,
+                                                              ).and({
+                                                                type: "'BetaFileSearchToolCall'",
+                                                              }),
+                                                            ),
+                                                          ).or(
+                                                            type(BetaComputerToolCallSchema).and({
+                                                              type: "'BetaComputerToolCall'",
+                                                            }),
+                                                          ),
                                                         ).or(
-                                                          BetaComputerToolCallOutputResourceSchema,
+                                                          type(
+                                                            BetaComputerToolCallOutputResourceSchema,
+                                                          ).and({
+                                                            type: "'BetaComputerToolCallOutputResource'",
+                                                          }),
                                                         ),
-                                                      ).or(BetaWebSearchToolCallSchema),
-                                                    ).or(BetaFunctionToolCallResourceSchema),
-                                                  ).or(BetaFunctionToolCallOutputResourceSchema),
-                                                ).or(BetaAgentMessageSchema),
-                                              ).or(BetaMultiAgentCallSchema),
-                                            ).or(BetaMultiAgentCallOutputSchema),
-                                          ).or(BetaToolSearchCallSchema),
-                                        ).or(BetaToolSearchOutputSchema),
-                                      ).or(BetaAdditionalToolsSchema),
-                                    ).or(BetaResponseConfigurationUpdateSchema),
-                                  ).or(BetaReasoningItemSchema),
-                                ).or(BetaProgramSchema),
-                              ).or(BetaProgramOutputSchema),
-                            ).or(BetaCompactionBodySchema),
-                          ).or(BetaImageGenToolCallSchema),
-                        ).or(BetaCodeInterpreterToolCallSchema),
-                      ).or(BetaLocalShellToolCallSchema),
-                    ).or(BetaLocalShellToolCallOutputSchema),
-                  ).or(BetaFunctionShellCallSchema),
-                ).or(BetaFunctionShellCallOutputSchema),
-              ).or(BetaApplyPatchToolCallSchema),
-            ).or(BetaApplyPatchToolCallOutputSchema),
-          ).or(BetaMCPListToolsSchema),
-        ).or(BetaMCPApprovalRequestSchema),
-      ).or(BetaMCPApprovalResponseResourceSchema),
-    ).or(BetaMCPToolCallSchema),
-  ).or(BetaCustomToolCallResourceSchema),
+                                                      ).or(
+                                                        type(BetaWebSearchToolCallSchema).and({
+                                                          type: "'BetaWebSearchToolCall'",
+                                                        }),
+                                                      ),
+                                                    ).or(
+                                                      type(BetaFunctionToolCallResourceSchema).and({
+                                                        type: "'BetaFunctionToolCallResource'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(
+                                                      BetaFunctionToolCallOutputResourceSchema,
+                                                    ).and({
+                                                      type: "'BetaFunctionToolCallOutputResource'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(BetaAgentMessageSchema).and({
+                                                    type: "'BetaAgentMessage'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(BetaMultiAgentCallSchema).and({
+                                                  type: "'BetaMultiAgentCall'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(BetaMultiAgentCallOutputSchema).and({
+                                                type: "'BetaMultiAgentCallOutput'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(BetaToolSearchCallSchema).and({
+                                              type: "'BetaToolSearchCall'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(BetaToolSearchOutputSchema).and({
+                                            type: "'BetaToolSearchOutput'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(BetaAdditionalToolsSchema).and({
+                                          type: "'BetaAdditionalTools'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(BetaResponseConfigurationUpdateSchema).and({
+                                        type: "'BetaResponseConfigurationUpdate'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(BetaReasoningItemSchema).and({
+                                      type: "'BetaReasoningItem'",
+                                    }),
+                                  ),
+                                ).or(type(BetaProgramSchema).and({ type: "'BetaProgram'" })),
+                              ).or(
+                                type(BetaProgramOutputSchema).and({ type: "'BetaProgramOutput'" }),
+                              ),
+                            ).or(
+                              type(BetaCompactionBodySchema).and({ type: "'BetaCompactionBody'" }),
+                            ),
+                          ).or(
+                            type(BetaImageGenToolCallSchema).and({
+                              type: "'BetaImageGenToolCall'",
+                            }),
+                          ),
+                        ).or(
+                          type(BetaCodeInterpreterToolCallSchema).and({
+                            type: "'BetaCodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(
+                        type(BetaLocalShellToolCallSchema).and({
+                          type: "'BetaLocalShellToolCall'",
+                        }),
+                      ),
+                    ).or(
+                      type(BetaLocalShellToolCallOutputSchema).and({
+                        type: "'BetaLocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(type(BetaFunctionShellCallSchema).and({ type: "'BetaFunctionShellCall'" })),
+                ).or(
+                  type(BetaFunctionShellCallOutputSchema).and({
+                    type: "'BetaFunctionShellCallOutput'",
+                  }),
+                ),
+              ).or(type(BetaApplyPatchToolCallSchema).and({ type: "'BetaApplyPatchToolCall'" })),
+            ).or(
+              type(BetaApplyPatchToolCallOutputSchema).and({
+                type: "'BetaApplyPatchToolCallOutput'",
+              }),
+            ),
+          ).or(type(BetaMCPListToolsSchema).and({ type: "'BetaMCPListTools'" })),
+        ).or(type(BetaMCPApprovalRequestSchema).and({ type: "'BetaMCPApprovalRequest'" })),
+      ).or(
+        type(BetaMCPApprovalResponseResourceSchema).and({
+          type: "'BetaMCPApprovalResponseResource'",
+        }),
+      ),
+    ).or(type(BetaMCPToolCallSchema).and({ type: "'BetaMCPToolCall'" })),
+  ).or(type(BetaCustomToolCallResourceSchema).and({ type: "'BetaCustomToolCallResource'" })),
 )
-  .or(BetaCustomToolCallOutputResourceSchema)
+  .or(
+    type(BetaCustomToolCallOutputResourceSchema).and({
+      type: "'BetaCustomToolCallOutputResource'",
+    }),
+  )
   .describe('Content item used to generate a response.\n')
 
 export type BetaItemResourceSchema = typeof BetaItemResourceSchema.infer
@@ -37314,17 +39728,27 @@ export const BetaMessageSchema = type({
             type(
               type(
                 type(
-                  type(type(BetaInputTextContentSchema).or(BetaOutputTextContentSchema)).or(
-                    BetaTextContentSchema,
-                  ),
-                ).or(BetaSummaryTextContentSchema),
-              ).or(BetaReasoningTextContentSchema),
-            ).or(BetaRefusalContentSchema),
-          ).or(BetaInputImageContentSchema),
-        ).or(BetaComputerScreenshotContentSchema),
-      ).or(BetaInputFileContentSchema),
+                  type(
+                    type(
+                      type(BetaInputTextContentSchema).and({ type: "'BetaInputTextContent'" }),
+                    ).or(
+                      type(BetaOutputTextContentSchema).and({ type: "'BetaOutputTextContent'" }),
+                    ),
+                  ).or(type(BetaTextContentSchema).and({ type: "'BetaTextContent'" })),
+                ).or(type(BetaSummaryTextContentSchema).and({ type: "'BetaSummaryTextContent'" })),
+              ).or(
+                type(BetaReasoningTextContentSchema).and({ type: "'BetaReasoningTextContent'" }),
+              ),
+            ).or(type(BetaRefusalContentSchema).and({ type: "'BetaRefusalContent'" })),
+          ).or(type(BetaInputImageContentSchema).and({ type: "'BetaInputImageContent'" })),
+        ).or(
+          type(BetaComputerScreenshotContentSchema).and({
+            type: "'BetaComputerScreenshotContent'",
+          }),
+        ),
+      ).or(type(BetaInputFileContentSchema).and({ type: "'BetaInputFileContent'" })),
     )
-      .or(BetaEncryptedContentSchema)
+      .or(type(BetaEncryptedContentSchema).and({ type: "'BetaEncryptedContent'" }))
       .describe('A content part that makes up an input or output item.'),
   )
     .array()
@@ -37333,7 +39757,7 @@ export const BetaMessageSchema = type({
     BetaMessagePhase2Schema.describe(
       'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('A message to or from the model.')
 
 export type BetaMessageSchema = typeof BetaMessageSchema.infer
@@ -37367,39 +39791,129 @@ export const BetaItemFieldSchema = type(
                                                     type(
                                                       type(
                                                         type(
-                                                          type(BetaMessageSchema).or(
-                                                            BetaProgramSchema,
+                                                          type(
+                                                            type(BetaMessageSchema).and({
+                                                              type: "'BetaMessage'",
+                                                            }),
+                                                          ).or(
+                                                            type(BetaProgramSchema).and({
+                                                              type: "'BetaProgram'",
+                                                            }),
                                                           ),
-                                                        ).or(BetaProgramOutputSchema),
-                                                      ).or(BetaFunctionToolCallSchema),
-                                                    ).or(BetaMultiAgentCallSchema),
-                                                  ).or(BetaMultiAgentCallOutputSchema),
-                                                ).or(BetaToolSearchCallSchema),
-                                              ).or(BetaToolSearchOutputSchema),
-                                            ).or(BetaAdditionalToolsSchema),
-                                          ).or(BetaAgentMessageSchema),
-                                        ).or(BetaFunctionToolCallOutputSchema),
-                                      ).or(BetaFileSearchToolCallSchema),
-                                    ).or(BetaWebSearchToolCallSchema),
-                                  ).or(BetaImageGenToolCallSchema),
-                                ).or(BetaComputerToolCallSchema),
-                              ).or(BetaComputerToolCallOutputResourceSchema),
-                            ).or(BetaReasoningItemSchema),
-                          ).or(BetaCompactionBodySchema),
-                        ).or(BetaCodeInterpreterToolCallSchema),
-                      ).or(BetaLocalShellToolCallSchema),
-                    ).or(BetaLocalShellToolCallOutputSchema),
-                  ).or(BetaFunctionShellCallSchema),
-                ).or(BetaFunctionShellCallOutputSchema),
-              ).or(BetaApplyPatchToolCallSchema),
-            ).or(BetaApplyPatchToolCallOutputSchema),
-          ).or(BetaMCPListToolsSchema),
-        ).or(BetaMCPApprovalRequestSchema),
-      ).or(BetaMCPApprovalResponseResourceSchema),
-    ).or(BetaMCPToolCallSchema),
-  ).or(BetaCustomToolCallSchema),
+                                                        ).or(
+                                                          type(BetaProgramOutputSchema).and({
+                                                            type: "'BetaProgramOutput'",
+                                                          }),
+                                                        ),
+                                                      ).or(
+                                                        type(BetaFunctionToolCallSchema).and({
+                                                          type: "'BetaFunctionToolCall'",
+                                                        }),
+                                                      ),
+                                                    ).or(
+                                                      type(BetaMultiAgentCallSchema).and({
+                                                        type: "'BetaMultiAgentCall'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(BetaMultiAgentCallOutputSchema).and({
+                                                      type: "'BetaMultiAgentCallOutput'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(BetaToolSearchCallSchema).and({
+                                                    type: "'BetaToolSearchCall'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(BetaToolSearchOutputSchema).and({
+                                                  type: "'BetaToolSearchOutput'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(BetaAdditionalToolsSchema).and({
+                                                type: "'BetaAdditionalTools'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(BetaAgentMessageSchema).and({
+                                              type: "'BetaAgentMessage'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(BetaFunctionToolCallOutputSchema).and({
+                                            type: "'BetaFunctionToolCallOutput'",
+                                          }),
+                                        ),
+                                      ).or(
+                                        type(BetaFileSearchToolCallSchema).and({
+                                          type: "'BetaFileSearchToolCall'",
+                                        }),
+                                      ),
+                                    ).or(
+                                      type(BetaWebSearchToolCallSchema).and({
+                                        type: "'BetaWebSearchToolCall'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(BetaImageGenToolCallSchema).and({
+                                      type: "'BetaImageGenToolCall'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(BetaComputerToolCallSchema).and({
+                                    type: "'BetaComputerToolCall'",
+                                  }),
+                                ),
+                              ).or(
+                                type(BetaComputerToolCallOutputResourceSchema).and({
+                                  type: "'BetaComputerToolCallOutputResource'",
+                                }),
+                              ),
+                            ).or(
+                              type(BetaReasoningItemSchema).and({ type: "'BetaReasoningItem'" }),
+                            ),
+                          ).or(
+                            type(BetaCompactionBodySchema).and({ type: "'BetaCompactionBody'" }),
+                          ),
+                        ).or(
+                          type(BetaCodeInterpreterToolCallSchema).and({
+                            type: "'BetaCodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(
+                        type(BetaLocalShellToolCallSchema).and({
+                          type: "'BetaLocalShellToolCall'",
+                        }),
+                      ),
+                    ).or(
+                      type(BetaLocalShellToolCallOutputSchema).and({
+                        type: "'BetaLocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(type(BetaFunctionShellCallSchema).and({ type: "'BetaFunctionShellCall'" })),
+                ).or(
+                  type(BetaFunctionShellCallOutputSchema).and({
+                    type: "'BetaFunctionShellCallOutput'",
+                  }),
+                ),
+              ).or(type(BetaApplyPatchToolCallSchema).and({ type: "'BetaApplyPatchToolCall'" })),
+            ).or(
+              type(BetaApplyPatchToolCallOutputSchema).and({
+                type: "'BetaApplyPatchToolCallOutput'",
+              }),
+            ),
+          ).or(type(BetaMCPListToolsSchema).and({ type: "'BetaMCPListTools'" })),
+        ).or(type(BetaMCPApprovalRequestSchema).and({ type: "'BetaMCPApprovalRequest'" })),
+      ).or(
+        type(BetaMCPApprovalResponseResourceSchema).and({
+          type: "'BetaMCPApprovalResponseResource'",
+        }),
+      ),
+    ).or(type(BetaMCPToolCallSchema).and({ type: "'BetaMCPToolCall'" })),
+  ).or(type(BetaCustomToolCallSchema).and({ type: "'BetaCustomToolCall'" })),
 )
-  .or(BetaCustomToolCallOutputSchema)
+  .or(type(BetaCustomToolCallOutputSchema).and({ type: "'BetaCustomToolCallOutput'" }))
   .describe(
     'An item representing a message, tool call, tool output, reasoning, or other response element.',
   )
@@ -37456,7 +39970,7 @@ export type BetaCompactResourceSchema = typeof BetaCompactResourceSchema.infer
 
 export const BetaResponseCustomToolCallInputDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.custom_tool_call_input.done'").describe('The event type identifier.'),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
@@ -37472,7 +39986,7 @@ export type BetaResponseCustomToolCallInputDoneEventSchema =
 
 export const BetaResponseCustomToolCallInputDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.custom_tool_call_input.delta'").describe('The event type identifier.'),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
@@ -37490,7 +40004,7 @@ export const BetaMetadataSchema = type(
   type({ '[string]': 'string' }).describe(
     'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type BetaMetadataSchema = typeof BetaMetadataSchema.infer
 
@@ -37500,17 +40014,17 @@ export const BetaModelResponsePropertiesSchema = type({
     type('number.integer >= 0 & number.integer <= 20').describe(
       'An integer between 0 and 20 specifying the maximum number of most likely\ntokens to return at each token position, each with an associated log\nprobability. In some cases, the number of returned tokens may be fewer than\nrequested.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'temperature?': type(
     type('number >= 0 & number <= 2').describe(
       'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\nWe generally recommend altering this or `top_p` but not both.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'top_p?': type(
     type('number >= 0 & number <= 1').describe(
       'An alternative to sampling with temperature, called nucleus sampling,\nwhere the model considers the results of the tokens with top_p probability\nmass. So 0.1 means only the tokens comprising the top 10% probability mass\nare considered.\n\nWe generally recommend altering this or `temperature` but not both.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'user?': type('string | null').describe(
     'This field is being replaced by `safety_identifier` and `prompt_cache_key`. Use `prompt_cache_key` instead to maintain caching optimizations.\nA stable identifier for your end-users.\nUsed to boost cache hit rates by better bucketing similar requests and  to help OpenAI detect and prevent abuse. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).\n',
   ),
@@ -37520,17 +40034,17 @@ export const BetaModelResponsePropertiesSchema = type({
       .describe(
         "A stable identifier used to help detect users of your application that may be violating OpenAI's usage policies.\nThe IDs should be a string that uniquely identifies each user, with a maximum length of 128 characters. We recommend hashing their username or email address, in order to avoid sending us any identifying information. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).\n",
       ),
-  ).or('null | null'),
+  ).or('null'),
   'prompt_cache_key?': type(
     type('string').describe(
       'Used by OpenAI to cache responses for similar requests to optimize your cache hit rates. Replaces the `user` field. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'prompt_cache_retention?': type(
     type("'in_memory' | '24h'").describe(
       "Deprecated. Use `prompt_cache_options.ttl` instead.\n\nThe retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching#prompt-cache-retention).\nThis field expresses a maximum retention policy, while\n`prompt_cache_options.ttl` expresses a minimum cache lifetime. The two\nfields are independent and do not interact.\nFor `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.\n\nFor older models that support both `in_memory` and `24h`, the default depends on your organization's data retention policy:\n  - Organizations without ZDR enabled default to `24h`.\n  - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is not specified.\n",
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaModelResponsePropertiesSchema = typeof BetaModelResponsePropertiesSchema.infer
@@ -37551,7 +40065,7 @@ export const BetaResponsePromptVariablesSchema = type(
   }).describe(
     'Optional map of values to substitute in for variables in your\nprompt. The substitution values can either be strings, or other\nResponse input types like images or files.\n',
   ),
-).or('null | null')
+).or('null')
 
 export type BetaResponsePromptVariablesSchema = typeof BetaResponsePromptVariablesSchema.infer
 
@@ -37559,13 +40073,13 @@ export const BetaPromptSchema = type(
   type({
     id: type('string').describe('The unique identifier of the prompt template to use.'),
     'version?': type(type('string').describe('Optional version of the prompt template.')).or(
-      'null | null',
+      'null',
     ),
     'variables?': BetaResponsePromptVariablesSchema,
   }).describe(
     'Reference to a prompt template and its variables.\n[Learn more](https://developers.openai.com/api/docs/guides/text?api-mode=responses#version-prompts-in-code).\n',
   ),
-).or('null | null')
+).or('null')
 
 export type BetaPromptSchema = typeof BetaPromptSchema.infer
 
@@ -37574,7 +40088,7 @@ export const BetaResponsePropertiesSchema = type({
     type('string').describe(
       'The unique ID of the previous response to the model. Use this to\ncreate multi-turn conversations. Learn more about\n[conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'model?': BetaModelIdsResponsesSchema.describe(
     'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI\noffers a wide range of models with different capabilities, performance\ncharacteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models)\nto browse and compare available models.\n',
   ),
@@ -37582,12 +40096,12 @@ export const BetaResponsePropertiesSchema = type({
     type('boolean').describe(
       'Whether to run the model response in the background.\n[Learn more](https://developers.openai.com/api/docs/guides/background).\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'max_tool_calls?': type(
     type('number.integer').describe(
       'The maximum number of total calls to built-in tools that can be processed in a response. This maximum number applies across all built-in tool calls, not per individual tool. Any further attempts to call a tool by the model will be ignored.\n',
     ),
-  ).or('null | null'),
+  ).or('null'),
   'text?': BetaResponseTextParamSchema,
   'tools?': BetaToolsArraySchema,
   'tool_choice?': BetaToolChoiceParamSchema,
@@ -37600,7 +40114,7 @@ export const BetaServiceTierResponsesSchema = type(
   type("'auto' | 'default' | 'flex' | 'scale' | 'priority' | 'fast' | 'ultrafast'").describe(
     "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - If set to 'ultrafast', then the request will be processed with the access-controlled Ultrafast Processing service tier. This tier is currently available for `gpt-5.6-sol`; a response served through it will show `service_tier=ultrafast`.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
   ),
-).or('null | null')
+).or('null')
 
 export type BetaServiceTierResponsesSchema = typeof BetaServiceTierResponsesSchema.infer
 
@@ -37618,25 +40132,47 @@ export const BetaAccessProgramsBodySchema = type({
 
 export type BetaAccessProgramsBodySchema = typeof BetaAccessProgramsBodySchema.infer
 
-export const BetaResponseErrorCodeSchema = type(
-  "'server_error' | 'rate_limit_exceeded' | 'invalid_prompt' | 'data_residency_mismatch' | 'bio_policy' | 'misalignment_policy_violation' | 'vector_store_timeout' | 'invalid_image' | 'invalid_image_format' | 'invalid_base64_image' | 'invalid_image_url' | 'image_too_large' | 'image_too_small' | 'image_parse_error' | 'image_content_policy_violation' | 'invalid_image_mode' | 'image_file_too_large' | 'unsupported_image_media_type' | 'empty_image_file' | 'failed_to_download_image' | 'image_file_not_found'",
-).describe('The error code for the response.\n')
+export const BetaResponseErrorCodeSchema = type
+  .enumerated(
+    'server_error',
+    'rate_limit_exceeded',
+    'invalid_prompt',
+    'data_residency_mismatch',
+    'bio_policy',
+    'misalignment_policy_violation',
+    'vector_store_timeout',
+    'invalid_image',
+    'invalid_image_format',
+    'invalid_base64_image',
+    'invalid_image_url',
+    'image_too_large',
+    'image_too_small',
+    'image_parse_error',
+    'image_content_policy_violation',
+    'invalid_image_mode',
+    'image_file_too_large',
+    'unsupported_image_media_type',
+    'empty_image_file',
+    'failed_to_download_image',
+    'image_file_not_found',
+  )
+  .describe('The error code for the response.\n')
 
 export type BetaResponseErrorCodeSchema = typeof BetaResponseErrorCodeSchema.infer
 
 export const BetaResponseErrorSchema = type(
   type({
-    'type?': type('string | null | null').describe(
+    'type?': type('string | null').describe(
       'The original error type, or null if it was not recorded.',
     ),
-    'param?': type('string | null | null').describe(
+    'param?': type('string | null').describe(
       'The request parameter associated with the error, or null if none was recorded.',
     ),
     code: BetaResponseErrorCodeSchema,
     message: type('string').describe('A human-readable description of the error.\n'),
     'misalignment?': BetaMisalignmentErrorDetailsResourceSchema,
   }).describe('An error object returned when the model fails to generate a Response.\n'),
-).or('null | null')
+).or('null')
 
 export type BetaResponseErrorSchema = typeof BetaResponseErrorSchema.infer
 
@@ -37685,40 +40221,130 @@ export const BetaOutputItemSchema = type(
                                                     type(
                                                       type(
                                                         type(
-                                                          type(BetaOutputMessageSchema).or(
-                                                            BetaFileSearchToolCallSchema,
+                                                          type(
+                                                            type(BetaOutputMessageSchema).and({
+                                                              type: "'BetaOutputMessage'",
+                                                            }),
+                                                          ).or(
+                                                            type(BetaFileSearchToolCallSchema).and({
+                                                              type: "'BetaFileSearchToolCall'",
+                                                            }),
                                                           ),
-                                                        ).or(BetaFunctionToolCallSchema),
+                                                        ).or(
+                                                          type(BetaFunctionToolCallSchema).and({
+                                                            type: "'BetaFunctionToolCall'",
+                                                          }),
+                                                        ),
                                                       ).or(
-                                                        BetaFunctionToolCallOutputResourceSchema,
+                                                        type(
+                                                          BetaFunctionToolCallOutputResourceSchema,
+                                                        ).and({
+                                                          type: "'BetaFunctionToolCallOutputResource'",
+                                                        }),
                                                       ),
-                                                    ).or(BetaAgentMessageSchema),
-                                                  ).or(BetaMultiAgentCallSchema),
-                                                ).or(BetaMultiAgentCallOutputSchema),
-                                              ).or(BetaWebSearchToolCallSchema),
-                                            ).or(BetaComputerToolCallSchema),
-                                          ).or(BetaComputerToolCallOutputResourceSchema),
-                                        ).or(BetaReasoningItemSchema),
-                                      ).or(BetaProgramSchema),
-                                    ).or(BetaProgramOutputSchema),
-                                  ).or(BetaToolSearchCallSchema),
-                                ).or(BetaToolSearchOutputSchema),
-                              ).or(BetaAdditionalToolsSchema),
-                            ).or(BetaCompactionBodySchema),
-                          ).or(BetaImageGenToolCallSchema),
-                        ).or(BetaCodeInterpreterToolCallSchema),
-                      ).or(BetaLocalShellToolCallSchema),
-                    ).or(BetaLocalShellToolCallOutputSchema),
-                  ).or(BetaFunctionShellCallSchema),
-                ).or(BetaFunctionShellCallOutputSchema),
-              ).or(BetaApplyPatchToolCallSchema),
-            ).or(BetaApplyPatchToolCallOutputSchema),
-          ).or(BetaMCPToolCallSchema),
-        ).or(BetaMCPListToolsSchema),
-      ).or(BetaMCPApprovalRequestSchema),
-    ).or(BetaMCPApprovalResponseResourceSchema),
-  ).or(BetaCustomToolCallSchema),
-).or(BetaCustomToolCallOutputResourceSchema)
+                                                    ).or(
+                                                      type(BetaAgentMessageSchema).and({
+                                                        type: "'BetaAgentMessage'",
+                                                      }),
+                                                    ),
+                                                  ).or(
+                                                    type(BetaMultiAgentCallSchema).and({
+                                                      type: "'BetaMultiAgentCall'",
+                                                    }),
+                                                  ),
+                                                ).or(
+                                                  type(BetaMultiAgentCallOutputSchema).and({
+                                                    type: "'BetaMultiAgentCallOutput'",
+                                                  }),
+                                                ),
+                                              ).or(
+                                                type(BetaWebSearchToolCallSchema).and({
+                                                  type: "'BetaWebSearchToolCall'",
+                                                }),
+                                              ),
+                                            ).or(
+                                              type(BetaComputerToolCallSchema).and({
+                                                type: "'BetaComputerToolCall'",
+                                              }),
+                                            ),
+                                          ).or(
+                                            type(BetaComputerToolCallOutputResourceSchema).and({
+                                              type: "'BetaComputerToolCallOutputResource'",
+                                            }),
+                                          ),
+                                        ).or(
+                                          type(BetaReasoningItemSchema).and({
+                                            type: "'BetaReasoningItem'",
+                                          }),
+                                        ),
+                                      ).or(type(BetaProgramSchema).and({ type: "'BetaProgram'" })),
+                                    ).or(
+                                      type(BetaProgramOutputSchema).and({
+                                        type: "'BetaProgramOutput'",
+                                      }),
+                                    ),
+                                  ).or(
+                                    type(BetaToolSearchCallSchema).and({
+                                      type: "'BetaToolSearchCall'",
+                                    }),
+                                  ),
+                                ).or(
+                                  type(BetaToolSearchOutputSchema).and({
+                                    type: "'BetaToolSearchOutput'",
+                                  }),
+                                ),
+                              ).or(
+                                type(BetaAdditionalToolsSchema).and({
+                                  type: "'BetaAdditionalTools'",
+                                }),
+                              ),
+                            ).or(
+                              type(BetaCompactionBodySchema).and({ type: "'BetaCompactionBody'" }),
+                            ),
+                          ).or(
+                            type(BetaImageGenToolCallSchema).and({
+                              type: "'BetaImageGenToolCall'",
+                            }),
+                          ),
+                        ).or(
+                          type(BetaCodeInterpreterToolCallSchema).and({
+                            type: "'BetaCodeInterpreterToolCall'",
+                          }),
+                        ),
+                      ).or(
+                        type(BetaLocalShellToolCallSchema).and({
+                          type: "'BetaLocalShellToolCall'",
+                        }),
+                      ),
+                    ).or(
+                      type(BetaLocalShellToolCallOutputSchema).and({
+                        type: "'BetaLocalShellToolCallOutput'",
+                      }),
+                    ),
+                  ).or(type(BetaFunctionShellCallSchema).and({ type: "'BetaFunctionShellCall'" })),
+                ).or(
+                  type(BetaFunctionShellCallOutputSchema).and({
+                    type: "'BetaFunctionShellCallOutput'",
+                  }),
+                ),
+              ).or(type(BetaApplyPatchToolCallSchema).and({ type: "'BetaApplyPatchToolCall'" })),
+            ).or(
+              type(BetaApplyPatchToolCallOutputSchema).and({
+                type: "'BetaApplyPatchToolCallOutput'",
+              }),
+            ),
+          ).or(type(BetaMCPToolCallSchema).and({ type: "'BetaMCPToolCall'" })),
+        ).or(type(BetaMCPListToolsSchema).and({ type: "'BetaMCPListTools'" })),
+      ).or(type(BetaMCPApprovalRequestSchema).and({ type: "'BetaMCPApprovalRequest'" })),
+    ).or(
+      type(BetaMCPApprovalResponseResourceSchema).and({
+        type: "'BetaMCPApprovalResponseResource'",
+      }),
+    ),
+  ).or(type(BetaCustomToolCallSchema).and({ type: "'BetaCustomToolCall'" })),
+).or(
+  type(BetaCustomToolCallOutputResourceSchema).and({ type: "'BetaCustomToolCallOutputResource'" }),
+)
 
 export type BetaOutputItemSchema = typeof BetaOutputItemSchema.infer
 
@@ -37792,7 +40418,7 @@ export const BetaPromptCacheOptionsSchema = type({
   ),
   'comparison_response_id?': type(
     type('string').describe('The response ID supplied as the prompt cache diagnostics comparison.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'The prompt-caching options that were applied to the response. Supported for `gpt-5.6` and later models.',
 )
@@ -37840,10 +40466,26 @@ export type BetaPromptCacheUnavailableDiagnosticsBodySchema =
 
 export const BetaPromptCacheDiagnosticsSchema = type(
   type(
-    type(BetaPromptCacheMissDiagnosticsBodySchema).or(BetaPromptCacheHitDiagnosticsBodySchema),
-  ).or(BetaPromptCacheComparisonResponseNotFoundDiagnosticsBodySchema),
+    type(
+      type(BetaPromptCacheMissDiagnosticsBodySchema).and({
+        type: "'BetaPromptCacheMissDiagnosticsBody'",
+      }),
+    ).or(
+      type(BetaPromptCacheHitDiagnosticsBodySchema).and({
+        type: "'BetaPromptCacheHitDiagnosticsBody'",
+      }),
+    ),
+  ).or(
+    type(BetaPromptCacheComparisonResponseNotFoundDiagnosticsBodySchema).and({
+      type: "'BetaPromptCacheComparisonResponseNotFoundDiagnosticsBody'",
+    }),
+  ),
 )
-  .or(BetaPromptCacheUnavailableDiagnosticsBodySchema)
+  .or(
+    type(BetaPromptCacheUnavailableDiagnosticsBodySchema).and({
+      type: "'BetaPromptCacheUnavailableDiagnosticsBody'",
+    }),
+  )
   .describe('Prompt cache diagnostics requested for this response.')
 
 export type BetaPromptCacheDiagnosticsSchema = typeof BetaPromptCacheDiagnosticsSchema.infer
@@ -37884,11 +40526,11 @@ export const BetaModerationErrorBodySchema = type({
 export type BetaModerationErrorBodySchema = typeof BetaModerationErrorBodySchema.infer
 
 export const BetaModerationSchema = type({
-  input: type(BetaModerationResultBodySchema)
-    .or(BetaModerationErrorBodySchema)
+  input: type(type(BetaModerationResultBodySchema).and({ type: "'BetaModerationResultBody'" }))
+    .or(type(BetaModerationErrorBodySchema).and({ type: "'BetaModerationErrorBody'" }))
     .describe('Moderation for the response input.'),
-  output: type(BetaModerationResultBodySchema)
-    .or(BetaModerationErrorBodySchema)
+  output: type(type(BetaModerationResultBodySchema).and({ type: "'BetaModerationResultBody'" }))
+    .or(type(BetaModerationErrorBodySchema).and({ type: "'BetaModerationErrorBody'" }))
     .describe('Moderation for the response output.'),
 }).describe('Moderation results or errors for the response input and output.')
 
@@ -37914,7 +40556,7 @@ export const BetaResponseSchema = type(
       type("'auto' | 'disabled'").describe(
         "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
       ),
-    ).or('null | null'),
+    ).or('null'),
     id: type('string').describe('Unique identifier for this Response.\n'),
     object: type("'response'").describe(
       'The object type of this resource - always set to `response`.\n',
@@ -37924,7 +40566,7 @@ export const BetaResponseSchema = type(
     ).describe(
       'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
     ),
-    access_programs: type(BetaAccessProgramsBodySchema).or('null | null'),
+    access_programs: type(BetaAccessProgramsBodySchema).or('null'),
     created_at: type('number').describe(
       'Unix timestamp (in seconds) of when this Response was created.\n',
     ),
@@ -37932,7 +40574,7 @@ export const BetaResponseSchema = type(
       type('number').describe(
         'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     error: BetaResponseErrorSchema,
     incomplete_details: type(
       type({
@@ -37942,7 +40584,7 @@ export const BetaResponseSchema = type(
           'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
         ),
       }).describe('Details about why the response is incomplete.\n'),
-    ).or('null | null'),
+    ).or('null'),
     'input_transformations?': type(BetaReasoningInputTransformationSchema)
       .array()
       .describe('Reasoning inputs withheld from the model, in input order.'),
@@ -37951,7 +40593,7 @@ export const BetaResponseSchema = type(
       .describe(
         "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
       ),
-    'reasoning?': type(BetaReasoningSchema).or('null | null'),
+    'reasoning?': type(BetaReasoningSchema).or('null'),
     instructions: type(
       type(
         type('string').describe(
@@ -37968,13 +40610,13 @@ export const BetaResponseSchema = type(
         .describe(
           "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
         ),
-    ).or('null | null'),
+    ).or('null'),
     'output_text?': type(
       type('string').describe(
         'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
       ),
-    ).or('null | null'),
-    'usage?': type(BetaResponseUsageSchema).or('null | null'),
+    ).or('null'),
+    'usage?': type(BetaResponseUsageSchema).or('null'),
     'tool_usage?': BetaResponseToolUsageSchema.describe(
       'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
     ),
@@ -37984,16 +40626,22 @@ export const BetaResponseSchema = type(
       BetaModerationSchema.describe(
         'Moderation results for the response input and output, if moderated completions were requested.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     parallel_tool_calls: type('boolean').describe(
       'Whether to allow the model to run tool calls in parallel.\n',
     ),
-    'conversation?': type(BetaResponseConversationSchema).or('null | null'),
+    'conversation?': type(BetaResponseConversationSchema).or('null'),
     'max_output_tokens?': type(
       type('number.integer').describe(
         'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
+    model: 'unknown',
+    tools: 'unknown',
+    metadata: 'unknown',
+    tool_choice: 'unknown',
+    temperature: 'unknown',
+    top_p: 'unknown',
   }),
 )
 
@@ -38001,7 +40649,7 @@ export type BetaResponseSchema = typeof BetaResponseSchema.infer
 
 export const BetaResponseQueuedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.queued'").describe("The type of the event. Always 'response.queued'."),
   response: BetaResponseSchema.describe('The full response object that is queued.'),
@@ -38012,7 +40660,7 @@ export type BetaResponseQueuedEventSchema = typeof BetaResponseQueuedEventSchema
 
 export const BetaResponseOutputTextAnnotationAddedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.output_text.annotation.added'").describe(
     "The type of the event. Always 'response.output_text.annotation.added'.",
@@ -38031,7 +40679,7 @@ export const BetaResponseOutputTextAnnotationAddedEventSchema = type({
   ),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
   annotation: type(BetaAnnotationSchema)
-    .or('null | null')
+    .or('null')
     .describe('The annotation object being added. (See annotation schema for details.)'),
 }).describe('Emitted when an annotation is added to output text content.\n')
 
@@ -38040,7 +40688,7 @@ export type BetaResponseOutputTextAnnotationAddedEventSchema =
 
 export const BetaResponseMCPListToolsInProgressEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_list_tools.in_progress'").describe(
     "The type of the event. Always 'response.mcp_list_tools.in_progress'.",
@@ -38059,7 +40707,7 @@ export type BetaResponseMCPListToolsInProgressEventSchema =
 
 export const BetaResponseMCPListToolsFailedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_list_tools.failed'").describe(
     "The type of the event. Always 'response.mcp_list_tools.failed'.",
@@ -38074,7 +40722,7 @@ export type BetaResponseMCPListToolsFailedEventSchema =
 
 export const BetaResponseMCPListToolsCompletedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_list_tools.completed'").describe(
     "The type of the event. Always 'response.mcp_list_tools.completed'.",
@@ -38089,7 +40737,7 @@ export type BetaResponseMCPListToolsCompletedEventSchema =
 
 export const BetaResponseMCPCallInProgressEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_call.in_progress'").describe(
     "The type of the event. Always 'response.mcp_call.in_progress'.",
@@ -38108,7 +40756,7 @@ export type BetaResponseMCPCallInProgressEventSchema =
 
 export const BetaResponseMCPCallFailedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_call.failed'").describe(
     "The type of the event. Always 'response.mcp_call.failed'.",
@@ -38122,7 +40770,7 @@ export type BetaResponseMCPCallFailedEventSchema = typeof BetaResponseMCPCallFai
 
 export const BetaResponseMCPCallCompletedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_call.completed'").describe(
     "The type of the event. Always 'response.mcp_call.completed'.",
@@ -38137,7 +40785,7 @@ export type BetaResponseMCPCallCompletedEventSchema =
 
 export const BetaResponseMCPCallArgumentsDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_call_arguments.done'").describe(
     "The type of the event. Always 'response.mcp_call_arguments.done'.",
@@ -38159,7 +40807,7 @@ export type BetaResponseMCPCallArgumentsDoneEventSchema =
 
 export const BetaResponseMCPCallArgumentsDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.mcp_call_arguments.delta'").describe(
     "The type of the event. Always 'response.mcp_call_arguments.delta'.",
@@ -38183,7 +40831,7 @@ export type BetaResponseMCPCallArgumentsDeltaEventSchema =
 
 export const BetaResponseImageGenCallPartialImageEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.image_generation_call.partial_image'").describe(
     "The type of the event. Always 'response.image_generation_call.partial_image'.",
@@ -38214,7 +40862,7 @@ export type BetaResponseImageGenCallPartialImageEventSchema =
 
 export const BetaResponseImageGenCallInProgressEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.image_generation_call.in_progress'").describe(
     "The type of the event. Always 'response.image_generation_call.in_progress'.",
@@ -38235,7 +40883,7 @@ export type BetaResponseImageGenCallInProgressEventSchema =
 
 export const BetaResponseImageGenCallGeneratingEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.image_generation_call.generating'").describe(
     "The type of the event. Always 'response.image_generation_call.generating'.",
@@ -38258,7 +40906,7 @@ export type BetaResponseImageGenCallGeneratingEventSchema =
 
 export const BetaResponseImageGenCallCompletedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.image_generation_call.completed'").describe(
     "The type of the event. Always 'response.image_generation_call.completed'.",
@@ -38279,7 +40927,7 @@ export type BetaResponseImageGenCallCompletedEventSchema =
 
 export const BetaResponseReasoningTextDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.reasoning_text.done'").describe(
     'The type of the event. Always `response.reasoning_text.done`.\n',
@@ -38298,7 +40946,7 @@ export type BetaResponseReasoningTextDoneEventSchema =
 
 export const BetaResponseReasoningTextDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.reasoning_text.delta'").describe(
     'The type of the event. Always `response.reasoning_text.delta`.\n',
@@ -38321,7 +40969,7 @@ export type BetaResponseReasoningTextDeltaEventSchema =
 
 export const BetaResponseReasoningSummaryTextDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.reasoning_summary_text.done'").describe(
     'The type of the event. Always `response.reasoning_summary_text.done`.\n',
@@ -38342,7 +40990,7 @@ export type BetaResponseReasoningSummaryTextDoneEventSchema =
 
 export const BetaResponseReasoningSummaryTextDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.reasoning_summary_text.delta'").describe(
     'The type of the event. Always `response.reasoning_summary_text.delta`.\n',
@@ -38365,7 +41013,7 @@ export type BetaResponseReasoningSummaryTextDeltaEventSchema =
 
 export const BetaResponseReasoningSummaryPartDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.reasoning_summary_part.done'").describe(
     'The type of the event. Always `response.reasoning_summary_part.done`.\n',
@@ -38392,7 +41040,7 @@ export type BetaResponseReasoningSummaryPartDoneEventSchema =
 
 export const BetaResponseReasoningSummaryPartAddedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.reasoning_summary_part.added'").describe(
     'The type of the event. Always `response.reasoning_summary_part.added`.\n',
@@ -38433,7 +41081,7 @@ export type BetaResponseLogProbSchema = typeof BetaResponseLogProbSchema.infer
 
 export const BetaResponseTextDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.output_text.done'").describe(
     'The type of the event. Always `response.output_text.done`.\n',
@@ -38458,7 +41106,7 @@ export type BetaResponseTextDoneEventSchema = typeof BetaResponseTextDoneEventSc
 
 export const BetaResponseTextDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.output_text.delta'").describe(
     'The type of the event. Always `response.output_text.delta`.\n',
@@ -38481,7 +41129,7 @@ export type BetaResponseTextDeltaEventSchema = typeof BetaResponseTextDeltaEvent
 
 export const BetaResponseRefusalDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.refusal.done'").describe(
     'The type of the event. Always `response.refusal.done`.\n',
@@ -38503,7 +41151,7 @@ export type BetaResponseRefusalDoneEventSchema = typeof BetaResponseRefusalDoneE
 
 export const BetaResponseRefusalDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.refusal.delta'").describe(
     'The type of the event. Always `response.refusal.delta`.\n',
@@ -38525,7 +41173,7 @@ export type BetaResponseRefusalDeltaEventSchema = typeof BetaResponseRefusalDelt
 
 export const BetaResponseOutputItemDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.output_item.done'").describe(
     'The type of the event. Always `response.output_item.done`.\n',
@@ -38542,7 +41190,7 @@ export type BetaResponseOutputItemDoneEventSchema =
 
 export const BetaResponseOutputItemAddedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.output_item.added'").describe(
     'The type of the event. Always `response.output_item.added`.\n',
@@ -38559,7 +41207,7 @@ export type BetaResponseOutputItemAddedEventSchema =
 
 export const BetaResponseInProgressEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.in_progress'").describe(
     'The type of the event. Always `response.in_progress`.\n',
@@ -38674,7 +41322,7 @@ export type BetaResponseShellCallCommandAddedStreamingEventSchema =
 
 export const BetaResponseFunctionCallArgumentsDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: "'response.function_call_arguments.done'",
   item_id: type('string').describe('The ID of the item.'),
@@ -38688,7 +41336,7 @@ export type BetaResponseFunctionCallArgumentsDoneEventSchema =
 
 export const BetaResponseFunctionCallArgumentsDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.function_call_arguments.delta'").describe(
     'The type of the event. Always `response.function_call_arguments.delta`.\n',
@@ -38708,7 +41356,7 @@ export type BetaResponseFunctionCallArgumentsDeltaEventSchema =
 
 export const BetaResponseFileSearchCallSearchingEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.file_search_call.searching'").describe(
     'The type of the event. Always `response.file_search_call.searching`.\n',
@@ -38727,7 +41375,7 @@ export type BetaResponseFileSearchCallSearchingEventSchema =
 
 export const BetaResponseFileSearchCallInProgressEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.file_search_call.in_progress'").describe(
     'The type of the event. Always `response.file_search_call.in_progress`.\n',
@@ -38746,7 +41394,7 @@ export type BetaResponseFileSearchCallInProgressEventSchema =
 
 export const BetaResponseFileSearchCallCompletedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.file_search_call.completed'").describe(
     'The type of the event. Always `response.file_search_call.completed`.\n',
@@ -38765,12 +41413,12 @@ export type BetaResponseFileSearchCallCompletedEventSchema =
 
 export const BetaResponseErrorEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'error'").describe('The type of the event. Always `error`.\n'),
-  code: type(type('string').describe('The error code.\n')).or('null | null'),
+  code: type(type('string').describe('The error code.\n')).or('null'),
   message: type('string').describe('The error message.\n'),
-  param: type(type('string').describe('The error parameter.\n')).or('null | null'),
+  param: type(type('string').describe('The error parameter.\n')).or('null'),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
 }).describe('Emitted when an error occurs.')
 
@@ -38778,7 +41426,7 @@ export type BetaResponseErrorEventSchema = typeof BetaResponseErrorEventSchema.i
 
 export const BetaResponseCreatedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.created'").describe('The type of the event. Always `response.created`.\n'),
   response: BetaResponseSchema.describe('The response that was created.\n'),
@@ -38788,14 +41436,16 @@ export const BetaResponseCreatedEventSchema = type({
 export type BetaResponseCreatedEventSchema = typeof BetaResponseCreatedEventSchema.infer
 
 export const BetaOutputContentSchema = type(
-  type(BetaOutputTextContentSchema).or(BetaRefusalContentSchema),
-).or(BetaReasoningTextContentSchema)
+  type(type(BetaOutputTextContentSchema).and({ type: "'BetaOutputTextContent'" })).or(
+    type(BetaRefusalContentSchema).and({ type: "'BetaRefusalContent'" }),
+  ),
+).or(type(BetaReasoningTextContentSchema).and({ type: "'BetaReasoningTextContent'" }))
 
 export type BetaOutputContentSchema = typeof BetaOutputContentSchema.infer
 
 export const BetaResponseContentPartDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.content_part.done'").describe(
     'The type of the event. Always `response.content_part.done`.\n',
@@ -38816,7 +41466,7 @@ export type BetaResponseContentPartDoneEventSchema =
 
 export const BetaResponseContentPartAddedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.content_part.added'").describe(
     'The type of the event. Always `response.content_part.added`.\n',
@@ -38837,7 +41487,7 @@ export type BetaResponseContentPartAddedEventSchema =
 
 export const BetaResponseCompletedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.completed'").describe(
     'The type of the event. Always `response.completed`.\n',
@@ -38867,7 +41517,7 @@ export type BetaResponseCompactionCompactingStreamingEventSchema =
 
 export const BetaResponseCodeInterpreterCallInterpretingEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.code_interpreter_call.interpreting'").describe(
     'The type of the event. Always `response.code_interpreter_call.interpreting`.',
@@ -38886,7 +41536,7 @@ export type BetaResponseCodeInterpreterCallInterpretingEventSchema =
 
 export const BetaResponseCodeInterpreterCallInProgressEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.code_interpreter_call.in_progress'").describe(
     'The type of the event. Always `response.code_interpreter_call.in_progress`.',
@@ -38905,7 +41555,7 @@ export type BetaResponseCodeInterpreterCallInProgressEventSchema =
 
 export const BetaResponseCodeInterpreterCallCompletedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.code_interpreter_call.completed'").describe(
     'The type of the event. Always `response.code_interpreter_call.completed`.',
@@ -38924,7 +41574,7 @@ export type BetaResponseCodeInterpreterCallCompletedEventSchema =
 
 export const BetaResponseCodeInterpreterCallCodeDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.code_interpreter_call_code.done'").describe(
     'The type of the event. Always `response.code_interpreter_call_code.done`.',
@@ -38944,7 +41594,7 @@ export type BetaResponseCodeInterpreterCallCodeDoneEventSchema =
 
 export const BetaResponseCodeInterpreterCallCodeDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.code_interpreter_call_code.delta'").describe(
     'The type of the event. Always `response.code_interpreter_call_code.delta`.',
@@ -38966,12 +41616,13 @@ export type BetaResponseCodeInterpreterCallCodeDeltaEventSchema =
 
 export const BetaResponseAudioTranscriptDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.audio.transcript.done'").describe(
     'The type of the event. Always `response.audio.transcript.done`.\n',
   ),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
+  response_id: 'unknown',
 }).describe('Emitted when the full audio transcript is completed.')
 
 export type BetaResponseAudioTranscriptDoneEventSchema =
@@ -38979,13 +41630,14 @@ export type BetaResponseAudioTranscriptDoneEventSchema =
 
 export const BetaResponseAudioTranscriptDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.audio.transcript.delta'").describe(
     'The type of the event. Always `response.audio.transcript.delta`.\n',
   ),
   delta: type('string').describe('The partial transcript of the audio response.\n'),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
+  response_id: 'unknown',
 }).describe('Emitted when there is a partial transcript of audio.')
 
 export type BetaResponseAudioTranscriptDeltaEventSchema =
@@ -38993,19 +41645,20 @@ export type BetaResponseAudioTranscriptDeltaEventSchema =
 
 export const BetaResponseAudioDoneEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.audio.done'").describe(
     'The type of the event. Always `response.audio.done`.\n',
   ),
   sequence_number: type('number.integer').describe('The sequence number of the delta.\n'),
+  response_id: 'unknown',
 }).describe('Emitted when the audio response is complete.')
 
 export type BetaResponseAudioDoneEventSchema = typeof BetaResponseAudioDoneEventSchema.infer
 
 export const BetaResponseAudioDeltaEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.audio.delta'").describe(
     'The type of the event. Always `response.audio.delta`.\n',
@@ -39020,7 +41673,7 @@ export type BetaResponseAudioDeltaEventSchema = typeof BetaResponseAudioDeltaEve
 
 export const BetaResponseIncompleteEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.incomplete'").describe(
     'The type of the event. Always `response.incomplete`.\n',
@@ -39035,7 +41688,7 @@ export type BetaResponseIncompleteEventSchema = typeof BetaResponseIncompleteEve
 
 export const BetaResponseFailedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.failed'").describe('The type of the event. Always `response.failed`.\n'),
   sequence_number: type('number.integer').describe('The sequence number of this event.'),
@@ -39046,7 +41699,7 @@ export type BetaResponseFailedEventSchema = typeof BetaResponseFailedEventSchema
 
 export const BetaResponseWebSearchCallCompletedEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.web_search_call.completed'").describe(
     'The type of the event. Always `response.web_search_call.completed`.\n',
@@ -39067,7 +41720,7 @@ export type BetaResponseWebSearchCallCompletedEventSchema =
 
 export const BetaResponseWebSearchCallSearchingEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.web_search_call.searching'").describe(
     'The type of the event. Always `response.web_search_call.searching`.\n',
@@ -39088,7 +41741,7 @@ export type BetaResponseWebSearchCallSearchingEventSchema =
 
 export const BetaResponseWebSearchCallInProgressEventSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'response.web_search_call.in_progress'").describe(
     'The type of the event. Always `response.web_search_call.in_progress`.\n',
@@ -39108,16 +41761,20 @@ export type BetaResponseWebSearchCallInProgressEventSchema =
   typeof BetaResponseWebSearchCallInProgressEventSchema.infer
 
 export const BetaUserMessageItemParamSchema = type({
-  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or(
-    'null | null',
-  ),
-  'id?': type(type('string').describe('The unique ID of this message item.')).or('null | null'),
+  'agent?': type(BetaAgentTagParamSchema.describe('The agent that produced this item.')).or('null'),
+  'id?': type(type('string').describe('The unique ID of this message item.')).or('null'),
   type: type("'message'").describe('The item type. Always `message`.'),
   role: type("'user'").describe('The message role. Always `user`.'),
   content: type(
     type(
-      type(type(BetaInputTextContentParamSchema).or(BetaInputImageContentParamAutoParamSchema))
-        .or(BetaInputFileContentParamSchema)
+      type(
+        type(type(BetaInputTextContentParamSchema).and({ type: "'BetaInputTextContentParam'" })).or(
+          type(BetaInputImageContentParamAutoParamSchema).and({
+            type: "'BetaInputImageContentParamAutoParam'",
+          }),
+        ),
+      )
+        .or(type(BetaInputFileContentParamSchema).and({ type: "'BetaInputFileContentParam'" }))
         .describe('A piece of message content, such as text, an image, or a file.'),
     ).array(),
   )
@@ -39129,7 +41786,7 @@ export const BetaUserMessageItemParamSchema = type({
         .describe('The message content, as a single string.'),
     )
     .describe('The message content, as an array of content parts.'),
-  'status?': type(type('string').describe('The status of the message item.')).or('null | null'),
+  'status?': type(type('string').describe('The status of the message item.')).or('null'),
 })
 
 export type BetaUserMessageItemParamSchema = typeof BetaUserMessageItemParamSchema.infer
@@ -39371,11 +42028,11 @@ export type BetaIncludeEnumSchema = typeof BetaIncludeEnumSchema.infer
 
 export const BetaErrorPayloadSchema = type({
   type: type('string').describe('The error type that was emitted.'),
-  code: type(type('string').describe('The error code that was emitted, if any.')).or('null | null'),
+  code: type(type('string').describe('The error code that was emitted, if any.')).or('null'),
   message: type('string').describe('The human-readable error message that was emitted.'),
   param: type(
     type('string').describe('The parameter name that was associated with the error, if any.'),
-  ).or('null | null'),
+  ).or('null'),
   'headers?': type({
     '[string]': type('string').describe('The header value that was emitted.'),
   }).describe('The response headers that were emitted with the error, if any.'),
@@ -39386,7 +42043,7 @@ export type BetaErrorPayloadSchema = typeof BetaErrorPayloadSchema.infer
 
 export const BetaResponseWsErrorSchema = type({
   'agent?': type(BetaAgentTagSchema)
-    .or('null | null')
+    .or('null')
     .describe('The agent that owns this multi-agent streaming event.'),
   type: type("'error'").describe('The type of the event. Always `error`.'),
   'status?': type('number.integer').describe(
@@ -40690,7 +43347,7 @@ export const BetaResponsePromptCacheOptionsParamSchema = type({
     type('string').describe(
       'The ID of a response to compare when diagnosing prompt cache reuse. Supplying this field requests prompt cache diagnostics when the feature is enabled.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe(
   'Options for prompt caching. Supported for `gpt-5.6` and later models. By default, OpenAI automatically chooses one implicit cache breakpoint. You can add explicit breakpoints to content blocks with `prompt_cache_breakpoint`. Each request can write up to four breakpoints. For cache matching, OpenAI considers up to the latest 80 breakpoints in the conversation, without a content-block lookback limit. Set `mode` to `explicit` to disable the implicit breakpoint. The `ttl` defaults to `30m`. Supported lifetimes depend on the API. See the [prompt caching guide](https://developers.openai.com/api/docs/guides/prompt-caching) for current details.',
 )
@@ -40711,10 +43368,10 @@ export type BetaModerationConfigParamSchema = typeof BetaModerationConfigParamSc
 export const BetaModerationPolicyParamSchema = type({
   'input?': type(
     BetaModerationConfigParamSchema.describe('The moderation policy for the response input.'),
-  ).or('null | null'),
+  ).or('null'),
   'output?': type(
     BetaModerationConfigParamSchema.describe('The moderation policy for the response output.'),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('The policy to apply to moderated response input and output.')
 
 export type BetaModerationPolicyParamSchema = typeof BetaModerationPolicyParamSchema.infer
@@ -40727,7 +43384,7 @@ export const BetaModerationParamSchema = type({
     BetaModerationPolicyParamSchema.describe(
       'The policy to apply to moderated response input and output.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).describe('Configuration for running moderation on the input and output of this response.')
 
 export type BetaModerationParamSchema = typeof BetaModerationParamSchema.infer
@@ -40754,7 +43411,7 @@ export const BetaResponseStreamOptionsSchema = type(
       'When true, stream obfuscation will be enabled. Stream obfuscation adds\nrandom characters to an `obfuscation` field on streaming delta events to\nnormalize payload sizes as a mitigation to certain side-channel attacks.\nThese obfuscation fields are included by default, but add a small amount\nof overhead to the data stream. You can set `include_obfuscation` to\nfalse to optimize for bandwidth if you trust the network links between\nyour application and the OpenAI API.\n',
     ),
   }).describe('Options for streaming responses. Only set this when you set `stream: true`.\n'),
-).or('null | null')
+).or('null')
 
 export type BetaResponseStreamOptionsSchema = typeof BetaResponseStreamOptionsSchema.infer
 
@@ -40766,7 +43423,7 @@ export const BetaContextManagementParamSchema = type({
     type('number.integer >= 1000').describe(
       'Token threshold at which compaction should be triggered for this entry.',
     ),
-  ).or('null | null'),
+  ).or('null'),
 })
 
 export type BetaContextManagementParamSchema = typeof BetaContextManagementParamSchema.infer
@@ -40794,8 +43451,8 @@ export const BetaCreateResponseSchema = type(
       type("'auto' | 'disabled'").describe(
         "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
       ),
-    ).or('null | null'),
-    'reasoning?': type(BetaReasoningSchema).or('null | null'),
+    ).or('null'),
+    'reasoning?': type(BetaReasoningSchema).or('null'),
     'input?': BetaInputParamSchema,
     'include?': type(
       type(BetaIncludeEnumSchema)
@@ -40803,25 +43460,25 @@ export const BetaCreateResponseSchema = type(
         .describe(
           'Specify additional output data to include in the model response. Currently supported values are:\n- `web_search_call.action.sources`: Include the sources of the web search tool call.\n- `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.\n- `computer_call_output.output.image_url`: Include image urls from the computer call output.\n- `file_search_call.results`: Include the search results of the file search tool call.\n- `message.input_image.image_url`: Include image urls from the input message.\n- `message.output_text.logprobs`: Include logprobs with assistant messages.\n- `reasoning.encrypted_content`: Includes an encrypted version of reasoning tokens in reasoning item outputs. This enables reasoning items to be used in multi-turn conversations when using the Responses API statelessly (like when the `store` parameter is set to `false`, or when an organization is enrolled in the zero data retention program).',
         ),
-    ).or('null | null'),
+    ).or('null'),
     'parallel_tool_calls?': type(
       type('boolean').describe('Whether to allow the model to run tool calls in parallel.\n'),
-    ).or('null | null'),
+    ).or('null'),
     'store?': type(
       type('boolean').describe(
         'Whether to store the generated model response for later retrieval via\nAPI.\nDefaults to true when omitted.\nIf set to true, response data will be stored for at least 30 days, subject to the [data retention exceptions](https://developers.openai.com/api/docs/guides/your-data#v1responses).\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'instructions?': type(
       type('string').describe(
         "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
       ),
-    ).or('null | null'),
+    ).or('null'),
     'moderation?': type(
       BetaModerationParamSchema.describe(
         'Configuration for running moderation on the input and output of this response.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'background_options?': BetaBackgroundOptionsParamSchema.describe(
       'Options for background execution on HTTP requests. The `2h` and `8h`\ncompletion windows require `background: true`, Standard processing,\nand `stream: false` or omitted.\n',
     ),
@@ -40829,22 +43486,22 @@ export const BetaCreateResponseSchema = type(
       type('boolean').describe(
         'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](https://developers.openai.com/api/reference/resources/responses/streaming-events)\nfor more information.\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'stream_options?': BetaResponseStreamOptionsSchema,
-    'conversation?': type(BetaConversationParamSchema).or('null | null'),
+    'conversation?': type(BetaConversationParamSchema).or('null'),
     'context_management?': type(
       type(type(BetaContextManagementParamSchema).array())
         .and(type('unknown[] >= 1'))
         .describe('Context management configuration for this request.\n'),
-    ).or('null | null'),
+    ).or('null'),
     'max_output_tokens?': type(
       type('number.integer >= 16').describe(
         'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
       ),
-    ).or('null | null'),
+    ).or('null'),
     'multi_agent?': type(
       BetaMultiAgentParamSchema.describe('Configuration for server-hosted multi-agent execution.'),
-    ).or('null | null'),
+    ).or('null'),
   }),
 )
 

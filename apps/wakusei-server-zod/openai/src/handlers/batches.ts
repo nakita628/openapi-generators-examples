@@ -14,7 +14,13 @@ export const getBatches = os
   .input(
     z.object({
       after: z.string().exactOptional(),
-      limit: z.coerce.number().int().default(20).exactOptional(),
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        )
+        .default(20)
+        .exactOptional(),
     }),
   )
   .output(ListBatchesResponseSchema)

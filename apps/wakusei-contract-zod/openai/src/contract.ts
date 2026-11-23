@@ -411,7 +411,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -468,7 +475,7 @@ export const contract = {
               .meta({
                 description: 'The name of the assistant. The maximum length is 256 characters.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         description: z
@@ -480,7 +487,7 @@ export const contract = {
                 description:
                   'The description of the assistant. The maximum length is 512 characters.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         instructions: z
@@ -492,7 +499,7 @@ export const contract = {
                 description:
                   'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         tools: z
@@ -544,7 +551,7 @@ export const contract = {
                 description:
                   "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         metadata: MetadataSchema.exactOptional(),
@@ -560,7 +567,7 @@ export const contract = {
                   'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
                 examples: [1],
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         top_p: z
@@ -575,11 +582,11 @@ export const contract = {
                   'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
                 examples: [1],
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         response_format: z
-          .union([AssistantsApiResponseFormatOptionSchema, z.null().nullable()])
+          .union([AssistantsApiResponseFormatOptionSchema, z.null()])
           .exactOptional(),
       }),
     )
@@ -645,7 +652,14 @@ export const contract = {
     .input(
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
       }),
     )
     .output(VoiceConsentListResourceSchema),
@@ -727,7 +741,14 @@ export const contract = {
     .input(
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
       }),
     )
     .output(ListBatchesResponseSchema),
@@ -780,7 +801,14 @@ export const contract = {
         model: z.string().exactOptional(),
         metadata: MetadataSchema.exactOptional(),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     )
@@ -848,7 +876,14 @@ export const contract = {
       z.object({
         completion_id: z.string(),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     )
@@ -874,7 +909,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         name: z.string().exactOptional(),
@@ -923,7 +965,14 @@ export const contract = {
     .input(
       z.object({
         container_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
       }),
@@ -994,7 +1043,14 @@ export const contract = {
     .input(
       z.object({
         conversation_id: z.string().meta({ examples: ['conv_123'] }),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
         after: z.string().exactOptional(),
         include: z
@@ -1091,7 +1147,14 @@ export const contract = {
     .input(
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         order_by: z.enum(['created_at', 'updated_at']).default('created_at').exactOptional(),
       }),
@@ -1167,7 +1230,14 @@ export const contract = {
       z.object({
         eval_id: z.string(),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         status: z
           .enum(['queued', 'in_progress', 'completed', 'canceled', 'failed'])
@@ -1263,7 +1333,14 @@ export const contract = {
         eval_id: z.string(),
         run_id: z.string(),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         status: z.enum(['fail', 'pass']).exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -1291,7 +1368,14 @@ export const contract = {
     .input(
       z.object({
         purpose: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(10000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(10000)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
       }),
@@ -1370,7 +1454,14 @@ export const contract = {
         fine_tuned_model_checkpoint: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
         project_id: z.string().exactOptional(),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(10).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(10)
+          .exactOptional(),
         order: z.enum(['ascending', 'descending']).default('descending').exactOptional(),
       }),
     )
@@ -1424,7 +1515,14 @@ export const contract = {
     .input(
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         metadata: z
           .preprocess(
             (val) => {
@@ -1499,7 +1597,14 @@ export const contract = {
       z.object({
         fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(10).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(10)
+          .exactOptional(),
       }),
     )
     .output(ListFineTuningJobCheckpointsResponseSchema),
@@ -1515,7 +1620,14 @@ export const contract = {
       z.object({
         fine_tuning_job_id: z.string().meta({ examples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'] }),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
       }),
     )
     .output(ListFineTuningJobEventsResponseSchema),
@@ -1736,9 +1848,12 @@ export const contract = {
           .default('asc')
           .meta({ description: 'Order results by creation time, ascending or descending.' })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(20)
           .meta({ description: 'Maximum number of keys to return.' })
           .exactOptional(),
@@ -1814,33 +1929,45 @@ export const contract = {
       z.object({
         effective_at: z
           .object({
-            gt: z.coerce
-              .number()
-              .int()
+            gt: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
               })
               .exactOptional(),
-            gte: z.coerce
-              .number()
-              .int()
+            gte: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
               })
               .exactOptional(),
-            lt: z.coerce
-              .number()
-              .int()
+            lt: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is less than this value.',
               })
               .exactOptional(),
-            lte: z.coerce
-              .number()
-              .int()
+            lte: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
@@ -1879,7 +2006,14 @@ export const contract = {
           )
           .exactOptional(),
         tenant_only: z.stringbool().default(false).exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
       }),
@@ -1896,7 +2030,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       }),
@@ -2002,8 +2143,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.literal('1d').default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -2029,7 +2179,14 @@ export const contract = {
             z.array(z.enum(['project_id', 'user_id', 'line_item', 'api_key_id', 'api_source'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().default(7).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(7)
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -2066,7 +2223,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).default(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(100)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -2133,7 +2297,13 @@ export const contract = {
     .input(
       z.object({
         group_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
@@ -2189,7 +2359,14 @@ export const contract = {
     .input(
       z.object({
         group_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(1000).default(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(100)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       }),
@@ -2244,7 +2421,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
       }),
     )
@@ -2295,7 +2479,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         include_archived: z.stringbool().default(false).exactOptional(),
       }),
@@ -2337,15 +2528,15 @@ export const contract = {
       z.object({
         project_id: z.string(),
         name: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'The updated name of the project, this name appears in reports.' })
           .exactOptional(),
         external_key_id: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'External key ID to associate with the project.' })
           .exactOptional(),
         geography: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({
             description:
               'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
@@ -2367,7 +2558,14 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         owner_project_access: z.enum(['active', 'inactive', 'any']).exactOptional(),
       }),
@@ -2453,7 +2651,14 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       }),
@@ -2547,7 +2752,14 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(100).default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -2626,23 +2838,23 @@ export const contract = {
       z.object({
         project_id: z.string(),
         file_search: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The file search permission update.' })
           .exactOptional(),
         web_search: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The web search permission update.' })
           .exactOptional(),
         image_generation: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The image generation permission update.' })
           .exactOptional(),
         mcp: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The MCP permission update.' })
           .exactOptional(),
         code_interpreter: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The code interpreter permission update.' })
           .exactOptional(),
       }),
@@ -2703,7 +2915,14 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().default(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(100)
+          .exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
       }),
@@ -2767,7 +2986,14 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
       }),
     )
@@ -2793,11 +3019,11 @@ export const contract = {
               .meta({
                 description: 'Create the service account without default roles or an API key.',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         expires_in_seconds: z
-          .union([z.int().min(1).max(31536000), z.null().nullable()])
+          .union([z.int().min(1).max(31536000), z.null()])
           .meta({
             description:
               'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
@@ -2862,7 +3088,13 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -2952,7 +3184,14 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
       }),
     )
@@ -2971,11 +3210,11 @@ export const contract = {
       z.object({
         project_id: z.string(),
         user_id: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'The ID of the user.' })
           .exactOptional(),
         email: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Email of the user to add.' })
           .exactOptional(),
         role: z.string().meta({ description: '`owner` or `member`' }),
@@ -3007,7 +3246,7 @@ export const contract = {
         project_id: z.string(),
         user_id: z.string(),
         role: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: '`owner` or `member`' })
           .exactOptional(),
       }),
@@ -3036,7 +3275,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).default(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(1000)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -3077,15 +3323,15 @@ export const contract = {
       z.object({
         role_id: z.string(),
         permissions: z
-          .union([z.array(z.string()), z.null().nullable()])
+          .union([z.array(z.string()), z.null()])
           .meta({ description: 'Updated set of permissions for the role.' })
           .exactOptional(),
         description: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New description for the role.' })
           .exactOptional(),
         role_name: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New name for the role.' })
           .exactOptional(),
       }),
@@ -3113,7 +3359,13 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -3188,8 +3440,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3221,7 +3482,13 @@ export const contract = {
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3237,8 +3504,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3270,7 +3546,13 @@ export const contract = {
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3286,8 +3568,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3301,7 +3592,13 @@ export const contract = {
             z.array(z.literal('project_id')),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3317,8 +3614,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3361,7 +3667,13 @@ export const contract = {
             ),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3377,8 +3689,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3410,7 +3731,13 @@ export const contract = {
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3426,8 +3753,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3459,7 +3795,13 @@ export const contract = {
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'vector_store_id'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3475,8 +3817,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         sources: z
           .preprocess(
@@ -3520,7 +3871,13 @@ export const contract = {
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3536,8 +3893,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3569,7 +3935,13 @@ export const contract = {
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3585,8 +3957,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3600,7 +3981,13 @@ export const contract = {
             z.array(z.literal('project_id')),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3616,8 +4003,17 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -3664,7 +4060,13 @@ export const contract = {
             ),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     )
@@ -3680,7 +4082,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         emails: z
           .preprocess(
@@ -3715,19 +4124,19 @@ export const contract = {
       z.object({
         user_id: z.string(),
         role: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: '`owner` or `reader`' })
           .exactOptional(),
         role_id: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Role ID to assign to the user.' })
           .exactOptional(),
         technical_level: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Technical level metadata.' })
           .exactOptional(),
         developer_persona: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Developer persona metadata.' })
           .exactOptional(),
       }),
@@ -3756,7 +4165,13 @@ export const contract = {
     .input(
       z.object({
         user_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
@@ -3813,7 +4228,13 @@ export const contract = {
       z.object({
         project_id: z.string(),
         group_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
@@ -3870,7 +4291,14 @@ export const contract = {
     .input(
       z.object({
         project_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(1000).default(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(1000)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -3891,7 +4319,7 @@ export const contract = {
         role_name: z.string().meta({ description: 'Unique name for the role.' }),
         permissions: z.array(z.string()).meta({ description: 'Permissions to grant to the role.' }),
         description: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Optional description of the role.' })
           .exactOptional(),
       }),
@@ -3922,15 +4350,15 @@ export const contract = {
         project_id: z.string(),
         role_id: z.string(),
         permissions: z
-          .union([z.array(z.string()), z.null().nullable()])
+          .union([z.array(z.string()), z.null()])
           .meta({ description: 'Updated set of permissions for the role.' })
           .exactOptional(),
         description: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New description for the role.' })
           .exactOptional(),
         role_name: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New name for the role.' })
           .exactOptional(),
       }),
@@ -3960,7 +4388,13 @@ export const contract = {
       z.object({
         project_id: z.string(),
         user_id: z.string(),
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
@@ -4173,8 +4607,9 @@ export const contract = {
                   .exactOptional(),
               })
               .meta({ description: 'Granular configuration for tracing.\n' }),
-            z.null().nullable(),
+            z.null(),
           ])
+          .default(null)
           .meta({
             description:
               'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
@@ -4341,7 +4776,13 @@ export const contract = {
           )
           .exactOptional(),
         stream: z.stringbool().exactOptional(),
-        starting_after: z.coerce.number().int().exactOptional(),
+        starting_after: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         include_obfuscation: z.stringbool().exactOptional(),
       }),
     )
@@ -4392,7 +4833,14 @@ export const contract = {
     .input(
       z.object({
         response_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
         after: z.string().exactOptional(),
         include: z
@@ -4479,7 +4927,7 @@ export const contract = {
                 description:
                   "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         metadata: MetadataSchema.exactOptional(),
@@ -4507,7 +4955,14 @@ export const contract = {
     .input(
       z.object({
         thread_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -4569,7 +5024,7 @@ export const contract = {
                 description:
                   'A list of files attached to the message, and the tools they should be added to.',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         metadata: MetadataSchema.exactOptional(),
@@ -4623,7 +5078,14 @@ export const contract = {
     .input(
       z.object({
         thread_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -4654,7 +5116,7 @@ export const contract = {
               'The ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) to use to execute this run.',
           }),
         model: z
-          .union([z.string(), AssistantSupportedModelsSchema, z.null().nullable()])
+          .union([z.string(), AssistantSupportedModelsSchema, z.null()])
           .meta({
             description:
               'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
@@ -4804,7 +5266,14 @@ export const contract = {
       z.object({
         thread_id: z.string(),
         run_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -4879,7 +5348,7 @@ export const contract = {
                 description:
                   'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       }),
@@ -4951,7 +5420,14 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -5081,7 +5557,14 @@ export const contract = {
       z.object({
         vector_store_id: z.string(),
         batch_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -5100,7 +5583,14 @@ export const contract = {
     .input(
       z.object({
         vector_store_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -5321,13 +5811,16 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
-          .union([
-            z.string(),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
-          ])
+          .union([z.string(), z.preprocess((val) => (val === 'null' ? null : val), z.null())])
           .exactOptional(),
         purpose: ExternalKeyPurposeSchema.exactOptional(),
       }),
@@ -5404,7 +5897,13 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         order: z
           .union([z.literal('asc').default('asc'), z.literal('desc').default('desc')])
           .exactOptional(),
@@ -5449,7 +5948,7 @@ export const contract = {
         verification: z
           .xor([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema])
           .exactOptional(),
-        description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+        description: z.union([z.string(), z.null()]).exactOptional(),
         attribute_transformations: z.array(TransformationParamSchema).max(20).exactOptional(),
         enabled: z.boolean().exactOptional(),
       }),
@@ -5476,7 +5975,13 @@ export const contract = {
     .input(
       z.object({
         workload_identity_provider_id: z.string().min(1),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         order: z
           .union([z.literal('asc').default('asc'), z.literal('desc').default('desc')])
           .exactOptional(),
@@ -5541,8 +6046,8 @@ export const contract = {
         z.object({
           workload_identity_provider_id: z.string().min(1),
           workload_identity_federation_rule_id: z.string().min(1),
-          name: z.union([z.string(), z.null().nullable()]).exactOptional(),
-          description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+          name: z.union([z.string(), z.null()]).exactOptional(),
+          description: z.union([z.string(), z.null()]).exactOptional(),
           attribute_matchers: z
             .record(z.string(), z.xor([z.string(), z.boolean(), z.union([z.int(), z.number()])]))
             .exactOptional(),
@@ -5579,14 +6084,21 @@ export const contract = {
     })
     .input(
       z.object({
-        start_time: z.coerce.number().int(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
         end_time: z
           .preprocess(
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.coerce.number().int(),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess(
+                  (val) =>
+                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                  z.number().int(),
+                ),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5602,7 +6114,7 @@ export const contract = {
                     description:
                       'Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.',
                   }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5612,8 +6124,12 @@ export const contract = {
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.coerce.number().int(),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess(
+                  (val) =>
+                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                  z.number().int(),
+                ),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5626,7 +6142,7 @@ export const contract = {
                 description:
                   'A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.',
               }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         project_ids: z
@@ -5642,7 +6158,7 @@ export const contract = {
                     ),
                   ])
                   .meta({ description: 'Return only usage for these projects.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5663,7 +6179,7 @@ export const contract = {
                     description:
                       'Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch`, `service_tier`, `api_source` or any combination of them. When grouped by `api_source`, results use `agents_api` for attributed Agents API activity and `unlabeled` for all other activity. Without source grouping, `api_source` is null.',
                   }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5681,7 +6197,7 @@ export const contract = {
                     ),
                   ])
                   .meta({ description: 'Return only usage for these users.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5699,7 +6215,7 @@ export const contract = {
                     ),
                   ])
                   .meta({ description: 'Return only usage for these API keys.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5717,7 +6233,7 @@ export const contract = {
                     ),
                   ])
                   .meta({ description: 'Return only usage for these models.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5728,7 +6244,7 @@ export const contract = {
             z
               .union([
                 z.stringbool(),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -5749,7 +6265,7 @@ export const contract = {
         project_id: z
           .union([
             z.string().meta({ examples: ['proj_123'] }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         after: z
@@ -5757,11 +6273,17 @@ export const contract = {
             z
               .string()
               .meta({ description: 'Return external storage configurations after this ID.' }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         order: ExternalStorageOrderSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
       }),
     )
     .output(ExternalStorageListResourceSchema),
@@ -5877,7 +6399,7 @@ export const contract = {
               description:
                 'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
             }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       }),
@@ -5950,7 +6472,7 @@ export const contract = {
               .min(1)
               .max(31536000)
               .meta({ description: 'Number of seconds until the API key expires.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       }),
@@ -5978,7 +6500,13 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
           .string()
@@ -6147,7 +6675,13 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
           .string()
@@ -6232,7 +6766,13 @@ export const contract = {
     .input(
       z.object({
         skill_id: z.string().meta({ examples: ['skill_123'] }),
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
           .string()
@@ -6349,7 +6889,13 @@ export const contract = {
     .input(
       z.object({
         thread_id: z.string().meta({ examples: ['cthr_123'] }),
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
           .string()
@@ -6398,7 +6944,13 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
           .string()
@@ -6975,18 +7527,18 @@ export const contract = {
           })
           .exactOptional(),
         reasoning: z
-          .union([ReasoningParamSchema, z.null().nullable()])
+          .union([ReasoningParamSchema, z.null()])
           .meta({
             description:
               "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
           })
           .exactOptional(),
         text: z
-          .union([TextParamSchema, z.null().nullable()])
+          .union([TextParamSchema, z.null()])
           .meta({ description: 'Configuration for text generated by the agent.' })
           .exactOptional(),
         service_tier: z
-          .union([ServiceTierParamSchema, z.null().nullable()])
+          .union([ServiceTierParamSchema, z.null()])
           .meta({ description: 'The service tier used for model requests.' })
           .exactOptional(),
         instructions: z
@@ -7000,11 +7552,11 @@ export const contract = {
           })
           .exactOptional(),
         multi_agent: z
-          .union([MultiAgentConfigCurrentParamSchema, z.null().nullable()])
+          .union([MultiAgentConfigCurrentParamSchema, z.null()])
           .meta({ description: 'Configuration for creating and coordinating subagents.' })
           .exactOptional(),
         compaction: z
-          .union([CompactionParamSchema, z.null().nullable()])
+          .union([CompactionParamSchema, z.null()])
           .meta({
             description:
               'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
@@ -7118,7 +7670,7 @@ export const contract = {
           })
           .exactOptional(),
         packages: z
-          .union([EnvironmentPackagesParamSchema, z.null().nullable()])
+          .union([EnvironmentPackagesParamSchema, z.null()])
           .meta({ description: 'Packages installed before the runtime network policy applies.' })
           .exactOptional(),
         setup_commands: z
@@ -7132,14 +7684,14 @@ export const contract = {
           })
           .exactOptional(),
         network: z
-          .union([NetworkPolicyParamSchema, z.null().nullable()])
+          .union([NetworkPolicyParamSchema, z.null()])
           .meta({
             description:
               'Network access available after setup completes. Omit to preserve the current policy, or pass `null` to reset to the default policy.',
           })
           .exactOptional(),
         desktop: z
-          .union([DesktopParamSchema, z.null().nullable()])
+          .union([DesktopParamSchema, z.null()])
           .meta({
             description: 'Replacement desktop configuration, or null to disable the desktop.',
           })
@@ -7268,7 +7820,7 @@ export const contract = {
       z.object({
         session_id: z.string().min(0).max(1048576),
         prompt_cache_options: z
-          .union([PromptCacheOptionsParam2Schema, z.null().nullable()])
+          .union([PromptCacheOptionsParam2Schema, z.null()])
           .meta({
             description:
               'Default prompt cache lifetime for future turns. Send null to clear the session default.',
@@ -7286,7 +7838,7 @@ export const contract = {
           .exactOptional(),
         review: SessionReviewParamSchema.exactOptional(),
         spend_control: z
-          .union([SessionBudgetControlParamsSchema, z.null().nullable()])
+          .union([SessionBudgetControlParamsSchema, z.null()])
           .meta({
             description:
               'Omit to retain the limit; null or a null limit removes it without resetting spend.',
@@ -7760,11 +8312,17 @@ export const contract = {
     })
     .input(
       z.object({
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         after: z
           .union([
             z.string().meta({ examples: ['whe_123'] }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
       }),
@@ -7906,7 +8464,13 @@ export const contract = {
           )
           .exactOptional(),
         stream: z.stringbool().exactOptional(),
-        starting_after: z.coerce.number().int().exactOptional(),
+        starting_after: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         include_obfuscation: z.stringbool().exactOptional(),
       }),
     )
@@ -7969,7 +8533,14 @@ export const contract = {
     .input(
       z.object({
         response_id: z.string(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
         after: z.string().exactOptional(),
         include: z

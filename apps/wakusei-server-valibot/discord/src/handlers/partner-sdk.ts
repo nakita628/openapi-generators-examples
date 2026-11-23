@@ -77,7 +77,7 @@ export const postPartnerSdkTokenBot = os
   })
   .input(
     v.object({
-      provisional_user_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+      provisional_user_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       external_user_id: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(1024)),
       preferred_global_name: v.optional(
         v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32))),

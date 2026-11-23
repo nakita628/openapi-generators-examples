@@ -194,8 +194,9 @@ export const postRealtimeCallsCallIdAccept = os
                 .exactOptional(),
             })
             .meta({ description: 'Granular configuration for tracing.\n' }),
-          z.null().nullable(),
+          z.null(),
         ])
+        .default(null)
         .meta({
           description:
             'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
