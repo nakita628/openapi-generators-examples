@@ -14,9 +14,6 @@
  * The exit code is 1 when any run failed. Each result goes into docs/results.json
  * (scripts/results.ts), which `bun scripts/results.ts write` turns into docs/typecheck.md.
  *
- * The takibi-hono apps are checked only when the app filter names them (`hono`), and their results
- * are not recorded: takibi-hono is checked by nakita628/hono-takibi-examples (see apps.ts).
- *
  * TC_TIMEOUT (seconds, default 600) and TC_MEM (tsc's GOMEMLIMIT, such as 12GiB) are for the
  * largest documents, checked one at a time.
  */
@@ -24,7 +21,7 @@ import { spawnSync } from 'node:child_process'
 import { existsSync, readdirSync } from 'node:fs'
 import { totalmem } from 'node:os'
 import { join } from 'node:path'
-import { apps, root } from './apps.ts'
+import { root } from './apps.ts'
 import { recordTypecheck, summarize } from './results.ts'
 
 const timeout = Number(process.env.TC_TIMEOUT ?? 600) * 1000
@@ -36,9 +33,6 @@ let passed = 0
 
 for (const app of readdirSync(join(root, 'apps')).sort()) {
   if (appFilter && !app.startsWith(appFilter)) continue
-  const frozen = apps[app]?.generator === 'takibi-hono'
-  if (frozen && !appFilter) continue
-  const record = frozen ? () => {} : recordTypecheck
   const appDir = join(root, 'apps', app)
   const tsc = join(appDir, 'node_modules', '.bin', 'tsc')
   for (const spec of readdirSync(appDir).sort()) {
@@ -61,21 +55,21 @@ for (const app of readdirSync(join(root, 'apps')).sort()) {
 
     if (result.status === 0) {
       passed++
-      record(spec, app, { errors: 0 })
+      recordTypecheck(spec, app, { errors: 0 })
       console.log(`ok    ${name} (${seconds}s)`)
     } else if (result.signal === 'SIGKILL' || result.status === 137) {
       const reason = `killed, likely out of memory (${Math.round(totalmem() / 2 ** 30)} GB)`
       skipped.push(`${name} (${reason})`)
-      record(spec, app, { errors: null, reason })
+      recordTypecheck(spec, app, { errors: null, reason })
       console.log(`SKIP  ${name} (${seconds}s): ${reason}`)
     } else if (result.signal === 'SIGTERM' || result.error?.message.includes('ETIMEDOUT')) {
       const reason = `timed out after ${timeout / 1000}s`
       skipped.push(`${name} (${reason})`)
-      record(spec, app, { errors: null, reason })
+      recordTypecheck(spec, app, { errors: null, reason })
       console.log(`SKIP  ${name} (${seconds}s): ${reason}`)
     } else {
       failed.push(`${name} (${errors} errors)`)
-      record(spec, app, errors > 0 ? summarize(output) : { errors: null, reason: `tsc exited with ${result.status}` })
+      recordTypecheck(spec, app, errors > 0 ? summarize(output) : { errors: null, reason: `tsc exited with ${result.status}` })
       console.log(`FAIL  ${name} (${seconds}s): ${errors} errors\n${output.trim().split('\n').slice(0, 5).join('\n')}`)
     }
   }

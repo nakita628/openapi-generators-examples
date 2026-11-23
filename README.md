@@ -8,7 +8,7 @@ New documents are added every day by the routine in [docs/daily-routine.md](./do
 | --- | --- |
 | [wakusei](https://github.com/nakita628/wakusei) | [oRPC](https://orpc.dev/) (contract / server mode) |
 | [openapi-to-trpc](https://github.com/nakita628/openapi-to-trpc) | [tRPC](https://trpc.io/) |
-| [takibi-hono](https://github.com/nakita628/takibi-hono) | [Hono](https://hono.dev/) (plain, [hono-openapi](https://hono.dev/examples/hono-openapi), [`defineHandler`](https://hono.dev/docs/helpers/factory#definehandler)), the first five documents only (see [Apps](#apps)) |
+| [takibi-hono](https://github.com/nakita628/takibi-hono) | [Hono](https://hono.dev/) (plain, [hono-openapi](https://hono.dev/examples/hono-openapi), [`defineHandler`](https://hono.dev/docs/helpers/factory#definehandler)) |
 | [asphodelos](https://github.com/nakita628/asphodelos) | [Elysia](https://elysiajs.com/), with the [Eden Treaty](https://elysiajs.com/eden/treaty/overview.html) client and the hooks of seven client libraries |
 
 ## Layout
@@ -38,8 +38,6 @@ docs/                          the daily routine, its candidates, and the result
 | takibi-hono (`defineHandler`, Hono 5) | `hono-define-handler-{zod,valibot,arktype,effect}` |
 | asphodelos | `elysia-typebox`: the app and modules, `src/lib/client.ts` (Eden Treaty) and `src/hooks/{swr,tanstack-query,preact-query,solid-query,vue-query,svelte-query,angular-query}.ts` |
 
-takibi-hono is checked by [hono-takibi-examples](https://github.com/nakita628/hono-takibi-examples), so its apps are not generated for new documents: they keep the first five, generated with takibi-hono 0.8.0 on 2026-11-21. `bun scripts/generate.ts` and `bun scripts/typecheck.ts` leave them out unless the app filter names them (`hono`, `hono-zod`), and their results are not recorded in docs/results.json.
-
 ### Specs
 
 The first five came from hono-takibi-examples, and the daily routine takes the next ones from its README, in order ([docs/candidates.md](./docs/candidates.md)). The generators read local files only, so the documents are committed under `openapi/`. [openapi/sources.json](./openapi/sources.json) records where each one comes from, and `bun scripts/sources.ts check` lists the ones that changed upstream. The table is written by `bun scripts/results.ts write`.
@@ -60,7 +58,7 @@ The repository is a [bun workspace](https://bun.com/docs/install/workspaces) (`a
 
 ```bash
 bun install
-bun run generate                      # every app × spec (the takibi-hono apps only when named)
+bun run generate                      # every app × spec
 bun scripts/generate.ts wakusei       # the apps whose name starts with it
 bun scripts/generate.ts "" petstore   # one spec, every app
 bun run typecheck                     # tsc in every app × spec, one at a time; recorded in docs/results.json
@@ -87,4 +85,4 @@ Problems found while generating are reported where the code lives: schema genera
 | [asphodelos#40](https://github.com/nakita628/asphodelos/issues/40) the fetch fallback requests a relative URL | wrong at run time, not a type error |
 | [asphodelos#41](https://github.com/nakita628/asphodelos/issues/41) angular-query imports the deprecated `@tanstack/angular-query-experimental` | a deprecation warning on install |
 
-The takibi-hono apps show what takibi-hono 0.8.0 produced: [truth#14](https://github.com/nakita628/truth/issues/14) to [truth#22](https://github.com/nakita628/truth/issues/22) (fixed in truth since) and [takibi-hono#73](https://github.com/nakita628/takibi-hono/issues/73) (`hono-openapi-typebox` fails on every spec).
+Until the daily routine regenerates them with the latest takibi-hono ([docs/daily-routine.md](./docs/daily-routine.md), 1c), the takibi-hono apps show what takibi-hono 0.8.0 produced on 2026-11-21: [truth#14](https://github.com/nakita628/truth/issues/14) to [truth#22](https://github.com/nakita628/truth/issues/22) (fixed in truth since) and [takibi-hono#73](https://github.com/nakita628/takibi-hono/issues/73) (`hono-openapi-typebox` fails on every spec).

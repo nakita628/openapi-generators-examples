@@ -93,19 +93,6 @@ export const apps: Record<string, App> = {
   },
 }
 
-/**
- * takibi-hono is checked by nakita628/hono-takibi-examples, so the daily routine
- * (docs/daily-routine.md) leaves it out: its apps keep the five documents below, and they are
- * regenerated only when an app filter names them (`bun scripts/generate.ts hono-zod`).
- */
-export const TAKIBI_HONO_SPECS: ReadonlySet<string> = new Set(['petstore', 'train-travel', 'spotify', 'discord', 'openai'])
-
-/** Whether `app` is generated from `spec`. `named`: an app filter selected the app. */
-export function generates(app: string, spec: string, named: boolean): boolean {
-  if (apps[app]?.generator !== 'takibi-hono') return true
-  return named && TAKIBI_HONO_SPECS.has(spec)
-}
-
 /** openapi/<name>.{json,yaml}, keyed by <name>. */
 export function specs(): Record<string, string> {
   return Object.fromEntries(

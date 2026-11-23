@@ -7,23 +7,19 @@
  *                                               one app, one spec
  *   bun scripts/generate.ts "" petstore         one spec, every app
  *
- * The takibi-hono apps are left out unless the app filter names them (`hono`, `hono-zod`), and
- * then only their five documents are generated: takibi-hono is checked by
- * nakita628/hono-takibi-examples (see TAKIBI_HONO_SPECS in apps.ts).
- *
  * `node scripts/generate.ts` works too; the generators then run on node.
  *
  * For each app × spec it writes apps/<app>/<spec>/<generator>.config.ts from the matrix in
  * apps.ts and a tsconfig.json for that spec alone, moves the previous src/ aside, and runs the
  * generator with that directory as its working directory. Empty handler stubs are then filled
  * with a placeholder (see fillStubs). When the generator fails, the previous src/ is put back.
- * Each result goes into docs/results.json (scripts/results.ts), except takibi-hono's.
+ * Each result goes into docs/results.json (scripts/results.ts).
  * The output is committed; `bun run typecheck` (or `bazel test //...`) type-checks it.
  */
 import { spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { apps, generates, root, specs } from './apps.ts'
+import { apps, root, specs } from './apps.ts'
 import { recordGeneration } from './results.ts'
 
 /** The body every empty handler stub gets. */
@@ -75,7 +71,6 @@ for (const [name, app] of Object.entries(apps)) {
   if (appFilter && !name.startsWith(appFilter)) continue
   for (const [spec, file] of Object.entries(all)) {
     if (specFilter && spec !== specFilter) continue
-    if (!generates(name, spec, Boolean(appFilter))) continue
     const dir = join(root, 'apps', name, spec)
     mkdirSync(dir, { recursive: true })
     const src = join(dir, 'src')
@@ -109,7 +104,7 @@ for (const [name, app] of Object.entries(apps)) {
     if (result.status === 0 && existsSync(src)) {
       rmSync(previous, { recursive: true, force: true })
       const stubs = fillStubs(src)
-      if (app.generator !== 'takibi-hono') recordGeneration(spec, name)
+      recordGeneration(spec, name)
       console.log(`ok    ${name}/${spec} (${seconds}s, ${stubs} stubs filled)`)
     } else {
       rmSync(src, { recursive: true, force: true })
@@ -123,7 +118,7 @@ for (const [name, app] of Object.entries(apps)) {
               .find((l) => /error|fail|cannot|invalid|unexpected|not /i.test(l)) ??
             output.split('\n').find((l) => l.trim()) ??
             `exit code ${result.status}`)
-      if (app.generator !== 'takibi-hono') recordGeneration(spec, name, reason)
+      recordGeneration(spec, name, reason)
       failures.push(`${name}/${spec}`)
       console.log(`FAIL  ${name}/${spec} (${seconds}s)${existsSync(src) ? ', previous output kept' : ''}`)
       console.log(output.split('\n').slice(-15).join('\n'))

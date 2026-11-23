@@ -5,7 +5,7 @@
  * docs/typecheck.md and the Specs table of README.md are written from it.
  *
  *   bun scripts/results.ts note <app> <spec> "<cause>"   the cause: `nakita628/<repo>#<n>`, or a short note
- *   bun scripts/results.ts todo [<spec> ...]             what still needs a check or a cause
+ *   bun scripts/results.ts todo [<spec> ...]             what still needs generating, a check or a cause
  *   bun scripts/results.ts affected <ref> [<ref> ...] [--stale]
  *                                                        app × document whose cause names an issue
  *                                                        (`wakusei#12`, `nakita628/truth#18`);
@@ -18,7 +18,7 @@
  */
 import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { apps, root, type Generator } from './apps.ts'
+import { apps, root, specs, type Generator } from './apps.ts'
 import { loadSources } from './sources.ts'
 
 export type Typecheck =
@@ -154,6 +154,15 @@ function note(app: string, spec: string, cause: string): void {
 
 function todo(only: string[]): void {
   const results = loadResults()
+  // An app × document that has never been generated (such as a generator's apps added to the
+  // routine after the document): scripts/generate.ts <app> <spec> writes and records it.
+  for (const spec of Object.keys(specs())) {
+    if (only.length && !only.includes(spec)) continue
+    for (const app of Object.keys(apps)) {
+      const e = results[spec]?.[app]
+      if (!e?.generator && !e?.failed) console.log(`${app}\t${spec}\tnot generated yet`)
+    }
+  }
   for (const [spec, byApp] of Object.entries(results)) {
     if (only.length && !only.includes(spec)) continue
     for (const [app, e] of Object.entries(byApp)) {
